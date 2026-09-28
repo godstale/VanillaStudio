@@ -92,13 +92,27 @@
 
 | 의존성 | 필수 여부 | 설치 방식 |
 | --- | --- | --- |
-| Node.js 22+ | 필수 | 사용자 설치 안내(winget/공식 설치 파일) |
-| pnpm | 필수 | `corepack enable` 안내 |
+| WebView2 Runtime | 필수(앱 실행) | 레지스트리 `EdgeUpdate\Clients\{F3017226-…}`의 `pv`로 확인. 인스톨러가 부트스트래퍼 포함 (S6) |
+| Node.js 22+ | 필수 | `node --version` 메이저 ≥ 22. 없으면 `winget install OpenJS.NodeJS.LTS` 안내 |
+| pnpm | 필수 | `pnpm.cmd` shim 해석. 없으면 `corepack enable pnpm` 안내 |
 | git | 권장(체크포인트) | 사용자 설치 안내, 없으면 폴더 스냅샷 |
-| 에이전트 CLI(1개 이상) | 필수 | 각 공식 설치 안내 + 로그인 상태 확인 |
+| 에이전트 CLI(1개 이상) | 필수 | 각 공식 설치 안내 + 로그인 상태 확인(Claude: `claude auth status`의 `loggedIn`만 읽음) |
 | ACP 어댑터 | 에이전트별 | 버전 고정 npm 패키지를 앱 데이터에 1회 설치(사용자 동의, 앱 소유 프로세스)하고 `node`로 실행 (S3) |
 | FFmpeg | 동영상 export 시 | 앱이 사용자 동의 후 다운로드해 앱 데이터에 저장, 경로는 환경 변수로 전달. MP4(H.264)는 libx264가 있는 **GPL 빌드** 필요(S1). 시스템 PATH의 FFmpeg는 버전이 낮을 수 있어 신뢰하지 않음 |
 | Chrome/Chromium | export 시 | HyperFrames가 관리하는 `chrome-headless-shell`(`hyperframes browser`) — S1 확인 |
+
+**Doctor 구현 규칙 (S6)**
+
+- 명령 해석: cmd.exe와 같이 PATH 순서 × `.exe/.cmd/.bat/.com`으로 찾는다. `.ps1`은 건너뛴다.
+- 실행 조건: stdin 닫힘, `CREATE_NO_WINDOW`, 15~20초 타임아웃.
+- **재점검 시 PATH를 레지스트리에서 새로 읽는다**(HKLM/HKCU `Environment`의 `Path`, `%VAR%` 확장). 앱 실행 중 설치한 도구를 인식하기 위해서다. 이 PATH는 앱이 띄우는 모든 자식 프로세스에도 전달한다.
+- FFmpeg 판정: `-encoders`에 `libx264`가 있어야 하고, `-colorspace bt709` 인코딩 시험을 통과해야 한다. PATH의 FFmpeg보다 앱 관리본을 우선한다.
+- **FFmpeg 다운로드**: 다음 순서로 진행한다(약 190MB, 23초).
+  1. BtbN GitHub 릴리스 API로 win64 GPL zip을 고른다(**검증된 메이저 계열로 고정**).
+  2. `checksums.sha256`로 SHA-256을 검증한다.
+  3. `ffmpeg.exe`·`ffprobe.exe`·`LICENSE.txt`만 앱 데이터 `tools/ffmpeg/`에 추출한다.
+  4. 받은 자산 이름·해시를 기록하고 사후 점검한다.
+  - FFmpeg 버전이 바뀌면 출력 바이트가 바뀌므로, 골든 테스트는 FFmpeg 버전까지 고정한다.
 
 ---
 
@@ -291,6 +305,8 @@ Bridge setDesign { colors } ─────────── 미리보기 전�
 | DESIGN.md lint | `node <app>/vanilla-export.mjs design-lint <project>/DESIGN.md` | 검증 요청 시 1회 |
 
 - 명령 문자열을 UI에서 받지 않는다. Rust enum으로 종류를 받고 argv는 Rust가 조립.
+- 공통 실행 규칙(S6·S7): 명령은 PATHEXT 순서로 해석한다. 레지스트리에서 새로 읽은 PATH를 전달하고, stdin은 닫는다(CLI 입력 대기로 멈추는 것 방지). 콘솔 창은 띄우지 않는다.
+- export 워커 환경 변수: `DO_NOT_TRACK=1`, `HYPERFRAMES_SKIP_SKILLS=1`, `HYPERFRAMES_FFMPEG_PATH`/`FFPROBE_PATH`(앱 관리본). `GEMINI_API_KEY`는 제거한다(S1·S2).
 - 프로젝트 전환·앱 종료 시 자식 프로세스 트리 정리(Windows Job Object).
 
 ---

@@ -65,7 +65,8 @@
   - [[poc-s4]] — WebView2 iframe 미리보기 + Bridge ✅ 통과
   - [[poc-s7]] — DESIGN.md 토큰 파이프라인 + 팔레트 교체 ✅ 통과
   - [[poc-s2]] — 스틸 캡처 @2x + 이미지 PPTX/PDF ✅ 통과
-  - `poc-s5`, `poc-s6` — 예정
+  - [[poc-s6]] — Windows Doctor + FFmpeg 다운로드 ✅ 통과
+  - `poc-s5` — 예정
 - 마일스톤 로그 (P4): `milestone-M0` ~ — 예정
 
 ## Syntheses

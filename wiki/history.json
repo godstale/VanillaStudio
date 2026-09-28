@@ -175,6 +175,17 @@
         "concepts/ExportPipeline.md",
         "concepts/DeterministicRendering.md"
       ]
+    },
+    "poc-s6": {
+      "source_file": "spikes/s6-doctor/README.md",
+      "origin": "PoC S6 (branch spike/s6-doctor)",
+      "ingest_mode": "full",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/poc-s6.md",
+        "concepts/AppOwnedProcesses.md"
+      ]
     }
   }
 }

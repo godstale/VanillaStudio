@@ -82,3 +82,9 @@
 
 ## [2026-09-29] lint | Wiki health check
 - 41 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] poc | S6 Windows Doctor + FFmpeg 다운로드 통과
+- 13개 항목 5초, 최소 PATH 모의, FFmpeg 190MB·SHA-256 23초. fresh PATH·FFmpeg 버전 고정 필요. → [[poc-s6]]
+
+## [2026-09-29] lint | Wiki health check
+- 42 pages, orphans 0, broken links 0. → `wiki/lint-report.md`

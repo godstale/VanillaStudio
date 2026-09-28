@@ -79,6 +79,10 @@
 
 - **문제**: Node 22+, pnpm, 에이전트 CLI와 로그인, FFmpeg, Chrome이 필요해 비개발자에게 장벽.
 - **대응**: Doctor 화면(D-005)에서 단계별 점검·설치 안내, FFmpeg는 앱이 다운로드. 프로젝트 `node_modules`는 pnpm 전역 스토어 공유로 디스크 절약.
+- **S6 결과(2026-09-29)**: 13개 항목 점검 약 5초. 최소 PATH 모의에서 누락 항목마다 해결 방법을 제시했다. FFmpeg는 190MB를 23초에 받아 SHA-256 검증까지 마쳤다.
+  - 새 리스크: 앱 실행 중 설치한 도구가 PATH에 반영되지 않음 → 레지스트리 재조회로 해결.
+  - 새 리스크: FFmpeg "latest" 빌드가 매일 바뀜 → 메이저 계열 고정 + 해시 기록.
+  - 실제 깨끗한 Windows 검증은 P5 릴리스 체크리스트로 넘긴다(`wiki/sources/poc-s6.md`).
 
 ### 2.8 보안 — 위험도: 중
 
@@ -140,7 +144,8 @@ PoC 코드는 `spikes/<id>-<topic>/`에 두고, 결과는 `wiki/sources/poc-<id>
 | S4 | ✅ 통과 (2026-09-29) | Bridge p95 34ms, HMR 27ms, iframe IPC는 ACL로 거부. HMR 연속 쓰기 누락 대응 설계 — `wiki/sources/poc-s4.md` |
 | S7 | ✅ 통과 (2026-09-29) | 교체 p95 34ms, HMR 26ms, 바이트 보존 재작성, 역할 4+5 확정, CSS 변수 `--color-*` — `wiki/sources/poc-s7.md` |
 | S2 | ✅ 통과 (2026-09-29) | @2x 3840×2160 캡처 0.3~0.5초, 준비 신호 필수(대조 실험), 이미지 PPTX·PDF가 PowerPoint에서 정상 — `wiki/sources/poc-s2.md` |
-| S5, S6 | 대기 | |
+| S6 | ✅ 통과 (2026-09-29, 깨끗한 PC는 최소 PATH로 모의) | 점검 13종 5초, FFmpeg 다운로드·검증 23초, fresh PATH 필요 — `wiki/sources/poc-s6.md` |
+| S5 | 대기 | |
 
 ---
 
