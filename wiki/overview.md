@@ -8,10 +8,10 @@ last_updated: 2026-09-29
 
 ## 현재 상태 (2026-09-29)
 
-- 개발 단계: **P3 구현 계획 진행 중** — PoC S1 ✅ 통과([[poc-s1]]), S2~S7 대기 ([[DevelopmentPhases]])
+- 개발 단계: **P3 구현 계획 진행 중** — PoC S1 ✅([[poc-s1]]), S3 ◐ Claude 통과([[poc-s3]]), S2·S4~S7 대기 ([[DevelopmentPhases]])
 - 브랜치: master(기획 병합, origin 푸시 완료) · PoC는 `spike/<id>-<topic>` 브랜치
 - 2026-09-29 기획 보강: [[DesignMd]] 표준 채택(D-015), [[ColorPalette]] 기능(D-016), HyperFrames 참고 자료 보관(D-017) → 기획서·설계서 v0.2, PoC S7 추가
-- 결정 D-001~D-017 모두 Accepted (2026-09-29). D-011은 범위 수정: 시간 함수 계약은 영상·이미지(캡처) 유형만 ([[decisions]])
+- 결정 D-001~D-017 Accepted, D-018(에이전트 세션 격리) Proposed (2026-09-29). D-011은 범위 수정: 시간 함수 계약은 영상·이미지(캡처) 유형만 ([[decisions]])
 - 앱 저장소 원격: https://github.com/godstale/VanillaStudio (push는 매번 사용자 승인 후)
 
 ## 한 문단 요약

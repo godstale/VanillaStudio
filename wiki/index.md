@@ -21,7 +21,7 @@
 
 ## Planning / Decisions
 
-- [[decisions]] — 결정 기록 색인 (D-001~D-017, 모두 Accepted)
+- [[decisions]] — 결정 기록 색인 (D-001~D-018, D-018만 Proposed)
 
 ## Research
 
@@ -61,7 +61,8 @@
 - [[phase-p2-planning]] — P2 상세 기획 로그
 - PoC 로그 (P3):
   - [[poc-s1]] — HyperFrames로 React+R3F MP4 렌더 ✅ 통과
-  - `poc-s2` ~ `poc-s7` — 예정
+  - [[poc-s3]] — Rust ACP 클라이언트로 Claude Code 구동 ◐ (Claude 통과, Codex 미검증)
+  - `poc-s2`, `poc-s4` ~ `poc-s7` — 예정
 - 마일스톤 로그 (P4): `milestone-M0` ~ — 예정
 
 ## Syntheses

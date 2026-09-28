@@ -57,7 +57,7 @@
 | 검증 | zod | 이미 의존성 존재. `plan.json`·`tasks.json`·`vanilla.json`·`template.json` 스키마 |
 | **ACP 클라이언트** | Rust `agent-client-protocol` crate | 신규. 프로세스 수명·권한·fs를 Rust에서 처리 |
 | **터미널** | Rust `portable-pty` + `@xterm/xterm` | 신규. 폴백 경로 |
-| **MCP 서버** | Rust `rmcp` (공식 Rust MCP SDK) ⚠️ | 신규(M, D-014). S3에서 연결 검증. 대안: Node 스크립트 |
+| **MCP 서버** | Streamable HTTP, 127.0.0.1 + 세션별 Bearer 토큰 (S3에서 Node 대역으로 검증). 구현: Rust `rmcp` ⚠️ M2에서 확정 | 신규(M, D-014). 대안: stdio(S3 검증) |
 | **HTTP(로컬)** | Rust `axum`/`tiny_http` 중 택1 ⚠️ | 플레이그라운드 정적 서빙, MCP HTTP |
 | **다운로드/압축** | `reqwest`, `zip` crate | FFmpeg 다운로드, zip export |
 | **DESIGN.md 처리** | `yaml`(ISC) + 자체 zod 스키마 (`src/lib/design`) | front matter 파싱·검증·`colors`만 교체해 다시 쓰기(본문 보존) |
@@ -96,7 +96,7 @@
 | pnpm | 필수 | `corepack enable` 안내 |
 | git | 권장(체크포인트) | 사용자 설치 안내, 없으면 폴더 스냅샷 |
 | 에이전트 CLI(1개 이상) | 필수 | 각 공식 설치 안내 + 로그인 상태 확인 |
-| ACP 어댑터 | 에이전트별 | `npx`로 실행 또는 전역 설치 ⚠️ |
+| ACP 어댑터 | 에이전트별 | 버전 고정 npm 패키지를 앱 데이터에 1회 설치(사용자 동의, 앱 소유 프로세스)하고 `node`로 실행 (S3) |
 | FFmpeg | 동영상 export 시 | 앱이 사용자 동의 후 다운로드해 앱 데이터에 저장, 경로는 환경 변수로 전달. MP4(H.264)는 libx264가 있는 **GPL 빌드** 필요(S1). 시스템 PATH의 FFmpeg는 버전이 낮을 수 있어 신뢰하지 않음 |
 | Chrome/Chromium | export 시 | HyperFrames가 관리하는 `chrome-headless-shell`(`hyperframes browser`) — S1 확인 |
 
@@ -108,10 +108,10 @@
 
 전역 DB `agents` 설정(사용자 편집 가능, 기본값은 앱 내장):
 
-| id | 표시명 | 기본 모드 | 실행 명령(기본값, ⚠️ S3에서 확정) | 지원 등급 |
+| id | 표시명 | 기본 모드 | 실행 명령(기본값) | 지원 등급 |
 | --- | --- | --- | --- | --- |
-| `claude-code` | Claude Code | ACP | `npx -y @agentclientprotocol/claude-agent-acp` | 공식 |
-| `codex` | Codex | ACP | `npx -y @agentclientprotocol/codex-acp` | 공식 |
+| `claude-code` | Claude Code | ACP | `node <appData>/adapters/claude-agent-acp@<고정버전>/dist/index.js` (S3: 0.83.0 검증) | 공식 |
+| `codex` | Codex | ACP | `@agentclientprotocol/codex-acp` 로컬 설치본 ⚠️ S3 미검증(CLI 미설치) | 공식 |
 | `opencode` | OpenCode | ACP | `opencode acp` | 실험적 |
 | `hermes` | Hermes Agent | ACP | `hermes acp` | 실험적 |
 | `agy` | Antigravity CLI | Terminal | `agy` (ACP는 커뮤니티 어댑터 선택 시) | 실험적 |
@@ -131,12 +131,20 @@ UI                         Rust agent_host                         Agent (stdio)
  │ cancel ───────────────▶ session/cancel ───────────────────────────────▶
 ```
 
-- **클라이언트 capability**: `fs.readTextFile`, `fs.writeTextFile` 제공(프로젝트 스코프 강제). `terminal`은 **제공하지 않는다** → 에이전트가 자체 셸을 쓰되 `request_permission`을 거치게 한다. ⚠️ 어댑터별 동작 S3에서 확인.
+- **클라이언트 capability**: `fs.readTextFile`, `fs.writeTextFile` 제공(프로젝트 스코프 강제). `terminal`은 **제공하지 않는다** → 에이전트가 자체 셸을 쓰되 `request_permission`을 거치게 한다.
+  - S3 결과(Claude Code): 어댑터는 fs capability를 쓰지 않고 자체 도구로 파일을 다룬다. 그래서 스코프 강제는 **권한 요청의 `locations` 검사 + 에이전트 세션 격리 설정**으로 한다. fs 핸들러는 fs를 쓰는 다른 어댑터용 방어선으로 유지한다.
+- **세션 격리(D-018 제안, S3)**: `session/new`의 `_meta.claudeCode.options`에 다음을 넣는다.
+  - `settingSources: ["project"]`: 사용자 전역 `~/.claude` 설정·스킬·커넥터·허용 목록 제외
+  - `settings.permissions.ask: ["Bash", "PowerShell"]`: 읽기 전용 명령도 매번 권한 요청
+  - 이 설정이 없으면 `echo` 같은 읽기 전용 셸이 확인 없이 실행된다.
+  - 어댑터별 동등 설정은 에이전트 레지스트리의 `sessionOptions`로 관리한다.
 - **권한 정책(D-010)**: 요청의 `toolCall.kind`로 분류
   - `read`/`edit`/`delete`/`move` + 경로가 프로젝트 안 → 자동 허용(로그 기록)
   - `execute`(셸) → 매번 다이얼로그, 선택지는 `allow_once`/`reject_once`만 노출(`allow_always` 숨김)
   - `fetch`(네트워크) → 다이얼로그(D-006 오픈 라이선스 리소스 다운로드 대비)
   - 경로가 프로젝트 밖 → 자동 거부
+  - 앱 자신의 MCP 도구(`mcp__vanilla__*`)는 `kind`가 비어 오므로 이름 접두사로 식별해 자동 허용. 다른 MCP 도구는 확인
+  - 요청에 `allow_always`가 있어도 UI에 노출하지 않는다(Claude는 execute에 allow_always를 주지 않고, read·MCP에는 준다)
 - **이벤트 전달**: Tauri `Channel`로 세션별 스트림 전송. 세션 로그는 `.vanilla/sessions/<id>.jsonl`에 append(재생·디버깅·강의 자료용).
 - **태스크 실행기**(TS, `src/lib/pipeline/`): `tasks.json` 위상 정렬 → 태스크마다 프롬프트 조립(§3.4) → `send_prompt` → `stopReason` 확인 → 검사·스냅샷·체크포인트 → 다음.
 

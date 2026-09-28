@@ -125,6 +125,21 @@
         "entities/HyperFrames.md",
         "concepts/DeterministicRendering.md"
       ]
+    },
+    "poc-s3": {
+      "source_file": "spikes/s3-acp-claude/README.md",
+      "origin": "PoC S3 (branch spike/s3-acp-claude)",
+      "ingest_mode": "full",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/poc-s3.md",
+        "concepts/PermissionPolicy.md",
+        "entities/ClaudeCode.md",
+        "entities/AgentClientProtocol.md",
+        "entities/Codex.md",
+        "concepts/VisualSelfReview.md"
+      ]
     }
   }
 }

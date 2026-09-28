@@ -55,3 +55,12 @@
 
 ## [2026-09-29] lint | Wiki health check
 - 37 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] poc | S3 Rust ACP + Claude Code (조건부 통과)
+- 세션·스트리밍·권한·MCP(stdio/HTTP)·취소 동작. 기본 설정은 읽기 전용 셸을 확인 없이 실행 → 세션 격리 필요. Codex 미검증. → [[poc-s3]]
+
+## [2026-09-29] decision | D-018 Proposed
+- 에이전트 세션 격리: 사용자 전역 설정 제외 + 셸 ask 규칙. → [[decisions]], [[PermissionPolicy]]
+
+## [2026-09-29] lint | Wiki health check
+- 38 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
