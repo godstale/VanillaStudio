@@ -25,3 +25,6 @@
 
 ## [2026-09-28] lint | Wiki health check
 - 33 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-28] update | P0 기준선 검증
+- Node 22.13 / pnpm 10.32 / rustc 1.97. lint·typecheck·test(10) 통과. → [[phase-p0-setup]]
