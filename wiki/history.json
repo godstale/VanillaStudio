@@ -186,6 +186,17 @@
         "sources/poc-s6.md",
         "concepts/AppOwnedProcesses.md"
       ]
+    },
+    "poc-s5": {
+      "source_file": "spikes/s5-dom-to-pptx/README.md",
+      "origin": "PoC S5 (branch spike/s5-dom-to-pptx)",
+      "ingest_mode": "full",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/poc-s5.md",
+        "entities/DomToPptx.md"
+      ]
     }
   }
 }

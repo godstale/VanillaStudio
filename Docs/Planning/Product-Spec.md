@@ -262,7 +262,7 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 | F-EXP-02 | 임베드 패키지(ES 모듈 + Web Component + React 래퍼) | S |
 | F-EXP-03 | 이미지: PNG/JPG/WebP, 배율, 여러 변형 일괄 | M |
 | F-EXP-04 | 슬라이드: PPTX(이미지)·PDF | M |
-| F-EXP-05 | 슬라이드: PPTX(편집 가능, Beta) | S |
+| F-EXP-05 | 슬라이드: PPTX(편집 가능, Beta) — 텍스트·위치는 정확, 효과는 근사치. 대상 PC에 설치된 폰트 필요(export 폴더에 폰트·안내 동봉) (S5) | S |
 | F-EXP-06 | 동영상: MP4(H.264)·WebM + 포스터 | M |
 | F-EXP-07 | 동영상: 투명 배경 | L |
 | F-EXP-08 | 작업 큐·진행률·취소·로그 | M |

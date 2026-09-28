@@ -66,7 +66,7 @@
   - [[poc-s7]] — DESIGN.md 토큰 파이프라인 + 팔레트 교체 ✅ 통과
   - [[poc-s2]] — 스틸 캡처 @2x + 이미지 PPTX/PDF ✅ 통과
   - [[poc-s6]] — Windows Doctor + FFmpeg 다운로드 ✅ 통과
-  - `poc-s5` — 예정
+  - [[poc-s5]] — dom-to-pptx 편집 가능 PPTX ◐ 조건부 통과(Beta 유지)
 - 마일스톤 로그 (P4): `milestone-M0` ~ — 예정
 
 ## Syntheses

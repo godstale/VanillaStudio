@@ -59,6 +59,11 @@
 
 - **문제**: PowerPoint의 도형 모델과 HTML/CSS는 1:1 대응하지 않는다. 셰이더·WebGL·복잡한 CSS 효과는 편집 가능한 도형으로 변환 불가.
 - **대응**: 기본은 이미지 기반 PPTX/PDF(충실도 100%), 편집 가능 PPTX는 Beta(`dom-to-pptx`)로 "텍스트·도형·이미지 레이어만 편집 가능, WebGL은 이미지로 대체". 슬라이드 템플릿은 텍스트를 DOM 텍스트로 유지하도록 권장.
+- **S5 결과(2026-09-29)**: 조건부 통과.
+  - 텍스트는 편집 가능하고 위치도 정확하다.
+  - 웹 폰트 임베드는 PowerPoint가 무시한다 → 시스템·설치 폰트가 조건이다.
+  - 텍스트 상자 폭이 딱 맞아 줄이 넘어간다 → `wrap="none"` 후처리로 해결한다.
+  - 그라데이션 각도·그림자는 근사치다(`wiki/sources/poc-s5.md`).
 
 ### 2.5 심미적 품질 (RQ14) — 위험도: 높음(제품 가치 핵심)
 
@@ -96,7 +101,7 @@
 | Remotion | 4인 이상 조직 유료 | 미채택 |
 | GSAP | 무료(표준 "No Charge" 라이선스) — 단 **Webflow와 경쟁하는 노코드 비주얼 애니메이션 빌더에서의 사용 금지** | 앱 기능은 GSAP 비의존. 에이전트가 생성한 코드 안에서의 사용은 FAQ상 허용(AI 생성 코드). 배포 전 법률 검토 권장 |
 | three.js / R3F / drei / motion / animejs / pptxgenjs | MIT | 사용 가능 |
-| dom-to-pptx | MIT(확인 필요) | Beta 기능, 번들 전 확인 |
+| dom-to-pptx | MIT (2.1.2 확인, S5) | Beta 기능. 브라우저 번들만 벤더링(npm 의존성에 puppeteer 전체 포함) |
 | FFmpeg | LGPL/GPL(빌드별) | 앱에 번들하지 않고 **사용자 동의 후 다운로드**해 별도 프로세스로 실행. HyperFrames의 MP4 인코딩은 libx264가 필요해 **GPL 빌드**를 받는다(S1). LGPL 빌드는 WebM만 가능. 배포 전 법률 검토 |
 | 폰트·CC0 에셋 | OFL/CC0 | `CREDITS.md` 기록 |
 | DESIGN.md 명세·CLI(`@google/design.md`) | Apache-2.0 (alpha) | 사용 가능, 버전 고정 |
@@ -145,7 +150,7 @@ PoC 코드는 `spikes/<id>-<topic>/`에 두고, 결과는 `wiki/sources/poc-<id>
 | S7 | ✅ 통과 (2026-09-29) | 교체 p95 34ms, HMR 26ms, 바이트 보존 재작성, 역할 4+5 확정, CSS 변수 `--color-*` — `wiki/sources/poc-s7.md` |
 | S2 | ✅ 통과 (2026-09-29) | @2x 3840×2160 캡처 0.3~0.5초, 준비 신호 필수(대조 실험), 이미지 PPTX·PDF가 PowerPoint에서 정상 — `wiki/sources/poc-s2.md` |
 | S6 | ✅ 통과 (2026-09-29, 깨끗한 PC는 최소 PATH로 모의) | 점검 13종 5초, FFmpeg 다운로드·검증 23초, fresh PATH 필요 — `wiki/sources/poc-s6.md` |
-| S5 | 대기 | |
+| S5 | ◐ 조건부 통과 (2026-09-29) | 텍스트 편집·위치 정확. 설치 폰트 조건 + wrap 후처리 필요, 효과는 근사치 → Beta 유지 — `wiki/sources/poc-s5.md` |
 
 ---
 

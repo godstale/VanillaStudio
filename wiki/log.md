@@ -88,3 +88,9 @@
 
 ## [2026-09-29] lint | Wiki health check
 - 42 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] poc | S5 dom-to-pptx 편집 PPTX 조건부 통과
+- 텍스트 편집·위치 정확. 웹 폰트는 PowerPoint가 무시(설치 폰트 조건), wrap 후처리 필요, 효과는 근사치 → Beta 유지. → [[poc-s5]]
+
+## [2026-09-29] lint | Wiki health check
+- 43 pages, orphans 0, broken links 0. → `wiki/lint-report.md`

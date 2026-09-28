@@ -83,7 +83,7 @@
 | 동영상 | HyperFrames CLI (Apache-2.0, 0.8.82에서 검증) | D-004. Chrome + FFmpeg. 루트 `data-no-timeline`, 환경 변수 `DO_NOT_TRACK=1`·`HYPERFRAMES_SKIP_SKILLS=1`·`HYPERFRAMES_FFMPEG_PATH`·`HYPERFRAMES_FFPROBE_PATH`, `--workers`는 메모리 기준(S1) |
 | 스틸 캡처 | `puppeteer-core` + HyperFrames가 관리하는 `chrome-headless-shell` (S2 확정) | `deviceScaleFactor`로 @1x/@2x, 준비 신호 대기 후 캡처. HyperFrames `snapshot`은 전체 @2x 미지원 + Gemini 자동 분석 위험(`--describe false` 필수) |
 | PPTX(이미지) | `pptxgenjs` (MIT) | 슬라이드 PNG를 전면 배치 |
-| PPTX(편집) | `dom-to-pptx` (pptxgenjs 기반) Beta | 브라우저 컨텍스트에서 실행 |
+| PPTX(편집) | `dom-to-pptx` 2.1.2 (MIT) Beta — **브라우저 번들(`dist/dom-to-pptx.bundle.js`, 3.6MB)만 벤더링** | npm 패키지는 puppeteer 전체를 끌어오므로 쓰지 않음. 변환 후 `wrap="none"` 후처리 필수 (S5) |
 | PDF | `pdf-lib`로 캡처 이미지를 16:9 페이지에 배치 (S2 확인) | 이미지 기반 |
 | 정적 사이트 | `vite build` + zip | |
 | DESIGN.md lint | `@google/design.md` CLI (Apache-2.0, alpha) ⚠️ | 구조·대비 검사. 형식 변경에 대비해 버전 고정, 실패 시 자체 zod 검사만 사용 |
@@ -321,7 +321,10 @@ export 요청 ─▶ 체크포인트 확인 ─▶ vite build (render 모드 엔
 | --- | --- |
 | web / interactive | `vite build`(live 모드) → `dist/` zip. 임베드 패키지는 lib 모드 빌드 + Web Component 래퍼 |
 | image | render 빌드를 헤드리스 Chrome으로 열어 변형별 `?variant&t` 지정 → `__vanillaReady` 대기 → 캡처(deviceScaleFactor=배율) → PNG/JPG/WebP. 3840×2160 한 장 약 0.3~0.5초(S2) |
-| slides | 슬라이드별 캡처(image와 동일) → `pptxgenjs` `LAYOUT_WIDE` 전면 이미지(이미지 PPTX), `pdf-lib` PDF / 편집 PPTX는 헤드리스 페이지에서 `dom-to-pptx` 실행 |
+| slides | 슬라이드별 캡처(image와 동일) → `pptxgenjs` `LAYOUT_WIDE` 전면 이미지(이미지 PPTX), `pdf-lib` PDF.
+편집 PPTX(S5): 헤드리스 페이지에 `dom-to-pptx` 번들을 주입해 `exportToPptx(slides, {width: 13.333, height: 7.5, skipDownload})` 실행(3장 약 0.24초).
+이어서 JSZip으로 한 줄짜리 텍스트 상자에 `wrap="none"`을 넣는다.
+제약: 웹 폰트 임베드를 PowerPoint가 쓰지 않으므로 시스템·설치 폰트가 조건이다. 결과 폴더에 폰트 파일과 안내를 넣는다. 그라데이션 각도·그림자는 근사치다. WebGL Canvas는 `preserveDrawingBuffer`가 필요하다 |
 | video | render 빌드 → HyperFrames render(fps·해상도·코덱) → MP4/WebM + 포스터 |
 
 render 모드와 HyperFrames seek의 연결, 준비 대기 신호는 S1에서 확정했다(§4.1). 결정성은 **같은 렌더러(GPU/소프트웨어) 안에서** 보장된다. 골든 테스트는 렌더러를 고정한다(CI는 `--no-browser-gpu`).
