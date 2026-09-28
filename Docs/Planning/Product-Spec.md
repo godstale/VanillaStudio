@@ -1,6 +1,6 @@
 # Vanilla Studio 상세 기획서 (Product Spec)
 
-- 문서 버전: v0.2 (2026-09-29) — v0.2: 디자인 시스템(`DESIGN.md`)·컬러 팔레트 기능 추가(§8, D-015~D-017)
+- 문서 버전: v0.3 (2026-09-29) — v0.2: 디자인 시스템(`DESIGN.md`)·컬러 팔레트(§8, D-015~D-017) / v0.3: 결정 D-011~D-014·D-017 확정 반영(시간 함수 계약 범위, MCP 도구 M)
 - 입력: `Docs/Vanilla-Studio-Requirements.txt`, 인터뷰 결정(`Docs/Planning/Decisions.md`)
 - 관련 문서: `Docs/Planning/Technical-Design.md`(기술 설계), `Docs/Planning/Feasibility-Risks.md`(구현 난점·리스크)
 - 상태: 초안 — 구현 계획서 작성 전 PoC 결과에 따라 갱신
@@ -43,7 +43,8 @@
 
 ## 2. 결과물 유형 (Output Types)
 
-모든 유형은 **Scene의 집합 + 포맷 규격**으로 표현하며, 유형별 차이는 규격과 export 방식뿐이다(D-011).
+모든 유형은 **Scene의 집합 + 포맷 규격**으로 표현하며 같은 React 런타임을 쓴다(D-011).
+애니메이션 작성 방식은 유형에 따라 다르다. `video`·`image`·`slides`(캡처 export)는 **시간 함수 계약**(같은 `t` → 같은 화면)이 필수다. `web`·`interactive`는 **자유 모드**로 실시간 애니메이션 코드를 허용한다.
 
 | 유형 | ID | 규격(기본값) | Scene 구성 | Export (MVP) | 비고 |
 | --- | --- | --- | --- | --- | --- |
@@ -135,7 +136,7 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 ```
 
 - **미리보기**: 프로젝트의 프리뷰 서버(Vite)를 iframe으로 표시. 규격 비율 유지, 확대/맞춤, 배경(체커보드) 토글, 기기 프레임(웹: 데스크탑/모바일 폭).
-- **타임라인 스크러버**(`video`·애니메이션이 있는 Scene): 재생/정지, 프레임 단위 이동, 구간 반복, Scene 경계 표시. 슬라이드는 이전/다음, 이미지는 변형 전환.
+- **타임라인 스크러버**(`video`, 시간 함수 계약을 따르는 Scene): 재생/정지, 프레임 단위 이동, 구간 반복, Scene 경계 표시. 슬라이드는 이전/다음, 이미지는 변형 전환. `web`·`interactive`(자유 모드)는 재생/일시정지·새로고침만 제공한다(D-011).
 - **파라미터 패널**: `plan.json`에서 선언되고 코드에서 등록된 파라미터를 폼으로 조절(색·숫자 슬라이더·텍스트·선택·토글·벡터). 변경 즉시 미리보기 반영, `저장` 시 `params/<scene>.values.json`에 기록 + 체크포인트.
 - **디자인 패널**(파라미터 패널 옆 탭 `파라미터 | 디자인`): 현재 팔레트 스와치, 팔레트 라이브러리에서 교체, 역할별 색 편집, 대비 경고. 교체하면 **저장 전에 미리보기에 바로 반영**되고, `적용` 시 `DESIGN.md`의 `colors` 토큰만 갱신 + 체크포인트(§8.2).
 - **팔레트 비교**(S): 현재 Scene·시각을 여러 팔레트로 스냅샷해 나란히 비교하고 하나를 고른다.
@@ -227,7 +228,7 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 | F-AGT-03 | 도구 호출·파일 diff 표시 | M |
 | F-AGT-04 | 내장 터미널(PTY)로 CLI 실행 — 폴백 | M |
 | F-AGT-05 | 에이전트 레지스트리(Claude Code·Codex 공식, OpenCode·Hermes·AGY 실험적) | M |
-| F-AGT-06 | 앱 MCP 도구(`snapshot_scene`·`check_scene`·`get_review`·`update_task_status`) | S |
+| F-AGT-06 | 앱 MCP 도구(`snapshot_scene`·`check_scene`·`get_review`·`update_task_status`) — D-014로 M 격상 | M |
 | F-AGT-07 | 세션 재개(앱 재시작 후 이어가기) | S |
 | F-AGT-08 | 태스크별 에이전트 지정(예: 기획은 Claude, 셰이더는 Codex) | L |
 
@@ -247,7 +248,7 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 | ID | 기능 | 우선 |
 | --- | --- | --- |
 | F-REV-01 | 프리뷰 서버 관리 + iframe 미리보기(비율·확대·배경) | M |
-| F-REV-02 | 타임라인 스크러버(재생·정지·seek·구간 반복) | M |
+| F-REV-02 | 타임라인 스크러버(재생·정지·seek·구간 반복) — 시간 함수 계약 유형만 | M |
 | F-REV-03 | 파라미터 패널(스키마 기반 폼, 즉시 반영, 저장) | M |
 | F-REV-04 | 수정 요청(대상·시각·코멘트·스크린샷 자동 첨부) | M |
 | F-REV-05 | 체크포인트 전/후 비교 | S |
@@ -382,7 +383,8 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 ### 7.3 Scene 런타임 계약 (요약 — 상세는 기술 설계서 §4)
 
 - Scene은 `defineScene({ id, params, duration? })`로 메타를 등록하는 React 컴포넌트.
-- 애니메이션은 `useTime()`이 주는 `t`(초)의 **순수 함수**로 작성. `Date.now()`·`requestAnimationFrame` 누적·시드 없는 `Math.random()` 금지.
+- `video`·`image`·`slides`: 애니메이션은 `useTime()`이 주는 `t`(초)의 **순수 함수**로 작성. `Date.now()`·`requestAnimationFrame` 누적·시드 없는 `Math.random()` 금지.
+- `web`·`interactive`: 자유 모드. 실시간 애니메이션 허용(D-011). 단 파라미터(`useParams`)·디자인 토큰(`useDesign`) 규칙은 동일.
 - 파라미터는 `useParams()`로 읽는다. 기본값은 코드, 사용자 값은 `params/*.values.json`.
 - 인터랙티브 입력은 `useInput()` 사용(렌더 모드에서는 비활성).
 

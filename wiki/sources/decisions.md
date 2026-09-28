@@ -24,13 +24,13 @@ last_updated: 2026-09-29
 | D-008 | 템플릿 = Agent Skill | Accepted | [[DesignTemplateSkill]] |
 | D-009 | 폴더 1 = 프로젝트 1 = 결과물 1 | Accepted | [[ProjectFolderLayout]] |
 | D-010 | 파일 쓰기 자동, 셸 매번 확인 | Accepted | [[PermissionPolicy]] |
-| D-011 | 공통 Scene 런타임(시간 함수형) | Proposed | [[SceneRuntimeContract]] |
-| D-012 | 앱 소유 프로세스 ≠ run_shell | Proposed | [[AppOwnedProcesses]] |
-| D-013 | git 자동 체크포인트 | Proposed | [[ProductionPipeline]] |
-| D-014 | 에이전트용 MCP 도구 | Proposed | [[VisualSelfReview]] |
+| D-011 | 공통 Scene 런타임, 시간 함수 계약은 영상·이미지(캡처) 유형만 — 웹/인터랙티브는 자유 모드 | Accepted (2026-09-29, 범위 수정) | [[SceneRuntimeContract]] |
+| D-012 | 앱 소유 프로세스 ≠ run_shell | Accepted (2026-09-29) | [[AppOwnedProcesses]] |
+| D-013 | git 자동 체크포인트(사용자 결과물 프로젝트) | Accepted (2026-09-29) | [[ProductionPipeline]] |
+| D-014 | 에이전트용 MCP 도구, MVP 필수로 격상 | Accepted (2026-09-29) | [[VisualSelfReview]] |
 | D-015 | 디자인 시스템 전달 표준: 프로젝트 `DESIGN.md` | Accepted (2026-09-29) | [[DesignMd]] |
 | D-016 | 컬러 팔레트 = DESIGN.md 색 역할 토큰, 교체는 에이전트 없이 | Accepted (2026-09-29) | [[ColorPalette]] |
-| D-017 | HyperFrames 프리셋·카탈로그는 참고 자료로만 | Proposed | [[research-2026-09-29-design-md-hyperframes]] |
+| D-017 | HyperFrames 프리셋·카탈로그는 참고 자료로만 | Accepted (2026-09-29) | [[research-2026-09-29-design-md-hyperframes]] |
 
 ## Connections
 

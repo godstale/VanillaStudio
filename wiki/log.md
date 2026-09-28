@@ -41,3 +41,9 @@
 
 ## [2026-09-29] lint | Wiki health check
 - 36 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] decision | D-011~D-014·D-017 Accepted
+- D-011 범위 수정(시간 함수 계약은 영상·이미지 계열만), D-014 MVP 필수. 기획서·설계서 v0.3. → [[decisions]], [[SceneRuntimeContract]]
+
+## [2026-09-29] lint | Wiki health check
+- 36 pages, orphans 0, broken links 0. → `wiki/lint-report.md`

@@ -1,5 +1,5 @@
 ---
-title: 'Technical Design v0.2 (기술 설계서)'
+title: 'Technical Design v0.3 (기술 설계서)'
 type: source
 tags: [planning, architecture, phase-p2]
 date: 2026-09-28
@@ -27,4 +27,4 @@ Tauri 앱(React UI + Rust Core)과 외부 프로세스(에이전트 CLI, 프로�
 ## Connections
 
 - [[feasibility-risks]] — ⚠️ 항목의 PoC 계획
-- [[decisions]] — D-011~D-014 Proposed, D-015·D-016 Accepted
+- [[decisions]] — D-001~D-017 모두 Accepted (2026-09-29)

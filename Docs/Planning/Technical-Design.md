@@ -1,6 +1,6 @@
 # Vanilla Studio 기술 설계서 (Technical Design)
 
-- 문서 버전: v0.2 (2026-09-29) — v0.2: 디자인 토큰 파이프라인(§4.4), 팔레트 관련 Bridge·DB·코드 구조 추가
+- 문서 버전: v0.3 (2026-09-29) — v0.2: 디자인 토큰 파이프라인(§4.4), 팔레트 관련 Bridge·DB·코드 구조 / v0.3: D-011 범위 수정(유형별 시간 모드), D-012~D-014 확정
 - 선행 문서: `Docs/Planning/Product-Spec.md`, `Docs/Planning/Decisions.md`
 - 템플릿 공통 아키텍처(`Docs/Architecture.md`)는 **템플릿 원본으로 유지**하고, 이 문서가 Vanilla Studio 고유 설계의 진실 공급원이다. 충돌 시 이 문서가 우선한다.
 - ⚠️ 표시 항목은 PoC(`Feasibility-Risks.md` §3)로 확정해야 하는 가정이다.
@@ -39,7 +39,7 @@
 1. **보안 경계는 Rust에 둔다.** 에이전트의 파일 요청·권한 요청, 프로세스 실행은 모두 Rust에서 스코프·정책을 강제한다. UI는 표시와 사용자 응답만 담당.
 2. **프로젝트 내용은 파일, 앱 상태는 DB.** (Product-Spec P7)
 3. **앱 소유 프로세스와 임의 셸을 분리한다.** (D-012)
-4. **하나의 Scene 런타임, 여러 export.** (D-011)
+4. **하나의 Scene 런타임, 여러 export.** 시간 함수 계약은 영상·이미지(캡처) 유형에만 강제한다. (D-011)
 
 ---
 
@@ -57,7 +57,7 @@
 | 검증 | zod | 이미 의존성 존재. `plan.json`·`tasks.json`·`vanilla.json`·`template.json` 스키마 |
 | **ACP 클라이언트** | Rust `agent-client-protocol` crate | 신규. 프로세스 수명·권한·fs를 Rust에서 처리 |
 | **터미널** | Rust `portable-pty` + `@xterm/xterm` | 신규. 폴백 경로 |
-| **MCP 서버** | Rust `rmcp` (공식 Rust MCP SDK) ⚠️ | 신규(S). 대안: Node 스크립트 |
+| **MCP 서버** | Rust `rmcp` (공식 Rust MCP SDK) ⚠️ | 신규(M, D-014). S3에서 연결 검증. 대안: Node 스크립트 |
 | **HTTP(로컬)** | Rust `axum`/`tiny_http` 중 택1 ⚠️ | 플레이그라운드 정적 서빙, MCP HTTP |
 | **다운로드/압축** | `reqwest`, `zip` crate | FFmpeg 다운로드, zip export |
 | **DESIGN.md 처리** | `yaml`(ISC) + 자체 zod 스키마 (`src/lib/design`) | front matter 파싱·검증·`colors`만 교체해 다시 쓰기(본문 보존) |
@@ -185,7 +185,9 @@ function IntroScene() {
   | --- | --- | --- |
   | `preview` | 호스트(Bridge)의 play/pause/seek | 검수 스튜디오 |
   | `render` | HyperFrames seek 이벤트(`hf-seek`) ⚠️ | 동영상·스틸 export |
-  | `live` | 실시간 rAF 시계 | 웹/인터랙티브 최종 배포본 |
+  | `live` | 실시간 rAF 시계 | 웹/인터랙티브 미리보기와 최종 배포본 |
+
+  유형별 시간 모드(D-011): `video`·`image`·`slides`는 **clock 계약**(preview·render 모드, `t`의 순수 함수). `web`·`interactive`는 **free 모드**로 미리보기부터 `live`로 동작하며, 자체 rAF·`useFrame(delta)`를 허용한다. free 모드에서 Bridge `seek`는 무시하고 `play`/`pause`만 전달한다(`useTime()`은 경과 시간을 반환).
 
 - R3F: `<VanillaCanvas>`가 `frameloop="demand"`로 Canvas를 감싸고 `t` 변경 시 `invalidate()`/`advance()` 호출.
 - 결정성 도우미: `useSeededRandom(seed)`, `noise2D/3D`(시드 고정), `ease.*`, `timeline([...keys])`(키 기반 보간).
@@ -200,7 +202,7 @@ function IntroScene() {
 
 ### 4.3 계약 검사 (`check_scene`)
 
-정적 검사(ESLint 커스텀 룰 + AST) + 동적 검사(같은 `t`를 두 번 렌더해 픽셀 비교):
+정적 검사(ESLint 커스텀 룰 + AST) + 동적 검사(같은 `t`를 두 번 렌더해 픽셀 비교). 시간 관련 규칙과 동적 검사는 clock 계약 유형(`video`·`image`·`slides`)에만 적용한다:
 - 금지 API: `Date.now`, `performance.now`, 시드 없는 `Math.random`, 자체 `requestAnimationFrame` 루프, `setInterval`
 - `defineScene` 누락, 선언되지 않은 파라미터 사용, 외부 URL 리소스 참조(CREDITS 없는 경우)
 - 하드코딩 색상(경고): TSX·CSS의 hex/rgb/hsl 리터럴 중 토큰이 아닌 것. 셰이더 상수·투명도 등 예외는 주석 `// ds-ignore`로 표시

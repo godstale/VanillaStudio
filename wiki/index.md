@@ -15,13 +15,13 @@
 
 ## Planning / Specs (P2)
 
-- [[product-spec]] — 상세 기획서 v0.2
-- [[technical-design]] — 기술 설계서 v0.2
+- [[product-spec]] — 상세 기획서 v0.3
+- [[technical-design]] — 기술 설계서 v0.3
 - [[feasibility-risks]] — 구현 난점·리스크·PoC 계획
 
 ## Planning / Decisions
 
-- [[decisions]] — 결정 기록 색인 (D-001~D-017)
+- [[decisions]] — 결정 기록 색인 (D-001~D-017, 모두 Accepted)
 
 ## Research
 

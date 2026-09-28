@@ -18,7 +18,7 @@
 | RQ6 | 구현 계획서로 화면 작성 | 중 | 가능 | 태스크 순차 실행기 + 계약 검사 + 체크포인트 |
 | RQ7 | 검수: 화면·애셋·애니메이션 **수동 조절** | 상 | 부분 가능 | "임의 조절"은 불가 → **에이전트가 선언한 파라미터만** 조절 + 타임라인 스크럽 (D-007) |
 | RQ8 | 수정 요청: 결과물 + 구현 계획서 수정해 재요청 | 중 | 가능 | `reviews/R-NNN.md` + 계획서 Revision 섹션 + 전/후 비교 |
-| RQ9 | 최종 결과물 export (웹·PPT·이미지·2D/3D 영상·인터랙티브) | 상 | 가능(유형별 품질 차) | Scene 런타임 하나 + export 방식별 파이프라인 (D-011) |
+| RQ9 | 최종 결과물 export (웹·PPT·이미지·2D/3D 영상·인터랙티브) | 상 | 가능(유형별 품질 차) | Scene 런타임 하나 + export 방식별 파이프라인. 시간 함수 계약은 영상·이미지 계열만 (D-011) |
 | RQ10 | React + three.js 앱에서 쓸 수 있는 패키지, 더 범용적인 대안이 있으면 채택 | 중 | 가능 | **Web Component를 범용 인터페이스**, React 래퍼는 얇게 |
 | RQ11 | 디자인 템플릿 = 구현 계획서 패키지 | 중 | 가능 | Agent Skill 형식 (D-008) |
 | RQ12 | 플레이그라운드(보관·재생), 추후 서버 | 하(로컬) / 상(서버) | 로컬만 MVP | `item.json`에 서버 연동 필드 예약 |
@@ -119,7 +119,7 @@
 | --- | --- | --- | --- |
 | S1 | React + R3F Scene(Vite 빌드)을 HyperFrames로 MP4 렌더 | 15초·30fps·1080p 렌더, 두 번 렌더 결과 프레임 동일, 소요 시간 기록 | 자체 CDP 가상 시간 캡처 + FFmpeg |
 | S2 | 동일 빌드에서 특정 `t` 스틸 캡처(PNG @2x) + 이미지 PPTX 생성 | 폰트·텍스처 로딩 누락 없음 | puppeteer-core + 시스템 Edge |
-| S3 | Rust ACP 클라이언트로 Claude Code·Codex 어댑터 구동 | 세션 생성·프롬프트·스트리밍·권한 요청·fs 요청·취소 동작, 에이전트별 매트릭스 작성 | TS SDK(Node 사이드카)로 클라이언트 구현 |
+| S3 | Rust ACP 클라이언트로 Claude Code·Codex 어댑터 구동 + `vanilla-tools` MCP 서버 연결(D-014) | 세션 생성·프롬프트·스트리밍·권한 요청·fs 요청·취소 동작, 에이전트가 MCP 도구 호출 성공, 에이전트별 매트릭스 작성 | TS SDK(Node 사이드카)로 클라이언트 구현 |
 | S4 | Tauri WebView2 안 iframe으로 Vite dev server 표시 + Bridge(seek·setParams) | HMR 동작, 파라미터 반영 < 100ms, IPC 격리 확인 | 별도 WebviewWindow 사용 |
 | S5 | `dom-to-pptx`로 샘플 슬라이드 3종 편집 PPTX 변환 | PowerPoint에서 텍스트 편집 가능, 레이아웃 오차 허용 범위 | Beta 기능 제외 |
 | S6 | Windows Doctor: Node/pnpm/git/CLI/FFmpeg/Chrome 탐지와 FFmpeg 다운로드 | 깨끗한 Windows에서 안내대로 준비 완료 | 수동 설치 문서 |

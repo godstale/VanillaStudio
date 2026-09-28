@@ -1,5 +1,5 @@
 ---
-title: 'Product Spec v0.2 (상세 기획서)'
+title: 'Product Spec v0.3 (상세 기획서)'
 type: source
 tags: [planning, spec, phase-p2]
 date: 2026-09-28
@@ -19,6 +19,7 @@ P2 핵심 산출물. [[VanillaStudio]]의 제품 원칙 7개, 결과물 유형 5
 - 검수 스튜디오 = 미리보기 iframe + 타임라인 스크러버 + 파라미터 패널 + 수정 요청 ([[UserParameters]])
 - 사용자 조절값(`params/*.values.json`)과 에이전트 코드는 분리 저장 (원칙 P5)
 - 템플릿 = Agent Skill ([[DesignTemplateSkill]]), 플레이그라운드는 로컬 MVP ([[Playground]])
+- v0.3(2026-09-29): 결정 확정 반영 — 시간 함수 계약은 영상·이미지·슬라이드만(웹/인터랙티브 자유 모드), MCP 도구(F-AGT-06) M 격상
 - v0.2(2026-09-29): 원칙 P8 "디자인은 토큰으로", §8을 "디자인 시스템·팔레트·템플릿"으로 확장 — 프로젝트 [[DesignMd]], [[ColorPalette]], 참고 자료(HyperFrames 프리셋·카탈로그), 기능 F-DSN-01~08·F-PAL-01~09
 
 ## Connections
