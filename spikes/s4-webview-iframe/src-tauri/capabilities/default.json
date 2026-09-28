@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "IPC only for the main window's own (local) origin; the preview iframe origin is not listed.",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

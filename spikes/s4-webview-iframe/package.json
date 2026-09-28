@@ -1,0 +1,27 @@
+{
+  "name": "spike-s4-webview-iframe",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "host": "vite host --port 1430 --strictPort",
+    "preview": "vite preview-app --port 5199 --strictPort --host 127.0.0.1",
+    "tauri": "tauri",
+    "run": "node run.mjs"
+  },
+  "dependencies": {
+    "@react-three/fiber": "^9.3.0",
+    "@tauri-apps/api": "^2.8.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "three": "^0.179.1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.8.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@types/three": "^0.179.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.0"
+  }
+}
