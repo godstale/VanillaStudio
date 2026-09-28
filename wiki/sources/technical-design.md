@@ -1,11 +1,11 @@
 ---
-title: 'Technical Design v0.1 (기술 설계서)'
+title: 'Technical Design v0.2 (기술 설계서)'
 type: source
 tags: [planning, architecture, phase-p2]
 date: 2026-09-28
 source_file: Docs/Planning/Technical-Design.md
 sources: [product-spec]
-last_updated: 2026-09-28
+last_updated: 2026-09-29
 ---
 
 ## Summary
@@ -22,8 +22,9 @@ Tauri 앱(React UI + Rust Core)과 외부 프로세스(에이전트 CLI, 프로�
 - 동영상은 [[HyperFrames]], PPTX는 pptxgenjs + [[DomToPptx]](Beta)
 - 에이전트용 MCP 도구 `vanilla-tools` ([[VisualSelfReview]])
 - 템플릿 기본 `assetProtocol.scope: ["**"]`는 M1에서 축소 필요
+- v0.2(2026-09-29) §4.4 디자인 토큰 파이프라인: 런타임 Vite 플러그인이 [[DesignMd]]를 가상 모듈로 읽어 `--ds-*` CSS 변수·`useDesign()` 제공, Bridge `setDesign`으로 [[ColorPalette]] 미리보기, 앱은 `colors`만 다시 씀(본문 보존). 전역 DB `palettes` 테이블, `src/lib/design/`
 
 ## Connections
 
 - [[feasibility-risks]] — ⚠️ 항목의 PoC 계획
-- [[decisions]] — D-011~D-014 Proposed
+- [[decisions]] — D-011~D-014 Proposed, D-015·D-016 Accepted

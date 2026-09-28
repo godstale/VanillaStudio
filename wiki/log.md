@@ -1,3 +1,4 @@
+
 # Wiki Log (append-only)
 
 > 형식: `## [YYYY-MM-DD] <type> | <title>` + 한두 줄. type: ingest · decision · phase · research · poc · milestone · lint · update
@@ -28,3 +29,15 @@
 
 ## [2026-09-28] update | P0 기준선 검증
 - Node 22.13 / pnpm 10.32 / rustc 1.97. lint·typecheck·test(10) 통과. → [[phase-p0-setup]]
+
+## [2026-09-29] research | DESIGN.md·HyperFrames 프리셋·카탈로그
+- 사용자 지정 링크 2건 보관 + DESIGN.md 형식 조사. → [[research-2026-09-29-design-md-hyperframes]]
+
+## [2026-09-29] decision | D-015·D-016 Accepted, D-017 Proposed
+- 프로젝트 DESIGN.md 표준, 컬러 팔레트 = 색 역할 토큰 교체, HyperFrames 자료는 참고용. → [[decisions]]
+
+## [2026-09-29] update | 기획 문서 v0.2 (디자인 시스템·팔레트)
+- Product-Spec §8·§5.7, Technical-Design §4.4, Feasibility-Risks §2.10·S7, AGENTS.md §4-6. → [[DesignMd]], [[ColorPalette]], [[phase-p2-planning]]
+
+## [2026-09-29] lint | Wiki health check
+- 36 pages, orphans 0, broken links 0. → `wiki/lint-report.md`

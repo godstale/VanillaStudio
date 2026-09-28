@@ -5,7 +5,7 @@ tags: [phase-log, phase-p2]
 date: 2026-09-28
 source_file: Docs/Playbook/prompts/P2-planning.md
 sources: [vanilla-studio-requirements, research-2026-09-28-agents-rendering]
-last_updated: 2026-09-28
+last_updated: 2026-09-29
 ---
 
 ## Summary
@@ -58,6 +58,13 @@ last_updated: 2026-09-28
 ## Metrics
 
 - 인터뷰 3라운드 / 12문항, 결정 14건(Accepted 10, Proposed 4), PoC 6건 정의, 기능 명세 약 40건
+
+## Addendum — 기획 보강 (2026-09-29)
+
+- 입력: 사용자 추가 요청 4건 — ① 컬러 팔레트 기능 ② DESIGN.md 표준 활용 ③ HyperFrames 디자인 프리셋 링크 보관 ④ HyperFrames 카탈로그 링크 보관
+- 활동: 외부 조사([[research-2026-09-29-design-md-hyperframes]]) → 기획서·설계서·리스크 v0.2 → D-015·D-016 Accepted, D-017 Proposed → PoC S7 추가 → AGENTS.md §4 규칙 6(디자인 토큰 계약)
+- 설계 요지: 디자인을 형태(템플릿)·디자인 시스템([[DesignMd]])·팔레트([[ColorPalette]]) 세 층으로 분리. 팔레트 교체는 `colors` 토큰만 바꾸고 에이전트를 부르지 않음
+- 교훈: 구현 전에 **업계 표준 파일 형식**(AGENTS.md, DESIGN.md처럼 에이전트가 이미 아는 파일)이 있는지 확인하면, 자체 형식을 만드는 것보다 에이전트 호환성이 좋아진다. 외부 예제 모음을 참고 자료로 받으면 라이선스와 기술 의존성(예: GSAP)부터 확인해 "참고만/차용 가능"을 결정 기록으로 남긴다.
 
 ## Connections
 

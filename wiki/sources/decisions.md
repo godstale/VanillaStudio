@@ -5,7 +5,7 @@ tags: [decisions, phase-p2]
 date: 2026-09-28
 source_file: Docs/Planning/Decisions.md
 sources: []
-last_updated: 2026-09-28
+last_updated: 2026-09-29
 ---
 
 ## Summary
@@ -28,6 +28,9 @@ last_updated: 2026-09-28
 | D-012 | 앱 소유 프로세스 ≠ run_shell | Proposed | [[AppOwnedProcesses]] |
 | D-013 | git 자동 체크포인트 | Proposed | [[ProductionPipeline]] |
 | D-014 | 에이전트용 MCP 도구 | Proposed | [[VisualSelfReview]] |
+| D-015 | 디자인 시스템 전달 표준: 프로젝트 `DESIGN.md` | Accepted (2026-09-29) | [[DesignMd]] |
+| D-016 | 컬러 팔레트 = DESIGN.md 색 역할 토큰, 교체는 에이전트 없이 | Accepted (2026-09-29) | [[ColorPalette]] |
+| D-017 | HyperFrames 프리셋·카탈로그는 참고 자료로만 | Proposed | [[research-2026-09-29-design-md-hyperframes]] |
 
 ## Connections
 

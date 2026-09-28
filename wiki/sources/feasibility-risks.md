@@ -5,12 +5,12 @@ tags: [planning, risk, poc, phase-p2]
 date: 2026-09-28
 source_file: Docs/Planning/Feasibility-Risks.md
 sources: [vanilla-studio-requirements, research-2026-09-28-agents-rendering]
-last_updated: 2026-09-28
+last_updated: 2026-09-29
 ---
 
 ## Summary
 
-요구사항 RQ1~RQ14의 구현 가능성을 판정하고, 고위험 영역(에이전트 이질성, 결정적 렌더링, 심미 품질)과 중위험 영역(수동 조절, HTML→PPTX, 프리뷰 환경, 의존성 설치, 보안, 라이선스)에 대한 대응을 정리했다. PoC S1~S6을 P3 첫 작업으로 정의한다.
+요구사항 RQ1~RQ14의 구현 가능성을 판정하고, 고위험 영역(에이전트 이질성, 결정적 렌더링, 심미 품질)과 중위험 영역(수동 조절, HTML→PPTX, 프리뷰 환경, 의존성 설치, 보안, 라이선스)에 대한 대응을 정리했다. PoC S1~S6을 P3 첫 작업으로 정의한다. v0.2(2026-09-29)에서 RQ15(팔레트)·RQ16(DESIGN.md), §2.10 디자인 시스템 리스크, PoC S7(토큰 파이프라인·팔레트 교체)을 추가했다.
 
 ## Key Claims
 

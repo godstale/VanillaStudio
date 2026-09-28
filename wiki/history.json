@@ -7,35 +7,58 @@
       "ingest_mode": "full",
       "status": "active",
       "ingested_at": "2026-09-28",
-      "pages": ["sources/vanilla-studio-requirements.md", "entities/VanillaStudio.md"]
+      "pages": [
+        "sources/vanilla-studio-requirements.md",
+        "entities/VanillaStudio.md"
+      ]
     },
     "product-spec": {
       "source_file": "Docs/Planning/Product-Spec.md",
       "ingest_mode": "summary-only",
       "status": "active",
-      "ingested_at": "2026-09-28",
-      "pages": ["sources/product-spec.md", "concepts/ProductionPipeline.md", "concepts/ProjectFolderLayout.md", "concepts/UserParameters.md", "concepts/DesignTemplateSkill.md", "concepts/Playground.md"]
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/product-spec.md",
+        "concepts/ProductionPipeline.md",
+        "concepts/ProjectFolderLayout.md",
+        "concepts/UserParameters.md",
+        "concepts/DesignTemplateSkill.md",
+        "concepts/Playground.md"
+      ]
     },
     "technical-design": {
       "source_file": "Docs/Planning/Technical-Design.md",
       "ingest_mode": "summary-only",
       "status": "active",
-      "ingested_at": "2026-09-28",
-      "pages": ["sources/technical-design.md", "concepts/SceneRuntimeContract.md", "concepts/VanillaBridge.md", "concepts/PermissionPolicy.md", "concepts/AppOwnedProcesses.md", "concepts/ExportPipeline.md", "concepts/VisualSelfReview.md"]
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/technical-design.md",
+        "concepts/SceneRuntimeContract.md",
+        "concepts/VanillaBridge.md",
+        "concepts/PermissionPolicy.md",
+        "concepts/AppOwnedProcesses.md",
+        "concepts/ExportPipeline.md",
+        "concepts/VisualSelfReview.md"
+      ]
     },
     "feasibility-risks": {
       "source_file": "Docs/Planning/Feasibility-Risks.md",
       "ingest_mode": "summary-only",
       "status": "active",
-      "ingested_at": "2026-09-28",
-      "pages": ["sources/feasibility-risks.md", "concepts/DeterministicRendering.md"]
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/feasibility-risks.md",
+        "concepts/DeterministicRendering.md"
+      ]
     },
     "decisions": {
       "source_file": "Docs/Planning/Decisions.md",
       "ingest_mode": "summary-only",
       "status": "active",
-      "ingested_at": "2026-09-28",
-      "pages": ["sources/decisions.md"]
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/decisions.md"
+      ]
     },
     "research-2026-09-28-agents-rendering": {
       "source_file": "",
@@ -43,7 +66,19 @@
       "ingest_mode": "full",
       "status": "active",
       "ingested_at": "2026-09-28",
-      "pages": ["sources/research-2026-09-28-agents-rendering.md", "entities/AgentClientProtocol.md", "entities/ClaudeCode.md", "entities/Codex.md", "entities/OpenCode.md", "entities/HermesAgent.md", "entities/AntigravityCLI.md", "entities/HyperFrames.md", "entities/Remotion.md", "entities/GSAP.md", "entities/DomToPptx.md"]
+      "pages": [
+        "sources/research-2026-09-28-agents-rendering.md",
+        "entities/AgentClientProtocol.md",
+        "entities/ClaudeCode.md",
+        "entities/Codex.md",
+        "entities/OpenCode.md",
+        "entities/HermesAgent.md",
+        "entities/AntigravityCLI.md",
+        "entities/HyperFrames.md",
+        "entities/Remotion.md",
+        "entities/GSAP.md",
+        "entities/DomToPptx.md"
+      ]
     },
     "phase-p0-setup": {
       "source_file": "",
@@ -51,7 +86,9 @@
       "ingest_mode": "full",
       "status": "active",
       "ingested_at": "2026-09-28",
-      "pages": ["sources/phase-p0-setup.md"]
+      "pages": [
+        "sources/phase-p0-setup.md"
+      ]
     },
     "phase-p2-planning": {
       "source_file": "Docs/Playbook/prompts/P2-planning.md",
@@ -59,7 +96,23 @@
       "ingest_mode": "full",
       "status": "active",
       "ingested_at": "2026-09-28",
-      "pages": ["sources/phase-p2-planning.md", "concepts/DevelopmentPhases.md"]
+      "pages": [
+        "sources/phase-p2-planning.md",
+        "concepts/DevelopmentPhases.md"
+      ]
+    },
+    "research-2026-09-29-design-md-hyperframes": {
+      "source_file": "",
+      "origin": "web research + user-provided links (https://www.hyperframes.dev/design, https://hyperframes.heygen.com/catalog)",
+      "ingest_mode": "full",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/research-2026-09-29-design-md-hyperframes.md",
+        "entities/DesignMd.md",
+        "concepts/ColorPalette.md",
+        "entities/HyperFrames.md"
+      ]
     }
   }
 }

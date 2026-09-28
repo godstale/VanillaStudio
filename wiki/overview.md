@@ -3,14 +3,15 @@ title: 'Overview'
 type: overview
 tags: [overview]
 sources: []
-last_updated: 2026-09-28
+last_updated: 2026-09-29
 ---
 
-## 현재 상태 (2026-09-28)
+## 현재 상태 (2026-09-29)
 
 - 개발 단계: **P2 상세 기획 완료 → P3 구현 계획(+PoC) 대기** ([[DevelopmentPhases]])
 - 브랜치: `docs/planning` (master는 템플릿 원본 기준 커밋)
-- 사용자 확인 대기: Proposed 결정 D-011~D-014 ([[decisions]])
+- 2026-09-29 기획 보강: [[DesignMd]] 표준 채택(D-015), [[ColorPalette]] 기능(D-016), HyperFrames 참고 자료 보관(D-017) → 기획서·설계서 v0.2, PoC S7 추가
+- 사용자 확인 대기: Proposed 결정 D-011~D-014, D-017 ([[decisions]])
 
 ## 한 문단 요약
 
