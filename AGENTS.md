@@ -14,7 +14,8 @@
 | 4 | `Docs/Planning/Technical-Design.md` | 기술 설계서 — **Vanilla Studio 고유 설계의 진실 공급원** |
 | 5 | `Docs/Planning/Feasibility-Risks.md` | 구현 난점·리스크·PoC |
 | 6 | `Docs/Planning/Decisions.md` | 결정 기록(D-NNN). Proposed 항목은 사용자 확인 전 전제로 삼지 않는다 |
-| 6a | `Docs/Planning/Implementation-Plan.md`, `Docs/Planning/TODO.md` | 구현 계획(마일스톤 M1~M7)과 작업 목록. **구현 작업은 TODO 항목 단위로 진행하고 체크한다** |
+| 6a | `Docs/Planning/Implementation-Plan.md`, `Docs/Planning/TODO.md` | 구현 계획(마일스톤 M1~M7)과 작업 목록. **구현 작업은 TODO 항목 단위로 진행하고 체크한다**. TODO 맨 위 "▶ 진입점"이 다음 작업이다 |
+| 6b | `Docs/Planning/Parallel-Execution.md` | 여러 세션 병렬 실행: 웨이브·레인 배치, 소유 경로, 공유 파일 규칙, 세션 시작 프롬프트, 완료 보고 형식 |
 | 7 | `Docs/Playbook/README.md` | 개발 단계(P0~P7)별 할 일·산출물 |
 | 8 | `Docs/Architecture.md`, `Docs/Project-Structure.md`, `Docs/Extension-Guide.md` | 기반 템플릿 구조(원본 유지). 충돌 시 `Technical-Design.md` 우선 |
 | 9 | `DESIGN.md`, `BRANDING.md` | 앱 UI 디자인 토큰·브랜딩 |
@@ -94,7 +95,7 @@ python .claude/skills/llm-wiki/scripts/lint.py --save   # wiki 건강 검사
 - **`git push`는 사용자의 명시적 승인 없이 실행하지 않습니다.**
 - `--no-verify`, `--force`, `git reset --hard` 등 파괴적/훅 우회 명령은 사용자 명시 지시 없이 사용 금지.
 - 비밀 정보 커밋 금지. `.env`, `*.db*`, `.vanilla/`는 커밋하지 않습니다.
-- **같은 브랜치에서 2개 이상의 에이전트/작업이 동시에 작업하지 않습니다.** 병렬 작업은 `git worktree add ../VanillaStudio-<topic> -b feat/<topic> master`, 끝나면 `git worktree remove`.
+- **같은 브랜치에서 2개 이상의 에이전트/작업이 동시에 작업하지 않습니다.** 병렬 구현은 `Docs/Planning/Parallel-Execution.md`의 레인·워크트리·소유 경로 규칙을 따릅니다. 병렬 작업은 `git worktree add ../VanillaStudio-<topic> -b feat/<topic> master`, 끝나면 `git worktree remove`.
 - **시작/중간/마지막 git 체크**: 시작(`git status -sb`, `git branch --show-current`) · 중간(범위 이탈 확인, 논리 단위 커밋) · 마지막(`git status -sb`, `git log --oneline -5`, 검증 결과 보고, push는 승인 후).
 
 ## 7. 안전/보안 원칙 (특히 중요)

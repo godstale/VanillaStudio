@@ -225,6 +225,15 @@
       "pages": [
         "sources/golden-samples.md"
       ]
+    },
+    "parallel-execution": {
+      "source_file": "Docs/Planning/Parallel-Execution.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/parallel-execution.md"
+      ]
     }
   }
 }
