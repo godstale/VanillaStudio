@@ -163,6 +163,18 @@
         "concepts/ColorPalette.md",
         "entities/DesignMd.md"
       ]
+    },
+    "poc-s2": {
+      "source_file": "spikes/s2-still-pptx/README.md",
+      "origin": "PoC S2 (branch spike/s2-still-pptx)",
+      "ingest_mode": "full",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/poc-s2.md",
+        "concepts/ExportPipeline.md",
+        "concepts/DeterministicRendering.md"
+      ]
     }
   }
 }

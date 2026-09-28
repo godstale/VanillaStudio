@@ -139,7 +139,8 @@ PoC 코드는 `spikes/<id>-<topic>/`에 두고, 결과는 `wiki/sources/poc-<id>
 | S3 | ◐ Claude Code 통과 (2026-09-29), Codex 미검증 | 세션 격리 옵션 필요(D-018 제안), MCP stdio·HTTP 모두 동작 — `wiki/sources/poc-s3.md` |
 | S4 | ✅ 통과 (2026-09-29) | Bridge p95 34ms, HMR 27ms, iframe IPC는 ACL로 거부. HMR 연속 쓰기 누락 대응 설계 — `wiki/sources/poc-s4.md` |
 | S7 | ✅ 통과 (2026-09-29) | 교체 p95 34ms, HMR 26ms, 바이트 보존 재작성, 역할 4+5 확정, CSS 변수 `--color-*` — `wiki/sources/poc-s7.md` |
-| S2, S5, S6 | 대기 | |
+| S2 | ✅ 통과 (2026-09-29) | @2x 3840×2160 캡처 0.3~0.5초, 준비 신호 필수(대조 실험), 이미지 PPTX·PDF가 PowerPoint에서 정상 — `wiki/sources/poc-s2.md` |
+| S5, S6 | 대기 | |
 
 ---
 

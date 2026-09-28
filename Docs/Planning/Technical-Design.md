@@ -81,10 +81,10 @@
 | 기능 | 선택 | 비고 |
 | --- | --- | --- |
 | 동영상 | HyperFrames CLI (Apache-2.0, 0.8.82에서 검증) | D-004. Chrome + FFmpeg. 루트 `data-no-timeline`, 환경 변수 `DO_NOT_TRACK=1`·`HYPERFRAMES_SKIP_SKILLS=1`·`HYPERFRAMES_FFMPEG_PATH`·`HYPERFRAMES_FFPROBE_PATH`, `--workers`는 메모리 기준(S1) |
-| 스틸 캡처 | HyperFrames `snapshot` 또는 `puppeteer-core` + 시스템 Chrome/Edge ⚠️ | S2에서 택1 |
+| 스틸 캡처 | `puppeteer-core` + HyperFrames가 관리하는 `chrome-headless-shell` (S2 확정) | `deviceScaleFactor`로 @1x/@2x, 준비 신호 대기 후 캡처. HyperFrames `snapshot`은 전체 @2x 미지원 + Gemini 자동 분석 위험(`--describe false` 필수) |
 | PPTX(이미지) | `pptxgenjs` (MIT) | 슬라이드 PNG를 전면 배치 |
 | PPTX(편집) | `dom-to-pptx` (pptxgenjs 기반) Beta | 브라우저 컨텍스트에서 실행 |
-| PDF | Chrome `printToPDF` 또는 `pdf-lib` | 이미지 기반 우선 |
+| PDF | `pdf-lib`로 캡처 이미지를 16:9 페이지에 배치 (S2 확인) | 이미지 기반 |
 | 정적 사이트 | `vite build` + zip | |
 | DESIGN.md lint | `@google/design.md` CLI (Apache-2.0, alpha) ⚠️ | 구조·대비 검사. 형식 변경에 대비해 버전 고정, 실패 시 자체 zod 검사만 사용 |
 
@@ -200,6 +200,11 @@ function IntroScene() {
 - R3F: `<VanillaCanvas>`가 Canvas를 감싼다. render 모드는 `frameloop="never"` + `advance(t)`로 동기 렌더, preview는 `demand` + `invalidate()` (S1).
 - **render 모드 시간 주입(S1 확정)**: `hf-seek` 리스너에서 `waitUntil(sceneReady.then(() => setTime(t)))`를 동기로 호출한다. `setTime`은 React DOM을 `flushSync`로 커밋하고 R3F를 `advance`로 그린다. `sceneReady` = 모든 Canvas `onCreated` + `document.fonts.ready` + 에셋(텍스처·HDRI) 로딩. 준비 전에 시각을 적용하면 워커 첫 프레임이 달라진다(`wiki/sources/poc-s1.md`).
 - 결정성 도우미: `useSeededRandom(seed)`, `noise2D/3D`(시드 고정), `ease.*`, `timeline([...keys])`(키 기반 보간).
+- **준비 신호(S1·S2)**: `registerAsset(promise)`로 텍스처·HDRI·모델 로딩을 등록한다. 런타임은 다음 순서로 기다린 뒤 준비를 선언한다.
+  1. 모든 Canvas `onCreated` + 등록된 에셋 + `DESIGN.md` typography 폰트의 `document.fonts.load()` 완료
+  2. 시각 적용 후 2프레임 페인트
+  3. `window.__vanillaReady = true` 설정(스틸), `hf-seek`의 `waitUntil` 해제(영상)
+  - `document.fonts.ready`만으로는 늦게 요청되는 웹 폰트를 놓친다(S2 대조 실험).
 - 입력: `useInput()` → 포인터·키·스크롤·자이로. `render` 모드에서는 고정값.
 - 디자인 토큰: `useDesign()` → `{ colors, typography, spacing, rounded }`(§4.4). CSS에서는 `var(--color-<role>)`.
   `param.color(token('accent'))`처럼 파라미터 기본값에 토큰을 참조할 수 있다.
@@ -299,8 +304,8 @@ export 요청 ─▶ 체크포인트 확인 ─▶ vite build (render 모드 엔
 | 유형 | 처리 |
 | --- | --- |
 | web / interactive | `vite build`(live 모드) → `dist/` zip. 임베드 패키지는 lib 모드 빌드 + Web Component 래퍼 |
-| image | render 빌드를 헤드리스 Chrome으로 열어 변형별 `t` 고정 캡처(deviceScaleFactor=배율) → PNG/JPG/WebP |
-| slides | 슬라이드별 캡처 → `pptxgenjs`(이미지 PPTX), PDF 결합 / 편집 PPTX는 헤드리스 페이지에서 `dom-to-pptx` 실행 |
+| image | render 빌드를 헤드리스 Chrome으로 열어 변형별 `?variant&t` 지정 → `__vanillaReady` 대기 → 캡처(deviceScaleFactor=배율) → PNG/JPG/WebP. 3840×2160 한 장 약 0.3~0.5초(S2) |
+| slides | 슬라이드별 캡처(image와 동일) → `pptxgenjs` `LAYOUT_WIDE` 전면 이미지(이미지 PPTX), `pdf-lib` PDF / 편집 PPTX는 헤드리스 페이지에서 `dom-to-pptx` 실행 |
 | video | render 빌드 → HyperFrames render(fps·해상도·코덱) → MP4/WebM + 포스터 |
 
 render 모드와 HyperFrames seek의 연결, 준비 대기 신호는 S1에서 확정했다(§4.1). 결정성은 **같은 렌더러(GPU/소프트웨어) 안에서** 보장된다. 골든 테스트는 렌더러를 고정한다(CI는 `--no-browser-gpu`).
@@ -391,6 +396,7 @@ resources/                   # 앱 번들 리소스
 | 컴포넌트 | 파라미터 폼, 타임라인 스크러버, 권한 다이얼로그 | vitest + Testing Library |
 | Rust | 경로 스코프, 권한 정책, 프로세스 argv 조립 | `cargo test` |
 | 통합 | 목(mock) ACP 에이전트(스크립트화된 응답)로 파이프라인 end-to-end | vitest + Node 목 서버 |
+| PPTX 검증(개발 PC) | 생성 PPTX를 PowerPoint COM(`PowerPoint.Application`)으로 열어 슬라이드 수·도형·텍스트 프레임 확인, 슬라이드 PNG 내보내기 비교 (S2 `verify-pptx.ps1`) | PowerShell |
 | 골든 | 샘플 프로젝트 export 결과 해시/픽셀 비교(결정성). 팔레트 2종으로 같은 Scene 렌더 → 색만 달라지는지 확인 | export 워커 테스트 |
 | E2E | 앱 실행 → WebView2 CDP(`WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=--remote-debugging-port`)로 페이지·미리보기 iframe의 콘솔·DOM·Bridge 흐름 검사 | Node CDP 스크립트(S4 `cdp-probe.mjs` 기반) |
 | 수동 | 실제 에이전트(Claude Code·Codex)로 샘플 브리프 → export | 릴리스 체크리스트 |

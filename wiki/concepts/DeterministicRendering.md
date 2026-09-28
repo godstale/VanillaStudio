@@ -17,3 +17,4 @@ last_updated: 2026-09-29
 
 - 워커 첫 프레임 경쟁 조건: 장면(Canvas·폰트·에셋) 준비 전에 시각을 적용하면 병렬 캡처 워커의 첫 프레임이 달라지고, H.264에서는 이후 프레임으로 번진다. `waitUntil(sceneReady.then(setTime))` → [[poc-s1]]
 - GPU 렌더와 소프트웨어(SwiftShader) 렌더는 픽셀이 다르다. 결정성 비교는 같은 렌더러끼리만 한다.
+- 웹 폰트는 늦게 요청되므로 `document.fonts.ready`만으로는 부족하다. 사용하는 폰트를 `document.fonts.load()`로 명시적으로 불러온다 → [[poc-s2]]

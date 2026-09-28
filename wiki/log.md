@@ -76,3 +76,9 @@
 
 ## [2026-09-29] lint | Wiki health check
 - 40 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] poc | S2 스틸 캡처 + 이미지 PPTX/PDF 통과
+- @2x 캡처 0.3~0.5초, 준비 신호 없으면 WebGL 누락·대체 폰트(대조 실험). PowerPoint COM으로 PPTX 검증. → [[poc-s2]]
+
+## [2026-09-29] lint | Wiki health check
+- 41 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
