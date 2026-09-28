@@ -64,3 +64,9 @@
 
 ## [2026-09-29] lint | Wiki health check
 - 38 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] poc | S4 WebView2 iframe + Bridge 통과
+- 반영 p95 34ms, HMR 27ms, iframe IPC는 ACL 거부. 연속 쓰기 HMR 누락 발견 → 파일 감시·reload 대응 설계. → [[poc-s4]]
+
+## [2026-09-29] lint | Wiki health check
+- 39 pages, orphans 0, broken links 0. → `wiki/lint-report.md`

@@ -140,6 +140,17 @@
         "entities/Codex.md",
         "concepts/VisualSelfReview.md"
       ]
+    },
+    "poc-s4": {
+      "source_file": "spikes/s4-webview-iframe/README.md",
+      "origin": "PoC S4 (branch spike/s4-webview-iframe)",
+      "ingest_mode": "full",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/poc-s4.md",
+        "concepts/VanillaBridge.md"
+      ]
     }
   }
 }

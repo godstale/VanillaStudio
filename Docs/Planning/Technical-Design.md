@@ -253,8 +253,19 @@ Bridge setDesign { colors } ─────────── 미리보기 전�
 | scene→host | `ready` | `{ scenes: SceneMeta[], duration, format, design: { hash, roles } }` |
 | scene→host | `time` | `{ t, sceneId }` (재생 중 16ms 이하로 스로틀) |
 | scene→host | `error` | `{ message, stack, sceneId }` → 검수 화면 오류 배너 + "에이전트에게 수정 요청" 버튼 |
+| scene→host | `hmr` | `{ modules: string[], at }` — 런타임 Vite 플러그인이 `vite:afterUpdate`에서 보고(HMR 누락 감지용, S4) |
+| host→scene | `reload` | – 전체 새로고침. 이후 `ready` → host가 `init`으로 파라미터·시각 복원 |
 
-- 미리보기 iframe은 `sandbox="allow-scripts allow-same-origin"`(Vite HMR 필요) + **별도 origin(127.0.0.1:port)** 이므로 앱 origin의 Tauri IPC에 접근 불가. CSP `frame-src http://127.0.0.1:*` 추가. ⚠️ S4에서 WebView2 동작 확인.
+- 미리보기 iframe은 `sandbox="allow-scripts allow-same-origin"`(Vite HMR 필요) + **별도 origin(`127.0.0.1:port`)**. CSP에 `frame-src http://127.0.0.1:*`를 추가한다.
+  - S4 확인: WebView2는 Tauri IPC 초기화 스크립트를 iframe에도 주입한다(`__TAURI_INTERNALS__` 존재). 그러나 capability ACL이 로컬 origin만 허용하므로 앱·플러그인 명령은 모두 거부된다. cross-origin이라 부모 창 접근은 `SecurityError`다.
+  - 따라서 **어떤 capability에도 `remote.urls`로 `127.0.0.1`/`localhost`를 넣지 않는다.** 개발 모드 host(`localhost:1430`)와 미리보기(`127.0.0.1`)의 호스트명을 달리해 origin을 구분한다.
+- 성능(S4): `setParams`·`seek` 왕복 p95 34ms(2프레임 대기 포함), HMR 반영 약 27ms. Fast Refresh로 상태가 유지된다.
+- **HMR 누락 대응(S4)**: 같은 모듈을 약 30ms 간격으로 연속 쓰면 Vite가 마지막 변경을 놓칠 수 있다. 앱은 다음 순서로 대응한다.
+  1. 프로젝트 파일 변경을 직접 감시한다(Rust `notify`).
+  2. 변경이 500ms 멈추면, 미리보기가 보고한 `hmr` 모듈 목록과 비교한다.
+  3. 누락이 있으면 `reload`로 새로고침한다.
+  4. 빌드 태스크가 끝날 때마다 이 확인을 거친다.
+- Fast Refresh 경계: 부트스트랩 `src/main.tsx`(앱 소유)와 Scene 모듈(컴포넌트만 export)을 분리한다. Bridge 리스너는 effect cleanup으로 해제한다.
 
 ---
 
@@ -356,7 +367,7 @@ resources/                   # 앱 번들 리소스
 | --- | --- |
 | 에이전트의 프로젝트 밖 파일 접근 | ACP fs 요청은 Rust `resolve_and_verify_workspace_path`로 검사(심링크 canonicalize). 에이전트 자체 도구 사용은 `request_permission`에서 경로 검사 |
 | 임의 셸 실행 | `execute` 권한은 매번 확인. 앱 소유 프로세스는 고정 argv(D-012) |
-| 미리보기 코드가 앱 IPC 호출 | iframe을 별도 origin으로 격리, Tauri capability는 메인 창에만 부여 |
+| 미리보기 코드가 앱 IPC 호출 | iframe을 별도 origin으로 격리, Tauri capability는 메인 창의 로컬 origin에만 부여. `remote.urls` 사용 금지(S4: iframe에 IPC 스크립트는 주입되지만 ACL이 거부) |
 | `assetProtocol.scope: ["**"]` (템플릿 기본값) | 현재 프로젝트·앱 데이터 경로로 동적 제한(M1 작업) |
 | 신뢰하지 않은 프로젝트/템플릿의 스킬 자동 로드 | 폴더 신뢰 확인(템플릿 기능) 후에만 에이전트 세션 시작. 외부 템플릿 가져오기 시 SKILL.md 미리보기·동의 |
 | 외부 리소스 라이선스 위반 | `CREDITS.md` 필수, `check_scene`이 외부 URL·파일 출처 누락 경고 |
@@ -374,4 +385,5 @@ resources/                   # 앱 번들 리소스
 | Rust | 경로 스코프, 권한 정책, 프로세스 argv 조립 | `cargo test` |
 | 통합 | 목(mock) ACP 에이전트(스크립트화된 응답)로 파이프라인 end-to-end | vitest + Node 목 서버 |
 | 골든 | 샘플 프로젝트 export 결과 해시/픽셀 비교(결정성). 팔레트 2종으로 같은 Scene 렌더 → 색만 달라지는지 확인 | export 워커 테스트 |
+| E2E | 앱 실행 → WebView2 CDP(`WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=--remote-debugging-port`)로 페이지·미리보기 iframe의 콘솔·DOM·Bridge 흐름 검사 | Node CDP 스크립트(S4 `cdp-probe.mjs` 기반) |
 | 수동 | 실제 에이전트(Claude Code·Codex)로 샘플 브리프 → export | 릴리스 체크리스트 |

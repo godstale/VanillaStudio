@@ -73,6 +73,7 @@
 
 - **문제**: 에이전트가 쓴 코드를 즉시 보려면 번들러가 필요. WebView2(Edge)와 export용 Chrome의 렌더 차이, 여러 WebGL 컨텍스트 메모리.
 - **대응**: 프로젝트별 Vite dev server(HMR) + iframe. 동시 WebGL 미리보기 2개 제한. 최종 확인은 export용 렌더 스냅샷으로.
+- **S4 결과(2026-09-29)**: 반영 p95 34ms, HMR 약 27ms, IPC는 ACL로 차단됐다. 새로 발견한 리스크는 빠른 연속 쓰기 때의 HMR 누락이다. 앱의 파일 감시와 `hmr` 보고 비교, 누락 시 새로고침으로 대응한다(`wiki/sources/poc-s4.md`).
 
 ### 2.7 런타임 의존성 설치 부담 — 위험도: 중
 
@@ -135,7 +136,8 @@ PoC 코드는 `spikes/<id>-<topic>/`에 두고, 결과는 `wiki/sources/poc-<id>
 | --- | --- | --- |
 | S1 | ✅ 통과 (2026-09-29) | MP4 2회 렌더 바이트 동일, 15초 1080p 약 18초. FFmpeg는 GPL 빌드 필요 — `wiki/sources/poc-s1.md` |
 | S3 | ◐ Claude Code 통과 (2026-09-29), Codex 미검증 | 세션 격리 옵션 필요(D-018 제안), MCP stdio·HTTP 모두 동작 — `wiki/sources/poc-s3.md` |
-| S2, S4~S7 | 대기 | |
+| S4 | ✅ 통과 (2026-09-29) | Bridge p95 34ms, HMR 27ms, iframe IPC는 ACL로 거부. HMR 연속 쓰기 누락 대응 설계 — `wiki/sources/poc-s4.md` |
+| S2, S5~S7 | 대기 | |
 
 ---
 

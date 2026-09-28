@@ -62,7 +62,8 @@
 - PoC 로그 (P3):
   - [[poc-s1]] — HyperFrames로 React+R3F MP4 렌더 ✅ 통과
   - [[poc-s3]] — Rust ACP 클라이언트로 Claude Code 구동 ◐ (Claude 통과, Codex 미검증)
-  - `poc-s2`, `poc-s4` ~ `poc-s7` — 예정
+  - [[poc-s4]] — WebView2 iframe 미리보기 + Bridge ✅ 통과
+  - `poc-s2`, `poc-s5` ~ `poc-s7` — 예정
 - 마일스톤 로그 (P4): `milestone-M0` ~ — 예정
 
 ## Syntheses
