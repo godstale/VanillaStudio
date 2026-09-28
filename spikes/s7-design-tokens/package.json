@@ -1,0 +1,31 @@
+{
+  "name": "spike-s7-design-tokens",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5207 --strictPort --host 127.0.0.1",
+    "test": "vitest run",
+    "measure": "node scripts/measure.mjs"
+  },
+  "dependencies": {
+    "@react-three/fiber": "^9.3.0",
+    "culori": "^4.0.2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "three": "^0.179.1",
+    "yaml": "^2.8.1",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "@google/design.md": "0.4.0",
+    "@types/culori": "^4.0.1",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@types/three": "^0.179.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "puppeteer-core": "^24.20.0",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.0",
+    "vitest": "^3.2.4"
+  }
+}
