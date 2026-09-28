@@ -59,7 +59,9 @@
 - [[DevelopmentPhases]] — 개발 단계 P0~P7 (플레이북: `Docs/Playbook/`)
 - [[phase-p0-setup]] — P0 준비 로그
 - [[phase-p2-planning]] — P2 상세 기획 로그
-- PoC 로그 (P3): `poc-S1` ~ `poc-S7` — 예정
+- PoC 로그 (P3):
+  - [[poc-s1]] — HyperFrames로 React+R3F MP4 렌더 ✅ 통과
+  - `poc-s2` ~ `poc-s7` — 예정
 - 마일스톤 로그 (P4): `milestone-M0` ~ — 예정
 
 ## Syntheses

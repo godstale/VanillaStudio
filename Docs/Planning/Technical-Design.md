@@ -80,7 +80,7 @@
 
 | 기능 | 선택 | 비고 |
 | --- | --- | --- |
-| 동영상 | HyperFrames CLI/라이브러리 (Apache-2.0) | D-004. Chrome + FFmpeg |
+| 동영상 | HyperFrames CLI (Apache-2.0, 0.8.82에서 검증) | D-004. Chrome + FFmpeg. 루트 `data-no-timeline`, 환경 변수 `DO_NOT_TRACK=1`·`HYPERFRAMES_SKIP_SKILLS=1`·`HYPERFRAMES_FFMPEG_PATH`·`HYPERFRAMES_FFPROBE_PATH`, `--workers`는 메모리 기준(S1) |
 | 스틸 캡처 | HyperFrames `snapshot` 또는 `puppeteer-core` + 시스템 Chrome/Edge ⚠️ | S2에서 택1 |
 | PPTX(이미지) | `pptxgenjs` (MIT) | 슬라이드 PNG를 전면 배치 |
 | PPTX(편집) | `dom-to-pptx` (pptxgenjs 기반) Beta | 브라우저 컨텍스트에서 실행 |
@@ -97,8 +97,8 @@
 | git | 권장(체크포인트) | 사용자 설치 안내, 없으면 폴더 스냅샷 |
 | 에이전트 CLI(1개 이상) | 필수 | 각 공식 설치 안내 + 로그인 상태 확인 |
 | ACP 어댑터 | 에이전트별 | `npx`로 실행 또는 전역 설치 ⚠️ |
-| FFmpeg | 동영상 export 시 | 앱이 다운로드해 앱 데이터에 저장 |
-| Chrome/Chromium | export 시 | HyperFrames가 관리하는 브라우저 또는 시스템 Chrome/Edge ⚠️ |
+| FFmpeg | 동영상 export 시 | 앱이 사용자 동의 후 다운로드해 앱 데이터에 저장, 경로는 환경 변수로 전달. MP4(H.264)는 libx264가 있는 **GPL 빌드** 필요(S1). 시스템 PATH의 FFmpeg는 버전이 낮을 수 있어 신뢰하지 않음 |
+| Chrome/Chromium | export 시 | HyperFrames가 관리하는 `chrome-headless-shell`(`hyperframes browser`) — S1 확인 |
 
 ---
 
@@ -184,12 +184,13 @@ function IntroScene() {
   | 모드 | 시간 공급원 | 용도 |
   | --- | --- | --- |
   | `preview` | 호스트(Bridge)의 play/pause/seek | 검수 스튜디오 |
-  | `render` | HyperFrames seek 이벤트(`hf-seek`) ⚠️ | 동영상·스틸 export |
+  | `render` | HyperFrames seek 이벤트(`hf-seek`, `waitUntil`) — S1 확인 | 동영상·스틸 export |
   | `live` | 실시간 rAF 시계 | 웹/인터랙티브 미리보기와 최종 배포본 |
 
   유형별 시간 모드(D-011): `video`·`image`·`slides`는 **clock 계약**(preview·render 모드, `t`의 순수 함수). `web`·`interactive`는 **free 모드**로 미리보기부터 `live`로 동작하며, 자체 rAF·`useFrame(delta)`를 허용한다. free 모드에서 Bridge `seek`는 무시하고 `play`/`pause`만 전달한다(`useTime()`은 경과 시간을 반환).
 
-- R3F: `<VanillaCanvas>`가 `frameloop="demand"`로 Canvas를 감싸고 `t` 변경 시 `invalidate()`/`advance()` 호출.
+- R3F: `<VanillaCanvas>`가 Canvas를 감싼다. render 모드는 `frameloop="never"` + `advance(t)`로 동기 렌더, preview는 `demand` + `invalidate()` (S1).
+- **render 모드 시간 주입(S1 확정)**: `hf-seek` 리스너에서 `waitUntil(sceneReady.then(() => setTime(t)))`를 동기로 호출한다. `setTime`은 React DOM을 `flushSync`로 커밋하고 R3F를 `advance`로 그린다. `sceneReady` = 모든 Canvas `onCreated` + `document.fonts.ready` + 에셋(텍스처·HDRI) 로딩. 준비 전에 시각을 적용하면 워커 첫 프레임이 달라진다(`wiki/sources/poc-s1.md`).
 - 결정성 도우미: `useSeededRandom(seed)`, `noise2D/3D`(시드 고정), `ease.*`, `timeline([...keys])`(키 기반 보간).
 - 입력: `useInput()` → 포인터·키·스크롤·자이로. `render` 모드에서는 고정값.
 - 디자인 토큰: `useDesign()` → `{ colors, typography, spacing, rounded }`(§4.4). CSS에서는 `var(--ds-<role>)`.
@@ -276,7 +277,7 @@ export 요청 ─▶ 체크포인트 확인 ─▶ vite build (render 모드 엔
 | slides | 슬라이드별 캡처 → `pptxgenjs`(이미지 PPTX), PDF 결합 / 편집 PPTX는 헤드리스 페이지에서 `dom-to-pptx` 실행 |
 | video | render 빌드 → HyperFrames render(fps·해상도·코덱) → MP4/WebM + 포스터 |
 
-⚠️ render 모드가 HyperFrames의 seek 어댑터와 맞물리는지(S1), 폰트 로딩 대기(`document.fonts.ready`)·에셋 프리로드 대기 신호가 필요한지 확인.
+render 모드와 HyperFrames seek의 연결, 준비 대기 신호는 S1에서 확정했다(§4.1). 결정성은 **같은 렌더러(GPU/소프트웨어) 안에서** 보장된다. 골든 테스트는 렌더러를 고정한다(CI는 `--no-browser-gpu`).
 
 ---
 

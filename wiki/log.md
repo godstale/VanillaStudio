@@ -1,4 +1,3 @@
-
 # Wiki Log (append-only)
 
 > 형식: `## [YYYY-MM-DD] <type> | <title>` + 한두 줄. type: ingest · decision · phase · research · poc · milestone · lint · update
@@ -47,3 +46,12 @@
 
 ## [2026-09-29] lint | Wiki health check
 - 36 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] phase | P3 구현 계획 시작
+- 기획 브랜치를 master에 병합·origin 푸시 후 PoC 착수. → [[DevelopmentPhases]]
+
+## [2026-09-29] poc | S1 HyperFrames + React/R3F 렌더 통과
+- MP4 2회 렌더 바이트 동일(450프레임, 약 18초). 워커 첫 프레임 경쟁 조건 해결, FFmpeg GPL 빌드 필요. → [[poc-s1]]
+
+## [2026-09-29] lint | Wiki health check
+- 37 pages, orphans 0, broken links 0. → `wiki/lint-report.md`

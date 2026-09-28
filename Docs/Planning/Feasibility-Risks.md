@@ -45,7 +45,7 @@
   2. R3F `frameloop="demand"` + 호스트가 시간 주입.
   3. HyperFrames의 가상 시간 + seek 어댑터(three.js는 `hf-seek` 이벤트) 활용.
   4. 로딩 완료 신호(`document.fonts.ready`, 텍스처 프리로드) 후 캡처 시작.
-- **잔여 리스크**: HyperFrames는 HTML-first — Vite 빌드 산출물(React SPA)을 composition으로 인식시키는 방식 검증 필요(S1). 실패 시 대안: 자체 CDP 캡처(Chrome `HeadlessExperimental.beginFrame`/가상 시간) + FFmpeg 파이프.
+- **잔여 리스크**: ~~Vite 빌드 산출물을 composition으로 인식시키는 방식~~ → S1 통과(2026-09-29): 빌드된 `index.html` 루트에 composition 속성을 두고 `hf-seek`로 시각 주입, 두 렌더가 바이트 동일. 남은 리스크는 에셋 로딩 대기 누락과 GPU/소프트웨어 렌더러 간 픽셀 차이(골든 테스트는 렌더러 고정).
 
 ### 2.3 수동 조절의 한계 (RQ7) — 위험도: 중
 
@@ -90,7 +90,7 @@
 | GSAP | 무료(표준 "No Charge" 라이선스) — 단 **Webflow와 경쟁하는 노코드 비주얼 애니메이션 빌더에서의 사용 금지** | 앱 기능은 GSAP 비의존. 에이전트가 생성한 코드 안에서의 사용은 FAQ상 허용(AI 생성 코드). 배포 전 법률 검토 권장 |
 | three.js / R3F / drei / motion / animejs / pptxgenjs | MIT | 사용 가능 |
 | dom-to-pptx | MIT(확인 필요) | Beta 기능, 번들 전 확인 |
-| FFmpeg | LGPL/GPL(빌드별) | 앱에 번들하지 않고 **사용자 동의 후 다운로드**. LGPL 빌드 우선 |
+| FFmpeg | LGPL/GPL(빌드별) | 앱에 번들하지 않고 **사용자 동의 후 다운로드**해 별도 프로세스로 실행. HyperFrames의 MP4 인코딩은 libx264가 필요해 **GPL 빌드**를 받는다(S1). LGPL 빌드는 WebM만 가능. 배포 전 법률 검토 |
 | 폰트·CC0 에셋 | OFL/CC0 | `CREDITS.md` 기록 |
 | DESIGN.md 명세·CLI(`@google/design.md`) | Apache-2.0 (alpha) | 사용 가능, 버전 고정 |
 | HyperFrames FRAME.MD 형식·프리셋 | Apache-2.0(소개 자료 기준) ⚠️ | 참고용. 프리셋 폰트는 개별 라이선스 확인(대부분 Google Fonts OFL로 보임) |
@@ -126,6 +126,13 @@
 | S7 | `DESIGN.md` 토큰 파이프라인 + 팔레트 교체: HyperFrames 프리셋 수준의 샘플 DESIGN.md를 Vite 플러그인으로 읽어 CSS 변수·`useDesign()` 제공, Bridge `setDesign`으로 교체, `colors`만 다시 쓰기, 공식 CLI `lint` | 교체 반영 < 100ms(DOM·R3F 모두), 본문 바이트 보존 왕복, 파일 수정 시 HMR, 두 팔레트 렌더 결과가 색만 다름, 표준 색 역할로 프리셋 12종 표현 가능 | 앱이 `tokens.css`·`tokens.ts` 생성 파일을 쓰는 방식 / 공식 CLI 대신 자체 검사만 |
 
 PoC 코드는 `spikes/<id>-<topic>/`에 두고, 결과는 `wiki/sources/poc-<id>.md`로 기록한 뒤 기술 설계서의 ⚠️ 항목을 갱신한다.
+
+**진행 현황**
+
+| ID | 상태 | 결과 |
+| --- | --- | --- |
+| S1 | ✅ 통과 (2026-09-29) | MP4 2회 렌더 바이트 동일, 15초 1080p 약 18초. FFmpeg는 GPL 빌드 필요 — `wiki/sources/poc-s1.md` |
+| S2~S7 | 대기 | |
 
 ---
 

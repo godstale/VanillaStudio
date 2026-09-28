@@ -113,6 +113,18 @@
         "concepts/ColorPalette.md",
         "entities/HyperFrames.md"
       ]
+    },
+    "poc-s1": {
+      "source_file": "spikes/s1-hyperframes-r3f/README.md",
+      "origin": "PoC S1 (branch spike/s1-hyperframes-r3f)",
+      "ingest_mode": "full",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/poc-s1.md",
+        "entities/HyperFrames.md",
+        "concepts/DeterministicRendering.md"
+      ]
     }
   }
 }
