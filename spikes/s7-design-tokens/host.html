@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>S7 host harness</title>
+    <style>html, body { margin: 0; background: #222; } iframe { border: 0; width: 1280px; height: 720px; display: block; }</style>
+  </head>
+  <body>
+    <iframe id="preview" src="/index.html"></iframe>
+    <script type="module">
+      // Minimal host side of the Bridge, driven by puppeteer through window.hostApi.
+      const frame = document.getElementById('preview');
+      const waiters = new Map();
+      const designEvents = [];
+      window.addEventListener('message', (e) => {
+        if (e.source !== frame.contentWindow) return;
+        const { type, payload = {} } = e.data ?? {};
+        if (type === 'design') designEvents.push({ ...payload, receivedAt: performance.now() });
+        waiters.get(`${type}:${payload.id ?? ''}`)?.(payload);
+      });
+      const waitFor = (type, id = '', ms = 10000) =>
+        new Promise((res, rej) => {
+          const t = setTimeout(() => rej(new Error(`timeout ${type}:${id}`)), ms);
+          waiters.set(`${type}:${id}`, (p) => { clearTimeout(t); res(p); });
+        });
+      window.hostApi = {
+        ready: waitFor('ready', '', 30000),
+        async setDesign(colors) {
+          const id = Math.random().toString(36).slice(2);
+          const started = performance.now();
+          const done = waitFor('applied', id);
+          frame.contentWindow.postMessage({ v: 1, type: 'setDesign', payload: { id, colors } }, location.origin);
+          await done;
+          return performance.now() - started;
+        },
+        designEvents: () => designEvents,
+        now: () => performance.now(),
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>S4 host</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #111; color: #ddd; font: 13px Consolas, monospace; }
+      #wrap { display: flex; height: 100%; }
+      iframe { border: 0; width: 960px; height: 540px; background: #000; }
+      #log { flex: 1; padding: 8px; overflow: auto; white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <div id="wrap">
+      <!-- Separate origin (127.0.0.1:5199) + sandbox: preview code must not reach Tauri IPC. -->
+      <iframe id="preview" sandbox="allow-scripts allow-same-origin" src="http://127.0.0.1:5199/"></iframe>
+      <div id="log"></div>
+    </div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

@@ -113,6 +113,118 @@
         "concepts/ColorPalette.md",
         "entities/HyperFrames.md"
       ]
+    },
+    "poc-s1": {
+      "source_file": "spikes/s1-hyperframes-r3f/README.md",
+      "origin": "PoC S1 (branch spike/s1-hyperframes-r3f)",
+      "ingest_mode": "full",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/poc-s1.md",
+        "entities/HyperFrames.md",
+        "concepts/DeterministicRendering.md"
+      ]
+    },
+    "poc-s3": {
+      "source_file": "spikes/s3-acp-claude/README.md",
+      "origin": "PoC S3 (branch spike/s3-acp-claude)",
+      "ingest_mode": "full",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/poc-s3.md",
+        "concepts/PermissionPolicy.md",
+        "entities/ClaudeCode.md",
+        "entities/AgentClientProtocol.md",
+        "entities/Codex.md",
+        "concepts/VisualSelfReview.md"
+      ]
+    },
+    "poc-s4": {
+      "source_file": "spikes/s4-webview-iframe/README.md",
+      "origin": "PoC S4 (branch spike/s4-webview-iframe)",
+      "ingest_mode": "full",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/poc-s4.md",
+        "concepts/VanillaBridge.md"
+      ]
+    },
+    "poc-s7": {
+      "source_file": "spikes/s7-design-tokens/README.md",
+      "origin": "PoC S7 (branch spike/s7-design-tokens)",
+      "ingest_mode": "full",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/poc-s7.md",
+        "concepts/ColorPalette.md",
+        "entities/DesignMd.md"
+      ]
+    },
+    "poc-s2": {
+      "source_file": "spikes/s2-still-pptx/README.md",
+      "origin": "PoC S2 (branch spike/s2-still-pptx)",
+      "ingest_mode": "full",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/poc-s2.md",
+        "concepts/ExportPipeline.md",
+        "concepts/DeterministicRendering.md"
+      ]
+    },
+    "poc-s6": {
+      "source_file": "spikes/s6-doctor/README.md",
+      "origin": "PoC S6 (branch spike/s6-doctor)",
+      "ingest_mode": "full",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/poc-s6.md",
+        "concepts/AppOwnedProcesses.md"
+      ]
+    },
+    "poc-s5": {
+      "source_file": "spikes/s5-dom-to-pptx/README.md",
+      "origin": "PoC S5 (branch spike/s5-dom-to-pptx)",
+      "ingest_mode": "full",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/poc-s5.md",
+        "entities/DomToPptx.md"
+      ]
+    },
+    "implementation-plan": {
+      "source_file": "Docs/Planning/Implementation-Plan.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/implementation-plan.md"
+      ]
+    },
+    "phase-p3-implementation-plan": {
+      "source_file": "Docs/Playbook/prompts/P3-implementation-plan.md",
+      "origin": "session log",
+      "ingest_mode": "full",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/phase-p3-implementation-plan.md"
+      ]
+    },
+    "golden-samples": {
+      "source_file": "Docs/Verification/Golden-Samples.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/golden-samples.md"
+      ]
     }
   }
 }

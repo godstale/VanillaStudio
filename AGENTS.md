@@ -14,6 +14,7 @@
 | 4 | `Docs/Planning/Technical-Design.md` | 기술 설계서 — **Vanilla Studio 고유 설계의 진실 공급원** |
 | 5 | `Docs/Planning/Feasibility-Risks.md` | 구현 난점·리스크·PoC |
 | 6 | `Docs/Planning/Decisions.md` | 결정 기록(D-NNN). Proposed 항목은 사용자 확인 전 전제로 삼지 않는다 |
+| 6a | `Docs/Planning/Implementation-Plan.md`, `Docs/Planning/TODO.md` | 구현 계획(마일스톤 M1~M7)과 작업 목록. **구현 작업은 TODO 항목 단위로 진행하고 체크한다** |
 | 7 | `Docs/Playbook/README.md` | 개발 단계(P0~P7)별 할 일·산출물 |
 | 8 | `Docs/Architecture.md`, `Docs/Project-Structure.md`, `Docs/Extension-Guide.md` | 기반 템플릿 구조(원본 유지). 충돌 시 `Technical-Design.md` 우선 |
 | 9 | `DESIGN.md`, `BRANDING.md` | 앱 UI 디자인 토큰·브랜딩 |
@@ -65,7 +66,7 @@
 3. **사용자 조절값 보호**: `params/*.values.json`은 사용자 소유. 앱·에이전트 프롬프트는 명시 요청 없이 덮어쓰게 해서는 안 됩니다.
 4. **에이전트 중립**: 특정 에이전트 전용 기능을 파이프라인 핵심 경로에 넣지 않습니다. 에이전트별 차이는 `src/lib/agents/` 레지스트리·어댑터 계층에서 흡수.
 5. **데이터 계약 변경**: `plan.json`·`tasks.json`·`vanilla.json`·`template.json`·`palette.json`·DESIGN.md 토큰 스키마·Bridge 메시지 스키마를 바꾸면 zod 스키마, 설계서, `vanilla-core` 스킬, 버전 필드를 함께 갱신.
-6. **디자인 토큰 계약**(D-015, D-016): 생성물의 색·타이포·간격은 사용자 프로젝트의 `DESIGN.md` 토큰에서만 가져온다(CSS `var(--ds-*)`, JS `useDesign()`). 앱이 팔레트를 적용할 때는 front matter의 `colors`만 바꾸고 본문을 보존한다. Plan 승인 후의 `DESIGN.md` 토큰 값은 `params/*.values.json`처럼 사용자 소유로 보호한다.
+6. **디자인 토큰 계약**(D-015, D-016): 생성물의 색·타이포·간격은 사용자 프로젝트의 `DESIGN.md` 토큰에서만 가져온다(CSS `var(--color-*)`, JS `useDesign()`). 앱이 팔레트를 적용할 때는 front matter의 `colors`를 바꾸고, 본문은 이전 색 값이 적힌 곳만 갱신한다(그 외 바이트 보존). Plan 승인 후의 `DESIGN.md` 토큰 값은 `params/*.values.json`처럼 사용자 소유로 보호한다.
 7. **생성형 AI 배제**(D-006): 이미지/영상 생성 서비스 연동 코드를 추가하지 않습니다. 외부 리소스는 오픈 라이선스 + `CREDITS.md` 기록.
 
 ## 5. 빌드/검증 명령
@@ -100,6 +101,7 @@ python .claude/skills/llm-wiki/scripts/lint.py --save   # wiki 건강 검사
 
 - Tauri 파일 명령은 항상 워크스페이스 스코프 밖 경로 접근을 거부합니다. 심링크는 canonicalize 후 재검사.
 - **셸 실행(`run_shell` 호출 코드)은 항상 실행 전 사용자 확인을 받습니다.** 예외를 만들지 마십시오.
+- **에이전트 세션 격리(D-018)**: 앱이 여는 에이전트 세션은 사용자 전역 설정을 불러오지 않는다(Claude Code: `settingSources: ["project"]`). 셸 도구에는 항상 ask 규칙을 건다(`permissions.ask: ["Bash","PowerShell"]`). "전역 설정 사용" 옵션을 켜도 ask 규칙은 유지한다.
 - **에이전트 권한 정책(D-010)**: 프로젝트 폴더 안 파일 읽기/쓰기만 자동 허용, 셸(`execute`)은 매번 확인(`allow_always` 미노출), 네트워크(`fetch`)는 확인, 프로젝트 밖은 거부. 이 정책은 Rust `agent_host`에서 강제합니다.
 - **앱 소유 프로세스**(프리뷰 서버·export 워커·pnpm install)는 고정 argv 전용 명령으로만 실행하고, UI에서 명령 문자열을 받지 않습니다(D-012).
 - 미리보기 iframe은 별도 origin으로 격리하고 Tauri IPC 권한을 주지 않습니다.

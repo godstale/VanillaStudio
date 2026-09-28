@@ -35,7 +35,9 @@
 
 - **문제**: CLI마다 헤드리스 출력 포맷·권한 모델·세션 재개 방식이 다르다. AGY는 네이티브 ACP 미지원(2026-09 기준, 기능 요청 이슈만 존재).
 - **대응**: ACP로 추상화(Claude Code·Codex는 공식 어댑터, OpenCode·Hermes는 네이티브). 어댑터가 없거나 불안정하면 PTY 터미널로 CLI를 그대로 실행하고 파이프라인은 반자동(사용자가 완료 표시).
-- **잔여 리스크**: 어댑터의 권한 요청 세분화 수준, `fs` capability 사용 여부가 에이전트마다 다를 수 있음 → S3에서 실측, 에이전트별 "지원 매트릭스" 문서화.
+- **잔여 리스크**: 어댑터의 권한 요청 세분화 수준, `fs` capability 사용 여부가 에이전트마다 다를 수 있음.
+  - S3(Claude Code)에서 실측했다. fs 미사용, 읽기 전용 셸은 기본 설정에서 자동 실행된다. 세션 격리 옵션으로 해결했다(`wiki/sources/poc-s3.md`).
+  - Codex는 설치 후 같은 도구로 재검증해 지원 매트릭스를 완성한다.
 
 ### 2.2 결정적 렌더링 (RQ9 동영상·이미지) — 위험도: 높음
 
@@ -45,7 +47,7 @@
   2. R3F `frameloop="demand"` + 호스트가 시간 주입.
   3. HyperFrames의 가상 시간 + seek 어댑터(three.js는 `hf-seek` 이벤트) 활용.
   4. 로딩 완료 신호(`document.fonts.ready`, 텍스처 프리로드) 후 캡처 시작.
-- **잔여 리스크**: HyperFrames는 HTML-first — Vite 빌드 산출물(React SPA)을 composition으로 인식시키는 방식 검증 필요(S1). 실패 시 대안: 자체 CDP 캡처(Chrome `HeadlessExperimental.beginFrame`/가상 시간) + FFmpeg 파이프.
+- **잔여 리스크**: ~~Vite 빌드 산출물을 composition으로 인식시키는 방식~~ → S1 통과(2026-09-29): 빌드된 `index.html` 루트에 composition 속성을 두고 `hf-seek`로 시각 주입, 두 렌더가 바이트 동일. 남은 리스크는 에셋 로딩 대기 누락과 GPU/소프트웨어 렌더러 간 픽셀 차이(골든 테스트는 렌더러 고정).
 
 ### 2.3 수동 조절의 한계 (RQ7) — 위험도: 중
 
@@ -57,6 +59,11 @@
 
 - **문제**: PowerPoint의 도형 모델과 HTML/CSS는 1:1 대응하지 않는다. 셰이더·WebGL·복잡한 CSS 효과는 편집 가능한 도형으로 변환 불가.
 - **대응**: 기본은 이미지 기반 PPTX/PDF(충실도 100%), 편집 가능 PPTX는 Beta(`dom-to-pptx`)로 "텍스트·도형·이미지 레이어만 편집 가능, WebGL은 이미지로 대체". 슬라이드 템플릿은 텍스트를 DOM 텍스트로 유지하도록 권장.
+- **S5 결과(2026-09-29)**: 조건부 통과.
+  - 텍스트는 편집 가능하고 위치도 정확하다.
+  - 웹 폰트 임베드는 PowerPoint가 무시한다 → 시스템·설치 폰트가 조건이다.
+  - 텍스트 상자 폭이 딱 맞아 줄이 넘어간다 → `wrap="none"` 후처리로 해결한다.
+  - 그라데이션 각도·그림자는 근사치다(`wiki/sources/poc-s5.md`).
 
 ### 2.5 심미적 품질 (RQ14) — 위험도: 높음(제품 가치 핵심)
 
@@ -71,11 +78,16 @@
 
 - **문제**: 에이전트가 쓴 코드를 즉시 보려면 번들러가 필요. WebView2(Edge)와 export용 Chrome의 렌더 차이, 여러 WebGL 컨텍스트 메모리.
 - **대응**: 프로젝트별 Vite dev server(HMR) + iframe. 동시 WebGL 미리보기 2개 제한. 최종 확인은 export용 렌더 스냅샷으로.
+- **S4 결과(2026-09-29)**: 반영 p95 34ms, HMR 약 27ms, IPC는 ACL로 차단됐다. 새로 발견한 리스크는 빠른 연속 쓰기 때의 HMR 누락이다. 앱의 파일 감시와 `hmr` 보고 비교, 누락 시 새로고침으로 대응한다(`wiki/sources/poc-s4.md`).
 
 ### 2.7 런타임 의존성 설치 부담 — 위험도: 중
 
 - **문제**: Node 22+, pnpm, 에이전트 CLI와 로그인, FFmpeg, Chrome이 필요해 비개발자에게 장벽.
 - **대응**: Doctor 화면(D-005)에서 단계별 점검·설치 안내, FFmpeg는 앱이 다운로드. 프로젝트 `node_modules`는 pnpm 전역 스토어 공유로 디스크 절약.
+- **S6 결과(2026-09-29)**: 13개 항목 점검 약 5초. 최소 PATH 모의에서 누락 항목마다 해결 방법을 제시했다. FFmpeg는 190MB를 23초에 받아 SHA-256 검증까지 마쳤다.
+  - 새 리스크: 앱 실행 중 설치한 도구가 PATH에 반영되지 않음 → 레지스트리 재조회로 해결.
+  - 새 리스크: FFmpeg "latest" 빌드가 매일 바뀜 → 메이저 계열 고정 + 해시 기록.
+  - 실제 깨끗한 Windows 검증은 P5 릴리스 체크리스트로 넘긴다(`wiki/sources/poc-s6.md`).
 
 ### 2.8 보안 — 위험도: 중
 
@@ -89,8 +101,8 @@
 | Remotion | 4인 이상 조직 유료 | 미채택 |
 | GSAP | 무료(표준 "No Charge" 라이선스) — 단 **Webflow와 경쟁하는 노코드 비주얼 애니메이션 빌더에서의 사용 금지** | 앱 기능은 GSAP 비의존. 에이전트가 생성한 코드 안에서의 사용은 FAQ상 허용(AI 생성 코드). 배포 전 법률 검토 권장 |
 | three.js / R3F / drei / motion / animejs / pptxgenjs | MIT | 사용 가능 |
-| dom-to-pptx | MIT(확인 필요) | Beta 기능, 번들 전 확인 |
-| FFmpeg | LGPL/GPL(빌드별) | 앱에 번들하지 않고 **사용자 동의 후 다운로드**. LGPL 빌드 우선 |
+| dom-to-pptx | MIT (2.1.2 확인, S5) | Beta 기능. 브라우저 번들만 벤더링(npm 의존성에 puppeteer 전체 포함) |
+| FFmpeg | LGPL/GPL(빌드별) | 앱에 번들하지 않고 **사용자 동의 후 다운로드**해 별도 프로세스로 실행. HyperFrames의 MP4 인코딩은 libx264가 필요해 **GPL 빌드**를 받는다(S1). LGPL 빌드는 WebM만 가능. 배포 전 법률 검토 |
 | 폰트·CC0 에셋 | OFL/CC0 | `CREDITS.md` 기록 |
 | DESIGN.md 명세·CLI(`@google/design.md`) | Apache-2.0 (alpha) | 사용 가능, 버전 고정 |
 | HyperFrames FRAME.MD 형식·프리셋 | Apache-2.0(소개 자료 기준) ⚠️ | 참고용. 프리셋 폰트는 개별 라이선스 확인(대부분 Google Fonts OFL로 보임) |
@@ -109,7 +121,8 @@
 - **문제 4 — 교체 후 품질**: 팔레트를 바꾸면 대비가 깨지거나 역할이 어울리지 않을 수 있다.
   - 대응: 역할 쌍 WCAG 대비 경고, 라이트/다크 `scheme` 태그로 템플릿과 맞지 않는 팔레트 표시, 팔레트 비교 스냅샷(F-PAL-07).
 - **문제 5 — 본문과 토큰 불일치**: 팔레트 교체는 front matter만 바꾸므로, 본문에 hex를 적어 두면 설명과 값이 어긋난다.
-  - 대응: 본문은 역할 이름으로만 색을 설명하도록 스킬에서 안내하고, 검증에서 본문의 hex 리터럴을 경고.
+  - 대응(S7 확정): 표준 예제도 본문에 hex를 쓰므로 금지하지 않는다. 적용할 때 본문의 이전 색 값을 새 값으로 함께 바꾼다.
+- **S7 결과(2026-09-29)**: 교체 p95 34ms, 레이아웃 불변, 되돌리면 픽셀 동일, HyperFrames 팔레트 18종 모두 대비 통과. 역할 설계를 "핵심 4 + 파생 5"로 확정했다(`wiki/sources/poc-s7.md`).
 
 ---
 
@@ -126,6 +139,18 @@
 | S7 | `DESIGN.md` 토큰 파이프라인 + 팔레트 교체: HyperFrames 프리셋 수준의 샘플 DESIGN.md를 Vite 플러그인으로 읽어 CSS 변수·`useDesign()` 제공, Bridge `setDesign`으로 교체, `colors`만 다시 쓰기, 공식 CLI `lint` | 교체 반영 < 100ms(DOM·R3F 모두), 본문 바이트 보존 왕복, 파일 수정 시 HMR, 두 팔레트 렌더 결과가 색만 다름, 표준 색 역할로 프리셋 12종 표현 가능 | 앱이 `tokens.css`·`tokens.ts` 생성 파일을 쓰는 방식 / 공식 CLI 대신 자체 검사만 |
 
 PoC 코드는 `spikes/<id>-<topic>/`에 두고, 결과는 `wiki/sources/poc-<id>.md`로 기록한 뒤 기술 설계서의 ⚠️ 항목을 갱신한다.
+
+**진행 현황**
+
+| ID | 상태 | 결과 |
+| --- | --- | --- |
+| S1 | ✅ 통과 (2026-09-29) | MP4 2회 렌더 바이트 동일, 15초 1080p 약 18초. FFmpeg는 GPL 빌드 필요 — `wiki/sources/poc-s1.md` |
+| S3 | ◐ Claude Code 통과 (2026-09-29), Codex 미검증 | 세션 격리 옵션 필요(D-018 제안), MCP stdio·HTTP 모두 동작 — `wiki/sources/poc-s3.md` |
+| S4 | ✅ 통과 (2026-09-29) | Bridge p95 34ms, HMR 27ms, iframe IPC는 ACL로 거부. HMR 연속 쓰기 누락 대응 설계 — `wiki/sources/poc-s4.md` |
+| S7 | ✅ 통과 (2026-09-29) | 교체 p95 34ms, HMR 26ms, 바이트 보존 재작성, 역할 4+5 확정, CSS 변수 `--color-*` — `wiki/sources/poc-s7.md` |
+| S2 | ✅ 통과 (2026-09-29) | @2x 3840×2160 캡처 0.3~0.5초, 준비 신호 필수(대조 실험), 이미지 PPTX·PDF가 PowerPoint에서 정상 — `wiki/sources/poc-s2.md` |
+| S6 | ✅ 통과 (2026-09-29, 깨끗한 PC는 최소 PATH로 모의) | 점검 13종 5초, FFmpeg 다운로드·검증 23초, fresh PATH 필요 — `wiki/sources/poc-s6.md` |
+| S5 | ◐ 조건부 통과 (2026-09-29) | 텍스트 편집·위치 정확. 설치 폰트 조건 + wrap 후처리 필요, 효과는 근사치 → Beta 유지 — `wiki/sources/poc-s5.md` |
 
 ---
 

@@ -1,0 +1,18 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "S4 WebView iframe",
+  "version": "0.0.1",
+  "identifier": "dev.vanilla.spike.s4",
+  "build": {
+    "frontendDist": "../host-dist",
+    "devUrl": "http://localhost:1430",
+    "beforeDevCommand": "pnpm host"
+  },
+  "app": {
+    "windows": [{ "title": "S4 host", "width": 1400, "height": 700 }],
+    "security": {
+      "csp": "default-src 'self'; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; frame-src http://127.0.0.1:*; connect-src 'self' ipc: http://ipc.localhost"
+    }
+  },
+  "bundle": { "active": false, "icon": ["icons/icon.ico"] }
+}

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>S5 slides</title>
+    <style>
+      body { margin: 0; background: #444; }
+      .slide { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: #e9e5db; color: #1b2566; margin-bottom: 40px; font-family: Arial, sans-serif; }
+      .serif { font-family: 'Instrument Serif', Georgia, serif; }
+      .cards { position: absolute; left: 120px; top: 380px; display: flex; gap: 48px; }
+      .card { width: 500px; height: 520px; border-radius: 28px; padding: 40px; box-sizing: border-box; background: linear-gradient(160deg, #ffffff 0%, #dcd6c4 100%); border: 2px solid #b9b3a3; box-shadow: 0 18px 40px rgba(27, 37, 102, 0.18); }
+      .card h3 { margin: 0 0 20px; font-size: 44px; }
+      .card li { font-size: 28px; line-height: 1.5; }
+      .bar { position: absolute; bottom: 140px; width: 150px; background: #1b2566; }
+    </style>
+  </head>
+  <body>
+    <section class="slide" id="s1">
+      <div class="serif" style="position:absolute; left:120px; top:260px; font-size:160px; line-height:1">Vanilla Studio</div>
+      <div id="s1-sub" style="position:absolute; left:126px; top:460px; font-size:44px; letter-spacing:0.04em">Code-built slides, <b>editable</b> in <i>PowerPoint</i></div>
+      <div style="position:absolute; left:126px; bottom:120px; font-size:28px; text-transform:uppercase; opacity:0.7">P3 · PoC S5 · 2026</div>
+    </section>
+
+    <section class="slide" id="s2">
+      <div class="serif" style="position:absolute; left:120px; top:140px; font-size:120px">Three Pillars</div>
+      <div class="cards">
+        <div class="card"><h3>Plan</h3><ul><li>Brief</li><li>Storyboard</li><li>Params</li></ul></div>
+        <div class="card"><h3>Build</h3><ul><li>Assets</li><li>Animation</li><li>Scenes</li></ul></div>
+        <div class="card" style="background:linear-gradient(160deg,#f1ee2e,#e26b4a)"><h3>Ship</h3><ul><li>Video</li><li>Slides</li><li>Web</li></ul></div>
+      </div>
+    </section>
+
+    <section class="slide" id="s3">
+      <div class="serif" style="position:absolute; left:120px; top:120px; font-size:110px">Numbers &amp; Media</div>
+      <div class="bar" style="left:120px; height:320px"></div>
+      <div class="bar" style="left:310px; height:480px"></div>
+      <div class="bar" style="left:500px; height:260px; background:#e26b4a"></div>
+      <svg id="icon" style="position:absolute; left:760px; top:360px" width="200" height="200" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="44" fill="#f1ee2e" stroke="#1b2566" stroke-width="6" />
+        <path d="M30 52 L45 66 L72 36" fill="none" stroke="#1b2566" stroke-width="8" stroke-linecap="round" />
+      </svg>
+      <img id="photo" src="/texture.png" style="position:absolute; left:1040px; top:360px; width:320px; height:320px; border-radius:24px" />
+      <canvas id="c2d" width="400" height="300" style="position:absolute; left:1420px; top:360px"></canvas>
+      <canvas id="gl" width="400" height="300" style="position:absolute; left:1420px; top:700px"></canvas>
+    </section>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -102,7 +102,7 @@
 - **결정**: Google Labs의 [DESIGN.md](https://github.com/google-labs-code/design.md) 형식(Apache-2.0, alpha)을 프로젝트 디자인 시스템의 단일 진실 공급원으로 쓴다.
   - 위치: 프로젝트 루트 `DESIGN.md`. 템플릿은 기본 `DESIGN.md`를 반드시 포함한다.
   - 에이전트: 시각 작업 전 `DESIGN.md`를 읽고 값은 토큰으로만 쓴다(프로젝트 `AGENTS.md`·`vanilla-core` 규칙).
-  - 런타임: Vite 플러그인이 `DESIGN.md`를 읽어 CSS 변수(`--ds-*`)와 `useDesign()`으로 제공한다.
+  - 런타임: Vite 플러그인이 `DESIGN.md`를 읽어 CSS 변수(`--color-*`)와 `useDesign()`으로 제공한다.
   - 소유: Plan 승인 후 토큰 값은 사용자 소유. 에이전트는 수정 요청이 있을 때만 바꾼다.
   - 영상: 선택 파일 `frame.md`(HyperFrames FRAME.MD)로 모션·페이싱 지침을 보조한다. 토큰은 `DESIGN.md`만.
 - **근거**: 에이전트 종류와 무관한 공개 형식이고, 토큰(정확한 값)과 산문(의도)을 한 파일에 담는다. HyperFrames도 같은 파일을 읽어 `:root`에 바인딩하는 방식을 쓴다.
@@ -112,12 +112,16 @@
 
 - **맥락**: 사용자 요청 — "같은 형태 디자인도 컬러 팔레트로 결과물의 느낌이 달라질 수 있으니 팔레트 기능을 기획에 포함".
 - **결정**:
-  - 팔레트는 표준 색 역할(`canvas`·`surface`·`ink`·`ink-muted`·`primary`·`secondary`·`accent`·`line` 필수 + 선택 역할)에 색을 배정한 묶음(`palette.json`).
-  - 적용하면 `DESIGN.md` front matter의 `colors`만 교체한다(본문 보존). 미리보기는 Bridge로 즉시, 저장은 `적용` 시 + 체크포인트. 에이전트 호출 없음.
+  - 팔레트는 표준 색 역할(핵심 4 + 파생 5, 아래 S7 확정)에 색을 배정한 묶음(`palette.json`).
+  - 적용하면 `DESIGN.md` front matter의 `colors`를 교체하고, 본문은 이전 색 값이 적힌 곳만 갱신한다. 미리보기는 Bridge로 즉시, 저장은 `적용` 시 + 체크포인트. 에이전트 호출 없음.
   - 기능: 내장 라이브러리, 편집기(OKLCH·잠금), WCAG 대비 경고, 기준색 조화 생성·자료 이미지 색 추출(로컬 계산), 팔레트 비교 스냅샷.
   - `color` 파라미터 기본값은 토큰 참조를 권장. 사용자가 직접 지정한 값은 팔레트 교체 후에도 유지.
 - **근거**: 형태(템플릿·코드)와 색을 분리하면 재생성 비용 없이 무드를 탐색할 수 있다.
-- **확정 필요**: 색 역할 이름·개수는 S7에서 DESIGN.md 예제와 HyperFrames 프리셋 12종을 표현해 보고 확정한다.
+- **S7 확정(2026-09-29)**:
+  - 역할은 핵심 4개(`canvas`·`ink`·`primary`·`accent`, 필수)와 파생 5개(`surface`·`ink-muted`·`line`·`secondary`·`on-primary`, 대비 보장 자동 계산)로 정했다.
+  - CSS 변수는 공식 CLI와 같은 `--color-*`를 쓴다.
+  - 본문에 적힌 이전 색 값은 적용할 때 함께 갱신한다.
+  - HyperFrames 팔레트 18종 모두 표현되고 대비를 통과했다.
 
 ## D-017 HyperFrames 프리셋·카탈로그는 참고 자료로만 사용 — Accepted (2026-09-29)
 
@@ -128,3 +132,16 @@
   - 앱 안에서 카탈로그를 검색·설치하는 기능(`hyperframes add` 연동)은 MVP에 넣지 않는다.
 - **사용자 결정(2026-09-29)**: 제안대로 승인.
 - **근거**: 저장소는 Apache-2.0이지만 항목별 `license` 필드가 선택이고, GSAP 의존 코드를 앱 번들 템플릿에 넣으면 D-007의 라이선스 원칙과 충돌할 수 있다.
+
+## D-018 에이전트 세션 격리: 사용자 전역 설정을 빼고 셸 ask 규칙 강제 — Accepted (2026-09-29)
+
+- **맥락**: PoC S3.
+  - 기본 설정의 Claude Code는 사용자 전역 `~/.claude`(스킬·커넥터·허용 목록)를 불러온다.
+  - 읽기 전용 셸 명령(`echo` 등)은 권한 요청 없이 실행해 D-010("셸은 매번 확인")을 어긴다.
+  - 전역 커넥터 안내가 에이전트 답변에 섞이고, 컨텍스트·비용도 늘었다(28.5k → 격리 시 21.5k, 비용 약 1/3).
+- **제안**: 앱이 여는 에이전트 세션은 다음 옵션으로 격리한다.
+  - Claude Code: `_meta.claudeCode.options`에 `settingSources: ["project"]`, `settings.permissions.ask: ["Bash", "PowerShell"]`
+  - 다른 에이전트: 동등한 설정을 에이전트 레지스트리의 `sessionOptions`로 관리
+  - 세션은 프로젝트의 `AGENTS.md`/`CLAUDE.md`·프로젝트 스킬(템플릿·`vanilla-core`)만 사용한다.
+- **사용자 결정(2026-09-29)**: 제안대로 승인.
+- **영향**: 사용자의 개인 전역 CLAUDE.md·스킬·MCP 커넥터는 Vanilla 프로젝트 세션에 적용되지 않는다. 필요하면 설정 화면에 "전역 설정 사용(고급)" 토글을 두되, 켜도 셸 ask 규칙은 유지한다.

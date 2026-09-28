@@ -18,10 +18,12 @@
 - [[product-spec]] — 상세 기획서 v0.3
 - [[technical-design]] — 기술 설계서 v0.3
 - [[feasibility-risks]] — 구현 난점·리스크·PoC 계획
+- [[implementation-plan]] — 구현 계획서 v1.0 + TODO (P3)
+- [[golden-samples]] — 골든 샘플 브리프 5종 초안(P5 품질 기준)
 
 ## Planning / Decisions
 
-- [[decisions]] — 결정 기록 색인 (D-001~D-017, 모두 Accepted)
+- [[decisions]] — 결정 기록 색인 (D-001~D-018, 모두 Accepted)
 
 ## Research
 
@@ -59,7 +61,15 @@
 - [[DevelopmentPhases]] — 개발 단계 P0~P7 (플레이북: `Docs/Playbook/`)
 - [[phase-p0-setup]] — P0 준비 로그
 - [[phase-p2-planning]] — P2 상세 기획 로그
-- PoC 로그 (P3): `poc-S1` ~ `poc-S7` — 예정
+- [[phase-p3-implementation-plan]] — P3 구현 계획(+PoC·TODO) 로그
+- PoC 로그 (P3):
+  - [[poc-s1]] — HyperFrames로 React+R3F MP4 렌더 ✅ 통과
+  - [[poc-s3]] — Rust ACP 클라이언트로 Claude Code 구동 ◐ (Claude 통과, Codex 미검증)
+  - [[poc-s4]] — WebView2 iframe 미리보기 + Bridge ✅ 통과
+  - [[poc-s7]] — DESIGN.md 토큰 파이프라인 + 팔레트 교체 ✅ 통과
+  - [[poc-s2]] — 스틸 캡처 @2x + 이미지 PPTX/PDF ✅ 통과
+  - [[poc-s6]] — Windows Doctor + FFmpeg 다운로드 ✅ 통과
+  - [[poc-s5]] — dom-to-pptx 편집 가능 PPTX ◐ 조건부 통과(Beta 유지)
 - 마일스톤 로그 (P4): `milestone-M0` ~ — 예정
 
 ## Syntheses

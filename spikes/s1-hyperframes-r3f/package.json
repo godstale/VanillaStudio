@@ -1,0 +1,25 @@
+{
+  "name": "spike-s1-hyperframes-r3f",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "render": "node scripts/render-twice.mjs"
+  },
+  "dependencies": {
+    "@react-three/fiber": "^9.3.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "three": "^0.179.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@types/three": "^0.179.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "hyperframes": "0.8.82",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.0"
+  }
+}

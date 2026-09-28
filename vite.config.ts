@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import { configDefaults } from 'vitest/config';
 
 export default defineConfig({
   plugins: [react()],
@@ -21,6 +22,7 @@ export default defineConfig({
         '**/*.db-*',
         '**/*.sqlite*',
         '**/logs/**',
+        '**/spikes/**',
       ],
     },
   },
@@ -28,5 +30,7 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     passWithNoTests: true,
+    // spikes/ are throwaway PoCs with their own toolchain and cwd-relative fixtures.
+    exclude: [...configDefaults.exclude, 'spikes/**'],
   },
 });

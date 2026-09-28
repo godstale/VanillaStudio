@@ -1,0 +1,1 @@
+{"name":"s3-deps","private":true,"dependencies":{"@agentclientprotocol/claude-agent-acp":"^0.83.0","@modelcontextprotocol/sdk":"^1.30.1","zod":"^4.6.5"}}

@@ -1,4 +1,3 @@
-
 # Wiki Log (append-only)
 
 > 형식: `## [YYYY-MM-DD] <type> | <title>` + 한두 줄. type: ingest · decision · phase · research · poc · milestone · lint · update
@@ -47,3 +46,69 @@
 
 ## [2026-09-29] lint | Wiki health check
 - 36 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] phase | P3 구현 계획 시작
+- 기획 브랜치를 master에 병합·origin 푸시 후 PoC 착수. → [[DevelopmentPhases]]
+
+## [2026-09-29] poc | S1 HyperFrames + React/R3F 렌더 통과
+- MP4 2회 렌더 바이트 동일(450프레임, 약 18초). 워커 첫 프레임 경쟁 조건 해결, FFmpeg GPL 빌드 필요. → [[poc-s1]]
+
+## [2026-09-29] lint | Wiki health check
+- 37 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] poc | S3 Rust ACP + Claude Code (조건부 통과)
+- 세션·스트리밍·권한·MCP(stdio/HTTP)·취소 동작. 기본 설정은 읽기 전용 셸을 확인 없이 실행 → 세션 격리 필요. Codex 미검증. → [[poc-s3]]
+
+## [2026-09-29] decision | D-018 Proposed
+- 에이전트 세션 격리: 사용자 전역 설정 제외 + 셸 ask 규칙. → [[decisions]], [[PermissionPolicy]]
+
+## [2026-09-29] lint | Wiki health check
+- 38 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] poc | S4 WebView2 iframe + Bridge 통과
+- 반영 p95 34ms, HMR 27ms, iframe IPC는 ACL 거부. 연속 쓰기 HMR 누락 발견 → 파일 감시·reload 대응 설계. → [[poc-s4]]
+
+## [2026-09-29] lint | Wiki health check
+- 39 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] poc | S7 DESIGN.md 토큰 파이프라인 통과
+- 교체 p95 34ms, HMR 26ms, 바이트 보존 재작성. 역할 핵심 4 + 파생 5, CSS 변수 `--color-*`로 설계 수정. → [[poc-s7]]
+
+## [2026-09-29] lint | Wiki health check
+- 40 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] poc | S2 스틸 캡처 + 이미지 PPTX/PDF 통과
+- @2x 캡처 0.3~0.5초, 준비 신호 없으면 WebGL 누락·대체 폰트(대조 실험). PowerPoint COM으로 PPTX 검증. → [[poc-s2]]
+
+## [2026-09-29] lint | Wiki health check
+- 41 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] poc | S6 Windows Doctor + FFmpeg 다운로드 통과
+- 13개 항목 5초, 최소 PATH 모의, FFmpeg 190MB·SHA-256 23초. fresh PATH·FFmpeg 버전 고정 필요. → [[poc-s6]]
+
+## [2026-09-29] lint | Wiki health check
+- 42 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] poc | S5 dom-to-pptx 편집 PPTX 조건부 통과
+- 텍스트 편집·위치 정확. 웹 폰트는 PowerPoint가 무시(설치 폰트 조건), wrap 후처리 필요, 효과는 근사치 → Beta 유지. → [[poc-s5]]
+
+## [2026-09-29] lint | Wiki health check
+- 43 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] ingest | 구현 계획서 v1.0 + TODO
+- 마일스톤 M1~M7, TODO 98개 항목(대상·완료 판정·선행·기능 ID). → [[implementation-plan]]
+
+## [2026-09-29] phase | P3 구현 계획 완료
+- PoC 7건, 설계 반영, 계획서·TODO. 다음: P4 M1. → [[phase-p3-implementation-plan]]
+
+## [2026-09-29] lint | Wiki health check
+- 45 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] decision | D-018 Accepted
+- 에이전트 세션 격리(전역 설정 제외 + 셸 ask 규칙) 사용자 승인. AGENTS.md §7 반영. → [[decisions]], [[PermissionPolicy]]
+
+## [2026-09-29] ingest | 골든 샘플 초안
+- 유형별 5종(G1~G5), 자동 검사 A1~A7 + 루브릭. 사용자 확정 대기. → [[golden-samples]]
+
+## [2026-09-29] lint | Wiki health check
+- 46 pages, orphans 0, broken links 0. → `wiki/lint-report.md`

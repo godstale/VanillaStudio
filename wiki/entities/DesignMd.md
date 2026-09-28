@@ -15,14 +15,16 @@ last_updated: 2026-09-29
 
 - 프로젝트 루트 `DESIGN.md`가 색·타이포·간격의 단일 진실 공급원이다.
 - 흐름: 템플릿의 DESIGN.md → Brief 단계에서 팔레트를 적용한 초기본 → Plan 단계에서 에이전트가 다듬고 사용자가 승인 → 이후 토큰 값은 사용자 소유.
-- 바인딩: 런타임 Vite 플러그인이 CSS 변수 `--ds-*`와 `useDesign()`으로 제공한다(기술 설계서 §4.4).
+- 바인딩: 런타임 Vite 플러그인이 CSS 변수 `--color-*`와 `useDesign()`으로 제공한다(기술 설계서 §4.4).
 - 영상 프로젝트는 HyperFrames의 `frame.md`로 모션·페이싱 지침을 보조한다.
 - 팔레트 교체는 `colors`만 바꾼다. → [[ColorPalette]]
 
 ## Pitfalls
 
 - alpha 형식이라 바뀔 수 있다. 자체 스키마로 관대하게 읽고, 모르는 키는 보존하고, CLI는 버전을 고정한다.
-- 본문에 hex를 적으면 팔레트 교체 후 설명과 값이 어긋난다. 본문에서는 역할 이름으로만 색을 설명한다.
+- 본문에 적힌 hex는 팔레트를 적용할 때 앱이 함께 갱신한다. 표준 예제도 본문에 hex를 쓰므로 금지하지 않는다(S7).
+- front matter가 없는 산문형 DESIGN.md가 실제로 있다(HyperFrames 저장소). 파서는 "토큰 없음"으로 알린다.
+- 공식 CLI는 stdin이 열려 있으면 멈춘다. 워커는 stdin을 닫고 실행한다.
 
 ## Appearances
 
@@ -30,3 +32,4 @@ last_updated: 2026-09-29
 - [[product-spec]] — §8.1
 - [[technical-design]] — §4.4
 - [[decisions]] — D-015
+- [[poc-s7]] — 토큰 파이프라인 검증

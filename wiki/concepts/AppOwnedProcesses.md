@@ -12,3 +12,9 @@ last_updated: 2026-09-29
 
 - [[technical-design]] — §6
 - [[decisions]] — D-012
+
+## Pitfalls
+
+- Windows 명령 shim: `.ps1`/`.cmd`/확장자 없는 스크립트가 함께 설치된다. PATHEXT 순서로 직접 해석하고 `.cmd`를 쓴다 → [[poc-s6]]
+- 앱 PATH는 실행 시점에 고정된다. 자식 프로세스에는 레지스트리에서 새로 읽은 PATH를 넘긴다.
+- CLI는 stdin이 열려 있으면 입력을 기다리며 멈출 수 있다(`@google/design.md`). 항상 stdin을 닫는다 → [[poc-s7]]
