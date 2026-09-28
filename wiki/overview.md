@@ -10,7 +10,7 @@ last_updated: 2026-09-29
 
 - 개발 단계: **P3 완료 → P4 구현 착수 대기**. ▶ **진입점: 웨이브 0 (TODO T1.1 → T1.3, 단독 세션)**. 병렬 배치는 [[parallel-execution]] (`Docs/Planning/Parallel-Execution.md`)
 - PoC S1~S7 완료(통과 5, 조건부 2), 계획: [[implementation-plan]] (`Docs/Planning/TODO.md`)
-- 브랜치: master(P3까지 병합, origin push). `Docs/images/`는 로컬 전용(.gitignore)
+- 브랜치: main(2026-09-29 master에서 이름 변경; P3까지 병합). `Docs/images/`는 로컬 전용(.gitignore)
 - 2026-09-29 기획 보강: [[DesignMd]] 표준 채택(D-015), [[ColorPalette]] 기능(D-016), HyperFrames 참고 자료 보관(D-017) → 기획서·설계서 v0.2, PoC S7 추가
 - 결정 D-001~D-018 모두 Accepted (D-018 에이전트 세션 격리 2026-09-29 승인)
 - 골든 샘플 초안: [[golden-samples]] — 사용자 확정 대기 D-011은 범위 수정: 시간 함수 계약은 영상·이미지(캡처) 유형만 ([[decisions]])

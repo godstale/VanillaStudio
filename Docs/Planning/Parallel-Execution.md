@@ -11,10 +11,10 @@
 
 | 순서 | 무엇을 | 누가 | 브랜치 / 워크트리 |
 | --- | --- | --- | --- |
-| **1 (지금)** | **웨이브 0**: T1.1 기준선 확인 → T1.3 pnpm 워크스페이스 도입 | 단독 세션 1개 | `feat/m1-foundation`(통합 브랜치, master에서 생성) → 작업 브랜치 `feat/m1-w0-workspace` |
+| **1 (지금)** | **웨이브 0**: T1.1 기준선 확인 → T1.3 pnpm 워크스페이스 도입 | 단독 세션 1개 | `feat/m1-foundation`(통합 브랜치, main에서 생성) → 작업 브랜치 `feat/m1-w0-workspace` |
 | 2 | 웨이브 0 병합 후 **웨이브 1**: 레인 A·B·C·D 동시 시작 | 세션 4개 | 레인별 워크트리 (§3) |
 | 3 | 웨이브 1의 선행 항목이 끝나면 **웨이브 2**: M1 통합 레인 B′·C′ | 세션 2개 | §3 |
-| 4 | T1.18 M1 마무리 → 사용자 확인 → master 병합 | 조정 세션 | — |
+| 4 | T1.18 M1 마무리 → 사용자 확인 → main 병합 | 조정 세션 | — |
 
 웨이브 0을 먼저 하는 이유: T1.3이 루트 `package.json`·`pnpm-workspace.yaml`·`tsconfig`·`eslint.config.js`·vitest 설정을 바꾼다. 모든 레인이 공유하는 파일이라 병렬 작업 전에 확정해야 충돌이 없다.
 
@@ -84,7 +84,7 @@ M2(에이전트)와 M3(파이프라인)의 레인 배치는 M1을 마무리할 �
 
 ```powershell
 # 조정 세션(또는 웨이브 0 세션)이 1회
-git checkout master
+git checkout main
 git checkout -b feat/m1-foundation            # M1 통합 브랜치
 
 # 웨이브 0
@@ -110,7 +110,7 @@ git worktree remove ../VanillaStudio-m1-a
 - **병합**: 레인 세션은 자기 브랜치에 커밋만 한다. `feat/m1-foundation`으로의 병합은 **조정 세션**이 한다.
   - 병합 전: 레인 브랜치를 최신 `feat/m1-foundation`에 rebase하고, 검증을 다시 돌린다.
   - 병합 순서(웨이브 1): C → B → A → D. 파일이 겹치는 정도가 적은 순서다.
-  - master 병합과 **push는 사용자 승인 후**에만 한다.
+  - main 병합과 **push는 사용자 승인 후**에만 한다.
 
 ---
 
@@ -163,7 +163,7 @@ wiki 기록 제안(Pitfalls 등): …
 ```text
 Vanilla Studio P4 구현 웨이브 0을 수행하라.
 - 먼저 AGENTS.md, Docs/Planning/Parallel-Execution.md, Docs/Planning/TODO.md(M1), Docs/Planning/Implementation-Plan.md를 읽어라.
-- master에서 feat/m1-foundation을 만들고, 거기서 feat/m1-w0-workspace 브랜치를 만든다.
+- main에서 feat/m1-foundation을 만들고, 거기서 feat/m1-w0-workspace 브랜치를 만든다.
 - TODO T1.1(pnpm tauri dev 기준선), T1.3(pnpm 워크스페이스: packages/runtime, packages/export-worker 빈 패키지, 루트 lint·typecheck·test가 패키지까지 통과)을 순서대로 수행하라.
 - spikes/는 lint·test 대상에서 계속 제외한다.
 - 끝나면 Parallel-Execution.md §5 형식으로 보고하고, feat/m1-foundation 병합은 승인 후에 하라. push 금지.
@@ -215,4 +215,4 @@ Vanilla Studio P4 구현, 레인 {{LANE}}을 수행하라.
 | 1 | D 런타임·디자인 | `feat/m1-d-runtime` | 대기 | — | M4a 선행분 |
 | 2 | B′ Doctor UI·설치 | `feat/m1-b2-doctor-ui` | 대기 | — | A·B 병합 후 |
 | 2 | C′ 스캐폴딩·마법사 | `feat/m1-c2-scaffold` | 대기 | — | A·B·C 병합 후 |
-| — | M1 마무리(T1.18) | `feat/m1-foundation` → master | 대기 | — | 사용자 확인 |
+| — | M1 마무리(T1.18) | `feat/m1-foundation` → main | 대기 | — | 사용자 확인 |

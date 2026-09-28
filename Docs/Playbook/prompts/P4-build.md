@@ -23,7 +23,7 @@
 
 ```text
 Docs/Planning/TODO.md의 마일스톤 {{MILESTONE}}을 시작하라.
-- AGENTS.md의 git 규칙대로 master에서 {{BRANCH}} 브랜치를 만든다.
+- AGENTS.md의 git 규칙대로 main에서 {{BRANCH}} 브랜치를 만든다.
 - wiki/index.md에서 관련 지식(결정·PoC·개념)을 먼저 조회하라.
 - TODO 순서대로 진행하고, 항목마다 테스트 → 커밋(Conventional Commits) → TODO 체크.
 - 설계와 다르게 구현해야 하면 멈추고 이유와 대안을 보고하라.

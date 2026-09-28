@@ -89,13 +89,13 @@ python .claude/skills/llm-wiki/scripts/lint.py --save   # wiki 건강 검사
 
 ## 6. Git / 커밋 규칙
 
-- **기본 브랜치(master)에 직접 커밋하지 않습니다.** 시작 시 `git status -sb` → `git checkout master`(원격이 있으면 `git pull --ff-only`) → `git checkout -b <type>/<short-topic>`.
+- **기본 브랜치(main)에 직접 커밋하지 않습니다.** 시작 시 `git status -sb` → `git checkout main`(원격이 있으면 `git pull --ff-only`) → `git checkout -b <type>/<short-topic>`.
   브랜치 접두어: `feat/`·`fix/`·`chore/`·`docs/`·`refactor/`·`test/`·`spike/`(PoC).
 - **작게 나누어 자주 커밋.** 하나의 커밋 = 하나의 논리 변경. Conventional Commits(`feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `test:`).
 - **`git push`는 사용자의 명시적 승인 없이 실행하지 않습니다.**
 - `--no-verify`, `--force`, `git reset --hard` 등 파괴적/훅 우회 명령은 사용자 명시 지시 없이 사용 금지.
 - 비밀 정보 커밋 금지. `.env`, `*.db*`, `.vanilla/`는 커밋하지 않습니다.
-- **같은 브랜치에서 2개 이상의 에이전트/작업이 동시에 작업하지 않습니다.** 병렬 구현은 `Docs/Planning/Parallel-Execution.md`의 레인·워크트리·소유 경로 규칙을 따릅니다. 병렬 작업은 `git worktree add ../VanillaStudio-<topic> -b feat/<topic> master`, 끝나면 `git worktree remove`.
+- **같은 브랜치에서 2개 이상의 에이전트/작업이 동시에 작업하지 않습니다.** 병렬 구현은 `Docs/Planning/Parallel-Execution.md`의 레인·워크트리·소유 경로 규칙을 따릅니다. 병렬 작업은 `git worktree add ../VanillaStudio-<topic> -b feat/<topic> main`, 끝나면 `git worktree remove`.
 - **시작/중간/마지막 git 체크**: 시작(`git status -sb`, `git branch --show-current`) · 중간(범위 이탈 확인, 논리 단위 커밋) · 마지막(`git status -sb`, `git log --oneline -5`, 검증 결과 보고, push는 승인 후).
 
 ## 7. 안전/보안 원칙 (특히 중요)

@@ -118,3 +118,6 @@
 
 ## [2026-09-29] lint | Wiki health check
 - 47 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] update | 기본 브랜치 이름 변경
+- `master` → `main`. AGENTS.md·구현 계획·병렬 실행 가이드·P4 프롬프트의 브랜치 이름 갱신(과거 기록은 그대로). → [[overview]]
