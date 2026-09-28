@@ -20,6 +20,7 @@
 - [[feasibility-risks]] — 구현 난점·리스크·PoC 계획
 - [[implementation-plan]] — 구현 계획서 v1.0 + TODO (P3)
 - [[golden-samples]] — 골든 샘플 브리프 5종 초안(P5 품질 기준)
+- [[parallel-execution]] — 병렬 실행 가이드: 웨이브·레인·워크트리·세션 프롬프트 (P4 진입점)
 
 ## Planning / Decisions
 

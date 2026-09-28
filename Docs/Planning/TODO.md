@@ -5,28 +5,34 @@
 - 공통 완료 조건: `pnpm lint`·`typecheck`·`test`가 통과해야 한다(Rust 변경 시 `cargo test`도). UI 문구는 ko/en 사전에 추가하고, 색상은 시맨틱 토큰만 쓴다(AGENTS.md §3).
 - 항목을 끝내면 체크하고 커밋한다. 마일스톤을 끝내면 `wiki/sources/milestone-mN.md`를 작성한다.
 
+## ▶ 진입점 (2026-09-29)
+
+- **다음 작업: 웨이브 0 — T1.1 → T1.3 (단독 세션 1개)**. 브랜치는 `feat/m1-foundation` → `feat/m1-w0-workspace`.
+- 그다음은 웨이브 1 병렬 레인 A·B·C·D, 웨이브 2 레인 B′·C′다. 배치·워크트리·공유 파일 규칙·세션 시작 프롬프트는 **`Docs/Planning/Parallel-Execution.md`**에 있다.
+- 항목의 `[레인 X · Wn]` 태그는 담당 레인과 웨이브를 뜻한다. 태그가 없는 항목(M2 이후)은 M1 마무리 때 배치한다.
+
 ---
 
 ## M1 기반 (branch: `feat/m1-foundation`)
 
-- [ ] T1.1 `pnpm tauri dev` 기준선 확인, 실패 시 원인 기록 — 대상: 없음(실행) · 완료 판정: 앱 창이 뜬다, P0 로그 갱신 · 선행: —
-- [ ] T1.2 브랜딩 교체(앱 이름·identifier·창 제목·아이콘 자리) — 대상: `src-tauri/tauri.conf.json`, `BRANDING.md` 절차, `src/components/brand/*` · 완료 판정: 창 제목 "Vanilla Studio", identifier `dev.vanilla.studio` · 선행: T1.1
-- [ ] T1.3 pnpm 워크스페이스 도입 결정·구성(`packages/runtime`, `packages/export-worker` 빈 패키지) — 대상: `pnpm-workspace.yaml`, `packages/*/package.json`, 루트 `tsconfig`·`eslint.config.js`·vitest include · 완료 판정: 루트 lint·typecheck·test가 패키지까지 통과 · 선행: T1.1
-- [ ] T1.4 템플릿 예제 도메인 제거(collections, extensions: 컴포넌트·lib·i18n 키·DB 테이블·테스트) — 대상: `src/components/{collections,extensions}`, `src/lib/{collections,extensions}`, `src/lib/i18n/dictionaries/*`, 마이그레이션 · 완료 판정: 참조 0건(grep), 앱 실행 정상 · 선행: T1.1
-- [ ] T1.5 보안 기본값 조정: `assetProtocol.scope` 축소, CSP `frame-src http://127.0.0.1:*` — 대상: `src-tauri/tauri.conf.json`, `src-tauri/capabilities/*` · 완료 판정: capability에 `remote.urls` 없음, 설계서 §10 표와 일치 · 선행: T1.2
-- [ ] T1.6 프로젝트 DB 경로 `.app-data` → `.vanilla`, 전역·프로젝트 마이그레이션 골격(agents, palettes, templates, playground_items, doctor_cache / pipeline_state, task_runs, agent_sessions, reviews, export_jobs) — 대상: `src/lib/db/migrations/*.sql`, `src/lib/db/client.ts` · 완료 판정: 마이그레이션 테스트 통과 · 선행: T1.4
-- [ ] T1.7 `vanilla.json` zod 스키마 + 타입(유형·규격·템플릿·팔레트·에이전트·런타임 버전) — 대상: `src/lib/project/schema.ts`, `src/lib/types/project.ts` · 완료 판정: 유효·무효 예제 단위 테스트 · 선행: T1.3 · (F-PRJ-01)
-- [ ] T1.8 Rust 프로세스 실행 공통 모듈: PATHEXT 해석, 레지스트리 fresh PATH, stdin 닫기, `CREATE_NO_WINDOW`, 타임아웃, Job Object 트리 종료 — 대상: `src-tauri/src/process/mod.rs` · 완료 판정: `cargo test`(해석·타임아웃), S6 `doctor-probe` 로직 이관 · 선행: T1.1
-- [ ] T1.9 Doctor Rust 명령(`doctor_check`) — 대상: `src-tauri/src/commands/doctor_commands.rs` · 완료 판정: 13개 항목 JSON, S6 결과와 같은 판정, 테스트(버전 비교·FFmpeg 판정) · 선행: T1.8 · (F-ENV-01)
-- [ ] T1.10 FFmpeg 다운로드 명령(진행률 Channel, SHA-256, 메이저 계열 고정, 해시 기록, 취소) — 대상: `doctor_commands.rs`, 앱 데이터 `tools/ffmpeg/` · 완료 판정: 실제 다운로드 후 `libx264=true`, 해시 불일치 시 삭제 테스트 · 선행: T1.9 · (F-ENV-01)
-- [ ] T1.11 Doctor 화면(설정 탭 + 웰컴 요약 배지, 재점검, 설치 안내, 다운로드 동의 다이얼로그) — 대상: `src/components/doctor/*`, `src/pages/Settings/*`, i18n · 완료 판정: 최소 PATH 모의에서 누락 항목마다 해결 방법이 표시됨 · 선행: T1.10 · (F-ENV-01)
-- [ ] T1.12 프로젝트 스캐폴딩 원본(`resources/project-template/`: `vanilla.json`, `AGENTS.md`, `CLAUDE.md`, 기본 `DESIGN.md`, `package.json`, `vite.config.ts`, `index.html`, `src/main.tsx`, `.gitignore`) — 대상: `resources/project-template/**`, `resources/design/DESIGN.md` · 완료 판정: 복사한 폴더에서 `pnpm install && pnpm dev` 동작 · 선행: T1.3
-- [ ] T1.13 스캐폴딩 Rust 명령(템플릿 복사, 변수 치환, 워크스페이스 스코프 검사) — 대상: `src-tauri/src/commands/project_commands.rs` · 완료 판정: `cargo test`로 결과 트리 검증, 스코프 밖 경로 거부 · 선행: T1.12, T1.8 · (F-PRJ-02)
-- [ ] T1.14 새 프로젝트 마법사 UI(유형·규격·템플릿(없음)·팔레트(기본)·에이전트·폴더) — 대상: `src/components/project/NewProjectWizard.tsx`, `src/lib/project/*`, i18n · 완료 판정: 마법사 완료 시 폴더 생성 + 탭 열림 · 선행: T1.7, T1.13 · (F-PRJ-01, F-DSN-01)
-- [ ] T1.15 앱 소유 프로세스: 의존성 설치(`pnpm install`, 마법사 1회 동의, `package.json` 변경 시 재확인) — 대상: `src-tauri/src/commands/process_commands.rs` · 완료 판정: 고정 argv만 허용(테스트), 진행 로그 표시 · 선행: T1.8, T1.14 · (D-012)
-- [ ] T1.16 프로젝트 열기·최근 프로젝트·폴더 신뢰 확인(템플릿 기능 재사용) — 대상: `src/lib/project/*`, `src/components/workspace/*` · 완료 판정: 재실행 후 최근 목록에서 열림, 신뢰 전에는 에이전트 기능 비활성 · 선행: T1.14 · (F-PRJ-03)
-- [ ] T1.17 액티비티바·탭 타입 등록(pipeline·explorer·agent·templates·playground, welcome·brief·plan·prompts·design·review·export 등 빈 뷰) — 대상: `src/components/layout/*`, `Docs/Extension-Guide.md` 절차 · 완료 판정: 모든 탭이 빈 상태로 열림 · 선행: T1.4
-- [ ] T1.18 M1 마무리: 데모 수행, `wiki/sources/milestone-m1.md`, 문서 동기화 · 완료 판정: 계획서 §2 M1 데모 ①~④ · 선행: T1.1~T1.17
+- [ ] ▶ T1.1 [단독 · W0] `pnpm tauri dev` 기준선 확인, 실패 시 원인 기록 — 대상: 없음(실행) · 완료 판정: 앱 창이 뜬다, P0 로그 갱신 · 선행: —
+- [ ] T1.2 [레인 A · W1] 브랜딩 교체(앱 이름·identifier·창 제목·아이콘 자리) — 대상: `src-tauri/tauri.conf.json`, `BRANDING.md` 절차, `src/components/brand/*` · 완료 판정: 창 제목 "Vanilla Studio", identifier `dev.vanilla.studio` · 선행: T1.1
+- [ ] T1.3 [단독 · W0] pnpm 워크스페이스 도입 결정·구성(`packages/runtime`, `packages/export-worker` 빈 패키지) — 대상: `pnpm-workspace.yaml`, `packages/*/package.json`, 루트 `tsconfig`·`eslint.config.js`·vitest include · 완료 판정: 루트 lint·typecheck·test가 패키지까지 통과 · 선행: T1.1
+- [ ] T1.4 [레인 A · W1] 템플릿 예제 도메인 제거(collections, extensions: 컴포넌트·lib·i18n 키·DB 테이블·테스트) — 대상: `src/components/{collections,extensions}`, `src/lib/{collections,extensions}`, `src/lib/i18n/dictionaries/*`, 마이그레이션 · 완료 판정: 참조 0건(grep), 앱 실행 정상 · 선행: T1.1
+- [ ] T1.5 [레인 A · W1] 보안 기본값 조정: `assetProtocol.scope` 축소, CSP `frame-src http://127.0.0.1:*` — 대상: `src-tauri/tauri.conf.json`, `src-tauri/capabilities/*` · 완료 판정: capability에 `remote.urls` 없음, 설계서 §10 표와 일치 · 선행: T1.2
+- [ ] T1.6 [레인 A · W1] 프로젝트 DB 경로 `.app-data` → `.vanilla`, 전역·프로젝트 마이그레이션 골격(agents, palettes, templates, playground_items, doctor_cache / pipeline_state, task_runs, agent_sessions, reviews, export_jobs) — 대상: `src/lib/db/migrations/*.sql`, `src/lib/db/client.ts` · 완료 판정: 마이그레이션 테스트 통과 · 선행: T1.4
+- [ ] T1.7 [레인 C · W1] `vanilla.json` zod 스키마 + 타입(유형·규격·템플릿·팔레트·에이전트·런타임 버전) — 대상: `src/lib/project/schema.ts`, `src/lib/types/project.ts` · 완료 판정: 유효·무효 예제 단위 테스트 · 선행: T1.3 · (F-PRJ-01)
+- [ ] T1.8 [레인 B · W1] Rust 프로세스 실행 공통 모듈: PATHEXT 해석, 레지스트리 fresh PATH, stdin 닫기, `CREATE_NO_WINDOW`, 타임아웃, Job Object 트리 종료 — 대상: `src-tauri/src/process/mod.rs` · 완료 판정: `cargo test`(해석·타임아웃), S6 `doctor-probe` 로직 이관 · 선행: T1.1
+- [ ] T1.9 [레인 B · W1] Doctor Rust 명령(`doctor_check`) — 대상: `src-tauri/src/commands/doctor_commands.rs` · 완료 판정: 13개 항목 JSON, S6 결과와 같은 판정, 테스트(버전 비교·FFmpeg 판정) · 선행: T1.8 · (F-ENV-01)
+- [ ] T1.10 [레인 B · W1] FFmpeg 다운로드 명령(진행률 Channel, SHA-256, 메이저 계열 고정, 해시 기록, 취소) — 대상: `doctor_commands.rs`, 앱 데이터 `tools/ffmpeg/` · 완료 판정: 실제 다운로드 후 `libx264=true`, 해시 불일치 시 삭제 테스트 · 선행: T1.9 · (F-ENV-01)
+- [ ] T1.11 [레인 B′ · W2] Doctor 화면(설정 탭 + 웰컴 요약 배지, 재점검, 설치 안내, 다운로드 동의 다이얼로그) — 대상: `src/components/doctor/*`, `src/pages/Settings/*`, i18n · 완료 판정: 최소 PATH 모의에서 누락 항목마다 해결 방법이 표시됨 · 선행: T1.10 · (F-ENV-01)
+- [ ] T1.12 [레인 C · W1] 프로젝트 스캐폴딩 원본(`resources/project-template/`: `vanilla.json`, `AGENTS.md`, `CLAUDE.md`, 기본 `DESIGN.md`, `package.json`, `vite.config.ts`, `index.html`, `src/main.tsx`, `.gitignore`) — 대상: `resources/project-template/**`, `resources/design/DESIGN.md` · 완료 판정: 복사한 폴더에서 `pnpm install && pnpm dev` 동작 · 선행: T1.3
+- [ ] T1.13 [레인 C′ · W2] 스캐폴딩 Rust 명령(템플릿 복사, 변수 치환, 워크스페이스 스코프 검사) — 대상: `src-tauri/src/commands/project_commands.rs` · 완료 판정: `cargo test`로 결과 트리 검증, 스코프 밖 경로 거부 · 선행: T1.12, T1.8 · (F-PRJ-02)
+- [ ] T1.14 [레인 C′ · W2] 새 프로젝트 마법사 UI(유형·규격·템플릿(없음)·팔레트(기본)·에이전트·폴더) — 대상: `src/components/project/NewProjectWizard.tsx`, `src/lib/project/*`, i18n · 완료 판정: 마법사 완료 시 폴더 생성 + 탭 열림 · 선행: T1.7, T1.13 · (F-PRJ-01, F-DSN-01)
+- [ ] T1.15 [레인 B′ · W2] 앱 소유 프로세스: 의존성 설치(`pnpm install`, 마법사 1회 동의, `package.json` 변경 시 재확인) — 대상: `src-tauri/src/commands/process_commands.rs` · 완료 판정: 고정 argv만 허용(테스트), 진행 로그 표시 · 선행: T1.8, T1.14 · (D-012)
+- [ ] T1.16 [레인 C′ · W2] 프로젝트 열기·최근 프로젝트·폴더 신뢰 확인(템플릿 기능 재사용) — 대상: `src/lib/project/*`, `src/components/workspace/*` · 완료 판정: 재실행 후 최근 목록에서 열림, 신뢰 전에는 에이전트 기능 비활성 · 선행: T1.14 · (F-PRJ-03)
+- [ ] T1.17 [레인 A · W1] 액티비티바·탭 타입 등록(pipeline·explorer·agent·templates·playground, welcome·brief·plan·prompts·design·review·export 등 빈 뷰) — 대상: `src/components/layout/*`, `Docs/Extension-Guide.md` 절차 · 완료 판정: 모든 탭이 빈 상태로 열림 · 선행: T1.4
+- [ ] T1.18 [레인 조정 · 마무리] M1 마무리: 데모 수행, `wiki/sources/milestone-m1.md`, 문서 동기화 · 완료 판정: 계획서 §2 M1 데모 ①~④ · 선행: T1.1~T1.17
 
 ## M2 에이전트 (branch: `feat/m2-agents`)
 
@@ -52,7 +58,7 @@
 - [ ] T3.2 Brief 편집기(구조화 폼 + 자유 서술, 브랜드 색·폰트 입력) + 자료 업로드(`brief/materials/`, 라이선스 메모) — 대상: `src/components/pipeline/brief/*` · 완료 판정: `brief/brief.md` 생성·재열기 · 선행: T3.1 · (F-PIP-01)
 - [ ] T3.3 프롬프트 프리앰블(영문) Plan·Prompts·Build·Revision + 조립기(파일 경로 참조, 출력 언어) — 대상: `src/lib/pipeline/prompts/*.md`, `src/lib/pipeline/assemble.ts` · 완료 판정: 조립 결과 스냅샷 테스트 · 선행: T3.1
 - [ ] T3.4 `plan.json` zod 스키마(`design` 필드, 토큰 참조 기본값) — 대상: `src/lib/pipeline/schemas/plan.ts` · 완료 판정: 예제 유효·무효 테스트 · 선행: T1.7
-- [ ] T3.5 `src/lib/design` 이관(S7 파서·재작성·역할 파생·대비) + 테스트 이관 — 대상: `src/lib/design/*` · 완료 판정: S7 테스트 10개 통과 · 선행: T1.3 · (F-DSN-02)
+- [ ] T3.5 [레인 D · W1] `src/lib/design` 이관(S7 파서·재작성·역할 파생·대비) + 테스트 이관 — 대상: `src/lib/design/*` · 완료 판정: S7 테스트 10개 통과 · 선행: T1.3 · (F-DSN-02)
 - [ ] T3.6 Plan 생성 흐름: 요청 → 파일 감시 → `plan.json`·`DESIGN.md` 검증 → 오류 자동 재요청(최대 2회) → 사용자 표시 — 대상: `src/lib/pipeline/planStep.ts` · 완료 판정: 목 에이전트로 재요청 루프 테스트 · 선행: T2.7, T3.3, T3.4, T3.5 · (F-PIP-02)
 - [ ] T3.7 DESIGN.md 공식 CLI lint(워커 경유, stdin 닫기, `orphaned-tokens` 필터, 버전 고정) — 대상: `packages/export-worker/src/designLint.ts` · 완료 판정: 샘플 lint 결과 JSON · 선행: T1.3 · (F-DSN-02)
 - [ ] T3.8 기획서 뷰어(스토리보드 카드·Asset 목록·타임라인 막대·파라미터 표·디자인 요약·`plan.md` 미리보기) — 대상: `src/components/pipeline/plan/*` · 완료 판정: 샘플 `plan.json` 렌더 · 선행: T3.4 · (F-PIP-03)
@@ -69,15 +75,15 @@
 
 M4a 런타임 패키지 (`packages/runtime`, M2·M3와 병렬 가능)
 
-- [ ] T4.1 `defineScene`·`param.*`·`useParams`(우선순위: 코드 < 토큰 < 사용자 값) — 대상: `packages/runtime/src/scene.ts`, `params.ts` · 완료 판정: 단위 테스트 · 선행: T1.3
-- [ ] T4.2 시계: clock 모드(preview·render, `hf-seek`+`waitUntil`) / free 모드(live), 전체 ↔ Scene 로컬 시간 — 대상: `packages/runtime/src/clock.ts` · 완료 판정: 시간 변환 테스트, S1 렌더 재현 · 선행: T4.1
-- [ ] T4.3 준비 신호 `registerAsset`, 폰트 `fonts.load`, Canvas `onCreated`, `__vanillaReady` — 대상: `packages/runtime/src/ready.ts` · 완료 판정: S2 대조 실험 재현(대기 없는 캡처와 다름, 대기 캡처 반복 동일) · 선행: T4.2
-- [ ] T4.4 `<VanillaCanvas>`(render=never+advance, preview=demand, `preserveDrawingBuffer` 옵션) — 대상: `packages/runtime/src/canvas.tsx` · 완료 판정: S1 결정성 테스트 · 선행: T4.2
-- [ ] T4.5 디자인 토큰 Vite 플러그인 + `DesignProvider`·`useDesign`·CSS 변수 `--color-*` — 대상: `packages/runtime/src/design/*`, `packages/runtime/vite.ts` · 완료 판정: S7 측정 재현(교체 < 100ms) · 선행: T3.5 · (F-DSN-03)
-- [ ] T4.6 Bridge 클라이언트(ready·time·error·hmr 보고, init·play·pause·seek·setParams·setDesign·goto·capture·reload 처리, origin 고정) — 대상: `packages/runtime/src/bridge.ts` · 완료 판정: 메시지 단위 테스트 · 선행: T4.2, T4.5
-- [ ] T4.7 결정성 도우미(`useSeededRandom`, `noise`, `ease`, `timeline`), `useInput` — 대상: `packages/runtime/src/helpers/*` · 완료 판정: 같은 시드 → 같은 값 테스트 · 선행: T4.1
-- [ ] T4.8 `check_scene` 정적 규칙(ESLint 플러그인: 금지 시간 API(clock 유형), 하드코딩 색, `defineScene` 누락) — 대상: `packages/runtime/eslint-plugin/*` · 완료 판정: 규칙별 테스트 · 선행: T4.1 · (F-DSN-05)
-- [ ] T4.9 런타임 빌드·배포 경로(`resources/runtime`, 스캐폴딩에 포함) — 대상: `packages/runtime/package.json`, 빌드 스크립트 · 완료 판정: 새 프로젝트에서 런타임 import 성공 · 선행: T4.1~T4.6, T1.12
+- [ ] T4.1 [레인 D · W1] `defineScene`·`param.*`·`useParams`(우선순위: 코드 < 토큰 < 사용자 값) — 대상: `packages/runtime/src/scene.ts`, `params.ts` · 완료 판정: 단위 테스트 · 선행: T1.3
+- [ ] T4.2 [레인 D · W1] 시계: clock 모드(preview·render, `hf-seek`+`waitUntil`) / free 모드(live), 전체 ↔ Scene 로컬 시간 — 대상: `packages/runtime/src/clock.ts` · 완료 판정: 시간 변환 테스트, S1 렌더 재현 · 선행: T4.1
+- [ ] T4.3 [레인 D · W1] 준비 신호 `registerAsset`, 폰트 `fonts.load`, Canvas `onCreated`, `__vanillaReady` — 대상: `packages/runtime/src/ready.ts` · 완료 판정: S2 대조 실험 재현(대기 없는 캡처와 다름, 대기 캡처 반복 동일) · 선행: T4.2
+- [ ] T4.4 [레인 D · W1] `<VanillaCanvas>`(render=never+advance, preview=demand, `preserveDrawingBuffer` 옵션) — 대상: `packages/runtime/src/canvas.tsx` · 완료 판정: S1 결정성 테스트 · 선행: T4.2
+- [ ] T4.5 [레인 D · W1] 디자인 토큰 Vite 플러그인 + `DesignProvider`·`useDesign`·CSS 변수 `--color-*` — 대상: `packages/runtime/src/design/*`, `packages/runtime/vite.ts` · 완료 판정: S7 측정 재현(교체 < 100ms) · 선행: T3.5 · (F-DSN-03)
+- [ ] T4.6 [레인 D · W1] Bridge 클라이언트(ready·time·error·hmr 보고, init·play·pause·seek·setParams·setDesign·goto·capture·reload 처리, origin 고정) — 대상: `packages/runtime/src/bridge.ts` · 완료 판정: 메시지 단위 테스트 · 선행: T4.2, T4.5
+- [ ] T4.7 [레인 D · W1] 결정성 도우미(`useSeededRandom`, `noise`, `ease`, `timeline`), `useInput` — 대상: `packages/runtime/src/helpers/*` · 완료 판정: 같은 시드 → 같은 값 테스트 · 선행: T4.1
+- [ ] T4.8 [레인 D · W1] `check_scene` 정적 규칙(ESLint 플러그인: 금지 시간 API(clock 유형), 하드코딩 색, `defineScene` 누락) — 대상: `packages/runtime/eslint-plugin/*` · 완료 판정: 규칙별 테스트 · 선행: T4.1 · (F-DSN-05)
+- [ ] T4.9 [레인 D · W2] 런타임 빌드·배포 경로(`resources/runtime`, 스캐폴딩에 포함) — 대상: `packages/runtime/package.json`, 빌드 스크립트 · 완료 판정: 새 프로젝트에서 런타임 import 성공 · 선행: T4.1~T4.6, T1.12
 
 M4b 검수 스튜디오
 

@@ -112,3 +112,9 @@
 
 ## [2026-09-29] lint | Wiki health check
 - 46 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] update | P4 병렬 실행 준비
+- 진입점(웨이브 0: T1.1→T1.3), 웨이브·레인 배치, 공유 파일 규칙, 세션 프롬프트. TODO에 [레인·웨이브] 태그. → [[parallel-execution]]
+
+## [2026-09-29] lint | Wiki health check
+- 47 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
