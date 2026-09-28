@@ -1,6 +1,6 @@
 # Vanilla Studio 기술 설계서 (Technical Design)
 
-- 문서 버전: v0.1 (2026-09-28)
+- 문서 버전: v0.2 (2026-09-29) — v0.2: 디자인 토큰 파이프라인(§4.4), 팔레트 관련 Bridge·DB·코드 구조 추가
 - 선행 문서: `Docs/Planning/Product-Spec.md`, `Docs/Planning/Decisions.md`
 - 템플릿 공통 아키텍처(`Docs/Architecture.md`)는 **템플릿 원본으로 유지**하고, 이 문서가 Vanilla Studio 고유 설계의 진실 공급원이다. 충돌 시 이 문서가 우선한다.
 - ⚠️ 표시 항목은 PoC(`Feasibility-Risks.md` §3)로 확정해야 하는 가정이다.
@@ -60,6 +60,8 @@
 | **MCP 서버** | Rust `rmcp` (공식 Rust MCP SDK) ⚠️ | 신규(S). 대안: Node 스크립트 |
 | **HTTP(로컬)** | Rust `axum`/`tiny_http` 중 택1 ⚠️ | 플레이그라운드 정적 서빙, MCP HTTP |
 | **다운로드/압축** | `reqwest`, `zip` crate | FFmpeg 다운로드, zip export |
+| **DESIGN.md 처리** | `yaml`(ISC) + 자체 zod 스키마 (`src/lib/design`) | front matter 파싱·검증·`colors`만 교체해 다시 쓰기(본문 보존) |
+| **색 계산** | `culori`(MIT) ⚠️ | OKLCH 변환·WCAG 대비·조화 생성. S7에서 번들 크기 확인, 과하면 필요한 함수만 자체 구현 |
 
 ### 2.2 사용자 프로젝트(생성물) 런타임 — 앱이 스캐폴딩
 
@@ -72,6 +74,7 @@
 | 셰이더 | GLSL(three `ShaderMaterial`) | 절차적 텍스처·배경 |
 | 폰트 | `@fontsource/*`(OFL) 로컬 번들 | 오프라인·결정성 |
 | 런타임 계약 | `@vanilla/runtime` (앱 번들, `vanilla/runtime/`에 설치) | §4 |
+| 디자인 토큰 | `@vanilla/runtime/vite` 플러그인이 `DESIGN.md`를 가상 모듈로 제공 | §4.4 |
 
 ### 2.3 Export 워커 (`vanilla-export`, Node 22+, 앱에 JS 번들로 포함)
 
@@ -83,6 +86,7 @@
 | PPTX(편집) | `dom-to-pptx` (pptxgenjs 기반) Beta | 브라우저 컨텍스트에서 실행 |
 | PDF | Chrome `printToPDF` 또는 `pdf-lib` | 이미지 기반 우선 |
 | 정적 사이트 | `vite build` + zip | |
+| DESIGN.md lint | `@google/design.md` CLI (Apache-2.0, alpha) ⚠️ | 구조·대비 검사. 형식 변경에 대비해 버전 고정, 실패 시 자체 zod 검사만 사용 |
 
 ### 2.4 외부 의존성 (Doctor가 점검)
 
@@ -186,6 +190,8 @@ function IntroScene() {
 - R3F: `<VanillaCanvas>`가 `frameloop="demand"`로 Canvas를 감싸고 `t` 변경 시 `invalidate()`/`advance()` 호출.
 - 결정성 도우미: `useSeededRandom(seed)`, `noise2D/3D`(시드 고정), `ease.*`, `timeline([...keys])`(키 기반 보간).
 - 입력: `useInput()` → 포인터·키·스크롤·자이로. `render` 모드에서는 고정값.
+- 디자인 토큰: `useDesign()` → `{ colors, typography, spacing, rounded }`(§4.4). CSS에서는 `var(--ds-<role>)`.
+  `param.color(token('accent'))`처럼 파라미터 기본값에 토큰을 참조할 수 있다.
 - GSAP 사용 시: `useGsapTimeline(tl)`이 paused timeline을 `t`에 맞춰 `seek` (선택적 헬퍼, gsap은 프로젝트 의존성으로만).
 
 ### 4.2 Composition
@@ -197,6 +203,26 @@ function IntroScene() {
 정적 검사(ESLint 커스텀 룰 + AST) + 동적 검사(같은 `t`를 두 번 렌더해 픽셀 비교):
 - 금지 API: `Date.now`, `performance.now`, 시드 없는 `Math.random`, 자체 `requestAnimationFrame` 루프, `setInterval`
 - `defineScene` 누락, 선언되지 않은 파라미터 사용, 외부 URL 리소스 참조(CREDITS 없는 경우)
+- 하드코딩 색상(경고): TSX·CSS의 hex/rgb/hsl 리터럴 중 토큰이 아닌 것. 셰이더 상수·투명도 등 예외는 주석 `// ds-ignore`로 표시
+
+### 4.4 디자인 토큰 파이프라인 (D-015, D-016)
+
+```
+DESIGN.md ──(Vite 플러그인 @vanilla/runtime/vite: front matter 파싱, 토큰 참조 해석)──▶ virtual:vanilla/design
+   │ 파일 변경 → HMR                                                                   │
+   │                                                  ┌────────────────────────────────┤
+   │                                                  ▼                                ▼
+   │                                  :root { --ds-canvas: …; --ds-accent: … }   useDesign() (JS 값)
+   │                                                  ▲                                ▲
+Bridge setDesign { colors } ─────────── 미리보기 전용 오버라이드(파일 변경 없음) ──────┘
+```
+
+- **읽기**: 런타임의 Vite 플러그인이 빌드·프리뷰 시 `DESIGN.md`를 파싱해 가상 모듈로 제공한다. 생성 파일(`tokens.css` 등)을 두지 않으므로 에이전트가 잘못 수정할 대상이 없고, export 빌드도 같은 경로를 쓴다. ⚠️ S7
+- **해석 순서**: 토큰 참조(`{colors.primary}`) 해석 → CSS 변수 주입 → `useDesign()` 값. `color` 파라미터는 코드 기본값 < 토큰 < 사용자 값(`params/*.values.json`) 순으로 결정.
+- **미리보기 교체**: 팔레트를 고르면 Bridge `setDesign`으로 CSS 변수와 `useDesign()` 값을 즉시 바꾼다. R3F는 `invalidate()`로 다시 그린다. 목표 < 100ms(파라미터와 동일).
+- **적용(쓰기)**: 앱(`src/lib/design`)이 front matter의 `colors` 블록만 교체해 다시 쓴다. 본문과 다른 토큰은 바이트 단위로 보존(왕복 테스트). → HMR로 반영 → 체크포인트.
+- **검증**(F-DSN-02): ① 자체 zod 스키마(필수 색 역할, 색 형식, 참조 대상 존재) ② WCAG 대비(역할 쌍) ③ 선택: 공식 CLI `lint`(export 워커 경유). Plan 단계에서 실패하면 오류 목록을 에이전트에 자동 재요청.
+- **결정성**: 토큰은 빌드 시점 상수이므로 같은 `DESIGN.md` → 같은 프레임. 렌더 모드에서는 `setDesign`을 받지 않는다.
 
 ---
 
@@ -211,8 +237,9 @@ function IntroScene() {
 | host→scene | `seek` | `{ t }` (전체 시간) |
 | host→scene | `setParams` | `{ sceneId, values }` |
 | host→scene | `goto` | `{ sceneId }` (slides/image) |
-| host→scene | `capture` | `{ scale }` → `captured` 응답(PNG dataURL, 수정 요청 첨부용) |
-| scene→host | `ready` | `{ scenes: SceneMeta[], duration, format }` |
+| host→scene | `setDesign` | `{ colors }` 미리보기 전용 토큰 오버라이드, `null`이면 해제 (§4.4) |
+| host→scene | `capture` | `{ scale }` → `captured` 응답(PNG dataURL, 수정 요청 첨부·팔레트 비교용) |
+| scene→host | `ready` | `{ scenes: SceneMeta[], duration, format, design: { hash, roles } }` |
 | scene→host | `time` | `{ t, sceneId }` (재생 중 16ms 이하로 스로틀) |
 | scene→host | `error` | `{ message, stack, sceneId }` → 검수 화면 오류 배너 + "에이전트에게 수정 요청" 버튼 |
 
@@ -227,6 +254,7 @@ function IntroScene() {
 | 의존성 설치 | `pnpm install --frozen-lockfile=false` (cwd=프로젝트) | 마법사에서 동의 후 1회, 이후 `package.json` 변경 감지 시 확인 후 재실행 |
 | 프리뷰 서버 | `node <app>/vite-runner.mjs --root <project> --port 0` | 프로젝트 열림 동안. 포트는 stdout으로 보고 |
 | export 워커 | `node <app>/vanilla-export.mjs <job.json>` | 작업 단위. 진행률 NDJSON stdout |
+| DESIGN.md lint | `node <app>/vanilla-export.mjs design-lint <project>/DESIGN.md` | 검증 요청 시 1회 |
 
 - 명령 문자열을 UI에서 받지 않는다. Rust enum으로 종류를 받고 argv는 Rust가 조립.
 - 프로젝트 전환·앱 종료 시 자식 프로세스 트리 정리(Windows Job Object).
@@ -260,6 +288,7 @@ export 요청 ─▶ 체크포인트 확인 ─▶ vite build (render 모드 엔
 | `agents` | 에이전트 레지스트리(§3.1) 사용자 설정 |
 | `playground_items` | 플레이그라운드 인덱스(파일은 `playground/<id>/`) |
 | `templates` | 사용자 설치 템플릿 인덱스 |
+| `palettes` | 팔레트 인덱스(내장·사용자·추출·생성, 태그·scheme). 파일은 앱 데이터 `palettes/<id>.json` |
 | `doctor_cache` | 의존성 점검 결과 캐시 |
 
 ### 8.2 프로젝트 DB (`<project>/.vanilla/app.db`) — 템플릿의 `.app-data`를 `.vanilla`로 변경
@@ -288,10 +317,11 @@ src/lib/
   pipeline/    # 단계 상태, plan/tasks 스키마(zod), 태스크 실행기, prompts/*.md(프리앰블)
   review/      # Bridge 클라이언트, 파라미터 스키마→폼, 수정 요청 작성
   export/      # 작업 큐 Context, 유형별 옵션
+  design/      # DESIGN.md 파싱·검증·colors 교체 쓰기, palette.json 스키마, 색 계산(대비·조화·추출)
   templates/   # template.json 스키마, 설치
   playground/  # 인덱스·플레이어
   doctor/      # 점검 결과 모델
-src/components/{pipeline,agents,review,export,templates,playground,doctor,terminal}/
+src/components/{pipeline,agents,review,design,export,templates,playground,doctor,terminal}/
 src-tauri/src/commands/
   project_commands.rs  agent_commands.rs  pty_commands.rs
   process_commands.rs  export_commands.rs doctor_commands.rs  mcp_server.rs
@@ -299,7 +329,9 @@ resources/                   # 앱 번들 리소스
   runtime/                   # @vanilla/runtime 소스(프로젝트에 복사)
   project-template/          # 스캐폴딩 원본
   skills/vanilla-core/       # 공통 스킬
-  templates/<id>/            # 내장 디자인 템플릿
+  templates/<id>/            # 내장 디자인 템플릿(각 DESIGN.md 포함)
+  design/DESIGN.md           # 템플릿 미선택 시 기본 DESIGN.md
+  palettes/*.json            # 내장 팔레트 라이브러리
   workers/                   # vite-runner.mjs, vanilla-export.mjs (빌드 산출물)
 ```
 
@@ -326,8 +358,9 @@ resources/                   # 앱 번들 리소스
 | 레벨 | 대상 | 도구 |
 | --- | --- | --- |
 | 단위 | zod 스키마, 태스크 위상 정렬, 권한 정책 분류, Bridge 메시지, 런타임 시간 변환 | vitest |
+| 단위(디자인) | DESIGN.md 파싱·토큰 참조 해석, `colors` 교체 왕복(본문 바이트 보존), WCAG 대비, OKLCH 변환 | vitest |
 | 컴포넌트 | 파라미터 폼, 타임라인 스크러버, 권한 다이얼로그 | vitest + Testing Library |
 | Rust | 경로 스코프, 권한 정책, 프로세스 argv 조립 | `cargo test` |
 | 통합 | 목(mock) ACP 에이전트(스크립트화된 응답)로 파이프라인 end-to-end | vitest + Node 목 서버 |
-| 골든 | 샘플 프로젝트 export 결과 해시/픽셀 비교(결정성) | export 워커 테스트 |
+| 골든 | 샘플 프로젝트 export 결과 해시/픽셀 비교(결정성). 팔레트 2종으로 같은 Scene 렌더 → 색만 달라지는지 확인 | export 워커 테스트 |
 | 수동 | 실제 에이전트(Claude Code·Codex)로 샘플 브리프 → export | 릴리스 체크리스트 |

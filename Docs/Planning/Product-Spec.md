@@ -1,6 +1,6 @@
 # Vanilla Studio 상세 기획서 (Product Spec)
 
-- 문서 버전: v0.1 (2026-09-28)
+- 문서 버전: v0.2 (2026-09-29) — v0.2: 디자인 시스템(`DESIGN.md`)·컬러 팔레트 기능 추가(§8, D-015~D-017)
 - 입력: `Docs/Vanilla-Studio-Requirements.txt`, 인터뷰 결정(`Docs/Planning/Decisions.md`)
 - 관련 문서: `Docs/Planning/Technical-Design.md`(기술 설계), `Docs/Planning/Feasibility-Risks.md`(구현 난점·리스크)
 - 상태: 초안 — 구현 계획서 작성 전 PoC 결과에 따라 갱신
@@ -24,6 +24,7 @@
 | P5 | **사람은 조절, 에이전트는 생성** | 사용자의 수동 조절 값(파라미터)과 에이전트의 코드는 분리 저장되어 서로 덮어쓰지 않는다. |
 | P6 | **에이전트 중립** | Claude Code·Codex·OpenCode·Hermes·AGY 중 무엇을 써도 같은 산출물 구조를 만든다. |
 | P7 | **모든 것은 파일** | 프로젝트 상태는 폴더 안 파일이 진실 공급원. DB는 UI 상태·인덱스용. |
+| P8 | **디자인은 토큰으로** | 색·타이포·간격은 프로젝트 `DESIGN.md`의 토큰에서만 가져온다. 코드에 색을 하드코딩하지 않으므로 팔레트만 바꿔도 같은 형태의 결과물이 다른 느낌을 낸다. (D-015, D-016) |
 
 ### 1.3 대상 사용자
 
@@ -70,24 +71,25 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 
 ### 3.1 단계 1 — Brief (결과물 지정 + 자료 제공)
 
-- **새 프로젝트 마법사**: ① 결과물 유형 ② 규격(해상도·fps·길이·슬라이드 수·이미지 변형) ③ 디자인 템플릿(선택/없음) ④ 사용할 에이전트 ⑤ 저장 폴더.
-- 마법사 완료 시 앱이 프로젝트 폴더를 스캐폴딩한다(§6). `pnpm install`·git 초기화는 이 시점에 1회 동의받고 실행(D-012, D-013).
-- **Brief 편집기**: 목적, 대상, 핵심 메시지, 톤앤매너, 필수 포함 요소, 금지 사항, 참고 자료를 입력하는 구조화 폼 + 자유 서술. 저장 위치 `brief/brief.md`.
+- **새 프로젝트 마법사**: ① 결과물 유형 ② 규격(해상도·fps·길이·슬라이드 수·이미지 변형) ③ 디자인 템플릿(선택/없음) ④ **컬러 팔레트**(템플릿 기본 / 라이브러리에서 선택 / 브랜드 색 입력 / 자료에서 추출, §8.2) ⑤ 사용할 에이전트 ⑥ 저장 폴더.
+- 마법사 완료 시 앱이 프로젝트 폴더를 스캐폴딩한다(§6). 이때 템플릿의 `DESIGN.md`(없으면 기본 `DESIGN.md`)에 선택한 팔레트를 적용해 프로젝트 루트에 둔다(§8.1). `pnpm install`·git 초기화는 이 시점에 1회 동의받고 실행(D-012, D-013).
+- **Brief 편집기**: 목적, 대상, 핵심 메시지, 톤앤매너, 브랜드 색·폰트(있으면), 필수 포함 요소, 금지 사항, 참고 자료를 입력하는 구조화 폼 + 자유 서술. 저장 위치 `brief/brief.md`.
 - **자료 업로드**: 이미지·로고·텍스트·PDF·CSV 등을 `brief/materials/`로 복사. 라이선스/출처 메모 입력란.
 
-**산출물**: `brief/brief.md`, `brief/materials/*`, `vanilla.json`
+**산출물**: `brief/brief.md`, `brief/materials/*`, `vanilla.json`, `DESIGN.md`(초기본)
 
 ### 3.2 단계 2 — Plan (기획서)
 
 - 사용자가 "기획서 생성"을 누르면 앱이 에이전트에게 **기획 프롬프트**(브리프 + 템플릿 스킬 + 규격)를 보낸다.
-- 에이전트는 두 파일을 쓴다:
-  - `plan/plan.md` — 사람용 기획서(콘셉트, 무드, 컬러·타이포, Scene별 설명, 스토리보드 서술)
+- 에이전트는 세 파일을 쓴다:
+  - `DESIGN.md` — 프로젝트 디자인 시스템(§8.1). 초기본을 브리프·무드에 맞게 다듬는다. 색·타이포 토큰과 사용 원칙은 여기에만 쓴다.
+  - `plan/plan.md` — 사람용 기획서(콘셉트, 무드, Scene별 설명, 스토리보드 서술). 색·타이포는 `DESIGN.md`의 토큰 이름으로 언급한다.
   - `plan/plan.json` — 기계용 구조(스키마 §7.1): Scene 목록, Scene 내 Asset 배치, Asset 움직임, 애니메이션 타임라인, **각 요소의 최적 구현 방법**, **사용자 조절 가능 범위(params)**
-- 앱은 `plan.json`을 스키마로 검증하고, 실패하면 오류 목록을 에이전트에게 자동 재요청한다(최대 2회, 이후 사용자에게 표시).
-- **기획서 뷰어**: Scene 카드(스토리보드), Asset 목록, 타임라인 막대 차트, 파라미터 목록을 시각화. `plan.md`는 마크다운 미리보기.
-- 사용자는 코멘트를 달아 "기획 수정 요청"하거나 **승인**한다. 승인 시 체크포인트 커밋.
+- 앱은 `plan.json`을 스키마로, `DESIGN.md`를 형식 검사(구조·토큰 참조·필수 색 역할·대비)로 검증하고, 실패하면 오류 목록을 에이전트에게 자동 재요청한다(최대 2회, 이후 사용자에게 표시).
+- **기획서 뷰어**: Scene 카드(스토리보드), Asset 목록, 타임라인 막대 차트, 파라미터 목록, **디자인 시스템 요약(팔레트 스와치·타이포 샘플)** 을 시각화. `plan.md`는 마크다운 미리보기.
+- 사용자는 코멘트를 달아 "기획 수정 요청"하거나 **승인**한다. 승인 시 체크포인트 커밋. 이 단계에서 팔레트를 바꿔 보며 무드를 정할 수 있다(에이전트 재호출 없음).
 
-**산출물**: `plan/plan.md`, `plan/plan.json` (승인됨)
+**산출물**: `DESIGN.md`, `plan/plan.md`, `plan/plan.json` (승인됨)
 
 ### 3.3 단계 3 — Prompts (구현 계획서)
 
@@ -104,7 +106,8 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 ### 3.4 단계 4 — Build (구현)
 
 - "빌드 시작" → 앱이 `tasks.json`의 위상 정렬 순서대로 태스크를 하나씩 에이전트에게 보낸다(태스크 = ACP 프롬프트 1회).
-- 각 태스크 완료 후: ① 런타임 계약 검사(`check_scene`) ② 스냅샷 생성 ③ 체크포인트 커밋 ④ 다음 태스크.
+- 에이전트는 색·타이포를 `DESIGN.md` 토큰(CSS 변수 `--ds-*`, JS `useDesign()`)으로만 쓴다(§8.1).
+- 각 태스크 완료 후: ① 런타임 계약 검사(`check_scene`, 하드코딩 색상 경고 포함) ② 스냅샷 생성 ③ 체크포인트 커밋 ④ 다음 태스크.
 - 사용자는 **에이전트 패널**에서 진행 로그(메시지·도구 호출·파일 diff)를 보고, 권한 요청에 응답하고, 일시정지/중단할 수 있다.
 - 실행 모드: `자동(순차 전체)` / `한 단계씩(태스크마다 확인)`.
 - 에이전트는 MCP 도구 `snapshot_scene`로 자기 결과물을 확인하고 스스로 개선할 수 있다(D-014).
@@ -134,12 +137,14 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 - **미리보기**: 프로젝트의 프리뷰 서버(Vite)를 iframe으로 표시. 규격 비율 유지, 확대/맞춤, 배경(체커보드) 토글, 기기 프레임(웹: 데스크탑/모바일 폭).
 - **타임라인 스크러버**(`video`·애니메이션이 있는 Scene): 재생/정지, 프레임 단위 이동, 구간 반복, Scene 경계 표시. 슬라이드는 이전/다음, 이미지는 변형 전환.
 - **파라미터 패널**: `plan.json`에서 선언되고 코드에서 등록된 파라미터를 폼으로 조절(색·숫자 슬라이더·텍스트·선택·토글·벡터). 변경 즉시 미리보기 반영, `저장` 시 `params/<scene>.values.json`에 기록 + 체크포인트.
+- **디자인 패널**(파라미터 패널 옆 탭 `파라미터 | 디자인`): 현재 팔레트 스와치, 팔레트 라이브러리에서 교체, 역할별 색 편집, 대비 경고. 교체하면 **저장 전에 미리보기에 바로 반영**되고, `적용` 시 `DESIGN.md`의 `colors` 토큰만 갱신 + 체크포인트(§8.2).
+- **팔레트 비교**(S): 현재 Scene·시각을 여러 팔레트로 스냅샷해 나란히 비교하고 하나를 고른다.
 - **인터랙티브 테스트**: 미리보기에서 직접 마우스/키 입력.
 - **수정 요청 (요구사항 6-2)**: 대상(Scene/Asset/Animation) + 시각 + 코멘트 + (자동) 현재 스크린샷·파라미터 값 →
   ① `reviews/R-NNN.md` 생성 ② 대상 구현 계획서에 "Revision R-NNN" 섹션 추가 ③ 에이전트에 반영 요청 ④ 완료 시 새 체크포인트와 **이전/이후 비교**(스크린샷 나란히).
 - **체크포인트 히스토리**: 목록, 비교, 되돌리기.
 
-**산출물**: `params/*.values.json`(사용자 조절값), `reviews/**`, 체크포인트
+**산출물**: `params/*.values.json`(사용자 조절값), `DESIGN.md`(팔레트 변경 시), `reviews/**`, 체크포인트
 
 ### 3.6 단계 6 — Export
 
@@ -161,7 +166,7 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 | 1 | 파이프라인 `pipeline` | 6단계 진행 상태, 단계별 바로가기, 태스크 목록 | ✔ |
 | 2 | 탐색기 `explorer` | 파일 트리(템플릿 기능) | ✔ |
 | 3 | 에이전트 `agent` | 세션 목록, 연결 상태, 에이전트 전환 | ✔ |
-| 4 | 템플릿 `templates` | 설치된 디자인 템플릿 목록·검색 | — |
+| 4 | 템플릿 `templates` | 설치된 디자인 템플릿·**팔레트 라이브러리** 목록·검색(하위 탭) | — |
 | 5 | 플레이그라운드 `playground` | 보관된 결과물 목록 | — |
 | 하단 | 설정 `/settings` | 전체 화면 | — |
 
@@ -175,11 +180,13 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 | `brief` | `brief` | Brief 편집기 + 자료 목록 |
 | `plan` | `plan` | 기획서 뷰어(스토리보드·타임라인·파라미터) |
 | `prompts` | `prompts` | 구현 계획서 트리 + 편집기 + 태스크 그래프 |
+| `design` | `design` | 디자인 시스템: `DESIGN.md` 토큰 시각화(스와치·타이포 샘플·간격·모서리) + 원문 편집 + 검사 결과 |
 | `review` | `review` | 검수 스튜디오 |
 | `export` | `export` | export 옵션·작업 이력 |
 | `agent-session` | `agent:<sessionId>` | 에이전트 대화·도구 호출·diff 로그 (ACP) |
 | `terminal` | `terminal:<id>` | 내장 터미널 (PTY 폴백) |
 | `template-viewer` | `template:<id>` | 템플릿 상세·미리보기 |
+| `palette-editor` | `palette:<id>` | 팔레트 편집(역할별 색, OKLCH 조정, 잠금, 대비 표, 조화 생성) |
 | `playground-item` | `playground:<id>` | 결과물 플레이어 |
 | `editor`, `image-viewer` | 기존 | 템플릿 기능 유지 |
 
@@ -193,7 +200,7 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 - **에이전트**: 에이전트별 실행 방식(ACP/터미널), 실행 명령, 기본 에이전트, 권한 정책 표시
 - **환경 점검(Doctor)**: Node 22+, pnpm, git, 각 에이전트 CLI, FFmpeg, Chrome/Chromium 상태 + 설치 안내/다운로드
 - **Export 기본값**: 품질, 코덱, 출력 폴더
-- **템플릿**: 템플릿 폴더 경로, 가져오기
+- **템플릿·팔레트**: 템플릿 폴더 경로, 가져오기, 사용자 팔레트 가져오기/내보내기
 
 ---
 
@@ -272,14 +279,38 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 | F-PLY-03 | 바닐라 스튜디오 서버 연동(공개 작품) | L |
 | F-ENV-01 | 환경 점검(Doctor) + 설치 안내 + FFmpeg 다운로드 | M |
 
+### 5.7 디자인 시스템 · 컬러 팔레트 (v0.2 추가)
+
+| ID | 기능 | 우선 |
+| --- | --- | --- |
+| F-DSN-01 | 프로젝트 `DESIGN.md` 스캐폴딩(템플릿 것 또는 기본본 + 선택 팔레트 적용) | M |
+| F-DSN-02 | `DESIGN.md` 검증(구조·토큰 참조·필수 색 역할·WCAG 대비), 실패 시 에이전트 자동 재요청 | M |
+| F-DSN-03 | 토큰 바인딩: `DESIGN.md` → 런타임(CSS 변수 `--ds-*`, `useDesign()`), 파일 변경 시 HMR 반영 | M |
+| F-DSN-04 | 디자인 탭(토큰 시각화·원문 편집·검사 결과) | M |
+| F-DSN-05 | `check_scene` 하드코딩 색상 경고 + 검수 화면 "토큰 미사용 n건" 표시 | S |
+| F-DSN-06 | `frame.md`(영상용 모션·페이싱·체류 시간 지침) 작성 지원 — `video` 유형 | S |
+| F-DSN-07 | `DESIGN.md` 가져오기/내보내기(다른 도구의 DESIGN.md, Tailwind·DTCG 토큰 내보내기) | S |
+| F-DSN-08 | 타이포 프리셋(폰트 페어링) 라이브러리 — 팔레트와 같은 방식으로 교체 | L |
+| F-PAL-01 | 팔레트 라이브러리: 내장 팔레트 24종 이상(라이트/다크·무드 태그), 검색·필터 | M |
+| F-PAL-02 | 팔레트 적용: `colors` 토큰 교체 → 즉시 미리보기 → 적용 시 저장·체크포인트(에이전트 호출 없음) | M |
+| F-PAL-03 | 팔레트 편집기: 역할별 색 지정, OKLCH 명도·채도 조정, 색 잠금 | M |
+| F-PAL-04 | 대비 검사: 텍스트/배경 역할 쌍의 WCAG 대비 표시·경고 | M |
+| F-PAL-05 | 자료에서 추출: 로고·이미지(`brief/materials/`)의 대표색 추출 → 역할 자동 배정(로컬 계산) | S |
+| F-PAL-06 | 기준색 1~2개 → 조화 팔레트 생성(보색·유사색·삼각·단색조, OKLCH) | S |
+| F-PAL-07 | 팔레트 비교: 같은 Scene·시각을 여러 팔레트로 스냅샷해 나란히 비교 | S |
+| F-PAL-08 | 사용자 팔레트 저장·가져오기·내보내기(`palette.json`, DESIGN.md `colors`) | S |
+| F-PAL-09 | 라이트/다크 쌍 팔레트, 웹 결과물의 `prefers-color-scheme` 대응 | L |
+
 ---
 
 ## 6. 사용자 프로젝트 폴더 구조
 
 ```
 <project>/
-├── vanilla.json                 # 프로젝트 매니페스트(유형·규격·템플릿·에이전트·런타임 버전)
-├── AGENTS.md                    # 앱이 생성: 파이프라인·런타임 계약·파일 규칙(에이전트 공통)
+├── vanilla.json                 # 프로젝트 매니페스트(유형·규격·템플릿·팔레트·에이전트·런타임 버전)
+├── DESIGN.md                    # 디자인 시스템(색·타이포·간격 토큰 + 사용 원칙) — §8.1, Google DESIGN.md 형식
+├── frame.md                     # (선택, video) 영상 프레임용 모션·페이싱 지침 — HyperFrames FRAME.MD 형식
+├── AGENTS.md                    # 앱이 생성: 파이프라인·런타임 계약·파일 규칙·DESIGN.md 사용 규칙(에이전트 공통)
 ├── CLAUDE.md                    # "@AGENTS.md" 한 줄 (Claude Code 호환)
 ├── brief/
 │   ├── brief.md
@@ -298,7 +329,7 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 │   ├── composition.tsx          # Scene 조합(타임라인/슬라이드 순서/섹션 순서)
 │   ├── scenes/<scene-id>/       # Scene 컴포넌트 + params 선언
 │   ├── assets/<asset-id>/       # 재사용 에셋 컴포넌트(SVG/three/셰이더)
-│   └── shared/                  # 공통 토큰(색·폰트)·유틸
+│   └── shared/                  # 공통 유틸(색·폰트 값은 두지 않음 → DESIGN.md 토큰)
 ├── public/                      # 폰트·CC0 텍스처 등 정적 리소스
 ├── assets/CREDITS.md            # 외부 리소스 출처·라이선스 기록(필수)
 ├── params/<scene-id>.values.json# 사용자 조절값(에이전트는 요청 없이는 수정 금지)
@@ -321,7 +352,8 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
   "version": 1,
   "outputType": "video",               // web | interactive | slides | image | video
   "format": { "width": 1920, "height": 1080, "fps": 30, "durationSec": 15 },
-  "concept": { "title": "", "goal": "", "audience": "", "tone": [], "palette": [], "typography": [] },
+  "concept": { "title": "", "goal": "", "audience": "", "tone": [] },
+  "design": { "file": "DESIGN.md", "palette": "biennale-yellow" },  // 색·타이포 값은 DESIGN.md에만
   "scenes": [{
     "id": "s1-intro", "title": "", "purpose": "", "start": 0, "end": 4,
     "layout": "화면 배치 서술", "assets": ["logo"], "animations": ["logo-reveal"],
@@ -330,12 +362,13 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
   }],
   "assets": [{ "id": "logo", "kind": "svg|three|shader|text|user-image|ui", "description": "", "implementation": {}, "params": ["logoSpin"] }],
   "animations": [{ "id": "logo-reveal", "target": "logo", "start": 0.5, "end": 2.0, "easing": "expo.out", "description": "" }],
-  "params": [{ "id": "bgColor", "scope": "s1-intro", "type": "color", "default": "#F5E6C8", "label": "배경색" }],
+  "params": [{ "id": "bgColor", "scope": "s1-intro", "type": "color", "default": "{colors.canvas}", "label": "배경색" }],
   "customizationNotes": "사용자가 조절 가능한 범위 설명"
 }
 ```
 
 - 파라미터 타입: `color`, `number{min,max,step}`, `text`, `select{options}`, `boolean`, `vec2`, `vec3`.
+- `color` 파라미터 기본값은 토큰 참조(`{colors.<role>}`)를 권장한다. 사용자가 값을 직접 고르지 않는 한 팔레트 교체를 따라간다. 우선순위: 코드 기본값 < `DESIGN.md` 토큰 < `params/*.values.json`의 사용자 값.
 - `slides`는 Scene = 슬라이드(시간 필드 생략 가능), `image`는 Scene = 이미지 변형(규격 개별 지정 가능).
 
 ### 7.2 `tasks.json` (요약)
@@ -355,19 +388,118 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 
 ---
 
-## 8. 디자인 템플릿
+## 8. 디자인 시스템 · 팔레트 · 템플릿
+
+디자인을 세 층으로 나눈다.
+
+| 층 | 내용 | 담는 곳 |
+| --- | --- | --- |
+| 형태 | 레이아웃·에셋·모션 | 템플릿과 에이전트 코드 |
+| 디자인 시스템 | 색·타이포·간격·모서리 토큰과 사용 원칙 | `DESIGN.md` |
+| 팔레트 | 색 역할별 값의 묶음 | `DESIGN.md`의 `colors` 토큰 |
+
+층이 분리되어 있으므로 같은 템플릿(형태)에 다른 팔레트를 조합해 느낌을 바꿀 수 있다.
+
+### 8.1 `DESIGN.md` — 에이전트에게 디자인을 전달하는 표준 파일 (D-015)
+
+- **형식**: Google Labs의 오픈 형식 [DESIGN.md](https://github.com/google-labs-code/design.md)(Apache-2.0, 2026-04 공개, 현재 `alpha`).
+  - YAML front matter = 기계용 토큰: `colors`, `typography`, `spacing`, `rounded`, `components`. 토큰 참조 문법 `{colors.primary}`.
+  - 마크다운 본문 = 사람·에이전트용 사용 원칙. 절 순서: Overview → Colors → Typography → Layout → Elevation & Depth → Shapes → Components → Do's and Don'ts.
+  - 공식 CLI(`@google/design.md`): `lint`(구조·대비 검사), `diff`, `export`(Tailwind·DTCG).
+- **위치**: 프로젝트 루트 `DESIGN.md`(`AGENTS.md`와 나란히). 프로젝트 `AGENTS.md`와 `vanilla-core` 스킬이 "시각 작업 전에 `DESIGN.md`를 읽고, 값은 토큰으로만 쓴다"를 규칙으로 둔다. 에이전트 종류와 무관하게 같은 파일을 읽으므로 동작 환경이 표준화된다.
+- **수명 주기**
+
+  | 단계 | 누가 | 무엇을 |
+  | --- | --- | --- |
+  | Brief | 앱 | 템플릿의 `DESIGN.md`(없으면 기본본) + 선택 팔레트로 초기본 생성 |
+  | Plan | 에이전트 | 브리프·무드에 맞게 본문과 토큰을 다듬음 → 앱이 검증(F-DSN-02) → 사용자 승인 |
+  | Build | 에이전트 | 읽기 전용으로 사용(토큰만 참조) |
+  | Review | 사용자 | 디자인 패널·팔레트로 `colors` 토큰 수정. 에이전트는 수정 요청(R-NNN)이 있을 때만 `DESIGN.md`를 바꾼다 |
+
+- **소유 규칙**: Plan 승인 이후 `DESIGN.md`의 토큰 값은 사용자 소유다(원칙 P5, `params/*.values.json`과 같은 보호).
+  - 앱이 팔레트를 적용할 때는 **front matter의 `colors`만 교체하고 본문은 그대로 둔다**.
+  - 그래서 본문은 hex 값 대신 역할 이름(`accent`, `canvas`)으로 색을 설명하도록 `vanilla-core` 스킬에서 안내한다.
+- **토큰 바인딩**: 런타임이 `DESIGN.md`를 읽어 두 가지 형태로 제공한다(기술 설계서 §4.4).
+  - CSS 변수: `--ds-canvas`, `--ds-accent` …
+  - JS 값: `useDesign().colors.accent` — three.js 재질·셰이더 uniform처럼 CSS 변수를 못 쓰는 곳용.
+- **`frame.md`(선택, `video`)**: HyperFrames의 FRAME.MD 형식.
+  - `DESIGN.md`의 브랜드를 16:9 영상 프레임에 맞게 옮긴 지침: 구도·스케일·페이싱·체류 시간·모션.
+  - `video` 프로젝트의 Plan 단계에서 에이전트에게 `DESIGN.md`를 바탕으로 작성하게 할 수 있다(F-DSN-06).
+  - 토큰의 진실 공급원은 항상 `DESIGN.md`다. `frame.md`는 모션 지침만 담는다.
+
+### 8.2 컬러 팔레트 (D-016)
+
+같은 형태라도 팔레트가 결과물의 느낌을 크게 바꾼다. 팔레트는 **역할(role)에 색을 배정한 묶음**이며, 적용하면 `DESIGN.md`의 `colors` 토큰이 교체된다.
+
+- **표준 색 역할** (Vanilla 규약. ⚠️ S7에서 DESIGN.md 예제·HyperFrames 프리셋과 대조해 확정)
+
+  | 역할 | 필수 | 용도 |
+  | --- | --- | --- |
+  | `canvas` | ✔ | 전체 배경 |
+  | `surface` | ✔ | 카드·패널·면 |
+  | `ink` | ✔ | 제목·본문 텍스트 |
+  | `ink-muted` | ✔ | 보조 텍스트·캡션 |
+  | `primary` | ✔ | 주 브랜드색·핵심 강조 |
+  | `secondary` | ✔ | 보조 강조 |
+  | `accent` | ✔ | 포인트(하이라이트·CTA·파티클) |
+  | `line` | ✔ | 선·테두리·그리드 |
+  | `on-primary` | – | `primary` 위 텍스트 |
+  | `data-1`~`data-6` | – | 차트·데이터 시각화 계열색 |
+
+- **팔레트 파일** `palette.json`:
+  ```jsonc
+  { "version": 1, "id": "biennale-yellow", "name": "Biennale Yellow", "tags": ["editorial", "warm"],
+    "scheme": "light",                       // light | dark
+    "colors": { "canvas": "#F4EEDF", "ink": "#1F2A5A", "accent": "#F2C230" /* … 역할별 */ },
+    "source": "builtin",                     // builtin | user | extracted | generated
+    "license": "CC0-1.0" }
+  ```
+  내장 팔레트는 앱 리소스, 사용자 팔레트는 앱 데이터 `palettes/`에 둔다.
+- **적용 흐름**
+  1. 라이브러리에서 팔레트 선택 → Bridge로 미리보기에만 즉시 반영(파일 변경 없음).
+  2. `적용` → `DESIGN.md`의 `colors` 교체 + `vanilla.json`의 `palette` 갱신 + 체크포인트.
+  3. 에이전트는 부르지 않는다.
+- **대비 검사**: `ink`/`canvas`, `ink`/`surface`, `ink-muted`/`canvas`, `on-primary`/`primary` 쌍의 WCAG 대비를 계산해 AA 미달이면 경고한다(적용을 막지는 않음).
+- **팔레트 만들기**: 모두 로컬 계산이며 생성형 AI를 쓰지 않는다(D-006).
+  - 직접 편집: 역할별 색, OKLCH 슬라이더, 색 잠금
+  - 기준색에서 조화 생성: 보색·유사색·삼각·단색조
+  - 자료 이미지에서 대표색 추출 → 역할 자동 배정
+- **파라미터와의 관계**: `color` 파라미터 기본값이 토큰 참조면 팔레트를 따라가고, 사용자가 값을 직접 지정한 파라미터는 팔레트를 바꿔도 유지된다(§7.1).
+- **결과물이 팔레트를 따르게 하는 장치**: `vanilla-core` 스킬 규칙(토큰만 사용), `check_scene`의 하드코딩 색상 경고(F-DSN-05), 템플릿 예제 코드의 토큰 사용.
+
+### 8.3 디자인 템플릿
 
 - 템플릿 = Agent Skill 폴더(D-008):
   ```
   <template-id>/
   ├── SKILL.md            # 언제 사용하는지, 스타일 원칙, 기획·구현 지침
-  ├── template.json       # 이름·설명·대상 유형·태그·미리보기 경로·버전·라이선스
-  ├── references/         # 스타일 가이드, 컬러·타이포 토큰, 구현 계획서 예시 프롬프트
-  ├── examples/           # 예제 Scene·Asset 코드
-  └── preview/            # 썸네일·짧은 미리보기 영상
+  ├── template.json       # 이름·설명·대상 유형·태그·미리보기 경로·버전·라이선스·기본/추천 팔레트
+  ├── DESIGN.md           # 템플릿 기본 디자인 시스템(필수) → 프로젝트 DESIGN.md의 초기본
+  ├── frame.md            # (선택, video 템플릿) 영상용 모션·페이싱 지침
+  ├── palettes/           # (선택) 템플릿이 추천하는 팔레트 palette.json
+  ├── references/         # 레이아웃·모션 원칙, 구현 계획서 예시 프롬프트
+  ├── examples/           # 예제 Scene·Asset 코드(토큰만 사용)
+  ├── preview/            # 썸네일·짧은 미리보기 영상(기본 팔레트 기준)
+  └── CREDITS.md          # 참고·차용한 외부 자료 출처와 라이선스
   ```
 - 내장 템플릿은 앱 리소스에 번들, 사용자 템플릿은 앱 데이터 `templates/`에 저장.
-- 프로젝트 생성 시 선택한 템플릿 + 항상 포함되는 `vanilla-core` 스킬(런타임 계약·파이프라인 규칙·심미 체크리스트)을 프로젝트에 복사.
+- 프로젝트 생성 시 선택한 템플릿 + 항상 포함되는 `vanilla-core` 스킬(런타임 계약·파이프라인 규칙·**DESIGN.md 사용 규칙**·심미 체크리스트)을 프로젝트에 복사.
+- 템플릿 갤러리에서 카드의 팔레트를 바꿔 미리보기 썸네일을 다시 칠해 볼 수 있다(S, 스냅샷 캐시).
+
+### 8.4 템플릿·프리셋 구성 참고 자료 (D-017)
+
+템플릿·팔레트·에셋 예제를 만들 때 참고할 외부 자료다. 상세 정리는 wiki `research-2026-09-29-design-md-hyperframes`에 있다.
+
+| 자료 | URL | 활용 |
+| --- | --- | --- |
+| HyperFrames FRAME.MD 디자인 프리셋 | https://www.hyperframes.dev/design | 에디토리얼·코퍼레이트·네오브루탈·포스터 계열 12종. 내장 `DESIGN.md`·팔레트·타이포 페어링과 `frame.md` 작성의 참고 |
+| HyperFrames 카탈로그 | https://hyperframes.heygen.com/catalog | 10개 분류(3D Motion, Carousels, Text & Captions, Code, Transitions, Data & Charts, Scenes & Demos, Motion & Effects, Surfaces, Blocks). 템플릿의 Asset·Animation 예제와 구현 계획서 예시 프롬프트의 참고 |
+| DESIGN.md 명세 | https://github.com/google-labs-code/design.md | §8.1 형식의 기준 |
+
+- **사용 원칙**
+  - 참고용이다. 카탈로그 항목은 GSAP paused timeline 기반 HTML이므로 코드를 그대로 복사하지 않고 Vanilla Scene 런타임(`useTime()` 순수 함수)으로 다시 구현한다(D-007).
+  - 항목별 라이선스와 폰트 라이선스를 확인하고, 출처를 템플릿 `CREDITS.md`에 남긴다.
+  - 카탈로그 항목의 `params`(color·text·number·select) 설계는 우리 파라미터 스키마(§7.1)와 개념이 같으므로 파라미터 설계의 참고로 쓴다.
 
 ## 9. 플레이그라운드
 
@@ -394,13 +526,13 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 
 | 마일스톤 | 내용 |
 | --- | --- |
-| M0 PoC | S1~S6 기술 검증 (`Feasibility-Risks.md` §3) |
+| M0 PoC | S1~S7 기술 검증 (`Feasibility-Risks.md` §3) |
 | M1 기반 | 브랜딩 교체, 예제 도메인 제거, 프로젝트 모델·스캐폴딩, Doctor |
 | M2 에이전트 | ACP 호스트, 권한 다이얼로그, 에이전트 패널, 터미널 폴백 |
-| M3 파이프라인 | Brief·Plan·Prompts·Build 단계 UI와 검증 |
-| M4 검수 | 런타임 패키지, 프리뷰 서버, 검수 스튜디오, 수정 요청, 체크포인트 |
+| M3 파이프라인 | Brief·Plan·Prompts·Build 단계 UI와 검증, `DESIGN.md` 스캐폴딩·검증 |
+| M4 검수 | 런타임 패키지(토큰 바인딩 포함), 프리뷰 서버, 검수 스튜디오, 디자인 패널·팔레트 교체, 수정 요청, 체크포인트 |
 | M5 Export | 웹·이미지·슬라이드·동영상 export, 작업 큐 |
-| M6 템플릿·플레이그라운드 | 내장 템플릿 3종, 갤러리, 플레이그라운드 |
+| M6 템플릿·플레이그라운드 | 내장 템플릿 3종(각 `DESIGN.md` 포함), 팔레트 라이브러리·편집기, 갤러리, 플레이그라운드 |
 | M7 릴리스 | 인스톨러, 서명, 자동 업데이트, 문서 |
 
 세부 일정·태스크는 다음 단계 산출물인 **구현 계획서(+TODO)** 에서 확정한다.

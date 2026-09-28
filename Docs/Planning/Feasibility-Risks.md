@@ -1,6 +1,6 @@
 # 구현 난점 · 리스크 · PoC 계획 (Feasibility & Risks)
 
-- 문서 버전: v0.1 (2026-09-28)
+- 문서 버전: v0.2 (2026-09-29) — v0.2: 추가 요구사항 RQ15·RQ16(팔레트·DESIGN.md), §2.10, PoC S7
 - 목적: 요구사항(`Docs/Vanilla-Studio-Requirements.txt`) 중 **실제 구현이 어려운 부분**을 식별하고, 구현 가능한 형태로 조정한 내역과 사전 검증(PoC) 계획을 기록한다.
 - 리서치 출처는 문서 끝 §5에 모았다.
 
@@ -24,6 +24,8 @@
 | RQ12 | 플레이그라운드(보관·재생), 추후 서버 | 하(로컬) / 상(서버) | 로컬만 MVP | `item.json`에 서버 연동 필드 예약 |
 | RQ13 | 생성형 AI 배제, 코딩으로 구성요소를 쌓아 올림 | 중 | 가능 | 절차적 생성 + 사용자 자료 + 오픈 라이선스(출처 기록) (D-006) |
 | RQ14 | "심미적으로 뛰어난" 결과물 | **최상** | 보장 불가(품질 목표) | 템플릿 스킬, `vanilla-core` 심미 체크리스트, 에이전트 **시각적 자기 검수**(스냅샷 MCP 도구), 사용자 검수 루프 |
+| RQ15 | 컬러 팔레트 기능(같은 형태도 팔레트로 느낌이 달라짐) — 2026-09-29 추가 | 중 | 가능(조건부) | 팔레트 = `DESIGN.md` 색 역할 토큰. 코드가 토큰만 쓰도록 강제해야 교체가 먹힘 (D-016) |
+| RQ16 | 디자인 가이드를 표준 `DESIGN.md`로 에이전트에 전달 — 2026-09-29 추가 | 중 | 가능 | Google DESIGN.md 형식 채택, 런타임이 토큰으로 바인딩, 영상은 `frame.md` 보조 (D-015) |
 
 ---
 
@@ -90,6 +92,24 @@
 | dom-to-pptx | MIT(확인 필요) | Beta 기능, 번들 전 확인 |
 | FFmpeg | LGPL/GPL(빌드별) | 앱에 번들하지 않고 **사용자 동의 후 다운로드**. LGPL 빌드 우선 |
 | 폰트·CC0 에셋 | OFL/CC0 | `CREDITS.md` 기록 |
+| DESIGN.md 명세·CLI(`@google/design.md`) | Apache-2.0 (alpha) | 사용 가능, 버전 고정 |
+| HyperFrames FRAME.MD 형식·프리셋 | Apache-2.0(소개 자료 기준) ⚠️ | 참고용. 프리셋 폰트는 개별 라이선스 확인(대부분 Google Fonts OFL로 보임) |
+| HyperFrames 카탈로그 항목 | 저장소 Apache-2.0, 항목별 `license` 필드는 선택 ⚠️ | 참고용(D-017). GSAP 기반이므로 복사하지 않고 런타임으로 재구현, 차용 시 항목별 확인 + `CREDITS.md` |
+| `yaml` / `culori` | ISC / MIT | 사용 가능 |
+| 내장 팔레트 | 자체 제작(CC0로 배포) | 외부 팔레트 사이트의 색 조합을 그대로 가져오지 않음 |
+
+### 2.10 디자인 시스템 표준화·팔레트 (RQ15·RQ16) — 위험도: 중
+
+- **문제 1 — 형식 변동**: DESIGN.md는 2026-04 공개된 `alpha` 형식이라 스키마·CLI가 바뀔 수 있다.
+  - 대응: 앱은 자체 zod 스키마로 필요한 부분(front matter 토큰)만 관대하게 읽는다. 공식 CLI는 버전 고정, 선택적 검사로만 사용. 모르는 키는 보존.
+- **문제 2 — 팔레트가 먹히지 않는 코드**: 에이전트가 색을 코드에 하드코딩하면 팔레트를 바꿔도 결과물이 안 바뀐다.
+  - 대응: `vanilla-core` 규칙(토큰만), `check_scene` 하드코딩 경고, 검수 화면 "토큰 미사용 n건" 표시와 "토큰으로 바꿔 달라" 수정 요청 버튼, 템플릿 예제 코드의 모범 사용.
+- **문제 3 — CSS 밖의 색**: three.js 재질·셰이더 uniform·Canvas 2D는 CSS 변수를 직접 못 쓴다.
+  - 대응: `useDesign()`으로 JS 값을 제공하고, 교체 시 R3F `invalidate()`. 셰이더는 uniform으로 받게 스킬에서 안내.
+- **문제 4 — 교체 후 품질**: 팔레트를 바꾸면 대비가 깨지거나 역할이 어울리지 않을 수 있다.
+  - 대응: 역할 쌍 WCAG 대비 경고, 라이트/다크 `scheme` 태그로 템플릿과 맞지 않는 팔레트 표시, 팔레트 비교 스냅샷(F-PAL-07).
+- **문제 5 — 본문과 토큰 불일치**: 팔레트 교체는 front matter만 바꾸므로, 본문에 hex를 적어 두면 설명과 값이 어긋난다.
+  - 대응: 본문은 역할 이름으로만 색을 설명하도록 스킬에서 안내하고, 검증에서 본문의 hex 리터럴을 경고.
 
 ---
 
@@ -103,6 +123,7 @@
 | S4 | Tauri WebView2 안 iframe으로 Vite dev server 표시 + Bridge(seek·setParams) | HMR 동작, 파라미터 반영 < 100ms, IPC 격리 확인 | 별도 WebviewWindow 사용 |
 | S5 | `dom-to-pptx`로 샘플 슬라이드 3종 편집 PPTX 변환 | PowerPoint에서 텍스트 편집 가능, 레이아웃 오차 허용 범위 | Beta 기능 제외 |
 | S6 | Windows Doctor: Node/pnpm/git/CLI/FFmpeg/Chrome 탐지와 FFmpeg 다운로드 | 깨끗한 Windows에서 안내대로 준비 완료 | 수동 설치 문서 |
+| S7 | `DESIGN.md` 토큰 파이프라인 + 팔레트 교체: HyperFrames 프리셋 수준의 샘플 DESIGN.md를 Vite 플러그인으로 읽어 CSS 변수·`useDesign()` 제공, Bridge `setDesign`으로 교체, `colors`만 다시 쓰기, 공식 CLI `lint` | 교체 반영 < 100ms(DOM·R3F 모두), 본문 바이트 보존 왕복, 파일 수정 시 HMR, 두 팔레트 렌더 결과가 색만 다름, 표준 색 역할로 프리셋 12종 표현 가능 | 앱이 `tokens.css`·`tokens.ts` 생성 파일을 쓰는 방식 / 공식 CLI 대신 자체 검사만 |
 
 PoC 코드는 `spikes/<id>-<topic>/`에 두고, 결과는 `wiki/sources/poc-<id>.md`로 기록한 뒤 기술 설계서의 ⚠️ 항목을 갱신한다.
 
@@ -127,3 +148,11 @@ PoC 코드는 `spikes/<id>-<topic>/`에 두고, 결과는 `wiki/sources/poc-<id>
 - Remotion 라이선스: https://www.remotion.dev/docs/license/faq
 - GSAP 표준 라이선스: https://gsap.com/community/standard-license/
 - dom-to-pptx: https://github.com/atharva9167j/dom-to-pptx , PptxGenJS 기반
+
+추가 조사 (2026-09-29)
+
+- DESIGN.md 명세·CLI: https://github.com/google-labs-code/design.md
+- DESIGN.md 오픈소스 공개 소식: https://the-decoder.com/googles-open-source-design-md-gives-ai-agents-a-prompt-ready-blueprint-for-brand-consistent-design/
+- HyperFrames FRAME.MD 프리셋·변환기: https://www.hyperframes.dev/design , 설명: https://www.therundown.ai/tools/frame-md
+- HyperFrames 카탈로그: https://hyperframes.heygen.com/catalog , 항목 구조: https://hyperframes.heygen.com/contributing/catalog.md , 검색: https://hyperframes.heygen.com/developers/catalog-search.md
+- HyperFrames에서 DESIGN.md 토큰 바인딩: https://github.com/heygen-com/hyperframes/blob/main/docs/guides/open-design-hyperframes.md
