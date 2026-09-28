@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>S1 HyperFrames + R3F</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0b0d12; }
+      #root { position: relative; width: 1920px; height: 1080px; }
+    </style>
+  </head>
+  <body>
+    <!-- HyperFrames reads duration/size from the composition root; React mounts inside it. -->
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="15"
+      data-width="1920"
+      data-height="1080"
+      data-fps="30"
+      data-no-timeline
+    ></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
