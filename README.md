@@ -1,11 +1,26 @@
-<p align="center"><img src="./design/brand/app-banner.svg" alt="WorkspaceTemplate — folder-based Tauri desktop workspace shell" width="100%" /></p>
+# Vanilla Studio
 
-# WorkspaceTemplate
+> 코딩 에이전트(Claude Code·Codex·OpenCode·Hermes·AGY)가 브라우저 기술만으로
+> 웹 페이지·슬라이드·이미지·2D/3D 영상·인터랙티브 페이지를 만드는 Tauri 데스크탑 디자인 스튜디오.
+> 생성형 이미지/영상 AI 없이, 에이전트가 코드로 구성요소를 하나씩 쌓아 올립니다.
+
+**현재 단계: P2 상세 기획 완료 → P3 구현 계획(+PoC) 준비 중.** 앱 기능은 아직 구현 전이며,
+아래 "기반 템플릿" 기능 위에 구현됩니다.
+
+| 문서 | 내용 |
+| --- | --- |
+| `AGENTS.md` | 에이전트·개발자 작업 지침 (먼저 읽기) |
+| `Docs/Vanilla-Studio-Requirements.txt` | 요구사항 원본 |
+| `Docs/Planning/` | 상세 기획서 · 기술 설계서 · 리스크/PoC · 결정 기록 |
+| `Docs/Playbook/` | 개발 단계(P0~P7) 플레이북 · 프롬프트 · 문서 양식 |
+| `wiki/` | 프로젝트 지식베이스 (`wiki/index.md`부터) |
+
+---
+
+# 기반 템플릿: WorkspaceTemplate
 
 폴더 기반 데스크탑 앱을 **빠르고 손쉽게 시작**하기 위한 Tauri 2 + React 19 +
-TypeScript 스타터 템플릿입니다. 특정 프로젝트의 도메인 로직은 포함하지 않고,
-모든 데스크탑 앱에 공통으로 필요한 **앱 셸(레이아웃·탭·파일·설정·다국어·테마·저장소)**만
-제공합니다.
+TypeScript 스타터 템플릿입니다. (브랜딩 교체는 구현 단계 M1에서 진행)
 
 ## 제공하는 것
 
