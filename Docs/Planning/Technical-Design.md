@@ -147,7 +147,7 @@ UI                         Rust agent_host                         Agent (stdio)
 
 - **클라이언트 capability**: `fs.readTextFile`, `fs.writeTextFile` 제공(프로젝트 스코프 강제). `terminal`은 **제공하지 않는다** → 에이전트가 자체 셸을 쓰되 `request_permission`을 거치게 한다.
   - S3 결과(Claude Code): 어댑터는 fs capability를 쓰지 않고 자체 도구로 파일을 다룬다. 그래서 스코프 강제는 **권한 요청의 `locations` 검사 + 에이전트 세션 격리 설정**으로 한다. fs 핸들러는 fs를 쓰는 다른 어댑터용 방어선으로 유지한다.
-- **세션 격리(D-018 제안, S3)**: `session/new`의 `_meta.claudeCode.options`에 다음을 넣는다.
+- **세션 격리(D-018, S3)**: `session/new`의 `_meta.claudeCode.options`에 다음을 넣는다.
   - `settingSources: ["project"]`: 사용자 전역 `~/.claude` 설정·스킬·커넥터·허용 목록 제외
   - `settings.permissions.ask: ["Bash", "PowerShell"]`: 읽기 전용 명령도 매번 권한 요청
   - 이 설정이 없으면 `echo` 같은 읽기 전용 셸이 확인 없이 실행된다.

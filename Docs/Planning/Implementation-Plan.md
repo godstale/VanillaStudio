@@ -1,7 +1,8 @@
 # Vanilla Studio 구현 계획서 (Implementation Plan)
 
 - 문서 버전: v1.0 (2026-09-29)
-- 선행 문서: `Product-Spec.md` v0.3, `Technical-Design.md` v0.3, `Feasibility-Risks.md` v0.2, `Decisions.md`(D-001~D-018), PoC 결과(`wiki/sources/poc-s1`~`poc-s7`)
+- 선행 문서: `Product-Spec.md` v0.3, `Technical-Design.md` v0.3, `Feasibility-Risks.md` v0.2, `Decisions.md`(D-001~D-018 모두 Accepted), PoC 결과(`wiki/sources/poc-s1`~`poc-s7`)
+- 골든 샘플(초안): `Docs/Verification/Golden-Samples.md`
 - 작업 목록: `Docs/Planning/TODO.md` (1~2시간 단위, 항목마다 대상 파일·완료 판정·선행 항목)
 - 양식: `Docs/Playbook/templates/Implementation-Plan-Template.md`
 
@@ -68,13 +69,13 @@ M1 기반 ──┬──▶ M2 에이전트 ──▶ M3 파이프라인 ──
 | M6 | `template.json`·`palette.json` 스키마, 내장 팔레트 대비 전부 통과 | 템플릿 3종 × 팔레트 2종 결과 비교 |
 | M7 | 인스톨러 빌드 CI(로컬) | 깨끗한 Windows VM 설치 체크리스트 |
 
-**골든 샘플**: P5 입력으로 쓸 샘플 브리프 5종은 사용자가 확정한다(`User-Checklist.md` P3). M4부터 1~2종으로 회귀 테스트를 돌린다.
+**골든 샘플**: `Docs/Verification/Golden-Samples.md`에 초안 5종(G1 web, G2 interactive, G3 slides, G4 image, G5 video)과 자동 검사·루브릭을 정리했다. **사용자 확정 대기**다. M4부터 G5·G3로 회귀 테스트를 돌린다.
 
 ## 5. 위험과 완화 (구현 단계)
 
 | 위험 | 출처 | 완화 |
 | --- | --- | --- |
-| 에이전트 기본 설정이 셸을 확인 없이 실행 | S3 | D-018 세션 격리(**사용자 확인 대기**). 확정 전에는 M2 구현을 격리 기본값으로 하되 설정 토글 자리를 남긴다 |
+| 에이전트 기본 설정이 셸을 확인 없이 실행 | S3 | D-018 세션 격리(Accepted): 격리 기본값 + "전역 설정 사용(고급)" 토글(켜도 셸 ask 규칙 유지). 에이전트별 동등 설정은 레지스트리 `sessionOptions` |
 | Codex 연동 미검증 | S3 | M2 중 Codex CLI 설치 후 `spikes/s3-acp-claude`의 `acp-probe`로 재검증, 지원 매트릭스 갱신 |
 | HMR이 연속 쓰기를 놓침 | S4 | 파일 감시 + `hmr` 보고 비교 + `reload` (T4 항목) |
 | FFmpeg 빌드 변동·라이선스(GPL) | S1·S6 | 메이저 계열 고정 + 해시 기록, 앱 번들 금지·동의 후 다운로드, 배포 전 법률 검토(P6) |
@@ -87,7 +88,6 @@ M1 기반 ──┬──▶ M2 에이전트 ──▶ M3 파이프라인 ──
 
 | 항목 | 확정 시점 | 판단 기준 |
 | --- | --- | --- |
-| D-018 에이전트 세션 격리 | M2 시작 전 | 사용자 결정 |
 | pnpm 워크스페이스(`packages/runtime`, `packages/export-worker`) 도입 | M1 T1.3 | 루트 lint·typecheck·test와 공존, 빌드 산출물을 `resources/`로 복사 가능 |
 | MCP 서버 구현(Rust `rmcp` vs Node) | M2 | Streamable HTTP + Bearer 토큰, 앱 상태 접근 용이성 |
 | 로컬 HTTP 서버 크레이트(`axum`/`tiny_http`) | M2(MCP)·M6(플레이그라운드) | MCP와 정적 서빙을 한 서버로 처리할 수 있는지 |

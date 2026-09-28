@@ -16,7 +16,7 @@ last_updated: 2026-09-29
 
 ## Pitfalls
 
-- Claude Code 기본 설정은 읽기 전용 셸을 권한 요청 없이 실행한다. 세션 격리(`settingSources: ["project"]` + `permissions.ask: ["Bash","PowerShell"]`, D-018 제안)가 필요하다.
+- Claude Code 기본 설정은 읽기 전용 셸을 권한 요청 없이 실행한다. 세션 격리(`settingSources: ["project"]` + `permissions.ask: ["Bash","PowerShell"]`, D-018)가 필요하다.
 - Claude 어댑터는 ACP `fs/*`를 쓰지 않는다. fs 핸들러만으로는 스코프를 강제할 수 없다.
 
 ## Discussed In

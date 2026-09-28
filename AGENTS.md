@@ -101,6 +101,7 @@ python .claude/skills/llm-wiki/scripts/lint.py --save   # wiki 건강 검사
 
 - Tauri 파일 명령은 항상 워크스페이스 스코프 밖 경로 접근을 거부합니다. 심링크는 canonicalize 후 재검사.
 - **셸 실행(`run_shell` 호출 코드)은 항상 실행 전 사용자 확인을 받습니다.** 예외를 만들지 마십시오.
+- **에이전트 세션 격리(D-018)**: 앱이 여는 에이전트 세션은 사용자 전역 설정을 불러오지 않는다(Claude Code: `settingSources: ["project"]`). 셸 도구에는 항상 ask 규칙을 건다(`permissions.ask: ["Bash","PowerShell"]`). "전역 설정 사용" 옵션을 켜도 ask 규칙은 유지한다.
 - **에이전트 권한 정책(D-010)**: 프로젝트 폴더 안 파일 읽기/쓰기만 자동 허용, 셸(`execute`)은 매번 확인(`allow_always` 미노출), 네트워크(`fetch`)는 확인, 프로젝트 밖은 거부. 이 정책은 Rust `agent_host`에서 강제합니다.
 - **앱 소유 프로세스**(프리뷰 서버·export 워커·pnpm install)는 고정 argv 전용 명령으로만 실행하고, UI에서 명령 문자열을 받지 않습니다(D-012).
 - 미리보기 iframe은 별도 origin으로 격리하고 Tauri IPC 권한을 주지 않습니다.

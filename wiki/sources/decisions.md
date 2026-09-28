@@ -31,7 +31,7 @@ last_updated: 2026-09-29
 | D-015 | 디자인 시스템 전달 표준: 프로젝트 `DESIGN.md` | Accepted (2026-09-29) | [[DesignMd]] |
 | D-016 | 컬러 팔레트 = DESIGN.md 색 역할 토큰, 교체는 에이전트 없이 | Accepted (2026-09-29) | [[ColorPalette]] |
 | D-017 | HyperFrames 프리셋·카탈로그는 참고 자료로만 | Accepted (2026-09-29) | [[research-2026-09-29-design-md-hyperframes]] |
-| D-018 | 에이전트 세션 격리(전역 설정 제외 + 셸 ask 규칙) | Proposed | [[PermissionPolicy]], [[poc-s3]] |
+| D-018 | 에이전트 세션 격리(전역 설정 제외 + 셸 ask 규칙) | Accepted (2026-09-29) | [[PermissionPolicy]], [[poc-s3]] |
 
 ## Connections
 

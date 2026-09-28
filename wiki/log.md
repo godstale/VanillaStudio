@@ -103,3 +103,12 @@
 
 ## [2026-09-29] lint | Wiki health check
 - 45 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] decision | D-018 Accepted
+- 에이전트 세션 격리(전역 설정 제외 + 셸 ask 규칙) 사용자 승인. AGENTS.md §7 반영. → [[decisions]], [[PermissionPolicy]]
+
+## [2026-09-29] ingest | 골든 샘플 초안
+- 유형별 5종(G1~G5), 자동 검사 A1~A7 + 루브릭. 사용자 확정 대기. → [[golden-samples]]
+
+## [2026-09-29] lint | Wiki health check
+- 46 pages, orphans 0, broken links 0. → `wiki/lint-report.md`

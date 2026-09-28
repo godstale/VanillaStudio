@@ -216,6 +216,15 @@
       "pages": [
         "sources/phase-p3-implementation-plan.md"
       ]
+    },
+    "golden-samples": {
+      "source_file": "Docs/Verification/Golden-Samples.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/golden-samples.md"
+      ]
     }
   }
 }

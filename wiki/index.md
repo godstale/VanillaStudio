@@ -19,10 +19,11 @@
 - [[technical-design]] — 기술 설계서 v0.3
 - [[feasibility-risks]] — 구현 난점·리스크·PoC 계획
 - [[implementation-plan]] — 구현 계획서 v1.0 + TODO (P3)
+- [[golden-samples]] — 골든 샘플 브리프 5종 초안(P5 품질 기준)
 
 ## Planning / Decisions
 
-- [[decisions]] — 결정 기록 색인 (D-001~D-018, D-018만 Proposed)
+- [[decisions]] — 결정 기록 색인 (D-001~D-018, 모두 Accepted)
 
 ## Research
 
