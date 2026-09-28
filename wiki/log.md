@@ -70,3 +70,9 @@
 
 ## [2026-09-29] lint | Wiki health check
 - 39 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] poc | S7 DESIGN.md 토큰 파이프라인 통과
+- 교체 p95 34ms, HMR 26ms, 바이트 보존 재작성. 역할 핵심 4 + 파생 5, CSS 변수 `--color-*`로 설계 수정. → [[poc-s7]]
+
+## [2026-09-29] lint | Wiki health check
+- 40 pages, orphans 0, broken links 0. → `wiki/lint-report.md`

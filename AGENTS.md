@@ -65,7 +65,7 @@
 3. **사용자 조절값 보호**: `params/*.values.json`은 사용자 소유. 앱·에이전트 프롬프트는 명시 요청 없이 덮어쓰게 해서는 안 됩니다.
 4. **에이전트 중립**: 특정 에이전트 전용 기능을 파이프라인 핵심 경로에 넣지 않습니다. 에이전트별 차이는 `src/lib/agents/` 레지스트리·어댑터 계층에서 흡수.
 5. **데이터 계약 변경**: `plan.json`·`tasks.json`·`vanilla.json`·`template.json`·`palette.json`·DESIGN.md 토큰 스키마·Bridge 메시지 스키마를 바꾸면 zod 스키마, 설계서, `vanilla-core` 스킬, 버전 필드를 함께 갱신.
-6. **디자인 토큰 계약**(D-015, D-016): 생성물의 색·타이포·간격은 사용자 프로젝트의 `DESIGN.md` 토큰에서만 가져온다(CSS `var(--ds-*)`, JS `useDesign()`). 앱이 팔레트를 적용할 때는 front matter의 `colors`만 바꾸고 본문을 보존한다. Plan 승인 후의 `DESIGN.md` 토큰 값은 `params/*.values.json`처럼 사용자 소유로 보호한다.
+6. **디자인 토큰 계약**(D-015, D-016): 생성물의 색·타이포·간격은 사용자 프로젝트의 `DESIGN.md` 토큰에서만 가져온다(CSS `var(--color-*)`, JS `useDesign()`). 앱이 팔레트를 적용할 때는 front matter의 `colors`를 바꾸고, 본문은 이전 색 값이 적힌 곳만 갱신한다(그 외 바이트 보존). Plan 승인 후의 `DESIGN.md` 토큰 값은 `params/*.values.json`처럼 사용자 소유로 보호한다.
 7. **생성형 AI 배제**(D-006): 이미지/영상 생성 서비스 연동 코드를 추가하지 않습니다. 외부 리소스는 오픈 라이선스 + `CREDITS.md` 기록.
 
 ## 5. 빌드/검증 명령

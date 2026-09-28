@@ -61,7 +61,7 @@
 | **HTTP(로컬)** | Rust `axum`/`tiny_http` 중 택1 ⚠️ | 플레이그라운드 정적 서빙, MCP HTTP |
 | **다운로드/압축** | `reqwest`, `zip` crate | FFmpeg 다운로드, zip export |
 | **DESIGN.md 처리** | `yaml`(ISC) + 자체 zod 스키마 (`src/lib/design`) | front matter 파싱·검증·`colors`만 교체해 다시 쓰기(본문 보존) |
-| **색 계산** | `culori`(MIT) ⚠️ | OKLCH 변환·WCAG 대비·조화 생성. S7에서 번들 크기 확인, 과하면 필요한 함수만 자체 구현 |
+| **색 계산** | `culori`(MIT) | OKLCH 혼합·WCAG 대비·파싱 (S7 사용). 앱 번들에서는 트리셰이킹 가능한 `culori/fn` 사용 |
 
 ### 2.2 사용자 프로젝트(생성물) 런타임 — 앱이 스캐폴딩
 
@@ -201,7 +201,7 @@ function IntroScene() {
 - **render 모드 시간 주입(S1 확정)**: `hf-seek` 리스너에서 `waitUntil(sceneReady.then(() => setTime(t)))`를 동기로 호출한다. `setTime`은 React DOM을 `flushSync`로 커밋하고 R3F를 `advance`로 그린다. `sceneReady` = 모든 Canvas `onCreated` + `document.fonts.ready` + 에셋(텍스처·HDRI) 로딩. 준비 전에 시각을 적용하면 워커 첫 프레임이 달라진다(`wiki/sources/poc-s1.md`).
 - 결정성 도우미: `useSeededRandom(seed)`, `noise2D/3D`(시드 고정), `ease.*`, `timeline([...keys])`(키 기반 보간).
 - 입력: `useInput()` → 포인터·키·스크롤·자이로. `render` 모드에서는 고정값.
-- 디자인 토큰: `useDesign()` → `{ colors, typography, spacing, rounded }`(§4.4). CSS에서는 `var(--ds-<role>)`.
+- 디자인 토큰: `useDesign()` → `{ colors, typography, spacing, rounded }`(§4.4). CSS에서는 `var(--color-<role>)`.
   `param.color(token('accent'))`처럼 파라미터 기본값에 토큰을 참조할 수 있다.
 - GSAP 사용 시: `useGsapTimeline(tl)`이 paused timeline을 `t`에 맞춰 `seek` (선택적 헬퍼, gsap은 프로젝트 의존성으로만).
 
@@ -223,16 +223,23 @@ DESIGN.md ──(Vite 플러그인 @vanilla/runtime/vite: front matter 파싱, �
    │ 파일 변경 → HMR                                                                   │
    │                                                  ┌────────────────────────────────┤
    │                                                  ▼                                ▼
-   │                                  :root { --ds-canvas: …; --ds-accent: … }   useDesign() (JS 값)
+   │                                  :root { --color-canvas: …; --color-accent: … }   useDesign() (JS 값)
    │                                                  ▲                                ▲
 Bridge setDesign { colors } ─────────── 미리보기 전용 오버라이드(파일 변경 없음) ──────┘
 ```
 
-- **읽기**: 런타임의 Vite 플러그인이 빌드·프리뷰 시 `DESIGN.md`를 파싱해 가상 모듈로 제공한다. 생성 파일(`tokens.css` 등)을 두지 않으므로 에이전트가 잘못 수정할 대상이 없고, export 빌드도 같은 경로를 쓴다. ⚠️ S7
+- **읽기**(S7 확인): 런타임의 Vite 플러그인이 빌드·프리뷰 시 `DESIGN.md`를 파싱해 가상 모듈 `virtual:vanilla/design`으로 제공한다.
+  - 생성 파일(`tokens.css` 등)을 두지 않으므로 에이전트가 잘못 수정할 대상이 없고, export 빌드도 같은 경로를 쓴다.
+  - 파일이 바뀌면 `handleHotUpdate`에서 가상 모듈을 무효화하고, 런타임이 `import.meta.hot.accept`로 받는다(약 26ms). 파일이 깨지면 마지막 정상 토큰을 유지하고 경고만 낸다.
+- **CSS 변수 이름**: `--color-<name>`, `--spacing-<name>`, `--rounded-<name>`. 공식 CLI의 `export --format css-vars`와 같다.
+- **역할 파생**: 핵심 4개(`canvas`·`ink`·`primary`·`accent`)가 있으면 나머지를 OKLCH 혼합으로 채운다. 대비는 `ink-muted` 3:1, `on-primary` 최대 대비를 보장한다(상세 기획서 §8.2).
 - **해석 순서**: 토큰 참조(`{colors.primary}`) 해석 → CSS 변수 주입 → `useDesign()` 값. `color` 파라미터는 코드 기본값 < 토큰 < 사용자 값(`params/*.values.json`) 순으로 결정.
 - **미리보기 교체**: 팔레트를 고르면 Bridge `setDesign`으로 CSS 변수와 `useDesign()` 값을 즉시 바꾼다. R3F는 `invalidate()`로 다시 그린다. 목표 < 100ms(파라미터와 동일).
-- **적용(쓰기)**: 앱(`src/lib/design`)이 front matter의 `colors` 블록만 교체해 다시 쓴다. 본문과 다른 토큰은 바이트 단위로 보존(왕복 테스트). → HMR로 반영 → 체크포인트.
-- **검증**(F-DSN-02): ① 자체 zod 스키마(필수 색 역할, 색 형식, 참조 대상 존재) ② WCAG 대비(역할 쌍) ③ 선택: 공식 CLI `lint`(export 워커 경유). Plan 단계에서 실패하면 오류 목록을 에이전트에 자동 재요청.
+- **적용(쓰기)**: 앱(`src/lib/design`)이 front matter의 `colors` 블록만 줄 단위로 교체한다. flow 스타일이면 YAML 문서 API로 처리한다.
+  - 선택하면 본문에 적힌 이전 hex도 새 값으로 바꾼다.
+  - 나머지 바이트·줄바꿈(CRLF)은 보존되고, 왕복하면 파일이 완전히 복원된다(S7 단위 테스트).
+  - 이후 HMR로 반영하고 체크포인트를 만든다.
+- **검증**(F-DSN-02): ① 자체 zod 스키마(필수 색 역할, 색 형식, 참조 대상 존재) ② WCAG 대비(역할 쌍) ③ 선택: 공식 CLI `lint`(export 워커 경유, **stdin을 닫고 실행**해야 멈추지 않음). `orphaned-tokens` 경고는 Scene 코드가 쓰는 역할 토큰이라 UI에서 걸러 낸다. Plan 단계에서 실패하면 오류 목록을 에이전트에 자동 재요청.
 - **결정성**: 토큰은 빌드 시점 상수이므로 같은 `DESIGN.md` → 같은 프레임. 렌더 모드에서는 `setDesign`을 받지 않는다.
 
 ---

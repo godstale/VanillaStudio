@@ -107,7 +107,7 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 ### 3.4 단계 4 — Build (구현)
 
 - "빌드 시작" → 앱이 `tasks.json`의 위상 정렬 순서대로 태스크를 하나씩 에이전트에게 보낸다(태스크 = ACP 프롬프트 1회).
-- 에이전트는 색·타이포를 `DESIGN.md` 토큰(CSS 변수 `--ds-*`, JS `useDesign()`)으로만 쓴다(§8.1).
+- 에이전트는 색·타이포를 `DESIGN.md` 토큰(CSS 변수 `--color-*`, JS `useDesign()`)으로만 쓴다(§8.1).
 - 각 태스크 완료 후: ① 런타임 계약 검사(`check_scene`, 하드코딩 색상 경고 포함) ② 스냅샷 생성 ③ 체크포인트 커밋 ④ 다음 태스크.
 - 사용자는 **에이전트 패널**에서 진행 로그(메시지·도구 호출·파일 diff)를 보고, 권한 요청에 응답하고, 일시정지/중단할 수 있다.
 - 실행 모드: `자동(순차 전체)` / `한 단계씩(태스크마다 확인)`.
@@ -286,7 +286,7 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 | --- | --- | --- |
 | F-DSN-01 | 프로젝트 `DESIGN.md` 스캐폴딩(템플릿 것 또는 기본본 + 선택 팔레트 적용) | M |
 | F-DSN-02 | `DESIGN.md` 검증(구조·토큰 참조·필수 색 역할·WCAG 대비), 실패 시 에이전트 자동 재요청 | M |
-| F-DSN-03 | 토큰 바인딩: `DESIGN.md` → 런타임(CSS 변수 `--ds-*`, `useDesign()`), 파일 변경 시 HMR 반영 | M |
+| F-DSN-03 | 토큰 바인딩: `DESIGN.md` → 런타임(CSS 변수 `--color-*`, `useDesign()`), 파일 변경 시 HMR 반영 | M |
 | F-DSN-04 | 디자인 탭(토큰 시각화·원문 편집·검사 결과) | M |
 | F-DSN-05 | `check_scene` 하드코딩 색상 경고 + 검수 화면 "토큰 미사용 n건" 표시 | S |
 | F-DSN-06 | `frame.md`(영상용 모션·페이싱·체류 시간 지침) 작성 지원 — `video` 유형 | S |
@@ -419,10 +419,11 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
   | Review | 사용자 | 디자인 패널·팔레트로 `colors` 토큰 수정. 에이전트는 수정 요청(R-NNN)이 있을 때만 `DESIGN.md`를 바꾼다 |
 
 - **소유 규칙**: Plan 승인 이후 `DESIGN.md`의 토큰 값은 사용자 소유다(원칙 P5, `params/*.values.json`과 같은 보호).
-  - 앱이 팔레트를 적용할 때는 **front matter의 `colors`만 교체하고 본문은 그대로 둔다**.
-  - 그래서 본문은 hex 값 대신 역할 이름(`accent`, `canvas`)으로 색을 설명하도록 `vanilla-core` 스킬에서 안내한다.
+  - 앱이 팔레트를 적용할 때는 **front matter의 `colors`만 교체**하고, 본문은 이전 색 값이 적힌 곳만 새 값으로 바꾼다. 나머지 바이트는 그대로 둔다(S7).
+  - 표준 명세의 예제도 본문에 `Primary (#1A1C1E)`처럼 hex를 적으므로 금지하지 않는다.
+  - front matter가 없는 산문형 DESIGN.md는 "토큰 없음"으로 알린다. 본문을 보존한 채 토큰 블록을 추가하거나 에이전트에게 작성을 요청한다.
 - **토큰 바인딩**: 런타임이 `DESIGN.md`를 읽어 두 가지 형태로 제공한다(기술 설계서 §4.4).
-  - CSS 변수: `--ds-canvas`, `--ds-accent` …
+  - CSS 변수: `--color-canvas`, `--color-accent`, `--spacing-md`, `--rounded-md` … (공식 CLI `export --format css-vars`와 같은 이름, S7)
   - JS 값: `useDesign().colors.accent` — three.js 재질·셰이더 uniform처럼 CSS 변수를 못 쓰는 곳용.
 - **`frame.md`(선택, `video`)**: HyperFrames의 FRAME.MD 형식.
   - `DESIGN.md`의 브랜드를 16:9 영상 프레임에 맞게 옮긴 지침: 구도·스케일·페이싱·체류 시간·모션.
@@ -433,21 +434,24 @@ React가 아닌 환경에서도 쓸 수 있도록 **Web Component를 범용 인�
 
 같은 형태라도 팔레트가 결과물의 느낌을 크게 바꾼다. 팔레트는 **역할(role)에 색을 배정한 묶음**이며, 적용하면 `DESIGN.md`의 `colors` 토큰이 교체된다.
 
-- **표준 색 역할** (Vanilla 규약. ⚠️ S7에서 DESIGN.md 예제·HyperFrames 프리셋과 대조해 확정)
+- **표준 색 역할** (Vanilla 규약, S7 확정)
+  - 이름은 기능 기준으로 짓는다. `primary`의 뜻이 생태계마다 다르기 때문이다(Google 예제에서는 글자색, Material에서는 브랜드색, HyperFrames에서는 배경 또는 글자).
+  - 핵심 4개는 필수, 파생 5개는 없으면 앱·런타임이 대비 기준을 지키며 자동 계산한다.
 
-  | 역할 | 필수 | 용도 |
-  | --- | --- | --- |
-  | `canvas` | ✔ | 전체 배경 |
-  | `surface` | ✔ | 카드·패널·면 |
-  | `ink` | ✔ | 제목·본문 텍스트 |
-  | `ink-muted` | ✔ | 보조 텍스트·캡션 |
-  | `primary` | ✔ | 주 브랜드색·핵심 강조 |
-  | `secondary` | ✔ | 보조 강조 |
-  | `accent` | ✔ | 포인트(하이라이트·CTA·파티클) |
-  | `line` | ✔ | 선·테두리·그리드 |
-  | `on-primary` | – | `primary` 위 텍스트 |
-  | `data-1`~`data-6` | – | 차트·데이터 시각화 계열색 |
+  | 역할 | 구분 | 용도 | 자동 파생 규칙 |
+  | --- | --- | --- | --- |
+  | `canvas` | 핵심 | 전체 배경 | – |
+  | `ink` | 핵심 | 제목·본문 텍스트 | – |
+  | `primary` | 핵심 | 주 브랜드색·핵심 강조 (DESIGN.md lint의 필수 토큰) | – |
+  | `accent` | 핵심 | 포인트(하이라이트·CTA·파티클) | – |
+  | `surface` | 파생 | 카드·패널·면 | canvas→ink 6% (OKLCH) |
+  | `ink-muted` | 파생 | 보조 텍스트·캡션 | ink→canvas, canvas 대비 3:1 이상 유지 |
+  | `line` | 파생 | 선·테두리·그리드 | ink→canvas 80% |
+  | `secondary` | 파생 | 보조 강조 | primary→ink 35% |
+  | `on-primary` | 파생 | `primary` 위 텍스트 | ink·canvas·흰색·검정 중 대비 최대 |
+  | `data-1`~`data-6` | 선택 | 차트·데이터 시각화 계열색 | – |
 
+  - 외부 팔레트(예: HyperFrames의 primary/secondary/tertiary/accent)는 밝기와 scheme을 기준으로 canvas·ink를 정해 매핑한다. HyperFrames 18종 모두 대비 검사를 통과했다(S7).
 - **팔레트 파일** `palette.json`:
   ```jsonc
   { "version": 1, "id": "biennale-yellow", "name": "Biennale Yellow", "tags": ["editorial", "warm"],

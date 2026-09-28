@@ -151,6 +151,18 @@
         "sources/poc-s4.md",
         "concepts/VanillaBridge.md"
       ]
+    },
+    "poc-s7": {
+      "source_file": "spikes/s7-design-tokens/README.md",
+      "origin": "PoC S7 (branch spike/s7-design-tokens)",
+      "ingest_mode": "full",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/poc-s7.md",
+        "concepts/ColorPalette.md",
+        "entities/DesignMd.md"
+      ]
     }
   }
 }
