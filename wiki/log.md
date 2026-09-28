@@ -94,3 +94,12 @@
 
 ## [2026-09-29] lint | Wiki health check
 - 43 pages, orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] ingest | 구현 계획서 v1.0 + TODO
+- 마일스톤 M1~M7, TODO 98개 항목(대상·완료 판정·선행·기능 ID). → [[implementation-plan]]
+
+## [2026-09-29] phase | P3 구현 계획 완료
+- PoC 7건, 설계 반영, 계획서·TODO. 다음: P4 M1. → [[phase-p3-implementation-plan]]
+
+## [2026-09-29] lint | Wiki health check
+- 45 pages, orphans 0, broken links 0. → `wiki/lint-report.md`

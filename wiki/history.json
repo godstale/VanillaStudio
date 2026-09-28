@@ -197,6 +197,25 @@
         "sources/poc-s5.md",
         "entities/DomToPptx.md"
       ]
+    },
+    "implementation-plan": {
+      "source_file": "Docs/Planning/Implementation-Plan.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/implementation-plan.md"
+      ]
+    },
+    "phase-p3-implementation-plan": {
+      "source_file": "Docs/Playbook/prompts/P3-implementation-plan.md",
+      "origin": "session log",
+      "ingest_mode": "full",
+      "status": "active",
+      "ingested_at": "2026-09-29",
+      "pages": [
+        "sources/phase-p3-implementation-plan.md"
+      ]
     }
   }
 }

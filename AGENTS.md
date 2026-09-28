@@ -14,6 +14,7 @@
 | 4 | `Docs/Planning/Technical-Design.md` | 기술 설계서 — **Vanilla Studio 고유 설계의 진실 공급원** |
 | 5 | `Docs/Planning/Feasibility-Risks.md` | 구현 난점·리스크·PoC |
 | 6 | `Docs/Planning/Decisions.md` | 결정 기록(D-NNN). Proposed 항목은 사용자 확인 전 전제로 삼지 않는다 |
+| 6a | `Docs/Planning/Implementation-Plan.md`, `Docs/Planning/TODO.md` | 구현 계획(마일스톤 M1~M7)과 작업 목록. **구현 작업은 TODO 항목 단위로 진행하고 체크한다** |
 | 7 | `Docs/Playbook/README.md` | 개발 단계(P0~P7)별 할 일·산출물 |
 | 8 | `Docs/Architecture.md`, `Docs/Project-Structure.md`, `Docs/Extension-Guide.md` | 기반 템플릿 구조(원본 유지). 충돌 시 `Technical-Design.md` 우선 |
 | 9 | `DESIGN.md`, `BRANDING.md` | 앱 UI 디자인 토큰·브랜딩 |
