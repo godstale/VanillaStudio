@@ -40,6 +40,7 @@ const GLOBAL_TABLES = [
   'doctor_cache',
   'palettes',
   'playground_items',
+  'playground_meta',
   'templates',
 ];
 const PROJECT_TABLES = [

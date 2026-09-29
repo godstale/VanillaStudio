@@ -9,6 +9,7 @@ export type WorkspaceTabType =
   | 'review'
   | 'export'
   | 'palette'
+  | 'playground-item'
   | 'terminal';
 
 export type SidePanelView =
