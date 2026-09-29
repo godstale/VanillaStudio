@@ -103,14 +103,14 @@ M4b 검수 스튜디오
 
 ## M5 Export (branch: `feat/m5-export`)
 
-- [ ] T5.1 export 워커 골격(작업 JSON 입력, NDJSON 진행률, 취소, 환경 변수: `DO_NOT_TRACK`·`HYPERFRAMES_SKIP_SKILLS`·FFmpeg 경로, `GEMINI_API_KEY` 제거) — 대상: `packages/export-worker/src/index.ts` · 완료 판정: 목 작업 실행 테스트 · 선행: T1.3, T1.15
+- [x] T5.1 export 워커 골격(작업 JSON 입력, NDJSON 진행률, 취소, 환경 변수: `DO_NOT_TRACK`·`HYPERFRAMES_SKIP_SKILLS`·FFmpeg 경로, `GEMINI_API_KEY` 제거) — 대상: `packages/export-worker/src/index.ts` · 완료 판정: 목 작업 실행 테스트 · 선행: T1.3, T1.15
 - [ ] T5.2 작업 큐 Context·`export_jobs`·진행률·로그·취소 UI — 대상: `src/lib/export/*`, `src/components/export/*` · 완료 판정: 2개 작업 대기열 처리 · 선행: T5.1 · (F-EXP-08)
-- [ ] T5.3 web/interactive: `vite build`(live) → zip — 대상: `packages/export-worker/src/web.ts` · 완료 판정: zip을 풀어 정적 서버로 열림 · 선행: T5.1 · (F-EXP-01)
-- [ ] T5.4 스틸 캡처 공통(puppeteer-core + 관리 브라우저, 준비 신호 대기, 배율) — 대상: `packages/export-worker/src/capture.ts` · 완료 판정: 3840×2160 반복 동일 · 선행: T4.3, T5.1
-- [ ] T5.5 image export(PNG/JPG/WebP, 변형 일괄) — 대상: `packages/export-worker/src/image.ts` · 완료 판정: 규격·배율별 파일 · 선행: T5.4 · (F-EXP-03)
-- [ ] T5.6 slides 이미지 PPTX + PDF — 대상: `packages/export-worker/src/slides.ts` · 완료 판정: `verify-pptx.ps1`로 장수·크기 확인 · 선행: T5.4 · (F-EXP-04)
+- [x] T5.3 web/interactive: `vite build`(live) → zip — 대상: `packages/export-worker/src/web.ts` · 완료 판정: zip을 풀어 정적 서버로 열림 · 선행: T5.1 · (F-EXP-01)
+- [x] T5.4 스틸 캡처 공통(puppeteer-core + 관리 브라우저, 준비 신호 대기, 배율) — 대상: `packages/export-worker/src/capture.ts` · 완료 판정: 3840×2160 반복 동일 · 선행: T4.3, T5.1
+- [x] T5.5 image export(PNG/JPG/WebP, 변형 일괄) — 대상: `packages/export-worker/src/image.ts` · 완료 판정: 규격·배율별 파일 · 선행: T5.4 · (F-EXP-03)
+- [x] T5.6 slides 이미지 PPTX + PDF — 대상: `packages/export-worker/src/slides.ts` · 완료 판정: `verify-pptx.ps1`로 장수·크기 확인 · 선행: T5.4 · (F-EXP-04)
 - [ ] T5.7 편집 PPTX(Beta): 번들 벤더링, `exportToPptx`, `wrap` 후처리, 폰트 파일·안내 동봉 — 대상: `packages/export-worker/src/slidesEditable.ts`, `resources/workers/vendor/dom-to-pptx.bundle.js` · 완료 판정: PowerPoint에서 텍스트 편집 가능·겹침 없음 · 선행: T5.6 · (F-EXP-05)
-- [ ] T5.8 video: render 빌드 → HyperFrames render(`--workers` 메모리 기준, `data-no-timeline`) → MP4/WebM + 포스터 — 대상: `packages/export-worker/src/video.ts` · 완료 판정: 샘플 15초 1080p MP4, 두 번 렌더 동일 · 선행: T4.2, T4.3, T1.10 · (F-EXP-06)
+- [x] T5.8 video: render 빌드 → HyperFrames render(`--workers` 메모리 기준, `data-no-timeline`) → MP4/WebM + 포스터 — 대상: `packages/export-worker/src/video.ts` · 완료 판정: 샘플 15초 1080p MP4, 두 번 렌더 동일 · 선행: T4.2, T4.3, T1.10 · (F-EXP-06)
 - [ ] T5.9 export 옵션 다이얼로그(유형별) — 대상: `src/components/export/ExportDialog.tsx` · 완료 판정: 유형별 옵션 저장 · 선행: T5.2
 - [ ] T5.10 임베드 패키지(ES 모듈 + Web Component + React 래퍼) — 대상: `packages/export-worker/src/embed.ts` · 완료 판정: 외부 HTML에서 `<vanilla-scene>` 동작 · 선행: T5.3 · (F-EXP-02, S)
 - [ ] T5.11 M5 마무리: 5개 형식 데모, `milestone-m5.md` · 선행: T5.1~T5.9
