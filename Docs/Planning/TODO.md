@@ -58,7 +58,7 @@
 - [ ] T3.2 Brief 편집기(구조화 폼 + 자유 서술, 브랜드 색·폰트 입력) + 자료 업로드(`brief/materials/`, 라이선스 메모) — 대상: `src/components/pipeline/brief/*` · 완료 판정: `brief/brief.md` 생성·재열기 · 선행: T3.1 · (F-PIP-01)
 - [ ] T3.3 프롬프트 프리앰블(영문) Plan·Prompts·Build·Revision + 조립기(파일 경로 참조, 출력 언어) — 대상: `src/lib/pipeline/prompts/*.md`, `src/lib/pipeline/assemble.ts` · 완료 판정: 조립 결과 스냅샷 테스트 · 선행: T3.1
 - [ ] T3.4 `plan.json` zod 스키마(`design` 필드, 토큰 참조 기본값) — 대상: `src/lib/pipeline/schemas/plan.ts` · 완료 판정: 예제 유효·무효 테스트 · 선행: T1.7
-- [ ] T3.5 [레인 D · W1] `src/lib/design` 이관(S7 파서·재작성·역할 파생·대비) + 테스트 이관 — 대상: `src/lib/design/*` · 완료 판정: S7 테스트 10개 통과 · 선행: T1.3 · (F-DSN-02)
+- [x] T3.5 [레인 D · W1] `src/lib/design` 이관(S7 파서·재작성·역할 파생·대비) + 테스트 이관 — 대상: `src/lib/design/*` · 완료 판정: S7 테스트 10개 통과 · 선행: T1.3 · (F-DSN-02)
 - [ ] T3.6 Plan 생성 흐름: 요청 → 파일 감시 → `plan.json`·`DESIGN.md` 검증 → 오류 자동 재요청(최대 2회) → 사용자 표시 — 대상: `src/lib/pipeline/planStep.ts` · 완료 판정: 목 에이전트로 재요청 루프 테스트 · 선행: T2.7, T3.3, T3.4, T3.5 · (F-PIP-02)
 - [ ] T3.7 DESIGN.md 공식 CLI lint(워커 경유, stdin 닫기, `orphaned-tokens` 필터, 버전 고정) — 대상: `packages/export-worker/src/designLint.ts` · 완료 판정: 샘플 lint 결과 JSON · 선행: T1.3 · (F-DSN-02)
 - [ ] T3.8 기획서 뷰어(스토리보드 카드·Asset 목록·타임라인 막대·파라미터 표·디자인 요약·`plan.md` 미리보기) — 대상: `src/components/pipeline/plan/*` · 완료 판정: 샘플 `plan.json` 렌더 · 선행: T3.4 · (F-PIP-03)
@@ -75,14 +75,14 @@
 
 M4a 런타임 패키지 (`packages/runtime`, M2·M3와 병렬 가능)
 
-- [ ] T4.1 [레인 D · W1] `defineScene`·`param.*`·`useParams`(우선순위: 코드 < 토큰 < 사용자 값) — 대상: `packages/runtime/src/scene.ts`, `params.ts` · 완료 판정: 단위 테스트 · 선행: T1.3
-- [ ] T4.2 [레인 D · W1] 시계: clock 모드(preview·render, `hf-seek`+`waitUntil`) / free 모드(live), 전체 ↔ Scene 로컬 시간 — 대상: `packages/runtime/src/clock.ts` · 완료 판정: 시간 변환 테스트, S1 렌더 재현 · 선행: T4.1
-- [ ] T4.3 [레인 D · W1] 준비 신호 `registerAsset`, 폰트 `fonts.load`, Canvas `onCreated`, `__vanillaReady` — 대상: `packages/runtime/src/ready.ts` · 완료 판정: S2 대조 실험 재현(대기 없는 캡처와 다름, 대기 캡처 반복 동일) · 선행: T4.2
-- [ ] T4.4 [레인 D · W1] `<VanillaCanvas>`(render=never+advance, preview=demand, `preserveDrawingBuffer` 옵션) — 대상: `packages/runtime/src/canvas.tsx` · 완료 판정: S1 결정성 테스트 · 선행: T4.2
-- [ ] T4.5 [레인 D · W1] 디자인 토큰 Vite 플러그인 + `DesignProvider`·`useDesign`·CSS 변수 `--color-*` — 대상: `packages/runtime/src/design/*`, `packages/runtime/vite.ts` · 완료 판정: S7 측정 재현(교체 < 100ms) · 선행: T3.5 · (F-DSN-03)
-- [ ] T4.6 [레인 D · W1] Bridge 클라이언트(ready·time·error·hmr 보고, init·play·pause·seek·setParams·setDesign·goto·capture·reload 처리, origin 고정) — 대상: `packages/runtime/src/bridge.ts` · 완료 판정: 메시지 단위 테스트 · 선행: T4.2, T4.5
-- [ ] T4.7 [레인 D · W1] 결정성 도우미(`useSeededRandom`, `noise`, `ease`, `timeline`), `useInput` — 대상: `packages/runtime/src/helpers/*` · 완료 판정: 같은 시드 → 같은 값 테스트 · 선행: T4.1
-- [ ] T4.8 [레인 D · W1] `check_scene` 정적 규칙(ESLint 플러그인: 금지 시간 API(clock 유형), 하드코딩 색, `defineScene` 누락) — 대상: `packages/runtime/eslint-plugin/*` · 완료 판정: 규칙별 테스트 · 선행: T4.1 · (F-DSN-05)
+- [x] T4.1 [레인 D · W1] `defineScene`·`param.*`·`useParams`(우선순위: 코드 < 토큰 < 사용자 값) — 대상: `packages/runtime/src/scene.ts`, `params.ts` · 완료 판정: 단위 테스트 · 선행: T1.3
+- [x] T4.2 [레인 D · W1] 시계: clock 모드(preview·render, `hf-seek`+`waitUntil`) / free 모드(live), 전체 ↔ Scene 로컬 시간 — 대상: `packages/runtime/src/clock.ts` · 완료 판정: 시간 변환 테스트, S1 렌더 재현 · 선행: T4.1
+- [x] T4.3 [레인 D · W1] 준비 신호 `registerAsset`, 폰트 `fonts.load`, Canvas `onCreated`, `__vanillaReady` — 대상: `packages/runtime/src/ready.ts` · 완료 판정: S2 대조 실험 재현(대기 없는 캡처와 다름, 대기 캡처 반복 동일) · 선행: T4.2
+- [x] T4.4 [레인 D · W1] `<VanillaCanvas>`(render=never+advance, preview=demand, `preserveDrawingBuffer` 옵션) — 대상: `packages/runtime/src/canvas.tsx` · 완료 판정: S1 결정성 테스트 · 선행: T4.2
+- [x] T4.5 [레인 D · W1] 디자인 토큰 Vite 플러그인 + `DesignProvider`·`useDesign`·CSS 변수 `--color-*` — 대상: `packages/runtime/src/design/*`, `packages/runtime/vite.ts` · 완료 판정: S7 측정 재현(교체 < 100ms) · 선행: T3.5 · (F-DSN-03)
+- [x] T4.6 [레인 D · W1] Bridge 클라이언트(ready·time·error·hmr 보고, init·play·pause·seek·setParams·setDesign·goto·capture·reload 처리, origin 고정) — 대상: `packages/runtime/src/bridge.ts` · 완료 판정: 메시지 단위 테스트 · 선행: T4.2, T4.5
+- [x] T4.7 [레인 D · W1] 결정성 도우미(`useSeededRandom`, `noise`, `ease`, `timeline`), `useInput` — 대상: `packages/runtime/src/helpers/*` · 완료 판정: 같은 시드 → 같은 값 테스트 · 선행: T4.1
+- [x] T4.8 [레인 D · W1] `check_scene` 정적 규칙(ESLint 플러그인: 금지 시간 API(clock 유형), 하드코딩 색, `defineScene` 누락) — 대상: `packages/runtime/eslint-plugin/*` · 완료 판정: 규칙별 테스트 · 선행: T4.1 · (F-DSN-05)
 - [ ] T4.9 [레인 D · W2] 런타임 빌드·배포 경로(`resources/runtime`, 스캐폴딩에 포함) — 대상: `packages/runtime/package.json`, 빌드 스크립트 · 완료 판정: 새 프로젝트에서 런타임 import 성공 · 선행: T4.1~T4.6, T1.12
 
 M4b 검수 스튜디오
