@@ -1,5 +1,7 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { NewProjectWizard } from '@/components/project/NewProjectWizard';
 import {
+  FilePlus2,
   FolderOpen,
   Settings,
   Minus,
@@ -32,6 +34,7 @@ export function TopMenuBar() {
   const { workspaceRoot, setWorkspaceRoot, recentWorkspaces } = useWorkspace();
   const { togglePanel } = useSidePanel();
   const { openTab } = useWorkspaceTabs();
+  const [wizardOpen, setWizardOpen] = useState(false);
   const folderName = useMemo(() => {
     if (!workspaceRoot) return '';
     const parts = workspaceRoot.split(/[/\\]/).filter(Boolean);
@@ -80,6 +83,13 @@ export function TopMenuBar() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="text-[11px]">
+          <DropdownMenuItem
+            onClick={() => setWizardOpen(true)}
+            className="gap-2 cursor-pointer text-[11px]"
+          >
+            <FilePlus2 className="h-3.5 w-3.5" />
+            <span>{t('project.new')}</span>
+          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => void handlePickFolder()}
             className="gap-2 cursor-pointer text-[11px]"
@@ -193,6 +203,7 @@ export function TopMenuBar() {
           <X className="h-4 w-4" />
         </Button>
       </div>
+      <NewProjectWizard open={wizardOpen} onOpenChange={setWizardOpen} />
     </div>
   );
 }

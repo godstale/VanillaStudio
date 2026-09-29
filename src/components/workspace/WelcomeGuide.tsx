@@ -5,6 +5,8 @@ import {
   Columns2,
   Languages,
   ArrowRight,
+  FilePlus2,
+  ShieldAlert,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AppMark } from '@/components/brand/AppMark';
@@ -12,12 +14,32 @@ import { APP_NAME } from '@/lib/brand';
 import { useWorkspace } from '@/lib/context/WorkspaceContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { invoke } from '@tauri-apps/api/core';
+import { useState } from 'react';
+import { projectFolderExists } from '@/lib/project/openProject';
+import { NewProjectWizard } from '@/components/project/NewProjectWizard';
 
 // Shown when no folder is open, and in `welcome` tabs.
 // Replace the highlight cards with your own feature tour.
 export function WelcomeGuide() {
   const { t } = useLanguage();
-  const { setWorkspaceRoot, recentWorkspaces } = useWorkspace();
+  const {
+    workspaceRoot,
+    setWorkspaceRoot,
+    recentWorkspaces,
+    isTrusted,
+    setTrustModalOpen,
+  } = useWorkspace();
+  const [wizardOpen, setWizardOpen] = useState(false);
+  const [missingPath, setMissingPath] = useState<string | null>(null);
+
+  const handleOpenRecent = async (path: string) => {
+    if (!(await projectFolderExists(path))) {
+      setMissingPath(path);
+      return;
+    }
+    setMissingPath(null);
+    setWorkspaceRoot(path);
+  };
 
   const handlePickFolder = async () => {
     try {
@@ -65,6 +87,16 @@ export function WelcomeGuide() {
             <span>{t('welcome.pickFolder')}</span>
             <ArrowRight className="h-4 w-4 ml-auto opacity-70" />
           </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            onClick={() => setWizardOpen(true)}
+            className="w-full h-11 gap-2 text-sm font-semibold"
+          >
+            <FilePlus2 className="h-4 w-4" />
+            <span>{t('project.new')}</span>
+          </Button>
+          <NewProjectWizard open={wizardOpen} onOpenChange={setWizardOpen} />
 
           {recentWorkspaces.length > 0 && (
             <div className="pt-3 border-t border-border/60 space-y-2">
@@ -77,7 +109,7 @@ export function WelcomeGuide() {
                   <button
                     key={path}
                     type="button"
-                    onClick={() => setWorkspaceRoot(path)}
+                    onClick={() => void handleOpenRecent(path)}
                     className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs hover:bg-muted/60 transition-colors text-left group border border-transparent hover:border-border/60"
                   >
                     <span className="font-mono truncate text-foreground text-[11px]">
@@ -89,9 +121,28 @@ export function WelcomeGuide() {
                   </button>
                 ))}
               </div>
+              {missingPath && (
+                <div role="alert" className="text-[11px] text-destructive break-all">
+                  {t('project.recent.missing', { path: missingPath })}
+                </div>
+              )}
             </div>
           )}
         </div>
+
+        {workspaceRoot && !isTrusted && (
+          <div className="border border-warning/40 rounded-xl bg-warning/10 p-4 flex items-start gap-3">
+            <ShieldAlert className="h-4 w-4 text-warning shrink-0 mt-0.5" />
+            <div className="space-y-2 min-w-0">
+              <p className="text-xs text-foreground leading-relaxed">
+                {t('project.untrusted.notice')}
+              </p>
+              <Button size="sm" variant="outline" onClick={() => setTrustModalOpen(true)} className="text-xs">
+                {t('project.untrusted.review')}
+              </Button>
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-3 gap-3 text-center">
           <div className="p-3.5 rounded-xl border border-border/50 bg-card/40 space-y-1">
