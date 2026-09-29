@@ -44,10 +44,16 @@ pub fn params(project: &Path, record: &Path, agent_id: &str) -> StartParams {
         session_options: Value::Null,
         use_global_settings: false,
         mcp_servers: vec![],
+        resume_session_id: None,
     }
 }
 
 async fn rig_with(agent_id: &str, tweak: impl FnOnce(&mut StartParams)) -> Option<Rig> {
+    rig_emit(agent_id, tweak, |e| e).await
+}
+
+/// Like `rig_with`, but the event sink can be wrapped (e.g. by an MCP lease).
+async fn rig_emit(agent_id: &str, tweak: impl FnOnce(&mut StartParams), wrap: impl FnOnce(Emit) -> Emit) -> Option<Rig> {
     if !node_available() {
         return None;
     }
@@ -58,7 +64,7 @@ async fn rig_with(agent_id: &str, tweak: impl FnOnce(&mut StartParams)) -> Optio
     tweak(&mut p);
     let events: Arc<Mutex<Vec<AgentEvent>>> = Arc::default();
     let sink = events.clone();
-    let emit: Emit = Arc::new(move |e| sink.lock().unwrap().push(e));
+    let emit = wrap(Arc::new(move |e| sink.lock().unwrap().push(e)));
     let session = start(p, emit).await.expect("session start");
     Some(Rig { session, events, project, record, _rec: rec })
 }
@@ -390,4 +396,173 @@ async fn session_events_are_logged_to_the_project_session_file() {
     }
     let sent = lines.iter().find(|l| l["event"]["type"] == "promptSent").unwrap();
     assert_eq!(sent["event"]["text"], "hello");
+}
+
+// --- T2.13 session resume (`session/load` -> `session/resume` -> unsupported error) ---
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn resume_prefers_session_load_and_suppresses_replay() {
+    let Some(r) = rig_with("mock", |p| {
+        p.resume_session_id = Some("old-sess-9".into());
+    })
+    .await
+    else {
+        return;
+    };
+    let loads = r.recorded("session/load");
+    assert_eq!(loads.len(), 1);
+    assert_eq!(loads[0]["sessionId"], "old-sess-9");
+    assert!(r.recorded("session/new").is_empty(), "a resumed session must not open a new one");
+    let started = r.events().into_iter().find(|e| matches!(e, AgentEvent::Started { .. })).expect("started event");
+    match started {
+        AgentEvent::Started { session_id, resumed, .. } => {
+            assert_eq!(session_id, "old-sess-9");
+            assert_eq!(resumed, Some(true));
+        }
+        _ => unreachable!(),
+    }
+    // The replayed conversation is already in the session log file; it must not reach the UI.
+    assert!(!r.message_text().contains("old answer"), "replayed updates are not re-emitted");
+    // The resumed session still takes prompts.
+    assert_eq!(r.session.prompt("hello".into()).await.unwrap(), "end_turn");
+    assert!(r.message_text().contains("hi there"));
+    r.session.close();
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn resume_falls_back_to_session_resume() {
+    let Some(r) = rig_with("mock", |p| {
+        p.launch.env.insert("MOCK_NO_LOAD".into(), "1".into());
+        p.launch.env.insert("MOCK_RESUME".into(), "1".into());
+        p.resume_session_id = Some("old-sess-3".into());
+    })
+    .await
+    else {
+        return;
+    };
+    assert!(r.recorded("session/load").is_empty());
+    assert!(r.recorded("session/new").is_empty());
+    let resumes = r.recorded("session/resume");
+    assert_eq!(resumes.len(), 1);
+    assert_eq!(resumes[0]["sessionId"], "old-sess-3");
+    let started = r.events().into_iter().find(|e| matches!(e, AgentEvent::Started { .. })).expect("started event");
+    match started {
+        AgentEvent::Started { session_id, load_session, resumed, .. } => {
+            assert_eq!(session_id, "old-sess-3");
+            assert!(!load_session);
+            assert_eq!(resumed, Some(true));
+        }
+        _ => unreachable!(),
+    }
+    r.session.close();
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn resume_fails_when_the_agent_supports_neither() {
+    if !node_available() {
+        return;
+    }
+    let project = tempfile::tempdir().unwrap();
+    let mut p = params(project.path(), &project.path().join("r.jsonl"), "mock");
+    p.launch.env.insert("MOCK_NO_LOAD".into(), "1".into());
+    p.resume_session_id = Some("old-sess-1".into());
+    let emit: Emit = Arc::new(|_| {});
+    let err = start(p, emit).await.err().expect("must fail");
+    assert!(matches!(err, HostError::Session(ref m) if m == "resume-unsupported"), "{err:?}");
+}
+
+// --- T2.10: the agent reaches the app's own MCP server with its session token ---
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn agent_calls_the_app_mcp_server_with_its_token() {
+    if !node_available() {
+        return;
+    }
+    let server = crate::mcp_server::McpServer::start().await.expect("mcp server");
+    let ep = server.issue_session();
+    let spec = McpHttpSpec { name: ep.name.to_string(), url: ep.url.clone(), bearer_token: ep.token.clone() };
+    let Some(r) = rig_with("mock", |p| {
+        p.mcp_servers = vec![spec.clone()];
+    })
+    .await
+    else {
+        return;
+    };
+    let new = &r.recorded("session/new")[0];
+    assert_eq!(new["mcpServers"][0]["name"], "vanilla-tools");
+    r.session.prompt("mcpping".into()).await.unwrap();
+    let report: Value = serde_json::from_str(&r.message_text()).expect("mock reports mcp json");
+    assert_eq!(report["name"], "vanilla-tools");
+    assert_eq!(report["noAuth"], 401, "requests without the session token are rejected");
+    assert_eq!(report["init"], 200);
+    assert!(report["tools"].as_array().unwrap().iter().any(|t| t == "ping"));
+    assert_eq!(report["ping"], "pong");
+    r.session.close();
+}
+
+// --- Bypass-mode defense (`bypassPermissions`/`auto` skip the permission gate) ---
+
+fn started_modes(rig: &Rig) -> Value {
+    rig.events()
+        .into_iter()
+        .find_map(|e| match e {
+            AgentEvent::Started { modes, .. } => Some(modes),
+            _ => None,
+        })
+        .expect("started event")
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn blocked_start_mode_is_reset_to_default() {
+    let Some(r) = rig_with("claude-code", |p| {
+        p.launch.env.insert("MOCK_MODE".into(), "bypassPermissions".into());
+    })
+    .await
+    else {
+        return;
+    };
+    // The host moved the agent back before reporting the session.
+    let resets = r.recorded("session/set_mode");
+    assert_eq!(resets.len(), 1);
+    assert_eq!(resets[0]["modeId"], "default");
+    let modes = started_modes(&r);
+    assert_eq!(modes["currentModeId"], "default");
+    let ids: Vec<&str> =
+        modes["availableModes"].as_array().unwrap().iter().map(|m| m["id"].as_str().unwrap()).collect();
+    assert!(!ids.contains(&"bypassPermissions") && !ids.contains(&"auto"), "blocked modes are not offered");
+    assert!(ids.contains(&"default"));
+    r.session.close();
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn blocked_start_mode_fails_when_reset_refused() {
+    if !node_available() {
+        return;
+    }
+    let project = tempfile::tempdir().unwrap();
+    let mut p = params(project.path(), &project.path().join("r.jsonl"), "claude-code");
+    p.launch.env.insert("MOCK_MODE".into(), "bypassPermissions".into());
+    p.launch.env.insert("MOCK_REFUSE_MODE".into(), "1".into());
+    let emit: Emit = Arc::new(|_| {});
+    let err = start(p, emit).await.err().expect("must fail");
+    assert!(matches!(err, HostError::Session(ref m) if m.starts_with("mode-locked")), "{err:?}");
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn runtime_switch_into_blocked_mode_is_reset() {
+    let Some(r) = rig_with("claude-code", |_| {}).await else { return };
+    r.session.prompt("mode:bypassPermissions".into()).await.unwrap();
+    r.wait_for("mode reset", |e| {
+        matches!(e, AgentEvent::Update { update, .. }
+            if update["sessionUpdate"] == "current_mode_update" && update["currentModeId"] == "default")
+    })
+    .await;
+    // The blocked update itself never reaches the UI; the agent was moved back instead.
+    assert!(
+        !r.events().iter().any(|e| matches!(e, AgentEvent::Update { update, .. }
+            if update.get("currentModeId").and_then(Value::as_str) == Some("bypassPermissions"))),
+        "blocked mode must not be reported as current"
+    );
+    assert_eq!(r.recorded("session/set_mode").len(), 1);
+    r.session.close();
 }

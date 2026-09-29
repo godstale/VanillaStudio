@@ -84,7 +84,7 @@ mod tests {
     use std::sync::Arc;
 
     fn started(id: &str) -> AgentEvent {
-        AgentEvent::Started { session_id: id.into(), agent_id: "a".into(), cwd: "c".into(), agent_name: None, agent_version: None, load_session: false, modes: serde_json::Value::Null }
+        AgentEvent::Started { session_id: id.into(), agent_id: "a".into(), cwd: "c".into(), agent_name: None, agent_version: None, load_session: false, modes: serde_json::Value::Null, resumed: None }
     }
 
     fn read_lines(path: &Path) -> Vec<serde_json::Value> {

@@ -5,13 +5,15 @@
 //! (cwd, isolation meta, MCP servers) -> prompt / cancel / permission responses -> close.
 
 use crate::agent_host::events::{AgentEvent, DecidedBy, Emit, PermissionOutcomeView};
-use crate::agent_host::launch::{build_session_meta, spawn_agent, AgentProcess, HostError, LaunchSpec, McpHttpSpec};
+use crate::agent_host::launch::{
+    build_session_meta, is_blocked_mode, sanitize_modes, spawn_agent, AgentProcess, HostError, LaunchSpec, McpHttpSpec, SAFE_MODE_ID,
+};
 use crate::agent_host::{fs, permission};
 use agent_client_protocol::schema::v1::{
     CancelNotification, ClientCapabilities, ContentBlock, FileSystemCapabilities, HttpHeader, Implementation, InitializeRequest,
-    McpServer, McpServerHttp, NewSessionRequest, PromptRequest, ReadTextFileRequest, ReadTextFileResponse, RequestPermissionOutcome,
-    RequestPermissionRequest, RequestPermissionResponse, SelectedPermissionOutcome, SessionNotification, TextContent,
-    WriteTextFileRequest, WriteTextFileResponse, PermissionOptionKind,
+    LoadSessionRequest, McpServer, McpServerHttp, NewSessionRequest, PermissionOptionKind, PromptRequest, ReadTextFileRequest, ReadTextFileResponse,
+    RequestPermissionOutcome, RequestPermissionRequest, RequestPermissionResponse, ResumeSessionRequest, SelectedPermissionOutcome, SessionId,
+    SessionNotification, SetSessionModeRequest, TextContent, WriteTextFileRequest, WriteTextFileResponse,
 };
 use agent_client_protocol::schema::ProtocolVersion;
 use agent_client_protocol::{Agent, ByteStreams, Client, ConnectionTo};
@@ -41,6 +43,9 @@ pub struct StartParams {
     /// D-018 "use global settings" toggle (the shell ask rule stays on).
     pub use_global_settings: bool,
     pub mcp_servers: Vec<McpHttpSpec>,
+    /// ACP session id to continue (T2.13): `session/load` when the agent supports it, else
+    /// `session/resume`, else the start fails with `session:resume-unsupported`.
+    pub resume_session_id: Option<String>,
 }
 
 enum Command {
@@ -204,6 +209,7 @@ async fn run(
 
     let closing = Arc::new(AtomicBool::new(false));
     let next_request = Arc::new(AtomicU64::new(1));
+    let replaying = Arc::new(AtomicBool::new(false));
     let root = params.project_dir.clone();
     let mut ready_tx = Some(ready_tx);
 
@@ -214,6 +220,9 @@ async fn run(
         let pending_m = pending.clone();
         let next_request_p = next_request.clone();
         let closing_m = closing.clone();
+        let replaying_n = replaying.clone();
+        let replaying_m = replaying.clone();
+        let agent_id_n = params.agent_id.clone();
         let ready = &mut ready_tx;
         let cmd_rx = &mut cmd_rx;
         let params = &params;
@@ -224,11 +233,36 @@ async fn run(
             .builder()
             .name("vanilla-studio")
             .on_receive_notification(
-                async move |n: SessionNotification, _cx| {
-                    emit_n(AgentEvent::Update {
-                        session_id: n.session_id.to_string(),
-                        update: serde_json::to_value(&n.update).unwrap_or(Value::Null),
-                    });
+                async move |n: SessionNotification, cx| {
+                    // `session/load` replays the stored conversation; it is already in the session log.
+                    if replaying_n.load(Ordering::SeqCst) {
+                        return Ok(());
+                    }
+                    let update = serde_json::to_value(&n.update).unwrap_or(Value::Null);
+                    if let Some(mode) = blocked_mode_update(&agent_id_n, &update) {
+                        // The agent moved itself into a mode that skips the permission gate: put it back.
+                        let (cx2, emit, sid) = (cx.clone(), emit_n.clone(), n.session_id.clone());
+                        return cx.spawn(async move {
+                            let reset = cx2.send_request(SetSessionModeRequest::new(sid.clone(), SAFE_MODE_ID)).block_task().await;
+                            match reset {
+                                Ok(_) => {
+                                    emit(AgentEvent::Update {
+                                        session_id: sid.to_string(),
+                                        update: serde_json::json!({ "sessionUpdate": "current_mode_update", "currentModeId": SAFE_MODE_ID }),
+                                    });
+                                    Ok(())
+                                }
+                                Err(e) => {
+                                    emit(AgentEvent::Error {
+                                        session_id: sid.to_string(),
+                                        message: format!("mode-locked: agent switched to {mode} and could not be reset: {e:?}"),
+                                    });
+                                    Err(e)
+                                }
+                            }
+                        });
+                    }
+                    emit_n(AgentEvent::Update { session_id: n.session_id.to_string(), update });
                     Ok(())
                 },
                 agent_client_protocol::on_receive_notification!(),
@@ -313,21 +347,67 @@ async fn run(
                         )]))
                     })
                     .collect();
-                let mut new_session = NewSessionRequest::new(params.project_dir.clone()).mcp_servers(mcp);
                 let meta = build_session_meta(&params.agent_id, &params.session_options, params.use_global_settings);
-                if !meta.is_empty() {
-                    new_session = new_session.meta(meta);
+                let cwd = params.project_dir.clone();
+                let fail = |ready: &mut Option<oneshot::Sender<Result<Started, HostError>>>, err: HostError| {
+                    if let Some(tx) = ready.take() {
+                        let _ = tx.send(Err(err));
+                    }
+                };
+                let resume_id = params.resume_session_id.clone();
+                let can_load = init.agent_capabilities.load_session;
+                let can_resume = init.agent_capabilities.session_capabilities.resume.is_some();
+                if resume_id.is_some() && !can_load && !can_resume {
+                    fail(ready, HostError::Session("resume-unsupported".into()));
+                    return Err(agent_client_protocol::util::internal_error("resume-unsupported"));
                 }
-                let session = match cx.send_request(new_session).block_task().await {
-                    Ok(s) => s,
-                    Err(e) => {
-                        if let Some(tx) = ready.take() {
-                            let _ = tx.send(Err(HostError::Session(format!("{e:?}"))));
+                let opened = match resume_id {
+                    Some(rid) if can_load => {
+                        let sid = SessionId::new(rid.as_str());
+                        let mut req = LoadSessionRequest::new(sid.clone(), cwd).mcp_servers(mcp);
+                        if !meta.is_empty() {
+                            req = req.meta(meta);
                         }
+                        replaying_m.store(true, Ordering::SeqCst);
+                        let res = cx.send_request(req).block_task().await;
+                        replaying_m.store(false, Ordering::SeqCst);
+                        res.map(|r| (sid, serde_json::to_value(&r.modes).unwrap_or(Value::Null), true))
+                    }
+                    Some(rid) => {
+                        let sid = SessionId::new(rid.as_str());
+                        let mut req = ResumeSessionRequest::new(sid.clone(), cwd).mcp_servers(mcp);
+                        if !meta.is_empty() {
+                            req = req.meta(meta);
+                        }
+                        cx.send_request(req).block_task().await.map(|r| (sid, serde_json::to_value(&r.modes).unwrap_or(Value::Null), true))
+                    }
+                    None => {
+                        let mut req = NewSessionRequest::new(cwd).mcp_servers(mcp);
+                        if !meta.is_empty() {
+                            req = req.meta(meta);
+                        }
+                        cx.send_request(req)
+                            .block_task()
+                            .await
+                            .map(|r| (r.session_id.clone(), serde_json::to_value(&r.modes).unwrap_or(Value::Null), false))
+                    }
+                };
+                let (sid, modes, resumed) = match opened {
+                    Ok(o) => o,
+                    Err(e) => {
+                        fail(ready, HostError::Session(format!("{e:?}")));
                         return Err(e);
                     }
                 };
-                let sid = session.session_id.clone();
+                // A project setting can start the agent in a mode that skips the permission gate.
+                let current_mode = modes.get("currentModeId").and_then(Value::as_str).unwrap_or_default();
+                if is_blocked_mode(&params.agent_id, current_mode) {
+                    if let Err(e) = cx.send_request(SetSessionModeRequest::new(sid.clone(), SAFE_MODE_ID)).block_task().await {
+                        fail(ready, HostError::Session(format!("mode-locked: could not leave {current_mode}: {e:?}")));
+                        return Err(e);
+                    }
+                }
+                let modes = sanitize_modes(&params.agent_id, &modes);
                 let sid_str = sid.to_string();
                 let _ = sid_cell.set(sid_str.clone());
                 emit_m(AgentEvent::Started {
@@ -337,7 +417,8 @@ async fn run(
                     agent_name: init.agent_info.as_ref().map(|i| i.name.clone()),
                     agent_version: init.agent_info.as_ref().map(|i| i.version.clone()),
                     load_session: init.agent_capabilities.load_session,
-                    modes: serde_json::to_value(&session.modes).unwrap_or(Value::Null),
+                    modes,
+                    resumed: resumed.then_some(true),
                 });
                 if let Some(tx) = ready.take() {
                     let _ = tx.send(Ok(Started { session_id: sid_str.clone() }));
@@ -405,6 +486,15 @@ async fn run(
         let _ = tx.send(Err(HostError::Initialize(format!("agent exited: {}", tail_string(&stderr_tail)))));
     }
     emit(AgentEvent::Closed { session_id: sid, reason: reason.into() });
+}
+
+/// The blocked mode id when `update` is a `current_mode_update` into one (see `is_blocked_mode`).
+fn blocked_mode_update(agent_id: &str, update: &Value) -> Option<String> {
+    if update.get("sessionUpdate")?.as_str()? != "current_mode_update" {
+        return None;
+    }
+    let mode = update.get("currentModeId")?.as_str()?;
+    is_blocked_mode(agent_id, mode).then(|| mode.to_string())
 }
 
 /// Decide one `session/request_permission` (policy first, user only when the policy says ask).

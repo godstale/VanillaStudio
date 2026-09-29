@@ -53,8 +53,13 @@ pub enum AgentEvent {
         agent_version: Option<String>,
         /// The agent can resume sessions (`loadSession`), used by T2.13.
         load_session: bool,
-        /// `modes` from `session/new` (available and current session modes), verbatim, or null.
+        /// `modes` from `session/new` (available and current session modes), or null. Modes that
+        /// skip the permission gate (`launch::is_blocked_mode`) are removed / reset.
         modes: Value,
+        /// Present (`true`) only when this is a resumed session (`session/load` or `session/resume`);
+        /// the conversation so far is in the session log, replayed updates are not re-emitted.
+        #[serde(skip_serializing_if = "Option::is_none")]
+        resumed: Option<bool>,
     },
     /// ACP `session/update`: message/thought chunks, tool_call, tool_call_update, plan,
     /// usage_update, current_mode_update, ...
