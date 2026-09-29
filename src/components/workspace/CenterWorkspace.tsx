@@ -20,7 +20,6 @@ import { ImageViewerTab } from '@/components/workspace/ImageViewerTab';
 import { EmptyTabView } from '@/components/workspace/EmptyTabView';
 import { STAGE_TAB_ICONS, TERMINAL_TAB_ITEM } from '@/components/layout/shellRegistry';
 import { TerminalTab } from '@/components/terminal/TerminalTab';
-import { STAGE_TAB_ICONS } from '@/components/layout/shellRegistry';
 import { BriefEditor } from '@/components/pipeline/brief/BriefEditor';
 import { DesignTab } from '@/components/design/DesignTab';
 import { PlanViewer } from '@/components/pipeline/plan/PlanViewer';
