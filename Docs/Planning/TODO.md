@@ -54,18 +54,18 @@
 
 ## M3 파이프라인 (branch: `feat/m3-pipeline`)
 
-- [ ] T3.1 파이프라인 상태 Context·`pipeline_state` 저장·파이프라인 사이드패널 — 대상: `src/lib/pipeline/PipelineContext.tsx`, `src/components/pipeline/*` · 완료 판정: 단계 표시·전환 테스트 · 선행: T1.17
-- [ ] T3.2 Brief 편집기(구조화 폼 + 자유 서술, 브랜드 색·폰트 입력) + 자료 업로드(`brief/materials/`, 라이선스 메모) — 대상: `src/components/pipeline/brief/*` · 완료 판정: `brief/brief.md` 생성·재열기 · 선행: T3.1 · (F-PIP-01)
-- [ ] T3.3 프롬프트 프리앰블(영문) Plan·Prompts·Build·Revision + 조립기(파일 경로 참조, 출력 언어) — 대상: `src/lib/pipeline/prompts/*.md`, `src/lib/pipeline/assemble.ts` · 완료 판정: 조립 결과 스냅샷 테스트 · 선행: T3.1
-- [ ] T3.4 `plan.json` zod 스키마(`design` 필드, 토큰 참조 기본값) — 대상: `src/lib/pipeline/schemas/plan.ts` · 완료 판정: 예제 유효·무효 테스트 · 선행: T1.7
+- [x] T3.1 파이프라인 상태 Context·`pipeline_state` 저장·파이프라인 사이드패널 — 대상: `src/lib/pipeline/PipelineContext.tsx`, `src/components/pipeline/*` · 완료 판정: 단계 표시·전환 테스트 · 선행: T1.17
+- [x] T3.2 Brief 편집기(구조화 폼 + 자유 서술, 브랜드 색·폰트 입력) + 자료 업로드(`brief/materials/`, 라이선스 메모) — 대상: `src/components/pipeline/brief/*` · 완료 판정: `brief/brief.md` 생성·재열기 · 선행: T3.1 · (F-PIP-01)
+- [x] T3.3 프롬프트 프리앰블(영문) Plan·Prompts·Build·Revision + 조립기(파일 경로 참조, 출력 언어) — 대상: `src/lib/pipeline/prompts/*.md`, `src/lib/pipeline/assemble.ts` · 완료 판정: 조립 결과 스냅샷 테스트 · 선행: T3.1
+- [x] T3.4 `plan.json` zod 스키마(`design` 필드, 토큰 참조 기본값) — 대상: `src/lib/pipeline/schemas/plan.ts` · 완료 판정: 예제 유효·무효 테스트 · 선행: T1.7
 - [x] T3.5 [레인 D · W1] `src/lib/design` 이관(S7 파서·재작성·역할 파생·대비) + 테스트 이관 — 대상: `src/lib/design/*` · 완료 판정: S7 테스트 10개 통과 · 선행: T1.3 · (F-DSN-02)
 - [ ] T3.6 Plan 생성 흐름: 요청 → 파일 감시 → `plan.json`·`DESIGN.md` 검증 → 오류 자동 재요청(최대 2회) → 사용자 표시 — 대상: `src/lib/pipeline/planStep.ts` · 완료 판정: 목 에이전트로 재요청 루프 테스트 · 선행: T2.7, T3.3, T3.4, T3.5 · (F-PIP-02)
 - [x] T3.7 DESIGN.md 공식 CLI lint(워커 경유, stdin 닫기, `orphaned-tokens` 필터, 버전 고정) — 대상: `packages/export-worker/src/designLint.ts` · 완료 판정: 샘플 lint 결과 JSON · 선행: T1.3 · (F-DSN-02)
-- [ ] T3.8 기획서 뷰어(스토리보드 카드·Asset 목록·타임라인 막대·파라미터 표·디자인 요약·`plan.md` 미리보기) — 대상: `src/components/pipeline/plan/*` · 완료 판정: 샘플 `plan.json` 렌더 · 선행: T3.4 · (F-PIP-03)
-- [ ] T3.9 디자인 탭(토큰 시각화·원문 편집·검사 결과) — 대상: `src/components/design/DesignTab.tsx` · 완료 판정: 샘플 DESIGN.md 표시·수정 저장 · 선행: T3.5 · (F-DSN-04)
+- [x] T3.8 기획서 뷰어(스토리보드 카드·Asset 목록·타임라인 막대·파라미터 표·디자인 요약·`plan.md` 미리보기) — 대상: `src/components/pipeline/plan/*` · 완료 판정: 샘플 `plan.json` 렌더 · 선행: T3.4 · (F-PIP-03)
+- [x] T3.9 디자인 탭(토큰 시각화·원문 편집·검사 결과) — 대상: `src/components/design/DesignTab.tsx` · 완료 판정: 샘플 DESIGN.md 표시·수정 저장 · 선행: T3.5 · (F-DSN-04)
 - [ ] T3.10 git 체크포인트(초기화·자동 커밋·히스토리 목록, git 없으면 폴더 스냅샷) — 대상: `src-tauri/src/commands/project_commands.rs`(checkpoint) · 완료 판정: 승인 시 커밋 생성 테스트 · 선행: T1.13 · (F-PRJ-04, D-013)
 - [ ] T3.11 승인·수정 요청 흐름(Plan) — 대상: `planStep.ts`, 뷰어 · 완료 판정: 승인 → 체크포인트 → 다음 단계 활성화 · 선행: T3.8, T3.10 · (F-PIP-03)
-- [ ] T3.12 `tasks.json` 스키마 + 위상 정렬 + 순환 검출 — 대상: `src/lib/pipeline/schemas/tasks.ts`, `topo.ts` · 완료 판정: 단위 테스트 · 선행: —
+- [x] T3.12 `tasks.json` 스키마 + 위상 정렬 + 순환 검출 — 대상: `src/lib/pipeline/schemas/tasks.ts`, `topo.ts` · 완료 판정: 단위 테스트 · 선행: —
 - [ ] T3.13 Prompts 단계: 생성 요청, 트리 편집기(CodeMirror), 승인 — 대상: `src/components/pipeline/prompts/*` · 완료 판정: 샘플 트리 편집·승인 · 선행: T3.6, T3.12 · (F-PIP-04)
 - [ ] T3.14 태스크 실행기(자동·한 단계씩, 일시정지·재시도, `task_runs` 기록, 태스크 후 체크포인트) — 대상: `src/lib/pipeline/runner.ts` · 완료 판정: 목 에이전트로 3개 태스크 순차 실행 테스트 · 선행: T3.12, T2.7, T3.10 · (F-PIP-05)
 - [ ] T3.15 (S) 태스크 그래프 시각화(의존성·상태) — 대상: `src/components/pipeline/prompts/TaskGraph.tsx` · 완료 판정: 샘플 `tasks.json` 그래프 표시 · 선행: T3.12 · (F-PIP-06)
