@@ -22,6 +22,7 @@ import { STAGE_TAB_ICONS, TERMINAL_TAB_ITEM } from '@/components/layout/shellReg
 import { TerminalTab } from '@/components/terminal/TerminalTab';
 import { BriefEditor } from '@/components/pipeline/brief/BriefEditor';
 import { DesignTab } from '@/components/design/DesignTab';
+import { ReviewTab } from '@/components/review/ReviewTab';
 import { PlanViewer } from '@/components/pipeline/plan/PlanViewer';
 import { WelcomeGuide } from '@/components/workspace/WelcomeGuide';
 import { cn } from '@/lib/utils';
@@ -54,8 +55,9 @@ function renderTabContent(tab: WorkspaceTab) {
       return <PlanViewer />;
     case 'design':
       return <DesignTab />;
-    case 'prompts':
     case 'review':
+      return <ReviewTab />;
+    case 'prompts':
     case 'export':
       return <EmptyTabView tab={tab} />;
     default:
