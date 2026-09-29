@@ -3,6 +3,7 @@ pub mod commands;
 pub mod mcp_server;
 pub mod process;
 
+use commands::agent_commands::*;
 use commands::doctor_commands::*;
 use commands::fs_commands::*;
 use commands::project_commands::*;
@@ -69,6 +70,11 @@ pub fn run() {
             install_claude_adapter,
             install_claude_adapter_cancel,
             claude_adapter_status,
+            start_agent_session,
+            send_agent_prompt,
+            cancel_agent_prompt,
+            respond_agent_permission,
+            close_agent_session,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
