@@ -169,9 +169,18 @@ const en: Dict = {
   'shortcuts.settings': 'Open settings',
   'shortcuts.sidebar': 'Toggle sidebar',
 
-
-
-
+  'shell.view.pipeline': 'Pipeline',
+  'shell.view.agent': 'Agent',
+  'shell.view.templates': 'Templates',
+  'shell.view.playground': 'Playground',
+  'shell.tab.brief': 'Brief',
+  'shell.tab.plan': 'Plan',
+  'shell.tab.prompts': 'Prompts',
+  'shell.tab.design': 'Design',
+  'shell.tab.review': 'Review',
+  'shell.tab.export': 'Export',
+  'shell.emptyView.desc': 'This view will be built in a later step.',
+  'shell.emptyPanel.desc': 'This panel will be built in a later step.',
 };
 
 export default en;

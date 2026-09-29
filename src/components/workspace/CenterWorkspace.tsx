@@ -17,6 +17,8 @@ import { useWorkspace } from '@/lib/context/WorkspaceContext';
 import type { WorkspaceTab, WorkspaceTabType } from '@/lib/types/workspaceTab';
 import { EditorTab } from '@/components/workspace/EditorTab';
 import { ImageViewerTab } from '@/components/workspace/ImageViewerTab';
+import { EmptyTabView } from '@/components/workspace/EmptyTabView';
+import { STAGE_TAB_ICONS } from '@/components/layout/shellRegistry';
 import { WelcomeGuide } from '@/components/workspace/WelcomeGuide';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -28,6 +30,7 @@ const TAB_ICONS: Record<WorkspaceTabType, LucideIcon> = {
   editor: FileCode,
   'image-viewer': ImageIcon,
   welcome: Compass,
+  ...STAGE_TAB_ICONS,
 };
 
 function renderTabContent(tab: WorkspaceTab) {
@@ -38,6 +41,13 @@ function renderTabContent(tab: WorkspaceTab) {
       return <ImageViewerTab tab={tab} />;
     case 'welcome':
       return <WelcomeGuide />;
+    case 'brief':
+    case 'plan':
+    case 'prompts':
+    case 'design':
+    case 'review':
+    case 'export':
+      return <EmptyTabView tab={tab} />;
     default:
       return null;
   }

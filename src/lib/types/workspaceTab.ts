@@ -1,9 +1,21 @@
 export type WorkspaceTabType =
   | 'editor'
   | 'image-viewer'
-  | 'welcome';
+  | 'welcome'
+  | 'brief'
+  | 'plan'
+  | 'prompts'
+  | 'design'
+  | 'review'
+  | 'export';
 
-export type SidePanelView = 'explorer' | null;
+export type SidePanelView =
+  | 'pipeline'
+  | 'explorer'
+  | 'agent'
+  | 'templates'
+  | 'playground'
+  | null;
 
 export interface WorkspaceTab {
   id: string;

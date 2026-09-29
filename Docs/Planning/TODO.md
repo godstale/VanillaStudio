@@ -31,7 +31,7 @@
 - [ ] T1.14 [레인 C′ · W2] 새 프로젝트 마법사 UI(유형·규격·템플릿(없음)·팔레트(기본)·에이전트·폴더) — 대상: `src/components/project/NewProjectWizard.tsx`, `src/lib/project/*`, i18n · 완료 판정: 마법사 완료 시 폴더 생성 + 탭 열림 · 선행: T1.7, T1.13 · (F-PRJ-01, F-DSN-01)
 - [ ] T1.15 [레인 B′ · W2] 앱 소유 프로세스: 의존성 설치(`pnpm install`, 마법사 1회 동의, `package.json` 변경 시 재확인) — 대상: `src-tauri/src/commands/process_commands.rs` · 완료 판정: 고정 argv만 허용(테스트), 진행 로그 표시 · 선행: T1.8, T1.14 · (D-012)
 - [ ] T1.16 [레인 C′ · W2] 프로젝트 열기·최근 프로젝트·폴더 신뢰 확인(템플릿 기능 재사용) — 대상: `src/lib/project/*`, `src/components/workspace/*` · 완료 판정: 재실행 후 최근 목록에서 열림, 신뢰 전에는 에이전트 기능 비활성 · 선행: T1.14 · (F-PRJ-03)
-- [ ] T1.17 [레인 A · W1] 액티비티바·탭 타입 등록(pipeline·explorer·agent·templates·playground, welcome·brief·plan·prompts·design·review·export 등 빈 뷰) — 대상: `src/components/layout/*`, `Docs/Extension-Guide.md` 절차 · 완료 판정: 모든 탭이 빈 상태로 열림 · 선행: T1.4
+- [x] T1.17 [레인 A · W1] 액티비티바·탭 타입 등록(pipeline·explorer·agent·templates·playground, welcome·brief·plan·prompts·design·review·export 등 빈 뷰) — 대상: `src/components/layout/*`, `Docs/Extension-Guide.md` 절차 · 완료 판정: 모든 탭이 빈 상태로 열림 · 선행: T1.4
 - [ ] T1.18 [레인 조정 · 마무리] M1 마무리: 데모 수행, `wiki/sources/milestone-m1.md`, 문서 동기화 · 완료 판정: 계획서 §2 M1 데모 ①~④ · 선행: T1.1~T1.17
 
 ## M2 에이전트 (branch: `feat/m2-agents`)

@@ -167,9 +167,18 @@ const ko = {
   'shortcuts.settings': '설정 열기',
   'shortcuts.sidebar': '사이드바 토글',
 
-
-
-
+  'shell.view.pipeline': '파이프라인',
+  'shell.view.agent': '에이전트',
+  'shell.view.templates': '템플릿',
+  'shell.view.playground': '플레이그라운드',
+  'shell.tab.brief': '브리프',
+  'shell.tab.plan': '기획서',
+  'shell.tab.prompts': '구현 프롬프트',
+  'shell.tab.design': '디자인',
+  'shell.tab.review': '검수',
+  'shell.tab.export': '내보내기',
+  'shell.emptyView.desc': '이 화면은 이후 단계에서 구현됩니다.',
+  'shell.emptyPanel.desc': '이 패널은 이후 단계에서 구현됩니다.',
 };
 
 export type Dict = typeof ko;

@@ -18,6 +18,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import { STAGE_TAB_ITEMS } from '@/components/layout/shellRegistry';
+import { useWorkspaceTabs } from '@/lib/context/WorkspaceTabsContext';
 import { AppMark } from '@/components/brand/AppMark';
 import { APP_NAME } from '@/lib/brand';
 import { useWorkspace } from '@/lib/context/WorkspaceContext';
@@ -29,6 +31,7 @@ export function TopMenuBar() {
   const navigate = useNavigate();
   const { workspaceRoot, setWorkspaceRoot, recentWorkspaces } = useWorkspace();
   const { togglePanel } = useSidePanel();
+  const { openTab } = useWorkspaceTabs();
   const folderName = useMemo(() => {
     if (!workspaceRoot) return '';
     const parts = workspaceRoot.split(/[/\\]/).filter(Boolean);
@@ -126,6 +129,20 @@ export function TopMenuBar() {
             <Settings className="h-3.5 w-3.5" />
             <span>{t('topMenu.settings')}</span>
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          {STAGE_TAB_ITEMS.map(({ type, icon: Icon, titleKey }) => (
+            <DropdownMenuItem
+              key={type}
+              disabled={!workspaceRoot}
+              onClick={() =>
+                openTab({ id: `${type}:main`, type, title: t(titleKey) })
+              }
+              className="gap-2 cursor-pointer text-[11px]"
+            >
+              <Icon className="h-3.5 w-3.5" />
+              <span>{t(titleKey)}</span>
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuContent>
       </DropdownMenu>
 
