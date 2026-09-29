@@ -185,5 +185,11 @@
 ## [2026-09-30] milestone | M3 pipeline milestone done
 - T3.16 done by lane M: mock-based end-to-end demo (brief, plan retry loop, viewer approval, prompts, 3-task runner, task graph, design tab) on feat/m2-agents code. Wrote [[milestone-m3]]. Manual remainder: real-agent Build demo. See: [[milestone-m3]]
 
+## [2026-09-30] milestone | M4 review-runtime done
+- T4.22 done by lane N: demos ①~⑥ in automation scope (unit suites + harness re-check, live WebView2/manual/agent-chat/clean-VM excluded and listed). Wrote [[milestone-m4]]. Verification: lint pass, typecheck pass, vitest 90 files 632 tests pass, cargo 165 pass 0 fail 4 ignored. See: [[parallel-execution]]
+
 ## [2026-09-30] lint | Wiki health check
 - Ran lint. See lint-report.md for details.
+
+## [2026-09-30] lint | Wiki health check (lane N, T4.22)
+- 50 pages, orphans 1 (wiki/sources/milestone-m4.md; overview.md 연결은 조정 세션에 인계), broken links 0. See: [[parallel-execution]]

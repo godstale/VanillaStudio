@@ -302,5 +302,6 @@ Vanilla Studio P4 구현, 레인 {{LANE}}을 수행하라.
 | 5 | D2 디자인·팔레트 | `feat/m4-d2-palette` | 병합 완료 | `d23328e` | T4.15·T4.16·T4.17 |
 | 5 | R2 수정요청·MCP | `feat/m4-r2-revision` | 병합 완료 | `8e5470d` | T4.20·T4.18·T4.19, P 병합본 rebase済 |
 | 6 | M M3 마무리 | `feat/m3-m-wrap` | 병합 완료 | `467d257` | T3.16, milestone-m3 |
+| 6 | N M4 마무리 | `feat/m4-n-wrap` | 병합 완료 | — | T4.22, milestone-m4 (커밋 후 기입) |
 | 5 | X2 Export UI | `feat/m5-x2-export-ui` | 병합 완료 | `dfdb8f7` | T5.2·T5.9·T5.7, CenterWorkspace prompts/export 충돌 해결 |
 | 5 | T2 템플릿 설치 | `feat/m6-t2-templates` | 병합 완료 | `4c1354c` | T6.2 |
