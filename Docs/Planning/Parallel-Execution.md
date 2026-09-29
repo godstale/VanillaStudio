@@ -101,6 +101,23 @@ M1은 main에 병합했다. 웨이브 3은 통합 브랜치 `feat/m2-agents`(mai
 
 ---
 
+## 2c. 웨이브 4 (M2 후속 + M3·M4b·M5 선행분) — 통합 브랜치 `feat/m2-agents`
+
+웨이브 3(S·G·E·R·H)은 병합 완료. 웨이브 4는 같은 통합 브랜치에 레인 5개를 병합한다.
+
+| 레인 | 브랜치 / 워크트리 | TODO 항목 | 소유 경로 | i18n 접두어 |
+| --- | --- | --- | --- | --- |
+| **F 에이전트 프런트** | `feat/m2-f-agent-ui` / `../VanillaStudio-m2-f` | T2.7 → T2.8 → T2.9 | `src/lib/agents/SessionContext*`·리듀서, `src/components/agents/**`, 우측 도크(`src/components/layout/*` 최소 수정), `src/pages/Workspace.tsx` Provider 한 줄 | `agentPanel.*` |
+| **E2 호스트 후속** | `feat/m2-e2-host-followup` / `../VanillaStudio-m2-e2` | MCP 세션 연결(T2.10 판정), T2.13, T2.12 | `src-tauri/src/agent_host/**`, `src-tauri/src/commands/agent_commands.rs`, `src-tauri/src/mcp_server/**`, `wiki/sources/poc-s3.md`(T2.12만) | — |
+| **K 체크포인트·스킬** | `feat/m3-k-checkpoint` / `../VanillaStudio-m3-k` | T3.10 → T3.15 → T6.1 | `src-tauri/src/commands/project_commands.rs`(checkpoint), `src/lib/project/checkpoint*`, `src/components/pipeline/prompts/TaskGraph.tsx`, `resources/skills/vanilla-core/**` | `checkpoint.*` |
+| **V 검수 스튜디오** | `feat/m4-v-review` / `../VanillaStudio-m4-v` | T4.10 → T4.11 → T4.12 → T4.13 → T4.14 → T4.21 | `resources/workers/vite-runner.mjs`, `src-tauri/src/commands/process_commands.rs`(프리뷰 job), `src-tauri/src/watch.rs`, `src/lib/review/**`, `src/components/review/**`, `tests/e2e/**` | `review.*` |
+| **X Export 워커** | `feat/m5-x-export` / `../VanillaStudio-m5-x` | T5.1 → T5.3 → T5.4 → T5.5 → T5.6 → T5.8 | `packages/export-worker/**`, `resources/workers/**`(vite-runner 제외) | 없음 |
+
+- 웨이브 5(에이전트 의존 흐름): T3.6, T3.11, T3.13, T3.14, T4.15~T4.20, T5.2, T5.7, T5.9, T6.x. 병합 순서: K → E2 → X → V → F.
+- 사람이 확인할 항목(자동화 불가): 실제 Claude Code·Codex·AGY 대화, PowerPoint에서 편집 PPTX, 깨끗한 Windows VM.
+
+---
+
 ## 3. 브랜치·워크트리
 
 ```powershell
