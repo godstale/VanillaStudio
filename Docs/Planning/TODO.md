@@ -103,7 +103,7 @@ M4b 검수 스튜디오
 
 ## M5 Export (branch: `feat/m5-export`)
 
-- [ ] T5.1 export 워커 골격(작업 JSON 입력, NDJSON 진행률, 취소, 환경 변수: `DO_NOT_TRACK`·`HYPERFRAMES_SKIP_SKILLS`·FFmpeg 경로, `GEMINI_API_KEY` 제거) — 대상: `packages/export-worker/src/index.ts` · 완료 판정: 목 작업 실행 테스트 · 선행: T1.3, T1.15
+- [x] T5.1 export 워커 골격(작업 JSON 입력, NDJSON 진행률, 취소, 환경 변수: `DO_NOT_TRACK`·`HYPERFRAMES_SKIP_SKILLS`·FFmpeg 경로, `GEMINI_API_KEY` 제거) — 대상: `packages/export-worker/src/index.ts` · 완료 판정: 목 작업 실행 테스트 · 선행: T1.3, T1.15
 - [ ] T5.2 작업 큐 Context·`export_jobs`·진행률·로그·취소 UI — 대상: `src/lib/export/*`, `src/components/export/*` · 완료 판정: 2개 작업 대기열 처리 · 선행: T5.1 · (F-EXP-08)
 - [ ] T5.3 web/interactive: `vite build`(live) → zip — 대상: `packages/export-worker/src/web.ts` · 완료 판정: zip을 풀어 정적 서버로 열림 · 선행: T5.1 · (F-EXP-01)
 - [ ] T5.4 스틸 캡처 공통(puppeteer-core + 관리 브라우저, 준비 신호 대기, 배율) — 대상: `packages/export-worker/src/capture.ts` · 완료 판정: 3840×2160 반복 동일 · 선행: T4.3, T5.1
