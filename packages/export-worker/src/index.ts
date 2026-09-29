@@ -25,5 +25,22 @@ export { exportImageShots } from './image';
 export type { ImageDeps } from './image';
 export { buildImagePptx, buildSlidesPdf, exportSlides, SLIDE_POINTS } from './slides';
 export type { SlidesDeps } from './slides';
+export {
+  applyWrapNone,
+  bundleProjectFonts,
+  collectProjectFonts,
+  EDITABLE_FILE,
+  EDITABLE_INCHES,
+  EDITABLE_SELECTOR,
+  exportEditableSlides,
+  FONTS_DIR,
+  FONTS_GUIDE,
+  MAX_BUNDLED_FONTS,
+  mergeSlideDecks,
+  postProcessDeck,
+  resolveVendorBundle,
+  VENDOR_BUNDLE,
+} from './slidesEditable';
+export type { EditableDeps, EditableSlideBrowser, EditableSlidePage, LaunchEditableBrowser, WrapFix } from './slidesEditable';
 export { buildHyperframesArgs, BYTES_PER_WORKER, exportVideo, prepareRenderBundle, resolveHyperframesBin, resolveWorkerCount, runHyperframes } from './video';
 export type { HyperframesCommand, HyperframesRunOptions, RenderBundleOptions, RenderOptions, VideoDeps } from './video';

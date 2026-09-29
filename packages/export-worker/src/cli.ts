@@ -10,6 +10,7 @@ import { designLint } from './designLint';
 import { formatEvent, parseJob, type ExportJob } from './job';
 import { runExport, type Steps } from './run';
 import { exportImageShots } from './image';
+import { exportEditableSlides } from './slidesEditable';
 import { exportSlides } from './slides';
 import { exportVideo } from './video';
 import { exportWeb } from './web';
@@ -17,7 +18,12 @@ import { exportWeb } from './web';
 const STEPS: Steps = {
   web: exportWeb,
   image: exportImageShots,
-  slides: exportSlides,
+  // Editable PPTX (Beta, T5.7) runs after the image outputs when requested.
+  slides: async (job, ctx) => {
+    const files = await exportSlides(job, ctx);
+    if (job.editable) files.push(...(await exportEditableSlides(job, ctx)));
+    return files;
+  },
   video: exportVideo,
 };
 
