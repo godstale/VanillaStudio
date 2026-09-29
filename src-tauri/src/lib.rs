@@ -1,4 +1,5 @@
 pub mod commands;
+pub mod process;
 
 use commands::fs_commands::*;
 use commands::search_commands::*;
