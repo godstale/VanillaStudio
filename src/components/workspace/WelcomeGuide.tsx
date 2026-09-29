@@ -5,6 +5,7 @@ import {
   Columns2,
   Languages,
   ArrowRight,
+  FilePlus2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AppMark } from '@/components/brand/AppMark';
@@ -12,12 +13,15 @@ import { APP_NAME } from '@/lib/brand';
 import { useWorkspace } from '@/lib/context/WorkspaceContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { invoke } from '@tauri-apps/api/core';
+import { useState } from 'react';
+import { NewProjectWizard } from '@/components/project/NewProjectWizard';
 
 // Shown when no folder is open, and in `welcome` tabs.
 // Replace the highlight cards with your own feature tour.
 export function WelcomeGuide() {
   const { t } = useLanguage();
   const { setWorkspaceRoot, recentWorkspaces } = useWorkspace();
+  const [wizardOpen, setWizardOpen] = useState(false);
 
   const handlePickFolder = async () => {
     try {
@@ -65,6 +69,16 @@ export function WelcomeGuide() {
             <span>{t('welcome.pickFolder')}</span>
             <ArrowRight className="h-4 w-4 ml-auto opacity-70" />
           </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            onClick={() => setWizardOpen(true)}
+            className="w-full h-11 gap-2 text-sm font-semibold"
+          >
+            <FilePlus2 className="h-4 w-4" />
+            <span>{t('project.new')}</span>
+          </Button>
+          <NewProjectWizard open={wizardOpen} onOpenChange={setWizardOpen} />
 
           {recentWorkspaces.length > 0 && (
             <div className="pt-3 border-t border-border/60 space-y-2">
