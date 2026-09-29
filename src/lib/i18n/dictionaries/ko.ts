@@ -618,6 +618,8 @@ const ko = {
   'export.dialog.slideCount': '슬라이드 수',
   'export.dialog.pptx': 'PPTX 포함',
   'export.dialog.pdf': 'PDF 포함',
+  'export.dialog.editable': '편집 가능 PPTX (Beta)',
+  'export.dialog.editableNote': '슬라이드 DOM을 변환해 텍스트 편집이 가능한 PPTX를 이미지 출력물과 함께 만듭니다.',
   'export.dialog.fps': 'FPS',
   'export.dialog.duration': '길이(초)',
   'export.dialog.videoFormat': '컨테이너',

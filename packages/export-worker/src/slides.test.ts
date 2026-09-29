@@ -38,6 +38,7 @@ const job = (outDir: string): SlidesJob => ({
   scale: 2,
   pptx: true,
   pdf: true,
+  editable: false,
 });
 
 describe('buildImagePptx (T5.6)', () => {

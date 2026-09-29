@@ -621,6 +621,8 @@ const en: Dict = {
   'export.dialog.slideCount': 'Slide count',
   'export.dialog.pptx': 'Include PPTX',
   'export.dialog.pdf': 'Include PDF',
+  'export.dialog.editable': 'Editable PPTX (Beta)',
+  'export.dialog.editableNote': 'Converts the slide DOM so text stays editable, next to the image outputs.',
   'export.dialog.fps': 'FPS',
   'export.dialog.duration': 'Duration (s)',
   'export.dialog.videoFormat': 'Container',

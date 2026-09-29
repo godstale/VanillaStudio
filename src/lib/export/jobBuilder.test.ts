@@ -34,9 +34,10 @@ describe('buildExportJob', () => {
       scale: 2,
       pptx: true,
       pdf: false,
+      editable: true,
       slides: [{ name: 's1', t: 0 }],
     });
-    expect(slides.job).toMatchObject({ kind: 'slides', pdf: false });
+    expect(slides.job).toMatchObject({ kind: 'slides', pdf: false, editable: true });
 
     const video = buildExportJob('/p', {
       kind: 'video',

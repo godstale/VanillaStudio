@@ -18,6 +18,8 @@ export interface SlidesExportOptions {
   count: number;
   pptx: boolean;
   pdf: boolean;
+  /** Editable PPTX (Beta, T5.7): DOM conversion next to the image outputs. */
+  editable: boolean;
 }
 
 export interface VideoExportOptions {
@@ -47,7 +49,7 @@ export function defaultExportOptions(): ExportOptions {
   return {
     kind: 'web',
     image: { width: 1920, height: 1080, formats: ['png'], scales: [2] },
-    slides: { width: 1920, height: 1080, scale: 2, count: 3, pptx: true, pdf: true },
+    slides: { width: 1920, height: 1080, scale: 2, count: 3, pptx: true, pdf: true, editable: false },
     video: { width: 1920, height: 1080, fps: 30, duration: 15, format: 'mp4' },
   };
 }
@@ -104,6 +106,7 @@ export function loadExportOptions(storage?: OptionsStorage): ExportOptions {
       count: Math.min(100, Math.max(1, Math.floor(num(parsed.slides.count, defaults.slides.count)))),
       pptx: parsed.slides.pptx !== false,
       pdf: parsed.slides.pdf !== false,
+      editable: parsed.slides.editable === true,
     };
   }
   if (isRecord(parsed.video)) {
@@ -159,6 +162,7 @@ export function detailsFromOptions(options: ExportOptions): ExportBuildDetails {
         scale: options.slides.scale,
         pptx: options.slides.pptx,
         pdf: options.slides.pdf,
+        editable: options.slides.editable,
         slides: Array.from({ length: options.slides.count }, (_, i) => ({ name: `s${i + 1}`, t: i * 5 })),
       };
     case 'video':

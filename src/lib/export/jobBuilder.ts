@@ -39,6 +39,8 @@ export const slidesJobSchema = baseJob.extend({
   scale: z.number().positive().default(2),
   pptx: z.boolean().default(true),
   pdf: z.boolean().default(true),
+  /** Editable PPTX (Beta, T5.7): DOM conversion next to the image outputs. */
+  editable: z.boolean().default(false),
 });
 
 export const videoJobSchema = baseJob.extend({
@@ -81,6 +83,7 @@ export type ExportBuildDetails =
       scale: number;
       pptx: boolean;
       pdf: boolean;
+      editable: boolean;
       slides: Array<{ name: string; t: number }>;
     }
   | {
@@ -141,6 +144,7 @@ export function buildExportJob(
         scale: details.scale,
         pptx: details.pptx,
         pdf: details.pdf,
+        editable: details.editable,
       };
       break;
     case 'video':

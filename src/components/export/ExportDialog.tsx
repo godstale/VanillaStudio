@@ -283,6 +283,18 @@ export function ExportDialog({
                 </label>
               ))}
             </div>
+            <label className="flex cursor-pointer items-start gap-1.5 text-xs text-foreground">
+              <input
+                type="checkbox"
+                className="mt-0.5 h-3.5 w-3.5 accent-primary"
+                checked={options.slides.editable}
+                onChange={(e) => set({ slides: { ...options.slides, editable: e.target.checked } })}
+              />
+              <span>
+                {t('export.dialog.editable')}
+                <span className="block text-[11px] text-muted-foreground">{t('export.dialog.editableNote')}</span>
+              </span>
+            </label>
           </>
         )}
 

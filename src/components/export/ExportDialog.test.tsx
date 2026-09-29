@@ -96,6 +96,29 @@ describe('ExportDialog', () => {
     });
   });
 
+  it('enqueues an editable slides job when the Beta box is checked', async () => {
+    const storage = memStorage();
+    const seen: Array<{ json: string }> = [];
+    const api: ExportApi = {
+      async start(_root, _jobId, jobJson) {
+        void _root;
+        void _jobId;
+        seen.push({ json: jobJson });
+        return { outDir: '/p/exports/x-slides', files: [] };
+      },
+      async cancel() {},
+    };
+    setup(api, storage, () => undefined);
+    fireEvent.click(screen.getByRole('radio', { name: '슬라이드' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: /편집 가능 PPTX/ }));
+    fireEvent.click(screen.getByRole('button', { name: '내보내기 시작' }));
+    await waitFor(() => {
+      if (seen.length === 0) throw new Error('no job enqueued');
+    });
+    const job = JSON.parse(seen[0].json) as { kind: string; editable: boolean; pptx: boolean };
+    expect(job).toMatchObject({ kind: 'slides', editable: true, pptx: true });
+  });
+
   it('queues the job as failed when the worker is missing (shown in the job list)', async () => {
     const storage = memStorage();
     const api: ExportApi = {

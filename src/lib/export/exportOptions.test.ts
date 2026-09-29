@@ -27,6 +27,14 @@ describe('export options', () => {
     expect(loadExportOptions(storage)).toEqual(options);
   });
 
+  it('defaults the editable Beta flag to off', () => {
+    const storage = memStorage({ 'vanilla.export.options.v1': JSON.stringify({ kind: 'slides', slides: { count: 2, editable: true } }) });
+    expect(loadExportOptions(storage).slides).toMatchObject({ count: 2, editable: true });
+    expect(loadExportOptions(memStorage()).slides.editable).toBe(false);
+    const base = defaultExportOptions();
+    expect(detailsFromOptions({ ...base, kind: 'slides' })).toMatchObject({ kind: 'slides', editable: false });
+  });
+
   it('falls back to defaults on missing, corrupt or partial data', () => {
     expect(loadExportOptions(memStorage())).toEqual(defaultExportOptions());
     expect(loadExportOptions(memStorage({ 'vanilla.export.options.v1': 'nope{' }))).toEqual(defaultExportOptions());
