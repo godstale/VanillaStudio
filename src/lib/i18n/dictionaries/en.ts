@@ -448,6 +448,11 @@ const en: Dict = {
   'design.saved': 'Saved',
   'design.unsaved': 'Unsaved changes',
   'design.revert': 'Revert',
+
+  'agent.tier.official': 'Official',
+  'agent.tier.experimental': 'Experimental',
+  'agent.mode.acp': 'ACP',
+  'agent.mode.terminal': 'Terminal',
 };
 
 export default en;

@@ -445,6 +445,11 @@ const ko = {
   'design.saved': '저장됨',
   'design.unsaved': '저장하지 않은 변경',
   'design.revert': '되돌리기',
+
+  'agent.tier.official': '공식 지원',
+  'agent.tier.experimental': '실험적',
+  'agent.mode.acp': 'ACP',
+  'agent.mode.terminal': '터미널',
 };
 
 export type Dict = typeof ko;
