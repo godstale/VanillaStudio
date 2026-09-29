@@ -75,7 +75,7 @@
 
 M4a 런타임 패키지 (`packages/runtime`, M2·M3와 병렬 가능)
 
-- [ ] T4.1 [레인 D · W1] `defineScene`·`param.*`·`useParams`(우선순위: 코드 < 토큰 < 사용자 값) — 대상: `packages/runtime/src/scene.ts`, `params.ts` · 완료 판정: 단위 테스트 · 선행: T1.3
+- [x] T4.1 [레인 D · W1] `defineScene`·`param.*`·`useParams`(우선순위: 코드 < 토큰 < 사용자 값) — 대상: `packages/runtime/src/scene.ts`, `params.ts` · 완료 판정: 단위 테스트 · 선행: T1.3
 - [ ] T4.2 [레인 D · W1] 시계: clock 모드(preview·render, `hf-seek`+`waitUntil`) / free 모드(live), 전체 ↔ Scene 로컬 시간 — 대상: `packages/runtime/src/clock.ts` · 완료 판정: 시간 변환 테스트, S1 렌더 재현 · 선행: T4.1
 - [ ] T4.3 [레인 D · W1] 준비 신호 `registerAsset`, 폰트 `fonts.load`, Canvas `onCreated`, `__vanillaReady` — 대상: `packages/runtime/src/ready.ts` · 완료 판정: S2 대조 실험 재현(대기 없는 캡처와 다름, 대기 캡처 반복 동일) · 선행: T4.2
 - [ ] T4.4 [레인 D · W1] `<VanillaCanvas>`(render=never+advance, preview=demand, `preserveDrawingBuffer` 옵션) — 대상: `packages/runtime/src/canvas.tsx` · 완료 판정: S1 결정성 테스트 · 선행: T4.2
