@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "midnight-rampart",
+  "name": "Midnight Rampart",
+  "tags": ["dark", "calm"],
+  "scheme": "dark",
+  "colors": {
+    "canvas": "#18191C",
+    "ink": "#D9DBE1",
+    "primary": "#6F9EF0",
+    "accent": "#E0B26A"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

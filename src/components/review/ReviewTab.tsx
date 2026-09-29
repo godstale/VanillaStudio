@@ -14,7 +14,9 @@ import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { cn } from '@/lib/utils';
 import { Preview } from '@/components/review/Preview';
 import { ParamsPanel } from '@/components/review/ParamsPanel';
+import { DesignPanel } from '@/components/review/DesignPanel';
 import { Scrubber } from '@/components/review/Scrubber';
+import { BUILT_IN_PALETTES } from '@/lib/design/palettes';
 
 const BACKGROUNDS: PreviewBackground[] = ['checker', 'canvas', 'light', 'dark'];
 
@@ -57,6 +59,7 @@ function ReviewBody({ root, server, onRetry }: { root: string; server: PreviewSe
   const [zoom, setZoom] = useState<PreviewZoom>('fit');
   const [background, setBackground] = useState<PreviewBackground>('checker');
   const [device, setDevice] = useState<(typeof DEVICE_PRESETS)[number]['id']>('desktop');
+  const [sideTab, setSideTab] = useState<'params' | 'design'>('params');
   const deviceWidth = DEVICE_PRESETS.find((d) => d.id === device)?.width ?? null;
   const showDevices = project.outputType === 'web';
   const serverUrl = server.phase === 'running' ? server.url : null;
@@ -107,7 +110,23 @@ function ReviewBody({ root, server, onRetry }: { root: string; server: PreviewSe
           <ServerStatus state={server} onRetry={onRetry} />
           <Preview serverUrl={serverUrl} format={project.format} zoom={zoom} background={background} deviceWidth={showDevices ? deviceWidth : null} />
         </div>
-        <ParamsPanel root={root} />
+        <div className="flex shrink-0 flex-col">
+          <div className="flex w-72 shrink-0 items-center gap-1 border-l border-border bg-background px-2 py-1" role="group" aria-label={t('palette.panel.title')}>
+            {(['params', 'design'] as const).map((tab) => (
+              <Button
+                key={tab}
+                size="sm"
+                variant={sideTab === tab ? 'secondary' : 'ghost'}
+                className="h-6 flex-1 px-2 text-xs"
+                aria-pressed={sideTab === tab}
+                onClick={() => setSideTab(tab)}
+              >
+                {t(`palette.tabs.${tab}`)}
+              </Button>
+            ))}
+          </div>
+          {sideTab === 'params' ? <ParamsPanel root={root} /> : <DesignPanel root={root} palettes={BUILT_IN_PALETTES} />}
+        </div>
       </div>
       <Scrubber fps={project.fps} timeKind={timeKindOf(project.outputType)} />
     </div>

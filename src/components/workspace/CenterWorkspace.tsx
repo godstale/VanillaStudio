@@ -8,6 +8,7 @@ import {
   Plus,
   Columns2,
   Rows2,
+  Palette as PaletteIcon,
   type LucideIcon,
 } from 'lucide-react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
@@ -22,6 +23,7 @@ import { STAGE_TAB_ICONS, TERMINAL_TAB_ITEM } from '@/components/layout/shellReg
 import { TerminalTab } from '@/components/terminal/TerminalTab';
 import { BriefEditor } from '@/components/pipeline/brief/BriefEditor';
 import { DesignTab } from '@/components/design/DesignTab';
+import { PaletteEditorTab } from '@/components/design/PaletteEditor';
 import { ReviewTab } from '@/components/review/ReviewTab';
 import { PlanViewer } from '@/components/pipeline/plan/PlanViewer';
 import { PromptsTab } from '@/components/pipeline/prompts/PromptsTab';
@@ -37,6 +39,7 @@ const TAB_ICONS: Record<WorkspaceTabType, LucideIcon> = {
   'image-viewer': ImageIcon,
   welcome: Compass,
   ...STAGE_TAB_ICONS,
+  palette: PaletteIcon,
   terminal: TERMINAL_TAB_ITEM.icon,
 };
 
@@ -56,6 +59,8 @@ function renderTabContent(tab: WorkspaceTab) {
       return <PlanViewer />;
     case 'design':
       return <DesignTab />;
+    case 'palette':
+      return <PaletteEditorTab tab={tab} />;
     case 'review':
       return <ReviewTab />;
     case 'prompts':
