@@ -229,6 +229,115 @@ const ko = {
   'project.recent.missing': '폴더를 찾을 수 없습니다: {path}',
   'project.untrusted.notice': '신뢰하지 않은 폴더입니다. 신뢰하기 전에는 에이전트 기능(세션 시작, 스킬 자동 로드)이 꺼져 있습니다.',
   'project.untrusted.review': '신뢰 여부 확인',
+  'doctor.title': '환경 점검',
+  'doctor.desc':
+    'Vanilla Studio가 사용하는 외부 도구가 설치되어 있는지 확인합니다.',
+  'doctor.recheck': '다시 점검',
+  'doctor.checking': '점검 중…',
+  'doctor.checkedIn': '{ms}ms 만에 점검함',
+  'doctor.failed': '점검하지 못했습니다: {error}',
+  'doctor.summary.ok': '모든 준비가 끝났습니다',
+  'doctor.summary.blocking': '필수 항목 {n}개가 필요합니다',
+  'doctor.summary.warnings': '선택 항목 {n}개를 확인하세요',
+  'doctor.summary.noAgent':
+    '사용 가능한 코딩 에이전트가 없습니다. 하나 이상 설치하세요',
+  'doctor.badge.open': '환경 점검 열기',
+  'doctor.required': '필수',
+  'doctor.optional': '선택',
+  'doctor.version': '버전',
+  'doctor.path': '경로',
+  'doctor.fixLabel': '해결 방법',
+  'doctor.copy': '복사',
+  'doctor.copied': '복사됨',
+  'doctor.status.ok': '정상',
+  'doctor.status.missing': '없음',
+  'doctor.status.outdated': '업데이트 필요',
+  'doctor.status.unsupported': '지원 안 됨',
+  'doctor.status.not-logged-in': '로그인 필요',
+  'doctor.status.info': '참고',
+  'doctor.detail.system-browser-only':
+    '시스템 브라우저만 있습니다(렌더 전용 브라우저는 없음)',
+  'doctor.detail.claude-code-missing': 'Claude Code를 먼저 설치하세요',
+  'doctor.detail.login-state-unparsed': '로그인 상태를 확인하지 못했습니다',
+  'doctor.check.node': 'Node.js',
+  'doctor.check.pnpm': 'pnpm',
+  'doctor.check.git': 'Git',
+  'doctor.check.claude-code': 'Claude Code',
+  'doctor.check.claude-login': 'Claude Code 로그인',
+  'doctor.check.codex': 'Codex',
+  'doctor.check.opencode': 'OpenCode',
+  'doctor.check.hermes': 'Hermes',
+  'doctor.check.agy': 'AGY',
+  'doctor.check.ffmpeg': 'FFmpeg (영상 인코딩)',
+  'doctor.check.render-browser': '렌더 브라우저 (Chrome Headless Shell)',
+  'doctor.check.webview2': 'WebView2 런타임',
+  'doctor.check.winget': 'winget (설치 도우미)',
+  'doctor.fix.install-node':
+    'Node.js 22 이상이 필요합니다. 아래 명령으로 설치하거나 nodejs.org에서 LTS를 받으세요.',
+  'doctor.fix.upgrade-node':
+    'Node.js 버전이 낮습니다(22 이상 필요). 아래 명령으로 LTS로 올리세요.',
+  'doctor.fix.enable-pnpm':
+    'Node.js에 포함된 corepack으로 pnpm을 켭니다. 아래 명령을 터미널에서 실행하세요.',
+  'doctor.fix.install-node-then-pnpm':
+    'corepack이 없습니다. Node.js를 먼저 설치한 뒤 아래 명령으로 pnpm을 켜세요.',
+  'doctor.fix.install-git':
+    'Git을 설치하세요. 아래 명령을 쓰거나 git-scm.com에서 받을 수 있습니다.',
+  'doctor.fix.install-claude-code':
+    'Claude Code를 설치하세요. 아래 설치 안내 페이지를 참고하세요.',
+  'doctor.fix.claude-login':
+    'Claude Code에 로그인되어 있지 않습니다. 터미널에서 아래 명령을 실행하세요.',
+  'doctor.fix.install-codex': 'Codex CLI를 설치하세요. Node.js가 필요합니다.',
+  'doctor.fix.install-opencode':
+    'OpenCode를 설치하세요. opencode.ai의 설치 안내를 따르세요.',
+  'doctor.fix.install-hermes':
+    'Hermes 에이전트를 설치하세요. 프로젝트 문서의 설치 안내를 따르세요.',
+  'doctor.fix.install-agy': 'AGY를 설치하세요. 제공처의 설치 안내를 따르세요.',
+  'doctor.fix.download-ffmpeg':
+    '영상 내보내기에는 libx264가 포함된 최신 FFmpeg가 필요합니다. 앱이 검증된 빌드를 내려받아 앱 데이터 폴더에만 설치할 수 있습니다.',
+  'doctor.fix.install-render-browser':
+    '영상·이미지 렌더용 브라우저가 없습니다. 아래 명령으로 Chrome Headless Shell을 설치하세요.',
+  'doctor.fix.install-webview2':
+    'WebView2 런타임이 필요합니다. 아래 주소에서 설치한 뒤 앱을 다시 시작하세요.',
+  'doctor.fix.winget-manual':
+    'winget이 없습니다. 위 항목은 각 안내 페이지에서 직접 설치하세요. Microsoft Store의 앱 설치 관리자를 업데이트하면 winget이 생깁니다.',
+  'doctor.ffmpeg.download': 'FFmpeg 내려받기',
+  'doctor.ffmpeg.consent.title': 'FFmpeg를 내려받을까요?',
+  'doctor.ffmpeg.consent.desc':
+    '영상 내보내기에 필요한 FFmpeg(GPL 빌드)를 인터넷에서 내려받습니다. 아래 내용을 확인하고 동의하면 진행합니다.',
+  'doctor.ffmpeg.consent.source':
+    '출처: GitHub BtbN/FFmpeg-Builds 최신 릴리스 (api.github.com, github.com)',
+  'doctor.ffmpeg.consent.target':
+    '설치 위치: 앱 데이터 폴더의 tools/ffmpeg (시스템 PATH는 변경하지 않음)',
+  'doctor.ffmpeg.consent.verify':
+    '내려받은 파일은 SHA-256으로 검증하며, 실패하거나 취소하면 파일을 남기지 않습니다.',
+  'doctor.ffmpeg.consent.confirm': '동의하고 내려받기',
+  'doctor.ffmpeg.consent.cancel': '취소',
+  'doctor.ffmpeg.cancel': '내려받기 취소',
+  'doctor.ffmpeg.stage.selected': '내려받을 파일 선택됨: {asset} ({mb} MB)',
+  'doctor.ffmpeg.stage.download': '내려받는 중… {percent}%',
+  'doctor.ffmpeg.stage.verified': 'SHA-256 검증 완료',
+  'doctor.ffmpeg.stage.extracted': '설치 완료',
+  'doctor.ffmpeg.done': 'FFmpeg를 설치했습니다',
+  'doctor.ffmpeg.doneNotOk': '설치했지만 libx264 검증에 실패했습니다',
+  'doctor.ffmpeg.cancelled': '내려받기를 취소했습니다',
+  'doctor.ffmpeg.alreadyRunning': '이미 내려받는 중입니다',
+  'doctor.ffmpeg.failed': '내려받지 못했습니다: {error}',
+  'doctor.install.title': '프로젝트 의존성 설치',
+  'doctor.install.desc':
+    '이 프로젝트를 실행하려면 의존성을 설치해야 합니다. 아래 고정 명령만 실행하며, 한 번 동의하면 package.json이 바뀌기 전까지 다시 묻지 않습니다.',
+  'doctor.install.descChanged':
+    'package.json이 바뀌었습니다. 의존성을 다시 설치할까요?',
+  'doctor.install.scriptsNote':
+    '패키지를 인터넷에서 내려받으며, 패키지의 설치 스크립트가 실행될 수 있습니다. 신뢰하는 프로젝트에서만 동의하세요.',
+  'doctor.install.confirm': '동의하고 설치',
+  'doctor.install.decline': '나중에',
+  'doctor.install.running': '설치하는 중입니다…',
+  'doctor.install.cancel': '설치 취소',
+  'doctor.install.close': '닫기',
+  'doctor.install.done': '의존성을 설치했습니다',
+  'doctor.install.exitFailed': '설치가 종료 코드 {code}(으)로 실패했습니다',
+  'doctor.install.cancelled': '설치를 취소했습니다',
+  'doctor.install.failed': '설치하지 못했습니다: {error}',
 };
 
 export type Dict = typeof ko;

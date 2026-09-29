@@ -17,6 +17,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { useState } from 'react';
 import { projectFolderExists } from '@/lib/project/openProject';
 import { NewProjectWizard } from '@/components/project/NewProjectWizard';
+import { DoctorWelcomeBadge } from '@/components/doctor/DoctorBadge';
 
 // Shown when no folder is open, and in `welcome` tabs.
 // Replace the highlight cards with your own feature tour.
@@ -65,6 +66,7 @@ export function WelcomeGuide() {
             <br />
             {t('welcome.guide')}
           </p>
+          <DoctorWelcomeBadge />
         </div>
 
         <div className="border border-border/80 rounded-2xl bg-card p-6 shadow-sm space-y-4">
