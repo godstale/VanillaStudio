@@ -325,6 +325,22 @@ const en: Dict = {
   'doctor.ffmpeg.cancelled': 'Download cancelled',
   'doctor.ffmpeg.alreadyRunning': 'A download is already running',
   'doctor.ffmpeg.failed': 'Download failed: {error}',
+  'doctor.install.title': 'Install project dependencies',
+  'doctor.install.desc':
+    'This project needs its dependencies installed. Only the fixed command below runs; once you agree, you are not asked again until package.json changes.',
+  'doctor.install.descChanged':
+    'package.json has changed. Install the dependencies again?',
+  'doctor.install.scriptsNote':
+    'Packages are downloaded from the internet and their install scripts may run. Agree only for projects you trust.',
+  'doctor.install.confirm': 'Agree and install',
+  'doctor.install.decline': 'Not now',
+  'doctor.install.running': 'Installing…',
+  'doctor.install.cancel': 'Cancel install',
+  'doctor.install.close': 'Close',
+  'doctor.install.done': 'Dependencies installed',
+  'doctor.install.exitFailed': 'Install failed with exit code {code}',
+  'doctor.install.cancelled': 'Install cancelled',
+  'doctor.install.failed': 'Install failed: {error}',
 };
 
 export default en;

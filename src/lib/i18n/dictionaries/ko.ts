@@ -322,6 +322,22 @@ const ko = {
   'doctor.ffmpeg.cancelled': '내려받기를 취소했습니다',
   'doctor.ffmpeg.alreadyRunning': '이미 내려받는 중입니다',
   'doctor.ffmpeg.failed': '내려받지 못했습니다: {error}',
+  'doctor.install.title': '프로젝트 의존성 설치',
+  'doctor.install.desc':
+    '이 프로젝트를 실행하려면 의존성을 설치해야 합니다. 아래 고정 명령만 실행하며, 한 번 동의하면 package.json이 바뀌기 전까지 다시 묻지 않습니다.',
+  'doctor.install.descChanged':
+    'package.json이 바뀌었습니다. 의존성을 다시 설치할까요?',
+  'doctor.install.scriptsNote':
+    '패키지를 인터넷에서 내려받으며, 패키지의 설치 스크립트가 실행될 수 있습니다. 신뢰하는 프로젝트에서만 동의하세요.',
+  'doctor.install.confirm': '동의하고 설치',
+  'doctor.install.decline': '나중에',
+  'doctor.install.running': '설치하는 중입니다…',
+  'doctor.install.cancel': '설치 취소',
+  'doctor.install.close': '닫기',
+  'doctor.install.done': '의존성을 설치했습니다',
+  'doctor.install.exitFailed': '설치가 종료 코드 {code}(으)로 실패했습니다',
+  'doctor.install.cancelled': '설치를 취소했습니다',
+  'doctor.install.failed': '설치하지 못했습니다: {error}',
 };
 
 export type Dict = typeof ko;
