@@ -25,3 +25,7 @@ export {
 } from './clock';
 export type { ActiveSegment, Clock, ClockMode, ClockOptions, Renderer, Segment } from './clock';
 export * from './helpers';
+export { VanillaCanvas } from './canvas';
+export type { VanillaCanvasProps } from './canvas';
+export { canvasSettings } from './canvasSettings';
+export type { CanvasSettings, FrameLoop } from './canvasSettings';
