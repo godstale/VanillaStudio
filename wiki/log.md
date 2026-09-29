@@ -139,3 +139,6 @@
 
 ## [2026-09-29] lint | Wiki health check
 - Ran lint. See lint-report.md for details.
+
+## [2026-09-29] wave4 | K checkpoint-skill done
+- Lane K (T3.10, T3.15, T6.1) done, awaiting merge. Follow-ups passed on: bundle resources skills entry for T6.2 lane, checkpoint_init wiring in wizard for T3.11 lane. See: [[parallel-execution]]
