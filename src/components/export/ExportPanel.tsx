@@ -7,6 +7,7 @@ import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useExport } from '@/lib/export/exportContextValue';
 import { isTerminalStatus, type ExportJobRecord } from '@/lib/export/types';
 import { useWorkspace } from '@/lib/context/WorkspaceContext';
+import { ExportDialog } from './ExportDialog';
 import { cn } from '@/lib/utils';
 
 const STATUS_TONE: Record<ExportJobRecord['status'], string> = {
@@ -120,6 +121,7 @@ export function ExportPanel() {
   const { t } = useLanguage();
   const { workspaceRoot } = useWorkspace();
   const { jobs, cancel, clearFinished } = useExport();
+  const [dialogOpen, setDialogOpen] = useState(false);
   if (!workspaceRoot) {
     return <p className="p-6 text-center text-xs text-muted-foreground">{t('export.panel.noProject')}</p>;
   }
@@ -133,8 +135,12 @@ export function ExportPanel() {
             {t('export.panel.clearFinished')}
           </Button>
         )}
+        <Button size="sm" onClick={() => setDialogOpen(true)}>
+          {t('export.panel.new')}
+        </Button>
       </div>
       <ExportJobList jobs={jobs} onCancel={cancel} />
+      {dialogOpen && <ExportDialog open onOpenChange={setDialogOpen} />}
     </div>
   );
 }
