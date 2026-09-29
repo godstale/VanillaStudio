@@ -113,7 +113,7 @@ M4b 검수 스튜디오
 - [x] T5.8 video: render 빌드 → HyperFrames render(`--workers` 메모리 기준, `data-no-timeline`) → MP4/WebM + 포스터 — 대상: `packages/export-worker/src/video.ts` · 완료 판정: 샘플 15초 1080p MP4, 두 번 렌더 동일 · 선행: T4.2, T4.3, T1.10 · (F-EXP-06)
 - [x] T5.9 export 옵션 다이얼로그(유형별) — 대상: `src/components/export/ExportDialog.tsx` · 완료 판정: 유형별 옵션 저장 · 선행: T5.2
 - [x] T5.10 임베드 패키지(ES 모듈 + Web Component + React 래퍼) — 대상: `packages/export-worker/src/embed.ts` · 완료 판정: 외부 HTML에서 `<vanilla-scene>` 동작 · 선행: T5.3 · (F-EXP-02, S)
-- [ ] T5.11 M5 마무리: 5개 형식 데모, `milestone-m5.md` · 선행: T5.1~T5.9
+- [x] T5.11 M5 마무리: 5개 형식 데모, `milestone-m5.md` · 선행: T5.1~T5.9
 
 ## M6 템플릿·플레이그라운드 (branch: `feat/m6-templates`)
 
