@@ -134,6 +134,24 @@ M1은 main에 병합했다. 웨이브 3은 통합 브랜치 `feat/m2-agents`(mai
 
 ---
 
+## 2e. 웨이브 6 (M3·M4·M5 마무리 + M6) — 통합 브랜치 `feat/m2-agents`
+
+수동 항목은 제외: 실제 에이전트 대화, PowerPoint 편집 PPTX 확인, 깨끗한 VM 실행(T7.2), 코드 서명(T7.5, 인증서 필요).
+
+| 레인 | 브랜치 / 워크트리 | TODO 항목 | 소유 경로 | i18n 접두어 |
+| --- | --- | --- | --- | --- |
+| **M M3 마무리** | `feat/m3-m-wrap` / `../VanillaStudio-m3-m` | T3.16 | `wiki/sources/milestone-m3.md`(신규), TODO 자기 체크만 | — |
+| **N M4 마무리** | `feat/m4-n-wrap` / `../VanillaStudio-m4-n` | T4.22 | `wiki/sources/milestone-m4.md`(신규), TODO 자기 체크만 | — |
+| **O M5 나머지** | `feat/m5-o-embed` / `../VanillaStudio-m5-o` | T5.10 → T5.11 | `packages/export-worker/src/embed.ts`(+test), `wiki/sources/milestone-m5.md`(신규) | — |
+| **Q1 팔레트 확장** | `feat/m6-q1-palettes` / `../VanillaStudio-m6-q1` | T6.3 → T6.9 | `resources/palettes/*.json`, `src/lib/design/extract.ts`, `src/lib/design/harmony.ts`(+tests) | `palette.*` |
+| **Q2 템플릿·갤러리** | `feat/m6-q2-templates` / `../VanillaStudio-m6-q2` | T6.4 → T6.5 → T6.6 → T6.7 | `resources/templates/**`, `src/components/templates/*` | `templates.*` |
+| **Q3 플레이그라운드** | `feat/m6-q3-playground` / `../VanillaStudio-m6-q3` | T6.8 → T6.10 | `src/lib/playground/*`, `src/components/playground/*`, T6.10 잔여(DESIGN.md IO·frame.md·가져오기 등) | `playground.*` |
+
+- Q3의 사용자 팔레트 부분은 D2의 병합 API(`listProjectPalettes`·`saveProjectPalette`) 위에서 구현한다(Q1 대기 불필요).
+- 병합 순서: M → N → O → Q1 → Q2 → Q3. T6.11·T7.1·T7.3·T7.4는 웨이브 7(웨이브 6 병합 후).
+
+---
+
 ## 3. 브랜치·워크트리
 
 ```powershell
