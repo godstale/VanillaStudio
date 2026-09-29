@@ -3,9 +3,11 @@
 //! The report carries language-neutral data only. `fix_key` names the guidance the UI shows
 //! (i18n `doctor.fix.<key>`), `fix_command` is a literal command or URL to display.
 
+use crate::process::ffmpeg::{self, FfmpegEvent, InstallRecord};
 use crate::process::{self, resolve_command, run_capture, RunOptions};
 use serde::Serialize;
 use std::path::{Path, PathBuf};
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 
 const AGENT_IDS: [&str; 5] = ["claude-code", "codex", "opencode", "hermes", "agy"];
@@ -281,6 +283,49 @@ pub async fn doctor_check<R: tauri::Runtime>(app: tauri::AppHandle<R>, fresh_pat
     })
     .await
     .map_err(|e| e.to_string())
+}
+
+static FFMPEG_CANCEL: AtomicBool = AtomicBool::new(false);
+static FFMPEG_RUNNING: AtomicBool = AtomicBool::new(false);
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct FfmpegInstallResult {
+    pub record: InstallRecord,
+    /// Post-install Doctor check of the managed copy (`status == "ok"` means libx264 works).
+    pub check: Check,
+}
+
+/// Download the pinned FFmpeg GPL build into `<app data>/tools/ffmpeg/` (needs prior user consent
+/// in the UI). Progress is streamed over `on_event`; a failed or cancelled run leaves no partial file.
+#[tauri::command]
+pub async fn ffmpeg_download<R: tauri::Runtime>(
+    app: tauri::AppHandle<R>,
+    on_event: tauri::ipc::Channel<FfmpegEvent>,
+) -> Result<FfmpegInstallResult, String> {
+    let dest = managed_ffmpeg_dir(&app)?;
+    if FFMPEG_RUNNING.swap(true, Ordering::SeqCst) {
+        return Err("already-running".into());
+    }
+    FFMPEG_CANCEL.store(false, Ordering::SeqCst);
+    let result = tauri::async_runtime::spawn_blocking(move || {
+        let record = ffmpeg::install(&dest, ffmpeg::PINNED_MAJOR, &FFMPEG_CANCEL, &mut |e| {
+            let _ = on_event.send(e);
+        })
+        .map_err(|e| e.to_string())?;
+        let check = check_ffmpeg(&process::fresh_path(), Some(&dest));
+        Ok(FfmpegInstallResult { record, check })
+    })
+    .await
+    .map_err(|e| e.to_string())
+    .and_then(|r| r);
+    FFMPEG_RUNNING.store(false, Ordering::SeqCst);
+    result
+}
+
+#[tauri::command]
+pub fn ffmpeg_download_cancel() {
+    FFMPEG_CANCEL.store(true, Ordering::SeqCst);
 }
 
 #[cfg(test)]

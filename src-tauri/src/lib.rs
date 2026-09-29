@@ -51,6 +51,8 @@ pub fn run() {
             find_files,
             run_shell,
             doctor_check,
+            ffmpeg_download,
+            ffmpeg_download_cancel,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -6,6 +6,8 @@
 //!
 //! Only fixed-argv execution is offered; nothing here parses a command string (D-012).
 
+pub mod ffmpeg;
+
 use std::ffi::OsString;
 use std::io::Read;
 use std::path::{Path, PathBuf};
