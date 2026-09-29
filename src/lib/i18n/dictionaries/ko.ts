@@ -445,6 +445,26 @@ const ko = {
   'design.saved': '저장됨',
   'design.unsaved': '저장하지 않은 변경',
   'design.revert': '되돌리기',
+
+  'agent.tier.official': '공식 지원',
+  'agent.tier.experimental': '실험적',
+  'agent.mode.acp': 'ACP',
+  'agent.mode.terminal': '터미널',
+  'agent.error.not-trusted': '신뢰 확인을 받지 않은 폴더에서는 에이전트를 시작할 수 없습니다',
+  'agent.error.outside-workspace': '열려 있는 프로젝트 폴더 밖에서는 에이전트를 시작할 수 없습니다',
+  'agent.error.invalid-spec': '에이전트 실행 설정이 올바르지 않습니다',
+  'agent.error.adapter-not-found': '에이전트 실행 파일을 찾을 수 없습니다. 설치 여부를 확인하세요',
+  'agent.error.spawn': '에이전트 프로세스를 시작하지 못했습니다',
+  'agent.error.initialize': '에이전트와 연결하지 못했습니다',
+  'agent.error.session': '에이전트 세션을 만들지 못했습니다',
+  'agent.error.busy': '에이전트가 아직 이전 요청을 처리하고 있습니다',
+  'agent.error.no-session': '에이전트 세션이 없습니다',
+  'agent.error.closed': '에이전트 세션이 종료되었습니다',
+  'agent.error.protocol': '에이전트와의 통신 중 문제가 생겼습니다',
+  'agent.error.too-many-sessions': '동시에 열 수 있는 에이전트 세션 수를 넘었습니다',
+  'agent.error.empty-prompt': '보낼 내용을 입력하세요',
+  'agent.error.prompt-too-large': '요청이 너무 깁니다',
+  'agent.error.unknown': '에이전트 오류가 발생했습니다',
 };
 
 export type Dict = typeof ko;

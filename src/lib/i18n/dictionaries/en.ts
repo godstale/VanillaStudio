@@ -448,6 +448,26 @@ const en: Dict = {
   'design.saved': 'Saved',
   'design.unsaved': 'Unsaved changes',
   'design.revert': 'Revert',
+
+  'agent.tier.official': 'Official',
+  'agent.tier.experimental': 'Experimental',
+  'agent.mode.acp': 'ACP',
+  'agent.mode.terminal': 'Terminal',
+  'agent.error.not-trusted': 'Agents cannot start in a folder that has not been trusted',
+  'agent.error.outside-workspace': 'Agents cannot start outside the open project folder',
+  'agent.error.invalid-spec': 'The agent launch settings are invalid',
+  'agent.error.adapter-not-found': 'The agent executable was not found. Check that it is installed',
+  'agent.error.spawn': 'Could not start the agent process',
+  'agent.error.initialize': 'Could not connect to the agent',
+  'agent.error.session': 'Could not create an agent session',
+  'agent.error.busy': 'The agent is still working on the previous request',
+  'agent.error.no-session': 'There is no agent session',
+  'agent.error.closed': 'The agent session has ended',
+  'agent.error.protocol': 'Communication with the agent failed',
+  'agent.error.too-many-sessions': 'Too many agent sessions are open',
+  'agent.error.empty-prompt': 'Enter something to send',
+  'agent.error.prompt-too-large': 'The request is too long',
+  'agent.error.unknown': 'An agent error occurred',
 };
 
 export default en;
