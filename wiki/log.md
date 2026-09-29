@@ -157,3 +157,6 @@
 
 ## [2026-09-29] milestone | M2 agent milestone done
 - T2.14 done by coordinator: verification (lint, typecheck, vitest 484, cargo 137) plus manual-check handoff. Wrote [[milestone-m2]]. Manual checks deferred: real agent chat, editable PPTX in PowerPoint, clean VM.
+
+## [2026-09-29] lint | Wiki health check
+- Ran lint. See lint-report.md for details.
