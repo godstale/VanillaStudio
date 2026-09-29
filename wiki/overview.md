@@ -8,7 +8,7 @@ last_updated: 2026-09-29
 
 ## 현재 상태 (2026-09-29)
 
-- 개발 단계: **P4 구현 — M2 에이전트 완료(`feat/m2-agents` 병합, main 병합·push 승인 대기)**. 다음: 웨이브 5(T3.6·T3.11·T3.13·T3.14·T4.15~T4.20·T5.2·T5.7·T5.9·T6.2). 마일스톤 로그: [[milestone-m1]]·[[milestone-m2]], 병렬 배치: [[parallel-execution]] (`Docs/Planning/Parallel-Execution.md`)
+- 개발 단계: **P4 구현 — M2 에이전트 완료(`feat/m2-agents` 병합, main 병합·push 승인 대기)**. 다음: 웨이브 5(T3.6·T3.11·T3.13·T3.14·T4.15~T4.20·T5.2·T5.7·T5.9·T6.2). 마일스톤 로그: [[milestone-m1]]·[[milestone-m2]]·[[milestone-m3]], 병렬 배치: [[parallel-execution]] (`Docs/Planning/Parallel-Execution.md`)
 - PoC S1~S7 완료(통과 5, 조건부 2), 계획: [[implementation-plan]] (`Docs/Planning/TODO.md`)
 - 브랜치: main(2026-09-29 master에서 이름 변경; P3까지 병합). `Docs/images/`는 로컬 전용(.gitignore)
 - 2026-09-29 기획 보강: [[DesignMd]] 표준 채택(D-015), [[ColorPalette]] 기능(D-016), HyperFrames 참고 자료 보관(D-017) → 기획서·설계서 v0.2, PoC S7 추가
