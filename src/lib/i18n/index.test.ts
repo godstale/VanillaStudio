@@ -12,9 +12,9 @@ describe('translate', () => {
 
   it('falls back to ko when the en table lacks the key', () => {
     const en = getDictionary('en') as Record<string, string>;
-    delete en['collections.newItem'];
-    expect(translate('en', 'collections.newItem')).toBe(
-      getDictionary('ko')['collections.newItem'],
+    delete en['workspace.close'];
+    expect(translate('en', 'workspace.close')).toBe(
+      getDictionary('ko')['workspace.close'],
     );
   });
 
@@ -23,7 +23,7 @@ describe('translate', () => {
   });
 
   it('replaces {param} placeholders', () => {
-    expect(translate('ko', 'collections.items', { count: 3 })).toBe('3개 항목');
+    expect(translate('ko', 'editor.meta', { lines: 3, chars: 9 })).toBe('3줄 · 9자');
     expect(translate('en', 'editor.meta', { lines: 10, chars: 99 })).toBe(
       '10 lines · 99 chars',
     );

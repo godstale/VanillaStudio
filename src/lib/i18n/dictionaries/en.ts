@@ -8,8 +8,6 @@ const en: Dict = {
   'languageSelect.confirm': 'Confirm',
 
   'activityBar.explorer': 'Explorer',
-  'activityBar.collections': 'Collections',
-  'activityBar.extensions': 'Extensions',
   'activityBar.needFolder': '(open a folder first)',
   'activityBar.settings': 'Settings',
   'activityBar.settingsNeedFolder': 'Open a folder to access settings',
@@ -25,8 +23,6 @@ const en: Dict = {
   'topMenu.maximize': 'Maximize / Restore',
   'topMenu.close': 'Close',
   'topMenu.selectFolderFirst': 'Open a folder first',
-  'topMenu.newItem': 'New item',
-  'topMenu.newItemHint': 'Create a new collection item',
 
   'fileTree.title': 'Explorer',
   'fileTree.loading': 'Loading…',
@@ -173,45 +169,9 @@ const en: Dict = {
   'shortcuts.settings': 'Open settings',
   'shortcuts.sidebar': 'Toggle sidebar',
 
-  'collections.title': 'Collections',
-  'collections.newItem': 'New item',
-  'collections.untitled': 'Untitled',
-  'collections.empty': 'No items yet',
-  'collections.emptyHint': 'Create an item and edit it in a tab.',
-  'collections.rename': 'Rename',
-  'collections.delete': 'Delete',
-  'collections.deleteTitle': 'Delete this item?',
-  'collections.deleteDesc': 'Deleted items cannot be recovered.',
-  'collections.confirmDelete': 'Delete',
-  'collections.cancel': 'Cancel',
-  'collections.items': '{count} items',
 
-  'collectionEditor.loading': 'Loading…',
-  'collectionEditor.notFound': 'Item not found.',
-  'collectionEditor.titleLabel': 'Title',
-  'collectionEditor.titlePlaceholder': 'Enter a title',
-  'collectionEditor.bodyLabel': 'Body',
-  'collectionEditor.saving': 'Saving…',
-  'collectionEditor.saved': 'Saved',
-  'collectionEditor.saveFailed': 'Save failed',
 
-  'extensions.title': 'Extensions',
-  'extensions.empty': 'No extensions',
-  'extensions.emptyHint':
-    'Create .extensions/<name>/extension.json in the folder to list it here.',
-  'extensions.enable': 'On',
-  'extensions.disable': 'Off',
-  'extensions.enabled': '{count} enabled',
-  'extensions.disabled': 'Disabled',
-  'extensions.viewDetails': 'View details',
-  'extensions.version': 'v{version}',
-  'extensions.noReadme': 'No README',
 
-  'extensionViewer.loading': 'Loading…',
-  'extensionViewer.notFound': 'Extension not found.',
-  'extensionViewer.readme': 'Readme',
-  'extensionViewer.manifest': 'Manifest',
-  'extensionViewer.status': 'Status',
 };
 
 export default en;

@@ -14,18 +14,9 @@ export const MIGRATION_STATEMENTS: string[] = [
     active_tab_id TEXT,
     theme TEXT NOT NULL DEFAULT 'light',
     language TEXT NOT NULL DEFAULT 'ko',
-    enabled_extensions TEXT NOT NULL DEFAULT '[]',
     trusted_workspaces TEXT NOT NULL DEFAULT '[]',
     last_workspace_root TEXT
   )`,
-  `CREATE TABLE IF NOT EXISTS items (
-    id TEXT PRIMARY KEY,
-    title TEXT NOT NULL,
-    body TEXT NOT NULL DEFAULT '',
-    created_at TEXT NOT NULL,
-    updated_at TEXT NOT NULL
-  )`,
-  `CREATE INDEX IF NOT EXISTS idx_items_updated ON items(updated_at)`,
 ];
 
 type Row = Record<string, unknown>;
@@ -41,7 +32,6 @@ export class MemorySqlFallback implements SqlDatabase {
 
   constructor() {
     this.tables.set('app_settings', new Map());
-    this.tables.set('items', new Map());
   }
 
   async execute(
@@ -63,7 +53,6 @@ export class MemorySqlFallback implements SqlDatabase {
         active_tab_id,
         theme,
         language,
-        enabled_extensions,
         trusted_workspaces,
         last_workspace_root,
       ] = bindValues;
@@ -73,7 +62,6 @@ export class MemorySqlFallback implements SqlDatabase {
         active_tab_id,
         theme,
         language,
-        enabled_extensions,
         trusted_workspaces,
         last_workspace_root,
       });
@@ -85,7 +73,6 @@ export class MemorySqlFallback implements SqlDatabase {
         active_tab_id,
         theme,
         language,
-        enabled_extensions,
         trusted_workspaces,
         last_workspace_root,
       ] = bindValues;
@@ -96,29 +83,10 @@ export class MemorySqlFallback implements SqlDatabase {
           active_tab_id,
           theme,
           language,
-          enabled_extensions,
           trusted_workspaces,
           last_workspace_root,
         });
       }
-      return { rowsAffected: 1 };
-    }
-    if (q.startsWith('INSERT INTO items')) {
-      const [id, title, body, created_at, updated_at] = bindValues;
-      this.tables
-        .get('items')
-        ?.set(id as string, { id, title, body, created_at, updated_at });
-      return { rowsAffected: 1 };
-    }
-    if (q.startsWith('UPDATE items SET')) {
-      const [title, body, updated_at, id] = bindValues;
-      const row = this.tables.get('items')?.get(id as string);
-      if (row) Object.assign(row, { title, body, updated_at });
-      return { rowsAffected: 1 };
-    }
-    if (q.startsWith('DELETE FROM items WHERE id = ?')) {
-      const [id] = bindValues;
-      this.tables.get('items')?.delete(id as string);
       return { rowsAffected: 1 };
     }
     throw new Error(
@@ -126,22 +94,10 @@ export class MemorySqlFallback implements SqlDatabase {
     );
   }
 
-  async select<T>(query: string, bindValues: unknown[] = []): Promise<T> {
+  async select<T>(query: string): Promise<T> {
     const q = norm(query);
     if (q.startsWith("SELECT * FROM app_settings WHERE id = 'singleton'")) {
       return Array.from(this.tables.get('app_settings')?.values() ?? []) as T;
-    }
-    if (q.startsWith('SELECT * FROM items ORDER BY updated_at DESC')) {
-      const rows = Array.from(this.tables.get('items')?.values() ?? []);
-      rows.sort((a, b) =>
-        String(b.updated_at).localeCompare(String(a.updated_at)),
-      );
-      return rows as T;
-    }
-    if (q.startsWith('SELECT * FROM items WHERE id = ?')) {
-      const [id] = bindValues;
-      const row = this.tables.get('items')?.get(id as string);
-      return (row ? [row] : []) as T;
     }
     throw new Error(`MemorySqlFallback: unsupported query: ${q.slice(0, 80)}`);
   }

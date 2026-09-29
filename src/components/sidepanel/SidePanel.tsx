@@ -1,6 +1,4 @@
 import type { SidePanelView } from '@/lib/types/workspaceTab';
-import { CollectionListPanel } from '@/components/collections/CollectionListPanel';
-import { ExtensionListPanel } from '@/components/extensions/ExtensionListPanel';
 import { FileTree } from '@/components/explorer/FileTree';
 
 export interface SidePanelProps {
@@ -16,10 +14,6 @@ export function SidePanel({ activeView }: SidePanelProps) {
   }
 
   switch (activeView) {
-    case 'collections':
-      return <CollectionListPanel />;
-    case 'extensions':
-      return <ExtensionListPanel />;
     case 'explorer':
       return <FileTree />;
     default:

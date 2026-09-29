@@ -13,7 +13,6 @@ interface SettingsRow {
   active_tab_id: string | null;
   theme: 'dark' | 'light' | 'system';
   language: string;
-  enabled_extensions: string;
   trusted_workspaces: string;
   last_workspace_root: string | null;
 }
@@ -24,7 +23,6 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   activeTabId: null,
   theme: 'light',
   language: 'ko',
-  enabledExtensions: [],
   trustedWorkspaces: [],
   lastWorkspaceRoot: null,
 };
@@ -36,7 +34,6 @@ function parseSettingsRow(row: SettingsRow): AppSettings {
     activeTabId: row.active_tab_id,
     theme: row.theme,
     language: row.language === 'en' ? 'en' : 'ko',
-    enabledExtensions: JSON.parse(row.enabled_extensions || '[]') as string[],
     trustedWorkspaces: JSON.parse(row.trusted_workspaces || '[]') as string[],
     lastWorkspaceRoot: row.last_workspace_root,
   };
@@ -52,15 +49,14 @@ async function fetchOrInitRow(db: SqlDatabase): Promise<SettingsRow> {
   await db.execute(
     `INSERT INTO app_settings (
       id, open_tabs, active_tab_id, theme, language,
-      enabled_extensions, trusted_workspaces, last_workspace_root
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      trusted_workspaces, last_workspace_root
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
     [
       DEFAULT_APP_SETTINGS.id,
       JSON.stringify(DEFAULT_APP_SETTINGS.openTabs),
       DEFAULT_APP_SETTINGS.activeTabId,
       DEFAULT_APP_SETTINGS.theme,
       DEFAULT_APP_SETTINGS.language,
-      JSON.stringify(DEFAULT_APP_SETTINGS.enabledExtensions),
       JSON.stringify(DEFAULT_APP_SETTINGS.trustedWorkspaces),
       DEFAULT_APP_SETTINGS.lastWorkspaceRoot,
     ],
@@ -71,7 +67,6 @@ async function fetchOrInitRow(db: SqlDatabase): Promise<SettingsRow> {
     active_tab_id: DEFAULT_APP_SETTINGS.activeTabId,
     theme: DEFAULT_APP_SETTINGS.theme,
     language: DEFAULT_APP_SETTINGS.language,
-    enabled_extensions: JSON.stringify(DEFAULT_APP_SETTINGS.enabledExtensions),
     trusted_workspaces: JSON.stringify(DEFAULT_APP_SETTINGS.trustedWorkspaces),
     last_workspace_root: DEFAULT_APP_SETTINGS.lastWorkspaceRoot,
   };
@@ -120,14 +115,13 @@ export async function updateSettings(
     await db.execute(
       `UPDATE app_settings SET
         open_tabs = ?, active_tab_id = ?, theme = ?, language = ?,
-        enabled_extensions = ?, trusted_workspaces = ?, last_workspace_root = ?
+        trusted_workspaces = ?, last_workspace_root = ?
       WHERE id = 'singleton'`,
       [
         JSON.stringify(merged.openTabs),
         merged.activeTabId,
         merged.theme,
         merged.language,
-        JSON.stringify(merged.enabledExtensions),
         JSON.stringify(merged.trustedWorkspaces),
         merged.lastWorkspaceRoot,
       ],
@@ -174,14 +168,13 @@ export async function updateSettings(
       await projectDb.execute(
         `UPDATE app_settings SET
           open_tabs = ?, active_tab_id = ?, theme = ?, language = ?,
-          enabled_extensions = ?, trusted_workspaces = ?, last_workspace_root = ?
+          trusted_workspaces = ?, last_workspace_root = ?
         WHERE id = 'singleton'`,
         [
           JSON.stringify(merged.openTabs),
           merged.activeTabId,
           merged.theme,
           merged.language,
-          JSON.stringify(merged.enabledExtensions),
           JSON.stringify(merged.trustedWorkspaces),
           merged.lastWorkspaceRoot,
         ],

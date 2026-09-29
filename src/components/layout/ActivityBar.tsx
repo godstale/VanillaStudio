@@ -1,7 +1,5 @@
 import {
   Files,
-  NotebookText,
-  Puzzle,
   Settings,
   type LucideIcon,
 } from 'lucide-react';
@@ -32,12 +30,6 @@ interface ActivityBarItem {
 // Each view must be handled in SidePanel.tsx.
 const ITEMS: ActivityBarItem[] = [
   { view: 'explorer', icon: Files, labelKey: 'activityBar.explorer' },
-  {
-    view: 'collections',
-    icon: NotebookText,
-    labelKey: 'activityBar.collections',
-  },
-  { view: 'extensions', icon: Puzzle, labelKey: 'activityBar.extensions' },
 ];
 
 export function ActivityBar({ activeView, onSelect }: ActivityBarProps) {

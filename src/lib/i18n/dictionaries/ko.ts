@@ -6,8 +6,6 @@ const ko = {
   'languageSelect.confirm': '확인',
 
   'activityBar.explorer': '파일 탐색기',
-  'activityBar.collections': '컬렉션',
-  'activityBar.extensions': '확장',
   'activityBar.needFolder': '(폴더를 먼저 여세요)',
   'activityBar.settings': '설정',
   'activityBar.settingsNeedFolder': '폴더를 열어야 설정할 수 있습니다',
@@ -23,8 +21,6 @@ const ko = {
   'topMenu.maximize': '최대화/복원',
   'topMenu.close': '닫기',
   'topMenu.selectFolderFirst': '먼저 폴더를 여세요',
-  'topMenu.newItem': '새 항목',
-  'topMenu.newItemHint': '컬렉션에 새 항목을 만듭니다',
 
   'fileTree.title': '탐색기',
   'fileTree.loading': '불러오는 중…',
@@ -171,45 +167,9 @@ const ko = {
   'shortcuts.settings': '설정 열기',
   'shortcuts.sidebar': '사이드바 토글',
 
-  'collections.title': '컬렉션',
-  'collections.newItem': '새 항목',
-  'collections.untitled': '제목 없음',
-  'collections.empty': '항목이 없습니다',
-  'collections.emptyHint': '새 항목을 만들어 탭에서 편집하세요.',
-  'collections.rename': '이름 바꾸기',
-  'collections.delete': '삭제',
-  'collections.deleteTitle': '항목을 삭제할까요?',
-  'collections.deleteDesc': '삭제한 항목은 복구할 수 없습니다.',
-  'collections.confirmDelete': '삭제',
-  'collections.cancel': '취소',
-  'collections.items': '{count}개 항목',
 
-  'collectionEditor.loading': '불러오는 중…',
-  'collectionEditor.notFound': '항목을 찾을 수 없습니다.',
-  'collectionEditor.titleLabel': '제목',
-  'collectionEditor.titlePlaceholder': '제목을 입력하세요',
-  'collectionEditor.bodyLabel': '내용',
-  'collectionEditor.saving': '저장 중…',
-  'collectionEditor.saved': '저장됨',
-  'collectionEditor.saveFailed': '저장 실패',
 
-  'extensions.title': '확장',
-  'extensions.empty': '확장이 없습니다',
-  'extensions.emptyHint':
-    '폴더 안 .extensions/<이름>/extension.json을 만들면 여기에 표시됩니다.',
-  'extensions.enable': '켬',
-  'extensions.disable': '끔',
-  'extensions.enabled': '{count}개 사용 중',
-  'extensions.disabled': '사용 안 함',
-  'extensions.viewDetails': '자세히 보기',
-  'extensions.version': 'v{version}',
-  'extensions.noReadme': 'README가 없습니다',
 
-  'extensionViewer.loading': '불러오는 중…',
-  'extensionViewer.notFound': '확장을 찾을 수 없습니다.',
-  'extensionViewer.readme': '소개',
-  'extensionViewer.manifest': '매니페스트',
-  'extensionViewer.status': '상태',
 };
 
 export type Dict = typeof ko;

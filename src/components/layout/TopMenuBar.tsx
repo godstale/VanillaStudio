@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import {
   FolderOpen,
-  Plus,
   Settings,
   Minus,
   Square,
@@ -23,17 +22,13 @@ import { AppMark } from '@/components/brand/AppMark';
 import { APP_NAME } from '@/lib/brand';
 import { useWorkspace } from '@/lib/context/WorkspaceContext';
 import { useSidePanel } from '@/lib/context/SidePanelContext';
-import { useWorkspaceTabs } from '@/lib/context/WorkspaceTabsContext';
-import { createItem } from '@/lib/collections/itemsRepo';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
-import { cn } from '@/lib/utils';
 
 export function TopMenuBar() {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const { workspaceRoot, setWorkspaceRoot, recentWorkspaces } = useWorkspace();
   const { togglePanel } = useSidePanel();
-  const { openTab } = useWorkspaceTabs();
   const folderName = useMemo(() => {
     if (!workspaceRoot) return '';
     const parts = workspaceRoot.split(/[/\\]/).filter(Boolean);
@@ -48,21 +43,6 @@ export function TopMenuBar() {
       }
     } catch (err) {
       console.error('Failed to pick project folder:', err);
-    }
-  };
-
-  const handleNewItem = async () => {
-    if (!workspaceRoot) return;
-    try {
-      const item = await createItem(t('collections.untitled'));
-      openTab({
-        id: `collection:${item.id}`,
-        type: 'collection-editor',
-        title: item.title,
-        meta: { itemId: item.id },
-      });
-    } catch (err) {
-      console.error('Failed to create item:', err);
     }
   };
 
@@ -103,15 +83,6 @@ export function TopMenuBar() {
           >
             <FolderOpen className="h-3.5 w-3.5" />
             <span>{t('topMenu.openFolder')}</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => void handleNewItem()}
-            disabled={!workspaceRoot}
-            className="gap-2 cursor-pointer text-[11px]"
-            title={t('topMenu.newItemHint')}
-          >
-            <Plus className="h-3.5 w-3.5" />
-            <span>{t('topMenu.newItem')}</span>
           </DropdownMenuItem>
           {recentWorkspaces.length > 0 && (
             <>
@@ -166,25 +137,6 @@ export function TopMenuBar() {
         )}
       </div>
 
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => void handleNewItem()}
-        disabled={!workspaceRoot}
-        title={
-          workspaceRoot
-            ? t('topMenu.newItemHint')
-            : t('topMenu.selectFolderFirst')
-        }
-        className={cn(
-          'h-7 w-7',
-          !workspaceRoot
-            ? 'text-muted-foreground/30'
-            : 'text-muted-foreground hover:text-foreground',
-        )}
-      >
-        <Plus className="h-4 w-4" />
-      </Button>
       <Button
         variant="ghost"
         size="icon"
