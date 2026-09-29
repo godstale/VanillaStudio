@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && pnpm -r --filter \"./packages/*\" --if-present run typecheck",
     "lint": "eslint . --max-warnings=0",
     "format": "prettier --write .",
     "test": "vitest run"

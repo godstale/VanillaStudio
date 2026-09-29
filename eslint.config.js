@@ -5,7 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 
 export default tseslint.config(
   // spikes/ are throwaway PoCs with their own package.json and toolchain.
-  { ignores: ['dist', 'src-tauri', 'node_modules', 'scripts', 'spikes'] },
+  { ignores: ['dist', 'src-tauri', 'node_modules', 'scripts', 'spikes', 'packages/*/dist'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
