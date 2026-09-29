@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-label="Kinetic Type Web preview">
+  <rect width="1280" height="720" style="fill:var(--color-canvas)"/>
+  <text x="120" y="300" font-family="Arial, sans-serif" font-weight="800" font-size="150" letter-spacing="-4" style="fill:var(--color-ink)">Type that</text>
+  <text x="120" y="450" font-family="Arial, sans-serif" font-weight="800" font-size="150" letter-spacing="-4" style="fill:var(--color-primary)">moves</text>
+  <text x="620" y="450" font-family="Arial, sans-serif" font-weight="800" font-size="150" letter-spacing="-4" style="fill:var(--color-ink)">people</text>
+  <rect x="0" y="540" width="1280" height="80" style="fill:var(--color-ink)"/>
+  <text x="40" y="594" font-family="Arial, sans-serif" font-weight="700" font-size="36" letter-spacing="3" style="fill:var(--color-canvas)">KINETIC TYPE — GROVE FRESH — KINETIC TYPE —</text>
+  <rect x="120" y="620" width="140" height="40" rx="20" style="fill:var(--color-accent)"/>
+</svg>
