@@ -37,3 +37,5 @@ export type { DesignProviderProps } from './design/provider';
 export { applyCssVars, cssVars } from './design/cssVars';
 export { EMPTY_DESIGN } from './design/types';
 export type { Colors, Design, TypographyStyle } from './design/types';
+export { BRIDGE_VERSION, clockTarget, createBridge, parseHostOrigin, reportClock, reportHmr } from './bridge';
+export type { Bridge, BridgeOptions, BridgeTarget, CapturedPayload, ErrorPayload, HostMessage, ReadyPayload, TimePayload } from './bridge';

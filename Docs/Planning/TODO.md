@@ -80,7 +80,7 @@ M4a 런타임 패키지 (`packages/runtime`, M2·M3와 병렬 가능)
 - [x] T4.3 [레인 D · W1] 준비 신호 `registerAsset`, 폰트 `fonts.load`, Canvas `onCreated`, `__vanillaReady` — 대상: `packages/runtime/src/ready.ts` · 완료 판정: S2 대조 실험 재현(대기 없는 캡처와 다름, 대기 캡처 반복 동일) · 선행: T4.2
 - [x] T4.4 [레인 D · W1] `<VanillaCanvas>`(render=never+advance, preview=demand, `preserveDrawingBuffer` 옵션) — 대상: `packages/runtime/src/canvas.tsx` · 완료 판정: S1 결정성 테스트 · 선행: T4.2
 - [x] T4.5 [레인 D · W1] 디자인 토큰 Vite 플러그인 + `DesignProvider`·`useDesign`·CSS 변수 `--color-*` — 대상: `packages/runtime/src/design/*`, `packages/runtime/vite.ts` · 완료 판정: S7 측정 재현(교체 < 100ms) · 선행: T3.5 · (F-DSN-03)
-- [ ] T4.6 [레인 D · W1] Bridge 클라이언트(ready·time·error·hmr 보고, init·play·pause·seek·setParams·setDesign·goto·capture·reload 처리, origin 고정) — 대상: `packages/runtime/src/bridge.ts` · 완료 판정: 메시지 단위 테스트 · 선행: T4.2, T4.5
+- [x] T4.6 [레인 D · W1] Bridge 클라이언트(ready·time·error·hmr 보고, init·play·pause·seek·setParams·setDesign·goto·capture·reload 처리, origin 고정) — 대상: `packages/runtime/src/bridge.ts` · 완료 판정: 메시지 단위 테스트 · 선행: T4.2, T4.5
 - [x] T4.7 [레인 D · W1] 결정성 도우미(`useSeededRandom`, `noise`, `ease`, `timeline`), `useInput` — 대상: `packages/runtime/src/helpers/*` · 완료 판정: 같은 시드 → 같은 값 테스트 · 선행: T4.1
 - [ ] T4.8 [레인 D · W1] `check_scene` 정적 규칙(ESLint 플러그인: 금지 시간 API(clock 유형), 하드코딩 색, `defineScene` 누락) — 대상: `packages/runtime/eslint-plugin/*` · 완료 판정: 규칙별 테스트 · 선행: T4.1 · (F-DSN-05)
 - [ ] T4.9 [레인 D · W2] 런타임 빌드·배포 경로(`resources/runtime`, 스캐폴딩에 포함) — 대상: `packages/runtime/package.json`, 빌드 스크립트 · 완료 판정: 새 프로젝트에서 런타임 import 성공 · 선행: T4.1~T4.6, T1.12
