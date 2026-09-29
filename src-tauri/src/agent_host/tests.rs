@@ -327,3 +327,33 @@ async fn real_claude_adapter_initialize_and_new_session() {
     eprintln!("{started:#?}");
     session.close();
 }
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn policy_auto_allows_project_edits_without_asking() {
+    let Some(r) = rig().await else { return };
+    let target = r.project.path().canonicalize().unwrap().join("hello.txt");
+    r.session.prompt(format!("perm:edit:{}", target.display())).await.unwrap();
+    assert_eq!(r.message_text(), "outcome:allow-once");
+    let events = r.events();
+    assert!(!events.iter().any(|e| matches!(e, AgentEvent::PermissionRequest { .. })), "no dialog for a project edit");
+    assert!(events.iter().any(|e| matches!(
+        e,
+        AgentEvent::PermissionResolved { outcome: PermissionOutcomeView::Allowed, decided_by: DecidedBy::Policy, reason, .. } if reason == "project-write"
+    )));
+    r.session.close();
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn policy_denies_outside_paths_without_asking() {
+    let Some(r) = rig().await else { return };
+    let outside = r.project.path().canonicalize().unwrap().parent().unwrap().join("outside.txt");
+    r.session.prompt(format!("perm:read:{}", outside.display())).await.unwrap();
+    assert_eq!(r.message_text(), "outcome:reject-once");
+    let events = r.events();
+    assert!(!events.iter().any(|e| matches!(e, AgentEvent::PermissionRequest { .. })));
+    assert!(events.iter().any(|e| matches!(
+        e,
+        AgentEvent::PermissionResolved { outcome: PermissionOutcomeView::Rejected, decided_by: DecidedBy::Policy, reason, .. } if reason == "outside-project"
+    )));
+    r.session.close();
+}
