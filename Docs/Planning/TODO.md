@@ -63,12 +63,12 @@
 - [x] T3.7 DESIGN.md 공식 CLI lint(워커 경유, stdin 닫기, `orphaned-tokens` 필터, 버전 고정) — 대상: `packages/export-worker/src/designLint.ts` · 완료 판정: 샘플 lint 결과 JSON · 선행: T1.3 · (F-DSN-02)
 - [x] T3.8 기획서 뷰어(스토리보드 카드·Asset 목록·타임라인 막대·파라미터 표·디자인 요약·`plan.md` 미리보기) — 대상: `src/components/pipeline/plan/*` · 완료 판정: 샘플 `plan.json` 렌더 · 선행: T3.4 · (F-PIP-03)
 - [x] T3.9 디자인 탭(토큰 시각화·원문 편집·검사 결과) — 대상: `src/components/design/DesignTab.tsx` · 완료 판정: 샘플 DESIGN.md 표시·수정 저장 · 선행: T3.5 · (F-DSN-04)
-- [ ] T3.10 git 체크포인트(초기화·자동 커밋·히스토리 목록, git 없으면 폴더 스냅샷) — 대상: `src-tauri/src/commands/project_commands.rs`(checkpoint) · 완료 판정: 승인 시 커밋 생성 테스트 · 선행: T1.13 · (F-PRJ-04, D-013)
+- [x] T3.10 git 체크포인트(초기화·자동 커밋·히스토리 목록, git 없으면 폴더 스냅샷) — 대상: `src-tauri/src/commands/project_commands.rs`(checkpoint) · 완료 판정: 승인 시 커밋 생성 테스트 · 선행: T1.13 · (F-PRJ-04, D-013)
 - [ ] T3.11 승인·수정 요청 흐름(Plan) — 대상: `planStep.ts`, 뷰어 · 완료 판정: 승인 → 체크포인트 → 다음 단계 활성화 · 선행: T3.8, T3.10 · (F-PIP-03)
 - [x] T3.12 `tasks.json` 스키마 + 위상 정렬 + 순환 검출 — 대상: `src/lib/pipeline/schemas/tasks.ts`, `topo.ts` · 완료 판정: 단위 테스트 · 선행: —
 - [ ] T3.13 Prompts 단계: 생성 요청, 트리 편집기(CodeMirror), 승인 — 대상: `src/components/pipeline/prompts/*` · 완료 판정: 샘플 트리 편집·승인 · 선행: T3.6, T3.12 · (F-PIP-04)
 - [ ] T3.14 태스크 실행기(자동·한 단계씩, 일시정지·재시도, `task_runs` 기록, 태스크 후 체크포인트) — 대상: `src/lib/pipeline/runner.ts` · 완료 판정: 목 에이전트로 3개 태스크 순차 실행 테스트 · 선행: T3.12, T2.7, T3.10 · (F-PIP-05)
-- [ ] T3.15 (S) 태스크 그래프 시각화(의존성·상태) — 대상: `src/components/pipeline/prompts/TaskGraph.tsx` · 완료 판정: 샘플 `tasks.json` 그래프 표시 · 선행: T3.12 · (F-PIP-06)
+- [x] T3.15 (S) 태스크 그래프 시각화(의존성·상태) — 대상: `src/components/pipeline/prompts/TaskGraph.tsx` · 완료 판정: 샘플 `tasks.json` 그래프 표시 · 선행: T3.12 · (F-PIP-06)
 - [ ] T3.16 M3 마무리: 샘플 브리프로 Build까지 데모, `milestone-m3.md` · 선행: T3.1~T3.14
 
 ## M4 검수·런타임 (branch: `feat/m4-runtime` → `feat/m4-review`)
@@ -117,7 +117,7 @@ M4b 검수 스튜디오
 
 ## M6 템플릿·플레이그라운드 (branch: `feat/m6-templates`)
 
-- [ ] T6.1 `vanilla-core` 스킬(런타임 계약, DESIGN.md 규칙, 파이프라인 파일 규칙, 심미 체크리스트) — 대상: `resources/skills/vanilla-core/SKILL.md` · 완료 판정: 샘플 브리프로 규칙 준수(토큰 사용, 금지 API 0건) · 선행: T4.8
+- [x] T6.1 `vanilla-core` 스킬(런타임 계약, DESIGN.md 규칙, 파이프라인 파일 규칙, 심미 체크리스트) — 대상: `resources/skills/vanilla-core/SKILL.md` · 완료 판정: 샘플 브리프로 규칙 준수(토큰 사용, 금지 API 0건) · 선행: T4.8
 - [ ] T6.2 `template.json`·`palette.json` 스키마 + 템플릿 설치(프로젝트에 복사, `.claude/skills`·`.agents/skills`) — 대상: `src/lib/templates/*` · 완료 판정: 스키마 테스트, 설치 결과 트리 · 선행: T1.13
 - [ ] T6.3 내장 팔레트 24종(자체 제작, 라이트/다크·무드 태그, 대비 전부 통과) — 대상: `resources/palettes/*.json` · 완료 판정: 대비 테스트 전부 통과 · 선행: T4.16
 - [ ] T6.4 내장 템플릿 1: 미니멀 에디토리얼 슬라이드(DESIGN.md·팔레트·예제·미리보기) — 대상: `resources/templates/editorial-slides/**` · 완료 판정: 새 프로젝트 → Build → export 품질 확인 · 선행: T6.1, T6.2 · (F-TPL-01)
