@@ -25,7 +25,7 @@ const MANIFEST = JSON.stringify({
   createdAt: '2026-09-29T00:00:00.000Z',
 });
 
-const mocks = vi.hoisted(() => ({ files: new Map<string, string>() }));
+const mocks = vi.hoisted(() => ({ files: new Map<string, string>(), opened: [] as unknown[] }));
 
 vi.mock('@tauri-apps/api/core', () => ({
   invoke: async (cmd: string, args: Record<string, string>) => {
@@ -53,6 +53,14 @@ vi.mock('@tauri-apps/api/core', () => ({
 vi.mock('@/lib/context/WorkspaceContext', () => ({
   useSafeWorkspace: () => ({ workspaceRoot: ROOT }),
 }));
+vi.mock('@/lib/context/WorkspaceTabsContext', () => ({
+  useWorkspaceTabs: () => ({
+    openTab: (tab: unknown) => {
+      mocks.opened.push(tab);
+      return 'palette:paper-dawn';
+    },
+  }),
+}));
 
 function openPalettes() {
   renderWithProviders(<TemplatesPanel />);
@@ -62,6 +70,7 @@ function openPalettes() {
 describe('TemplatesPanel', () => {
   beforeEach(() => {
     mocks.files.clear();
+    mocks.opened.length = 0;
     mocks.files.set(`${ROOT}/DESIGN.md`, DESIGN);
     mocks.files.set(`${ROOT}/vanilla.json`, MANIFEST);
   });
@@ -84,6 +93,15 @@ describe('TemplatesPanel', () => {
     fireEvent.click(screen.getByTestId('palette-scheme-dark'));
     expect(screen.queryByTestId('palette-option-paper-dawn')).toBeNull();
     expect(screen.getByTestId('palette-option-ember-night')).toBeTruthy();
+  });
+
+  it('opens the palette editor tab', async () => {
+    openPalettes();
+    await screen.findByTestId('palette-option-paper-dawn');
+    fireEvent.click(screen.getByTestId('palette-edit-paper-dawn'));
+    expect(mocks.opened).toContainEqual(
+      expect.objectContaining({ type: 'palette', meta: { paletteId: 'paper-dawn' } }),
+    );
   });
 
   it('applies a palette to the open project', async () => {

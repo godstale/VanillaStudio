@@ -8,6 +8,7 @@ export type WorkspaceTabType =
   | 'design'
   | 'review'
   | 'export'
+  | 'palette'
   | 'terminal';
 
 export type SidePanelView =

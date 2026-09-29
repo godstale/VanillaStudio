@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { EmptyPanel } from '@/components/sidepanel/EmptyPanel';
 import { PaletteLibrary } from '@/components/design/PaletteLibrary';
 import { useSafeWorkspace } from '@/lib/context/WorkspaceContext';
+import { useWorkspaceTabs } from '@/lib/context/WorkspaceTabsContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { BUILT_IN_PALETTES, listProjectPalettes, type PaletteFile } from '@/lib/design/palettes';
 import { applyPalette } from '@/lib/review/designApply';
@@ -21,13 +22,13 @@ function ApplyPaletteButton({ root, palette }: { root: string | null; palette: P
   const [error, setError] = useState<string | null>(null);
   if (!root) {
     return (
-      <p className="px-2 text-xs text-muted-foreground" title={t('palette.applyNeedsProject')}>
+      <p className="text-xs text-muted-foreground" title={t('palette.applyNeedsProject')}>
         {t('palette.applyNeedsProject')}
       </p>
     );
   }
   return (
-    <div className="flex items-center gap-2 px-2">
+    <>
       <Button
         type="button"
         size="sm"
@@ -55,7 +56,7 @@ function ApplyPaletteButton({ root, palette }: { root: string | null; palette: P
           {error}
         </span>
       )}
-    </div>
+    </>
   );
 }
 
@@ -64,6 +65,7 @@ function ApplyPaletteButton({ root, palette }: { root: string | null; palette: P
 export function TemplatesPanel() {
   const { t } = useLanguage();
   const root = useSafeWorkspace()?.workspaceRoot ?? null;
+  const { openTab } = useWorkspaceTabs();
   const [tab, setTab] = useState<'templates' | 'palettes'>('templates');
   const [projectPalettes, setProjectPalettes] = useState<PaletteFile[]>([]);
 
@@ -110,7 +112,24 @@ export function TemplatesPanel() {
         </div>
       ) : (
         <div className="min-h-0 flex-1 overflow-y-auto p-2">
-          <PaletteLibrary palettes={library} actions={(p) => <ApplyPaletteButton root={root} palette={p} />} />
+          <PaletteLibrary
+            palettes={library}
+            actions={(p) => (
+              <div className="flex items-center gap-2 px-2">
+                <ApplyPaletteButton root={root} palette={p} />
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  className="h-6 px-2 text-xs"
+                  data-testid={`palette-edit-${p.id}`}
+                  onClick={() => openTab({ id: `palette:${p.id}`, type: 'palette', title: p.name, meta: { paletteId: p.id } })}
+                >
+                  {t('palette.editor.edit')}
+                </Button>
+              </div>
+            )}
+          />
         </div>
       )}
     </div>
