@@ -1,3 +1,6 @@
+// Types for the virtual module below; the project tsconfig does not include this .d.ts on its own.
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="./virtual.d.ts" />
 // File-backed <DesignProvider>: reads the project's DESIGN.md through the Vite plugin's
 // `virtual:vanilla/design` module and follows its HMR updates. Kept out of the package index because
 // the virtual module only exists inside a Vite project that uses `@vanilla/runtime/vite`.

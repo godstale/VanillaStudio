@@ -2,8 +2,8 @@
 // and hot-updates it when the file changes. No generated files are written into the project, so an
 // agent has nothing to edit by mistake and the export build follows the same path (Technical-Design §4.4).
 //
-// The parser lives in the app (`src/lib/design`, T3.5) and is bundled into this plugin by the runtime
-// build (T4.9); until then it is imported by relative path inside the monorepo.
+// The parser lives in the app (`src/lib/design`, T3.5); `scripts/build.mjs` bundles it into the shipped
+// `vite.js` (T4.9), so a project needs nothing from the app source.
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';

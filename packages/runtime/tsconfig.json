@@ -1,4 +1,4 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["src", "vite.ts", "vite.test.ts", "eslint-plugin"]
+  "include": ["src", "vite.ts", "vite.test.ts", "dist.test.ts", "eslint-plugin"]
 }
