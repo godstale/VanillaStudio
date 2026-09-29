@@ -39,6 +39,9 @@ tokio-util = "0.7.19"
 tokio = { version = "1.53.1", features = ["rt-multi-thread", "macros", "net", "sync", "time"] }
 rand = "0.9.5"
 portable-pty = "0.9.0"
+agent-client-protocol = "2.2.0"
+tokio = { version = "1.53.1", features = ["rt", "macros", "sync", "time", "io-util", "process", "rt-multi-thread"] }
+tokio-util = { version = "0.7.19", features = ["compat"] }
 
 [target."cfg(windows)".dependencies]
 windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_System_JobObjects", "Win32_System_Threading"] }

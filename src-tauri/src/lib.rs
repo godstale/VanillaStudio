@@ -1,3 +1,4 @@
+pub mod agent_host;
 pub mod commands;
 pub mod mcp_server;
 pub mod process;
