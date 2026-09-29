@@ -50,6 +50,7 @@ pub fn run() {
             delete_path,
             list_dir,
             copy_path,
+            import_external_file,
             reveal_in_explorer,
             grep_files,
             find_files,
