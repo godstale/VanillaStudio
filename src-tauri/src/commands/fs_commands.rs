@@ -20,10 +20,11 @@ pub fn get_active_workspace_internal() -> Option<String> {
 }
 
 #[tauri::command]
-pub fn set_active_workspace(path: Option<String>) -> Result<(), String> {
+pub fn set_active_workspace<R: Runtime>(app: AppHandle<R>, path: Option<String>) -> Result<(), String> {
     set_active_workspace_internal(path.clone());
     if let Some(ref p) = path {
         let _ = ensure_app_dir(p.clone());
+        let _ = super::project_commands::allow_project_assets(&app, p);
     }
     Ok(())
 }

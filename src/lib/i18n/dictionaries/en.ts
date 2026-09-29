@@ -228,6 +228,9 @@ const en: Dict = {
   'project.error.invalidManifest': 'Some values are invalid.',
   'project.error.createFailed': 'Failed to create the project',
   'project.new': 'New project',
+  'project.recent.missing': 'Folder not found: {path}',
+  'project.untrusted.notice': 'This folder is not trusted. Agent features (starting sessions, auto-loading skills) stay off until you trust it.',
+  'project.untrusted.review': 'Review trust',
 };
 
 export default en;

@@ -226,6 +226,9 @@ const ko = {
   'project.error.invalidManifest': '입력값이 올바르지 않습니다.',
   'project.error.createFailed': '프로젝트를 만들지 못했습니다',
   'project.new': '새 프로젝트',
+  'project.recent.missing': '폴더를 찾을 수 없습니다: {path}',
+  'project.untrusted.notice': '신뢰하지 않은 폴더입니다. 신뢰하기 전에는 에이전트 기능(세션 시작, 스킬 자동 로드)이 꺼져 있습니다.',
+  'project.untrusted.review': '신뢰 여부 확인',
 };
 
 export type Dict = typeof ko;

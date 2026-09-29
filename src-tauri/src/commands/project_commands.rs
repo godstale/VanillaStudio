@@ -256,6 +256,21 @@ fn resolve_template_dir<R: Runtime>(app: &AppHandle<R>) -> Result<PathBuf, Strin
     Err("Project template resources not found".into())
 }
 
+/// Canonical directory to open in the asset protocol scope, or None when `path` is not a directory.
+pub fn asset_scope_dir(path: &str) -> Option<PathBuf> {
+    Path::new(path).canonicalize().ok().filter(|p| p.is_dir())
+}
+
+/// Allow the asset protocol (ImageViewerTab) to read the active project folder (Technical-Design §10).
+/// tauri offers no way to revoke an allowed directory (`forbid_directory` is permanent and would block
+/// reopening the project), so folders opened earlier in this session stay readable until restart.
+pub fn allow_project_assets<R: Runtime>(app: &AppHandle<R>, path: &str) -> Result<(), String> {
+    let dir = asset_scope_dir(path).ok_or_else(|| format!("Not a directory: {path}"))?;
+    app.asset_protocol_scope()
+        .allow_directory(dir, true)
+        .map_err(|e| e.to_string())
+}
+
 #[tauri::command]
 pub fn scaffold_project<R: Runtime>(
     app: AppHandle<R>,
@@ -398,6 +413,16 @@ mod tests {
                 .is_err()
         );
         assert_eq!(fs::read_dir(outside.path()).unwrap().count(), 0);
+    }
+
+    #[test]
+    fn asset_scope_dir_accepts_only_directories() {
+        let tmp = tempfile::tempdir().unwrap();
+        assert!(asset_scope_dir(tmp.path().to_str().unwrap()).is_some());
+        let file = tmp.path().join("f.txt");
+        fs::write(&file, "x").unwrap();
+        assert!(asset_scope_dir(file.to_str().unwrap()).is_none());
+        assert!(asset_scope_dir(tmp.path().join("missing").to_str().unwrap()).is_none());
     }
 
     #[test]
