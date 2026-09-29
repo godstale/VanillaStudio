@@ -64,7 +64,7 @@
 - [x] T3.8 기획서 뷰어(스토리보드 카드·Asset 목록·타임라인 막대·파라미터 표·디자인 요약·`plan.md` 미리보기) — 대상: `src/components/pipeline/plan/*` · 완료 판정: 샘플 `plan.json` 렌더 · 선행: T3.4 · (F-PIP-03)
 - [x] T3.9 디자인 탭(토큰 시각화·원문 편집·검사 결과) — 대상: `src/components/design/DesignTab.tsx` · 완료 판정: 샘플 DESIGN.md 표시·수정 저장 · 선행: T3.5 · (F-DSN-04)
 - [x] T3.10 git 체크포인트(초기화·자동 커밋·히스토리 목록, git 없으면 폴더 스냅샷) — 대상: `src-tauri/src/commands/project_commands.rs`(checkpoint) · 완료 판정: 승인 시 커밋 생성 테스트 · 선행: T1.13 · (F-PRJ-04, D-013)
-- [ ] T3.11 승인·수정 요청 흐름(Plan) — 대상: `planStep.ts`, 뷰어 · 완료 판정: 승인 → 체크포인트 → 다음 단계 활성화 · 선행: T3.8, T3.10 · (F-PIP-03)
+- [x] T3.11 승인·수정 요청 흐름(Plan) — 대상: `planStep.ts`, 뷰어 · 완료 판정: 승인 → 체크포인트 → 다음 단계 활성화 · 선행: T3.8, T3.10 · (F-PIP-03)
 - [x] T3.12 `tasks.json` 스키마 + 위상 정렬 + 순환 검출 — 대상: `src/lib/pipeline/schemas/tasks.ts`, `topo.ts` · 완료 판정: 단위 테스트 · 선행: —
 - [x] T3.13 Prompts 단계: 생성 요청, 트리 편집기(CodeMirror), 승인 — 대상: `src/components/pipeline/prompts/*` · 완료 판정: 샘플 트리 편집·승인 · 선행: T3.6, T3.12 · (F-PIP-04)
 - [ ] T3.14 태스크 실행기(자동·한 단계씩, 일시정지·재시도, `task_runs` 기록, 태스크 후 체크포인트) — 대상: `src/lib/pipeline/runner.ts` · 완료 판정: 목 에이전트로 3개 태스크 순차 실행 테스트 · 선행: T3.12, T2.7, T3.10 · (F-PIP-05)
