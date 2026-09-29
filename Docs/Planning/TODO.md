@@ -43,9 +43,9 @@
 - [x] T2.4 권한 정책 모듈(D-010 + S3 규칙: `locations` canonicalize, `mcp__vanilla__` 식별, `allow_always` 숨김) — 대상: `src-tauri/src/agent_host/permission.rs` · 완료 판정: S3 시나리오 분류표 단위 테스트 전부 통과 · 선행: T2.3 · (F-AGT-02)
 - [x] T2.5 fs 요청 핸들러(스코프 검사) + 세션 로그 `.vanilla/sessions/<id>.jsonl` — 대상: `agent_host/fs.rs`, `agent_host/log.rs` · 완료 판정: 스코프 밖 거부 테스트 · 선행: T2.3
 - [x] T2.6 Tauri 명령·Channel 이벤트(세션 업데이트·권한 요청 스트림) — 대상: `src-tauri/src/commands/agent_commands.rs` · 완료 판정: 프런트 목 구독 테스트 · 선행: T2.3
-- [ ] T2.7 프런트 에이전트 세션 Context(세션 상태·메시지·도구 호출·diff·사용량) — 대상: `src/lib/agents/SessionContext.tsx` · 완료 판정: 이벤트 리듀서 단위 테스트 · 선행: T2.6
-- [ ] T2.8 에이전트 패널·우측 도크 UI(입력, 스트리밍, 도구 호출 카드, diff 뷰, 중단) — 대상: `src/components/agents/*` · 완료 판정: 실제 Claude Code로 대화·취소 · 선행: T2.7 · (F-AGT-01, F-AGT-03)
-- [ ] T2.9 권한 다이얼로그(셸 명령 전문 표시, 이번만 허용/거부) — 대상: `src/components/agents/PermissionDialog.tsx` · 완료 판정: S3 `shell` 시나리오가 다이얼로그로 뜸 · 선행: T2.8 · (F-AGT-02)
+- [x] T2.7 프런트 에이전트 세션 Context(세션 상태·메시지·도구 호출·diff·사용량) — 대상: `src/lib/agents/SessionContext.tsx` · 완료 판정: 이벤트 리듀서 단위 테스트 · 선행: T2.6
+- [x] T2.8 에이전트 패널·우측 도크 UI(입력, 스트리밍, 도구 호출 카드, diff 뷰, 중단) — 대상: `src/components/agents/*` · 완료 판정: 실제 Claude Code로 대화·취소 · 선행: T2.7 · (F-AGT-01, F-AGT-03)
+- [x] T2.9 권한 다이얼로그(셸 명령 전문 표시, 이번만 허용/거부) — 대상: `src/components/agents/PermissionDialog.tsx` · 완료 판정: S3 `shell` 시나리오가 다이얼로그로 뜸 · 선행: T2.8 · (F-AGT-02)
 - [x] T2.10 MCP 서버 `vanilla-tools` 골격(Streamable HTTP 127.0.0.1, 세션별 토큰, ping 도구) + 구현 방식 확정(rmcp vs Node) — 대상: `src-tauri/src/mcp_server/*` · 완료 판정: 에이전트가 ping 호출, 토큰 없는 요청 401 · 선행: T2.3 · (F-AGT-06)
 - [x] T2.11 PTY 폴백(portable-pty + xterm.js 탭, AGY 실행) — 대상: `src-tauri/src/commands/pty_commands.rs`, `src/components/terminal/*` · 완료 판정: AGY가 터미널 탭에서 대화 가능 · 선행: T1.8 · (F-AGT-04)
 - [ ] T2.12 Codex 재검증(설치 후 `acp-probe`) + 지원 매트릭스 문서화 — 대상: `wiki/sources/poc-s3.md` 갱신 · 완료 판정: 매트릭스 표 · 선행: T2.3
