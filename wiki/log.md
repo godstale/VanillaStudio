@@ -142,3 +142,6 @@
 
 ## [2026-09-29] wave4 | K checkpoint-skill done
 - Lane K (T3.10, T3.15, T6.1) done, awaiting merge. Follow-ups passed on: bundle resources skills entry for T6.2 lane, checkpoint_init wiring in wizard for T3.11 lane. See: [[parallel-execution]]
+
+## [2026-09-29] wave4 | F agent-frontend done
+- Lane F (T2.7, T2.8, T2.9) done, awaiting merge. Human check needed: real Claude Code session start, chat, cancel, shell permission dialog. Leftover: ActivityBar agent icon still opens left EmptyPanel (SidePanel.tsx out of lane scope) for follow-up lane. See: [[parallel-execution]]
