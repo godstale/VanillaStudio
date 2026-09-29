@@ -338,6 +338,15 @@ const ko = {
   'doctor.install.exitFailed': '설치가 종료 코드 {code}(으)로 실패했습니다',
   'doctor.install.cancelled': '설치를 취소했습니다',
   'doctor.install.failed': '설치하지 못했습니다: {error}',
+  'terminal.title': '터미널',
+  'terminal.desc':
+    '에이전트 CLI를 터미널로 직접 실행합니다(ACP를 쓸 수 없을 때의 폴백). 프로젝트 폴더에서 시작됩니다.',
+  'terminal.start': '{agent} 실행',
+  'terminal.permissionNote':
+    '터미널 안에서의 셸·파일 권한은 각 에이전트 CLI의 권한 시스템을 따릅니다. 앱은 임의 명령을 실행하지 않습니다.',
+  'terminal.exited': '프로세스가 종료되었습니다.',
+  'terminal.exitedCode': '프로세스가 종료되었습니다(코드 {code}).',
+  'terminal.failed': '터미널을 시작하지 못했습니다: {error}',
 };
 
 export type Dict = typeof ko;

@@ -8,6 +8,7 @@ import {
   LayoutTemplate,
   ListChecks,
   Palette,
+  SquareTerminal,
   ScanSearch,
   Workflow,
   type LucideIcon,
@@ -52,3 +53,9 @@ export const STAGE_TAB_ITEMS: StageTabItem[] = [
 export const STAGE_TAB_ICONS = Object.fromEntries(
   STAGE_TAB_ITEMS.map(({ type, icon }) => [type, icon]),
 ) as Record<StageTabType, LucideIcon>;
+
+export const TERMINAL_TAB_ITEM = {
+  type: 'terminal',
+  icon: SquareTerminal,
+  titleKey: 'terminal.title',
+} as const;

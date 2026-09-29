@@ -46,8 +46,8 @@
 - [ ] T2.7 프런트 에이전트 세션 Context(세션 상태·메시지·도구 호출·diff·사용량) — 대상: `src/lib/agents/SessionContext.tsx` · 완료 판정: 이벤트 리듀서 단위 테스트 · 선행: T2.6
 - [ ] T2.8 에이전트 패널·우측 도크 UI(입력, 스트리밍, 도구 호출 카드, diff 뷰, 중단) — 대상: `src/components/agents/*` · 완료 판정: 실제 Claude Code로 대화·취소 · 선행: T2.7 · (F-AGT-01, F-AGT-03)
 - [ ] T2.9 권한 다이얼로그(셸 명령 전문 표시, 이번만 허용/거부) — 대상: `src/components/agents/PermissionDialog.tsx` · 완료 판정: S3 `shell` 시나리오가 다이얼로그로 뜸 · 선행: T2.8 · (F-AGT-02)
-- [ ] T2.10 MCP 서버 `vanilla-tools` 골격(Streamable HTTP 127.0.0.1, 세션별 토큰, ping 도구) + 구현 방식 확정(rmcp vs Node) — 대상: `src-tauri/src/mcp_server/*` · 완료 판정: 에이전트가 ping 호출, 토큰 없는 요청 401 · 선행: T2.3 · (F-AGT-06)
-- [ ] T2.11 PTY 폴백(portable-pty + xterm.js 탭, AGY 실행) — 대상: `src-tauri/src/commands/pty_commands.rs`, `src/components/terminal/*` · 완료 판정: AGY가 터미널 탭에서 대화 가능 · 선행: T1.8 · (F-AGT-04)
+- [x] T2.10 MCP 서버 `vanilla-tools` 골격(Streamable HTTP 127.0.0.1, 세션별 토큰, ping 도구) + 구현 방식 확정(rmcp vs Node) — 대상: `src-tauri/src/mcp_server/*` · 완료 판정: 에이전트가 ping 호출, 토큰 없는 요청 401 · 선행: T2.3 · (F-AGT-06)
+- [x] T2.11 PTY 폴백(portable-pty + xterm.js 탭, AGY 실행) — 대상: `src-tauri/src/commands/pty_commands.rs`, `src/components/terminal/*` · 완료 판정: AGY가 터미널 탭에서 대화 가능 · 선행: T1.8 · (F-AGT-04)
 - [ ] T2.12 Codex 재검증(설치 후 `acp-probe`) + 지원 매트릭스 문서화 — 대상: `wiki/sources/poc-s3.md` 갱신 · 완료 판정: 매트릭스 표 · 선행: T2.3
 - [ ] T2.13 세션 재개(loadSession) — 대상: `agent_host`, `agent_sessions` 테이블 · 완료 판정: 앱 재시작 후 이어서 대화 · 선행: T2.8 · (F-AGT-07, S)
 - [ ] T2.14 M2 마무리: 데모, `milestone-m2.md` · 선행: T2.1~T2.12
