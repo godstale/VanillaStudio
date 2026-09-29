@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "kinetic-grove",
+  "name": "Kinetic Grove",
+  "tags": ["light", "natural", "typographic"],
+  "scheme": "light",
+  "colors": {
+    "canvas": "#F2F5EC",
+    "ink": "#1E3320",
+    "primary": "#0B7A4B",
+    "accent": "#C2703D"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

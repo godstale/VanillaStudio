@@ -742,6 +742,16 @@ const ko = {
   'export.dialog.cancel': '취소',
   'export.dialog.confirm': '내보내기 시작',
   'export.dialog.startFailed': '시작하지 못했습니다: {error}',
+
+  'templates.gallery.title': '템플릿 갤러리',
+  'templates.gallery.search': '템플릿 검색… (이름·설명·태그)',
+  'templates.gallery.empty': '조건에 맞는 템플릿이 없습니다.',
+  'templates.gallery.typeAll': '전체 유형',
+  'templates.gallery.tagAll': '전체 태그',
+  'templates.gallery.palette': '팔레트',
+  'templates.gallery.select': '선택',
+  'templates.gallery.selected': '선택됨',
+  'templates.gallery.templates': '개',
 };
 
 export type Dict = typeof ko;

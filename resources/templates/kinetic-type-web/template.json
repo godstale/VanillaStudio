@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "id": "kinetic-type-web",
+  "name": "Kinetic Type Web",
+  "description": "Type that moves: staggered hero reveals, scrolling manifestos and marquee rhythms for single-page sites. Free-mode motion with token-only styling.",
+  "outputTypes": ["web"],
+  "tags": ["typography", "kinetic", "web"],
+  "preview": "preview/cover.svg",
+  "license": "CC0-1.0",
+  "defaultPalette": "kinetic-grove",
+  "recommendedPalettes": ["kinetic-grove", "forest-mist", "paper-dawn"],
+  "designFile": "DESIGN.md"
+}
