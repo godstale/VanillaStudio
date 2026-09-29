@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "tide-glass",
+  "name": "Tide Glass",
+  "tags": ["dark", "cool", "fresh"],
+  "scheme": "dark",
+  "colors": {
+    "canvas": "#0F1C21",
+    "ink": "#D4EAF0",
+    "primary": "#6FCFDD",
+    "accent": "#E0B26A"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

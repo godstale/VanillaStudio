@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "deep-harbor",
+  "name": "Deep Harbor",
+  "tags": ["dark", "calm", "cool"],
+  "scheme": "dark",
+  "colors": {
+    "canvas": "#131A25",
+    "ink": "#DCE3F1",
+    "primary": "#7FA8F2",
+    "accent": "#E0B26A"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

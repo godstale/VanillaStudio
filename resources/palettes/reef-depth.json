@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "reef-depth",
+  "name": "Reef Depth",
+  "tags": ["dark", "cool", "bold"],
+  "scheme": "dark",
+  "colors": {
+    "canvas": "#0D1D27",
+    "ink": "#D6E8F3",
+    "primary": "#6FB4E6",
+    "accent": "#E8837A"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "copper-loft",
+  "name": "Copper Loft",
+  "tags": ["dark", "warm", "retro"],
+  "scheme": "dark",
+  "colors": {
+    "canvas": "#1A1411",
+    "ink": "#ECDFCC",
+    "primary": "#DFA95F",
+    "accent": "#E8837A"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

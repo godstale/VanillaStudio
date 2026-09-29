@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "blush-ledger",
+  "name": "Blush Ledger",
+  "tags": ["light", "warm", "editorial"],
+  "scheme": "light",
+  "colors": {
+    "canvas": "#FBF3EF",
+    "ink": "#3B2130",
+    "primary": "#A11E4E",
+    "accent": "#8A6D00"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

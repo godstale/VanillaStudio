@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "plum-night",
+  "name": "Plum Night",
+  "tags": ["dark", "bold", "vivid"],
+  "scheme": "dark",
+  "colors": {
+    "canvas": "#1C131D",
+    "ink": "#EFDCF0",
+    "primary": "#C99BCC",
+    "accent": "#6CC49A"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

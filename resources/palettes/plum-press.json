@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "plum-press",
+  "name": "Plum Press",
+  "tags": ["light", "bold", "editorial"],
+  "scheme": "light",
+  "colors": {
+    "canvas": "#F7F1F6",
+    "ink": "#32172D",
+    "primary": "#8C1D6C",
+    "accent": "#1E7A4C"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

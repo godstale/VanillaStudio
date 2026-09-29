@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "violet-bunker",
+  "name": "Violet Bunker",
+  "tags": ["dark", "calm", "cool"],
+  "scheme": "dark",
+  "colors": {
+    "canvas": "#161326",
+    "ink": "#E1DEF5",
+    "primary": "#9FA8D6",
+    "accent": "#E0B26A"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

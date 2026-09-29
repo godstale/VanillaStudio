@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "pine-signal",
+  "name": "Pine Signal",
+  "tags": ["dark", "natural", "fresh"],
+  "scheme": "dark",
+  "colors": {
+    "canvas": "#0E1A16",
+    "ink": "#D8E9D8",
+    "primary": "#7BD5A2",
+    "accent": "#E0A35A"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

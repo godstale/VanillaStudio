@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "porcelain-harbor",
+  "name": "Porcelain Harbor",
+  "tags": ["light", "calm", "cool"],
+  "scheme": "light",
+  "colors": {
+    "canvas": "#F4F7FC",
+    "ink": "#152741",
+    "primary": "#0D5CC6",
+    "accent": "#C2703D"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

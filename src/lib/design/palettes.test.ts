@@ -68,6 +68,23 @@ describe('parsePaletteFile', () => {
 });
 
 describe('built-ins', () => {
+  it('ships the full 24-palette set, balanced across schemes (T6.3)', () => {
+    expect(BUILT_IN_PALETTES.length).toBe(24);
+    expect(BUILT_IN_PALETTES.filter((p) => p.scheme === 'light')).toHaveLength(12);
+    expect(BUILT_IN_PALETTES.filter((p) => p.scheme === 'dark')).toHaveLength(12);
+    const ids = BUILT_IN_PALETTES.map((p) => p.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    // Legacy D2 palettes keep their original tags; new T6.3 palettes carry a scheme tag.
+    const legacy = new Set(['ember-night', 'forest-mist', 'midnight-rampart', 'paper-dawn']);
+    for (const p of BUILT_IN_PALETTES) {
+      expect(p.tags.length).toBeGreaterThan(0);
+      if (!legacy.has(p.id)) {
+        expect(p.tags.map((t) => t.toLowerCase())).toContain(p.scheme);
+      }
+      expect(p.source).toBe('builtin');
+    }
+  });
+
   it('loads at least one palette per scheme', () => {
     expect(BUILT_IN_PALETTES.length).toBeGreaterThan(0);
     expect(BUILT_IN_PALETTES.some((p) => p.scheme === 'light')).toBe(true);

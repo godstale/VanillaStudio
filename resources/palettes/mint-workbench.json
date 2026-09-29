@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "mint-workbench",
+  "name": "Mint Workbench",
+  "tags": ["light", "fresh", "minimal"],
+  "scheme": "light",
+  "colors": {
+    "canvas": "#EDF7F2",
+    "ink": "#0F3230",
+    "primary": "#0B6E5E",
+    "accent": "#9A5B13"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}
