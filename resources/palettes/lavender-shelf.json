@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "lavender-shelf",
+  "name": "Lavender Shelf",
+  "tags": ["light", "calm", "cool"],
+  "scheme": "light",
+  "colors": {
+    "canvas": "#F4F2FB",
+    "ink": "#29224E",
+    "primary": "#4638B0",
+    "accent": "#B3541E"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

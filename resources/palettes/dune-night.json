@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "dune-night",
+  "name": "Dune Night",
+  "tags": ["dark", "warm", "minimal"],
+  "scheme": "dark",
+  "colors": {
+    "canvas": "#1B1913",
+    "ink": "#ECE2CE",
+    "primary": "#D4A262",
+    "accent": "#7FA8F2"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

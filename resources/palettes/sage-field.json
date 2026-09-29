@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "sage-field",
+  "name": "Sage Field",
+  "tags": ["light", "natural", "calm"],
+  "scheme": "light",
+  "colors": {
+    "canvas": "#F3F6EE",
+    "ink": "#20301E",
+    "primary": "#176B3C",
+    "accent": "#A35A1B"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

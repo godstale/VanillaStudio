@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "moss-lantern",
+  "name": "Moss Lantern",
+  "tags": ["dark", "natural", "warm"],
+  "scheme": "dark",
+  "colors": {
+    "canvas": "#121A14",
+    "ink": "#DBE7D9",
+    "primary": "#6CC49A",
+    "accent": "#E0A35A"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

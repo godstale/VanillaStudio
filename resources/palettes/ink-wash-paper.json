@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "ink-wash-paper",
+  "name": "Ink Wash Paper",
+  "tags": ["light", "editorial", "minimal"],
+  "scheme": "light",
+  "colors": {
+    "canvas": "#F1F3F5",
+    "ink": "#12161D",
+    "primary": "#1F4CCF",
+    "accent": "#7A5B00"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

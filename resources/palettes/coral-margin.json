@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "coral-margin",
+  "name": "Coral Margin",
+  "tags": ["light", "warm", "vivid"],
+  "scheme": "light",
+  "colors": {
+    "canvas": "#FCF4EF",
+    "ink": "#3A1D1C",
+    "primary": "#AC2929",
+    "accent": "#0C6E6E"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "ember-ash",
+  "name": "Ember Ash",
+  "tags": ["dark", "warm", "vivid"],
+  "scheme": "dark",
+  "colors": {
+    "canvas": "#1F1411",
+    "ink": "#F1DED1",
+    "primary": "#E8837A",
+    "accent": "#6CC49A"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

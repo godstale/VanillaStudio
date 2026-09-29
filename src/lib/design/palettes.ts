@@ -7,10 +7,30 @@ import { z } from 'zod';
 import { projectPath } from '@/lib/pipeline/briefFiles';
 import { isColor } from './color';
 import { CORE_ROLES, deriveRoles, type Colors } from './roles';
+import blushLedger from '../../../resources/palettes/blush-ledger.json';
+import copperLoft from '../../../resources/palettes/copper-loft.json';
+import coralMargin from '../../../resources/palettes/coral-margin.json';
+import deepHarbor from '../../../resources/palettes/deep-harbor.json';
+import duneNight from '../../../resources/palettes/dune-night.json';
+import emberAsh from '../../../resources/palettes/ember-ash.json';
 import emberNight from '../../../resources/palettes/ember-night.json';
 import forestMist from '../../../resources/palettes/forest-mist.json';
+import honeyArchive from '../../../resources/palettes/honey-archive.json';
+import inkWashPaper from '../../../resources/palettes/ink-wash-paper.json';
+import lavenderShelf from '../../../resources/palettes/lavender-shelf.json';
 import midnightRampart from '../../../resources/palettes/midnight-rampart.json';
+import mintWorkbench from '../../../resources/palettes/mint-workbench.json';
+import mossLantern from '../../../resources/palettes/moss-lantern.json';
 import paperDawn from '../../../resources/palettes/paper-dawn.json';
+import pineSignal from '../../../resources/palettes/pine-signal.json';
+import plumNight from '../../../resources/palettes/plum-night.json';
+import plumPress from '../../../resources/palettes/plum-press.json';
+import porcelainHarbor from '../../../resources/palettes/porcelain-harbor.json';
+import reefDepth from '../../../resources/palettes/reef-depth.json';
+import sageField from '../../../resources/palettes/sage-field.json';
+import slateGrove from '../../../resources/palettes/slate-grove.json';
+import tideGlass from '../../../resources/palettes/tide-glass.json';
+import violetBunker from '../../../resources/palettes/violet-bunker.json';
 
 const slug = z.string().regex(/^[a-z0-9][a-z0-9-]*$/, 'kebab-case id');
 
@@ -78,10 +98,30 @@ function mustParse(raw: unknown, path: string): PaletteFile {
 
 // Explicit index: adding a file to `resources/palettes/` means adding one line here.
 export const BUILT_IN_PALETTES: PaletteFile[] = [
+  mustParse(blushLedger, 'blush-ledger.json'),
+  mustParse(copperLoft, 'copper-loft.json'),
+  mustParse(coralMargin, 'coral-margin.json'),
+  mustParse(deepHarbor, 'deep-harbor.json'),
+  mustParse(duneNight, 'dune-night.json'),
+  mustParse(emberAsh, 'ember-ash.json'),
   mustParse(emberNight, 'ember-night.json'),
   mustParse(forestMist, 'forest-mist.json'),
+  mustParse(honeyArchive, 'honey-archive.json'),
+  mustParse(inkWashPaper, 'ink-wash-paper.json'),
+  mustParse(lavenderShelf, 'lavender-shelf.json'),
   mustParse(midnightRampart, 'midnight-rampart.json'),
+  mustParse(mintWorkbench, 'mint-workbench.json'),
+  mustParse(mossLantern, 'moss-lantern.json'),
   mustParse(paperDawn, 'paper-dawn.json'),
+  mustParse(pineSignal, 'pine-signal.json'),
+  mustParse(plumNight, 'plum-night.json'),
+  mustParse(plumPress, 'plum-press.json'),
+  mustParse(porcelainHarbor, 'porcelain-harbor.json'),
+  mustParse(reefDepth, 'reef-depth.json'),
+  mustParse(sageField, 'sage-field.json'),
+  mustParse(slateGrove, 'slate-grove.json'),
+  mustParse(tideGlass, 'tide-glass.json'),
+  mustParse(violetBunker, 'violet-bunker.json'),
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export function getPalette(palettes: PaletteFile[], id: string): PaletteFile | null {
