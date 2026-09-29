@@ -105,7 +105,8 @@ describe('PipelinePanel', () => {
     renderPanel();
     await waitFor(() => expect(availability('plan')).toBe('complete'));
     expect(availability('prompts')).toBe('open');
-    expect(getApi().current).toBe('prompts');
+    // holder.api syncs in an effect after commit; poll it instead of reading once.
+    await waitFor(() => expect(getApi().current).toBe('prompts'));
   });
 
   it('keeps working in memory when the database is unavailable', async () => {

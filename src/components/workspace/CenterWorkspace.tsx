@@ -18,7 +18,6 @@ import { useWorkspace } from '@/lib/context/WorkspaceContext';
 import type { WorkspaceTab, WorkspaceTabType } from '@/lib/types/workspaceTab';
 import { EditorTab } from '@/components/workspace/EditorTab';
 import { ImageViewerTab } from '@/components/workspace/ImageViewerTab';
-import { EmptyTabView } from '@/components/workspace/EmptyTabView';
 import { STAGE_TAB_ICONS, TERMINAL_TAB_ITEM } from '@/components/layout/shellRegistry';
 import { TerminalTab } from '@/components/terminal/TerminalTab';
 import { BriefEditor } from '@/components/pipeline/brief/BriefEditor';
@@ -64,7 +63,7 @@ function renderTabContent(tab: WorkspaceTab) {
       return <PaletteEditorTab tab={tab} />;
     case 'review':
       return <ReviewTab />;
-<    case 'prompts':
+    case 'prompts':
       return <PromptsTab />;
     case 'export':
       return <ExportTab />;
