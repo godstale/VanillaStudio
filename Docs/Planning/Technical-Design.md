@@ -1,6 +1,6 @@
 # Vanilla Studio 기술 설계서 (Technical Design)
 
-- 문서 버전: v0.4 (2026-09-29) — v0.4: M1 구현 반영(§8.2 마이그레이션 방식, §8.3 vanilla.json 필드, D-020 Proposed) / v0.2: 디자인 토큰 파이프라인(§4.4), 팔레트 관련 Bridge·DB·코드 구조 / v0.3: D-011 범위 수정(유형별 시간 모드), D-012~D-014 확정
+- 문서 버전: v0.5 (2026-09-29) — v0.5: M2 T2.10 MCP 구현 확정(rmcp+axum)·서버명 vanilla-tools 반영 / v0.4: M1 구현 반영(§8.2 마이그레이션 방식, §8.3 vanilla.json 필드, D-020 Proposed) / v0.2: 디자인 토큰 파이프라인(§4.4), 팔레트 관련 Bridge·DB·코드 구조 / v0.3: D-011 범위 수정(유형별 시간 모드), D-012~D-014 확정
 - 선행 문서: `Docs/Planning/Product-Spec.md`, `Docs/Planning/Decisions.md`
 - 템플릿 공통 아키텍처(`Docs/Architecture.md`)는 **템플릿 원본으로 유지**하고, 이 문서가 Vanilla Studio 고유 설계의 진실 공급원이다. 충돌 시 이 문서가 우선한다.
 - ⚠️ 표시 항목은 PoC(`Feasibility-Risks.md` §3)로 확정해야 하는 가정이다.
@@ -57,7 +57,7 @@
 | 검증 | zod | 이미 의존성 존재. `plan.json`·`tasks.json`·`vanilla.json`·`template.json` 스키마 |
 | **ACP 클라이언트** | Rust `agent-client-protocol` crate | 신규. 프로세스 수명·권한·fs를 Rust에서 처리 |
 | **터미널** | Rust `portable-pty` + `@xterm/xterm` | 신규. 폴백 경로 |
-| **MCP 서버** | Streamable HTTP, 127.0.0.1 + 세션별 Bearer 토큰 (S3에서 Node 대역으로 검증). 구현: Rust `rmcp` ⚠️ M2에서 확정 | 신규(M, D-014). 대안: stdio(S3 검증) |
+| **MCP 서버** | Streamable HTTP, 127.0.0.1 + 세션별 Bearer 토큰 (S3에서 Node 대역으로 검증). 구현: Rust `rmcp`+`axum` (M2 T2.10 확정) | 신규(M, D-014). 대안: stdio(S3 검증) |
 | **HTTP(로컬)** | Rust `axum`/`tiny_http` 중 택1 ⚠️ | 플레이그라운드 정적 서빙, MCP HTTP |
 | **다운로드/압축** | `reqwest`, `zip` crate | FFmpeg 다운로드, zip export |
 | **DESIGN.md 처리** | `yaml`(ISC) + 자체 zod 스키마 (`src/lib/design`) | front matter 파싱·검증·`colors`만 교체해 다시 쓰기(본문 보존) |
@@ -157,7 +157,7 @@ UI                         Rust agent_host                         Agent (stdio)
   - `execute`(셸) → 매번 다이얼로그, 선택지는 `allow_once`/`reject_once`만 노출(`allow_always` 숨김)
   - `fetch`(네트워크) → 다이얼로그(D-006 오픈 라이선스 리소스 다운로드 대비)
   - 경로가 프로젝트 밖 → 자동 거부
-  - 앱 자신의 MCP 도구(`mcp__vanilla__*`)는 `kind`가 비어 오므로 이름 접두사로 식별해 자동 허용. 다른 MCP 도구는 확인
+  - 앱 자신의 MCP 도구(`mcp__vanilla-tools__*`)는 `kind`가 비어 오므로 이름 접두사로 식별해 자동 허용. 다른 MCP 도구는 확인
   - 요청에 `allow_always`가 있어도 UI에 노출하지 않는다(Claude는 execute에 allow_always를 주지 않고, read·MCP에는 준다)
 - **이벤트 전달**: Tauri `Channel`로 세션별 스트림 전송. 세션 로그는 `.vanilla/sessions/<id>.jsonl`에 append(재생·디버깅·강의 자료용).
 - **태스크 실행기**(TS, `src/lib/pipeline/`): `tasks.json` 위상 정렬 → 태스크마다 프롬프트 조립(§3.4) → `send_prompt` → `stopReason` 확인 → 검사·스냅샷·체크포인트 → 다음.

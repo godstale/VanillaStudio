@@ -1,6 +1,6 @@
 # 구현 난점 · 리스크 · PoC 계획 (Feasibility & Risks)
 
-- 문서 버전: v0.2 (2026-09-29) — v0.2: 추가 요구사항 RQ15·RQ16(팔레트·DESIGN.md), §2.10, PoC S7
+- 문서 버전: v0.3 (2026-09-29) — v0.3: M5 export-worker 의존성(jszip·pptxgenjs·pdf-lib·puppeteer-core) 추가 / v0.2: 추가 요구사항 RQ15·RQ16(팔레트·DESIGN.md), §2.10, PoC S7
 - 목적: 요구사항(`Docs/Vanilla-Studio-Requirements.txt`) 중 **실제 구현이 어려운 부분**을 식별하고, 구현 가능한 형태로 조정한 내역과 사전 검증(PoC) 계획을 기록한다.
 - 리서치 출처는 문서 끝 §5에 모았다.
 
@@ -110,6 +110,7 @@
 | `yaml` / `culori` | ISC / MIT | 사용 가능 |
 | M1 추가 Rust crate: `reqwest`, `sha2`, `hex`, `zip`, `winreg`, `windows-sys`(+dev `tempfile`) | MIT 또는 Apache-2.0 | 사용 가능(FFmpeg 다운로드·SHA-256·zip 해제·레지스트리 PATH·Job Object) |
 | M1 추가 JS: `zod`(런타임), `@react-three/fiber`·`three`(런타임 peer/dev), `@types/culori` | MIT | 사용 가능 |
+| M5 추가 JS(export-worker): `jszip`, `pptxgenjs`, `pdf-lib`, `puppeteer-core` | MIT / MIT / MIT / Apache-2.0 | 사용 가능. `puppeteer-core`는 브라우저 미포함(관리 브라우저·시스템 Edge 사용) |
 | 내장 팔레트 | 자체 제작(CC0로 배포) | 외부 팔레트 사이트의 색 조합을 그대로 가져오지 않음 |
 
 ### 2.10 디자인 시스템 표준화·팔레트 (RQ15·RQ16) — 위험도: 중
