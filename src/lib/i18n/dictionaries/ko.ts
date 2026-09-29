@@ -490,6 +490,21 @@ const ko = {
   'review.status.retry': '다시 시도',
   'review.status.noProject': '프로젝트 폴더를 열면 미리보기를 볼 수 있습니다.',
   'review.status.untrusted': '신뢰 확인을 받지 않은 폴더에서는 미리보기를 시작할 수 없습니다.',
+  'review.scrub.label': '타임라인',
+  'review.scrub.play': '재생',
+  'review.scrub.pause': '일시정지',
+  'review.scrub.frameBack': '한 프레임 뒤로',
+  'review.scrub.frameForward': '한 프레임 앞으로',
+  'review.scrub.prevScene': '이전 Scene',
+  'review.scrub.nextScene': '다음 Scene',
+  'review.scrub.seek': '탐색',
+  'review.scrub.loop': '구간 반복',
+  'review.scrub.loopStart': '반복 시작점',
+  'review.scrub.loopEnd': '반복 끝점',
+  'review.scrub.loopClear': '반복 해제',
+  'review.scrub.loopActive': '구간 반복 {start}–{end}',
+  'review.scrub.currentScene': 'Scene {id}',
+  'review.scrub.live': '실시간',
 };
 
 export type Dict = typeof ko;

@@ -7,12 +7,13 @@ import { useHmrGuard } from '@/lib/review/hmrGuard';
 import { previewOriginOf } from '@/lib/review/bridgeProtocol';
 import { DEVICE_PRESETS, nextZoom, type PreviewBackground, type PreviewZoom } from '@/lib/review/previewLayout';
 import { usePreviewServer, type PreviewServerState } from '@/lib/review/previewServer';
-import { useReviewProject } from '@/lib/review/reviewProject';
+import { timeKindOf, useReviewProject } from '@/lib/review/reviewProject';
 import { useWorkspace } from '@/lib/context/WorkspaceContext';
 import { resolveAgentAccess } from '@/lib/project/access';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { cn } from '@/lib/utils';
 import { Preview } from '@/components/review/Preview';
+import { Scrubber } from '@/components/review/Scrubber';
 
 const BACKGROUNDS: PreviewBackground[] = ['checker', 'canvas', 'light', 'dark'];
 
@@ -104,6 +105,7 @@ function ReviewBody({ root, server, onRetry }: { root: string; server: PreviewSe
         <ServerStatus state={server} onRetry={onRetry} />
         <Preview serverUrl={serverUrl} format={project.format} zoom={zoom} background={background} deviceWidth={showDevices ? deviceWidth : null} />
       </div>
+      <Scrubber fps={project.fps} timeKind={timeKindOf(project.outputType)} />
     </div>
   );
 }

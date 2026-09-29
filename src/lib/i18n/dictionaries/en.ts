@@ -493,6 +493,21 @@ const en: Dict = {
   'review.status.retry': 'Retry',
   'review.status.noProject': 'Open a project folder to see the preview.',
   'review.status.untrusted': 'The preview cannot start in a folder that has not been trusted.',
+  'review.scrub.label': 'Timeline',
+  'review.scrub.play': 'Play',
+  'review.scrub.pause': 'Pause',
+  'review.scrub.frameBack': 'Step back one frame',
+  'review.scrub.frameForward': 'Step forward one frame',
+  'review.scrub.prevScene': 'Previous scene',
+  'review.scrub.nextScene': 'Next scene',
+  'review.scrub.seek': 'Seek',
+  'review.scrub.loop': 'Loop section',
+  'review.scrub.loopStart': 'Set loop start',
+  'review.scrub.loopEnd': 'Set loop end',
+  'review.scrub.loopClear': 'Clear loop',
+  'review.scrub.loopActive': 'Looping {start}–{end}',
+  'review.scrub.currentScene': 'Scene {id}',
+  'review.scrub.live': 'Live',
 };
 
 export default en;
