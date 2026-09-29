@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "WorkspaceTemplate",
+  "productName": "Vanilla Studio",
   "version": "0.1.0",
-  "identifier": "com.example.workspace-template",
+  "identifier": "dev.vanilla.studio",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:14200",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "WorkspaceTemplate",
+        "title": "Vanilla Studio",
         "width": 1280,
         "height": 800,
         "resizable": true,
@@ -23,10 +23,10 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; img-src 'self' asset: https://asset.localhost blob: data:; style-src 'self' 'unsafe-inline'",
+      "csp": "default-src 'self'; img-src 'self' asset: https://asset.localhost blob: data:; style-src 'self' 'unsafe-inline'; frame-src http://127.0.0.1:*; connect-src 'self' ipc: http://ipc.localhost",
       "assetProtocol": {
         "enable": true,
-        "scope": ["**"]
+        "scope": ["$APPDATA/**", "$APPLOCALDATA/**"]
       }
     }
   },

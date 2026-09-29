@@ -1,13 +1,8 @@
-import {
-  Files,
-  NotebookText,
-  Puzzle,
-  Settings,
-  type LucideIcon,
-} from 'lucide-react';
+import { Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import type { SidePanelView } from '@/lib/types/workspaceTab';
+import { ACTIVITY_ITEMS } from '@/components/layout/shellRegistry';
 import {
   Tooltip,
   TooltipContent,
@@ -22,24 +17,6 @@ export interface ActivityBarProps {
   onSelect: (view: Exclude<SidePanelView, null>) => void;
 }
 
-interface ActivityBarItem {
-  view: Exclude<SidePanelView, null>;
-  icon: LucideIcon;
-  labelKey: string;
-}
-
-// Add or remove entries here to change the side panels.
-// Each view must be handled in SidePanel.tsx.
-const ITEMS: ActivityBarItem[] = [
-  { view: 'explorer', icon: Files, labelKey: 'activityBar.explorer' },
-  {
-    view: 'collections',
-    icon: NotebookText,
-    labelKey: 'activityBar.collections',
-  },
-  { view: 'extensions', icon: Puzzle, labelKey: 'activityBar.extensions' },
-];
-
 export function ActivityBar({ activeView, onSelect }: ActivityBarProps) {
   const { t } = useLanguage();
   const workspace = useSafeWorkspace();
@@ -52,7 +29,7 @@ export function ActivityBar({ activeView, onSelect }: ActivityBarProps) {
         className="w-12 shrink-0 h-full flex flex-col items-center justify-between bg-sidebar border-r border-border py-2 select-none"
       >
         <div className="flex flex-col items-center gap-1 w-full">
-          {ITEMS.map(({ view, icon: Icon, labelKey }) => {
+          {ACTIVITY_ITEMS.map(({ view, icon: Icon, labelKey }) => {
             const isActive = activeView === view;
             const isItemDisabled = !hasWorkspace && view !== 'explorer';
             const title = t(labelKey);

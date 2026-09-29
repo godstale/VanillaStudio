@@ -7,26 +7,36 @@ export interface SqlDatabase {
   close?(db?: string): Promise<boolean>;
 }
 
-export const MIGRATION_STATEMENTS: string[] = [
-  `CREATE TABLE IF NOT EXISTS app_settings (
-    id TEXT PRIMARY KEY DEFAULT 'singleton',
-    open_tabs TEXT NOT NULL DEFAULT '[]',
-    active_tab_id TEXT,
-    theme TEXT NOT NULL DEFAULT 'light',
-    language TEXT NOT NULL DEFAULT 'ko',
-    enabled_extensions TEXT NOT NULL DEFAULT '[]',
-    trusted_workspaces TEXT NOT NULL DEFAULT '[]',
-    last_workspace_root TEXT
-  )`,
-  `CREATE TABLE IF NOT EXISTS items (
-    id TEXT PRIMARY KEY,
-    title TEXT NOT NULL,
-    body TEXT NOT NULL DEFAULT '',
-    created_at TEXT NOT NULL,
-    updated_at TEXT NOT NULL
-  )`,
-  `CREATE INDEX IF NOT EXISTS idx_items_updated ON items(updated_at)`,
-];
+import initSql from './migrations/0001_init.sql?raw';
+import globalSql from './migrations/0002_global.sql?raw';
+import projectSql from './migrations/0003_project.sql?raw';
+
+// Project data folder inside a user project (Technical-Design §8.2).
+export const PROJECT_DATA_DIR = '.vanilla';
+
+export type MigrationScope = 'global' | 'project' | 'all';
+
+// All statements are idempotent (IF NOT EXISTS), so they run on every open.
+// 0001 is shared; 0002 is global-only; 0003 is project-only.
+const MIGRATION_SQL: Record<MigrationScope, string[]> = {
+  global: [initSql, globalSql],
+  project: [initSql, projectSql],
+  all: [initSql, globalSql, projectSql],
+};
+
+export function splitSqlStatements(sql: string): string[] {
+  return sql
+    .split('\n')
+    .filter((line) => !line.trim().startsWith('--'))
+    .join('\n')
+    .split(';')
+    .map((stmt) => stmt.trim())
+    .filter((stmt) => stmt.length > 0);
+}
+
+export function getMigrationStatements(scope: MigrationScope): string[] {
+  return MIGRATION_SQL[scope].flatMap(splitSqlStatements);
+}
 
 type Row = Record<string, unknown>;
 
@@ -41,7 +51,6 @@ export class MemorySqlFallback implements SqlDatabase {
 
   constructor() {
     this.tables.set('app_settings', new Map());
-    this.tables.set('items', new Map());
   }
 
   async execute(
@@ -52,7 +61,8 @@ export class MemorySqlFallback implements SqlDatabase {
     if (
       q.startsWith('CREATE TABLE') ||
       q.startsWith('CREATE UNIQUE INDEX') ||
-      q.startsWith('CREATE INDEX')
+      q.startsWith('CREATE INDEX') ||
+      q.startsWith('DROP TABLE')
     ) {
       return { rowsAffected: 0 };
     }
@@ -63,7 +73,6 @@ export class MemorySqlFallback implements SqlDatabase {
         active_tab_id,
         theme,
         language,
-        enabled_extensions,
         trusted_workspaces,
         last_workspace_root,
       ] = bindValues;
@@ -73,7 +82,6 @@ export class MemorySqlFallback implements SqlDatabase {
         active_tab_id,
         theme,
         language,
-        enabled_extensions,
         trusted_workspaces,
         last_workspace_root,
       });
@@ -85,7 +93,6 @@ export class MemorySqlFallback implements SqlDatabase {
         active_tab_id,
         theme,
         language,
-        enabled_extensions,
         trusted_workspaces,
         last_workspace_root,
       ] = bindValues;
@@ -96,29 +103,10 @@ export class MemorySqlFallback implements SqlDatabase {
           active_tab_id,
           theme,
           language,
-          enabled_extensions,
           trusted_workspaces,
           last_workspace_root,
         });
       }
-      return { rowsAffected: 1 };
-    }
-    if (q.startsWith('INSERT INTO items')) {
-      const [id, title, body, created_at, updated_at] = bindValues;
-      this.tables
-        .get('items')
-        ?.set(id as string, { id, title, body, created_at, updated_at });
-      return { rowsAffected: 1 };
-    }
-    if (q.startsWith('UPDATE items SET')) {
-      const [title, body, updated_at, id] = bindValues;
-      const row = this.tables.get('items')?.get(id as string);
-      if (row) Object.assign(row, { title, body, updated_at });
-      return { rowsAffected: 1 };
-    }
-    if (q.startsWith('DELETE FROM items WHERE id = ?')) {
-      const [id] = bindValues;
-      this.tables.get('items')?.delete(id as string);
       return { rowsAffected: 1 };
     }
     throw new Error(
@@ -126,22 +114,10 @@ export class MemorySqlFallback implements SqlDatabase {
     );
   }
 
-  async select<T>(query: string, bindValues: unknown[] = []): Promise<T> {
+  async select<T>(query: string): Promise<T> {
     const q = norm(query);
     if (q.startsWith("SELECT * FROM app_settings WHERE id = 'singleton'")) {
       return Array.from(this.tables.get('app_settings')?.values() ?? []) as T;
-    }
-    if (q.startsWith('SELECT * FROM items ORDER BY updated_at DESC')) {
-      const rows = Array.from(this.tables.get('items')?.values() ?? []);
-      rows.sort((a, b) =>
-        String(b.updated_at).localeCompare(String(a.updated_at)),
-      );
-      return rows as T;
-    }
-    if (q.startsWith('SELECT * FROM items WHERE id = ?')) {
-      const [id] = bindValues;
-      const row = this.tables.get('items')?.get(id as string);
-      return (row ? [row] : []) as T;
     }
     throw new Error(`MemorySqlFallback: unsupported query: ${q.slice(0, 80)}`);
   }
@@ -165,8 +141,11 @@ export function setDatabase(db: SqlDatabase | null): void {
   mockDb = db;
 }
 
-export async function runMigrations(db: SqlDatabase): Promise<void> {
-  for (const stmt of MIGRATION_STATEMENTS) {
+export async function runMigrations(
+  db: SqlDatabase,
+  scope: MigrationScope = 'all',
+): Promise<void> {
+  for (const stmt of getMigrationStatements(scope)) {
     await db.execute(stmt);
   }
 }
@@ -185,20 +164,20 @@ export async function getGlobalDatabase(): Promise<SqlDatabase> {
   }
   if (globalDb) {
     if (!globalMigrationDone) {
-      await runMigrations(globalDb);
+      await runMigrations(globalDb, 'global');
       globalMigrationDone = true;
     }
     return globalDb;
   }
   if (!isTauriEnvironment()) {
     globalDb = new MemorySqlFallback();
-    await runMigrations(globalDb);
+    await runMigrations(globalDb, 'global');
     globalMigrationDone = true;
     return globalDb;
   }
   const db = await Database.load('sqlite:app.db');
   globalDb = db;
-  await runMigrations(db);
+  await runMigrations(db, 'global');
   globalMigrationDone = true;
   return db;
 }
@@ -228,7 +207,7 @@ export async function getProjectDatabase(
   }
   if (!isTauriEnvironment()) {
     const memDb = new MemorySqlFallback();
-    await runMigrations(memDb);
+    await runMigrations(memDb, 'project');
     projectDbs.set(root, memDb);
     return memDb;
   }
@@ -241,8 +220,10 @@ export async function getProjectDatabase(
     );
   }
   const normalized = root.replace(/\\/g, '/');
-  const db = await Database.load(`sqlite:${normalized}/.app-data/app.db`);
-  await runMigrations(db);
+  const db = await Database.load(
+    `sqlite:${normalized}/${PROJECT_DATA_DIR}/app.db`,
+  );
+  await runMigrations(db, 'project');
   projectDbs.set(root, db);
   return db;
 }

@@ -16,11 +16,11 @@
 ## M1 기반 (branch: `feat/m1-foundation`)
 
 - [x] T1.1 [단독 · W0] `pnpm tauri dev` 기준선 확인, 실패 시 원인 기록 — 대상: 없음(실행) · 완료 판정: 앱 창이 뜬다, P0 로그 갱신 · 선행: —
-- [ ] T1.2 [레인 A · W1] 브랜딩 교체(앱 이름·identifier·창 제목·아이콘 자리) — 대상: `src-tauri/tauri.conf.json`, `BRANDING.md` 절차, `src/components/brand/*` · 완료 판정: 창 제목 "Vanilla Studio", identifier `dev.vanilla.studio` · 선행: T1.1
+- [x] T1.2 [레인 A · W1] 브랜딩 교체(앱 이름·identifier·창 제목·아이콘 자리) — 대상: `src-tauri/tauri.conf.json`, `BRANDING.md` 절차, `src/components/brand/*` · 완료 판정: 창 제목 "Vanilla Studio", identifier `dev.vanilla.studio` · 선행: T1.1
 - [x] T1.3 [단독 · W0] pnpm 워크스페이스 도입 결정·구성(`packages/runtime`, `packages/export-worker` 빈 패키지) — 대상: `pnpm-workspace.yaml`, `packages/*/package.json`, 루트 `tsconfig`·`eslint.config.js`·vitest include · 완료 판정: 루트 lint·typecheck·test가 패키지까지 통과 · 선행: T1.1
-- [ ] T1.4 [레인 A · W1] 템플릿 예제 도메인 제거(collections, extensions: 컴포넌트·lib·i18n 키·DB 테이블·테스트) — 대상: `src/components/{collections,extensions}`, `src/lib/{collections,extensions}`, `src/lib/i18n/dictionaries/*`, 마이그레이션 · 완료 판정: 참조 0건(grep), 앱 실행 정상 · 선행: T1.1
-- [ ] T1.5 [레인 A · W1] 보안 기본값 조정: `assetProtocol.scope` 축소, CSP `frame-src http://127.0.0.1:*` — 대상: `src-tauri/tauri.conf.json`, `src-tauri/capabilities/*` · 완료 판정: capability에 `remote.urls` 없음, 설계서 §10 표와 일치 · 선행: T1.2
-- [ ] T1.6 [레인 A · W1] 프로젝트 DB 경로 `.app-data` → `.vanilla`, 전역·프로젝트 마이그레이션 골격(agents, palettes, templates, playground_items, doctor_cache / pipeline_state, task_runs, agent_sessions, reviews, export_jobs) — 대상: `src/lib/db/migrations/*.sql`, `src/lib/db/client.ts` · 완료 판정: 마이그레이션 테스트 통과 · 선행: T1.4
+- [x] T1.4 [레인 A · W1] 템플릿 예제 도메인 제거(collections, extensions: 컴포넌트·lib·i18n 키·DB 테이블·테스트) — 대상: `src/components/{collections,extensions}`, `src/lib/{collections,extensions}`, `src/lib/i18n/dictionaries/*`, 마이그레이션 · 완료 판정: 참조 0건(grep), 앱 실행 정상 · 선행: T1.1
+- [x] T1.5 [레인 A · W1] 보안 기본값 조정: `assetProtocol.scope` 축소, CSP `frame-src http://127.0.0.1:*` — 대상: `src-tauri/tauri.conf.json`, `src-tauri/capabilities/*` · 완료 판정: capability에 `remote.urls` 없음, 설계서 §10 표와 일치 · 선행: T1.2
+- [x] T1.6 [레인 A · W1] 프로젝트 DB 경로 `.app-data` → `.vanilla`, 전역·프로젝트 마이그레이션 골격(agents, palettes, templates, playground_items, doctor_cache / pipeline_state, task_runs, agent_sessions, reviews, export_jobs) — 대상: `src/lib/db/migrations/*.sql`, `src/lib/db/client.ts` · 완료 판정: 마이그레이션 테스트 통과 · 선행: T1.4
 - [x] T1.7 [레인 C · W1] `vanilla.json` zod 스키마 + 타입(유형·규격·템플릿·팔레트·에이전트·런타임 버전) — 대상: `src/lib/project/schema.ts`, `src/lib/types/project.ts` · 완료 판정: 유효·무효 예제 단위 테스트 · 선행: T1.3 · (F-PRJ-01)
 - [x] T1.8 [레인 B · W1] Rust 프로세스 실행 공통 모듈: PATHEXT 해석, 레지스트리 fresh PATH, stdin 닫기, `CREATE_NO_WINDOW`, 타임아웃, Job Object 트리 종료 — 대상: `src-tauri/src/process/mod.rs` · 완료 판정: `cargo test`(해석·타임아웃), S6 `doctor-probe` 로직 이관 · 선행: T1.1
 - [x] T1.9 [레인 B · W1] Doctor Rust 명령(`doctor_check`) — 대상: `src-tauri/src/commands/doctor_commands.rs` · 완료 판정: 13개 항목 JSON, S6 결과와 같은 판정, 테스트(버전 비교·FFmpeg 판정) · 선행: T1.8 · (F-ENV-01)
@@ -31,7 +31,7 @@
 - [ ] T1.14 [레인 C′ · W2] 새 프로젝트 마법사 UI(유형·규격·템플릿(없음)·팔레트(기본)·에이전트·폴더) — 대상: `src/components/project/NewProjectWizard.tsx`, `src/lib/project/*`, i18n · 완료 판정: 마법사 완료 시 폴더 생성 + 탭 열림 · 선행: T1.7, T1.13 · (F-PRJ-01, F-DSN-01)
 - [ ] T1.15 [레인 B′ · W2] 앱 소유 프로세스: 의존성 설치(`pnpm install`, 마법사 1회 동의, `package.json` 변경 시 재확인) — 대상: `src-tauri/src/commands/process_commands.rs` · 완료 판정: 고정 argv만 허용(테스트), 진행 로그 표시 · 선행: T1.8, T1.14 · (D-012)
 - [ ] T1.16 [레인 C′ · W2] 프로젝트 열기·최근 프로젝트·폴더 신뢰 확인(템플릿 기능 재사용) — 대상: `src/lib/project/*`, `src/components/workspace/*` · 완료 판정: 재실행 후 최근 목록에서 열림, 신뢰 전에는 에이전트 기능 비활성 · 선행: T1.14 · (F-PRJ-03)
-- [ ] T1.17 [레인 A · W1] 액티비티바·탭 타입 등록(pipeline·explorer·agent·templates·playground, welcome·brief·plan·prompts·design·review·export 등 빈 뷰) — 대상: `src/components/layout/*`, `Docs/Extension-Guide.md` 절차 · 완료 판정: 모든 탭이 빈 상태로 열림 · 선행: T1.4
+- [x] T1.17 [레인 A · W1] 액티비티바·탭 타입 등록(pipeline·explorer·agent·templates·playground, welcome·brief·plan·prompts·design·review·export 등 빈 뷰) — 대상: `src/components/layout/*`, `Docs/Extension-Guide.md` 절차 · 완료 판정: 모든 탭이 빈 상태로 열림 · 선행: T1.4
 - [ ] T1.18 [레인 조정 · 마무리] M1 마무리: 데모 수행, `wiki/sources/milestone-m1.md`, 문서 동기화 · 완료 판정: 계획서 §2 M1 데모 ①~④ · 선행: T1.1~T1.17
 
 ## M2 에이전트 (branch: `feat/m2-agents`)
