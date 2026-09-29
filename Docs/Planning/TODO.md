@@ -118,7 +118,7 @@ M4b 검수 스튜디오
 ## M6 템플릿·플레이그라운드 (branch: `feat/m6-templates`)
 
 - [x] T6.1 `vanilla-core` 스킬(런타임 계약, DESIGN.md 규칙, 파이프라인 파일 규칙, 심미 체크리스트) — 대상: `resources/skills/vanilla-core/SKILL.md` · 완료 판정: 샘플 브리프로 규칙 준수(토큰 사용, 금지 API 0건) · 선행: T4.8
-- [ ] T6.2 `template.json`·`palette.json` 스키마 + 템플릿 설치(프로젝트에 복사, `.claude/skills`·`.agents/skills`) — 대상: `src/lib/templates/*` · 완료 판정: 스키마 테스트, 설치 결과 트리 · 선행: T1.13
+- [x] T6.2 `template.json`·`palette.json` 스키마 + 템플릿 설치(프로젝트에 복사, `.claude/skills`·`.agents/skills`) — 대상: `src/lib/templates/*` · 완료 판정: 스키마 테스트, 설치 결과 트리 · 선행: T1.13
 - [ ] T6.3 내장 팔레트 24종(자체 제작, 라이트/다크·무드 태그, 대비 전부 통과) — 대상: `resources/palettes/*.json` · 완료 판정: 대비 테스트 전부 통과 · 선행: T4.16
 - [ ] T6.4 내장 템플릿 1: 미니멀 에디토리얼 슬라이드(DESIGN.md·팔레트·예제·미리보기) — 대상: `resources/templates/editorial-slides/**` · 완료 판정: 새 프로젝트 → Build → export 품질 확인 · 선행: T6.1, T6.2 · (F-TPL-01)
 - [ ] T6.5 내장 템플릿 2: 3D 제품 쇼케이스 영상 — 대상: `resources/templates/product-showcase-video/**` · 완료 판정: 동일 · 선행: T6.4 · (F-TPL-01)
