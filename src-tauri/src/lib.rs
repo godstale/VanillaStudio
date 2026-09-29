@@ -6,6 +6,7 @@ use commands::doctor_commands::*;
 use commands::fs_commands::*;
 use commands::project_commands::*;
 use commands::process_commands::*;
+use commands::pty_commands::*;
 use commands::search_commands::*;
 use commands::shell_commands::*;
 
@@ -59,6 +60,10 @@ pub fn run() {
             scaffold_project,
             install_project_deps,
             install_project_deps_cancel,
+            pty_start,
+            pty_write,
+            pty_resize,
+            pty_kill,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

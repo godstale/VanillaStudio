@@ -341,6 +341,15 @@ const en: Dict = {
   'doctor.install.exitFailed': 'Install failed with exit code {code}',
   'doctor.install.cancelled': 'Install cancelled',
   'doctor.install.failed': 'Install failed: {error}',
+  'terminal.title': 'Terminal',
+  'terminal.desc':
+    'Run an agent CLI directly in a terminal (fallback when ACP is unavailable). It starts in the project folder.',
+  'terminal.start': 'Run {agent}',
+  'terminal.permissionNote':
+    'Shell and file permissions inside the terminal follow the permission system of each agent CLI. The app never runs arbitrary commands.',
+  'terminal.exited': 'The process has exited.',
+  'terminal.exitedCode': 'The process exited (code {code}).',
+  'terminal.failed': 'Could not start the terminal: {error}',
 };
 
 export default en;

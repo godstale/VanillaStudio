@@ -20,7 +20,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { STAGE_TAB_ITEMS } from '@/components/layout/shellRegistry';
+import { STAGE_TAB_ITEMS, TERMINAL_TAB_ITEM } from '@/components/layout/shellRegistry';
 import { useWorkspaceTabs } from '@/lib/context/WorkspaceTabsContext';
 import { AppMark } from '@/components/brand/AppMark';
 import { APP_NAME } from '@/lib/brand';
@@ -153,6 +153,19 @@ export function TopMenuBar() {
               <span>{t(titleKey)}</span>
             </DropdownMenuItem>
           ))}
+          <DropdownMenuItem
+            disabled={!workspaceRoot}
+            onClick={() =>
+              openTab({
+                type: TERMINAL_TAB_ITEM.type,
+                title: t(TERMINAL_TAB_ITEM.titleKey),
+              })
+            }
+            className="gap-2 cursor-pointer text-[11px]"
+          >
+            <TERMINAL_TAB_ITEM.icon className="h-3.5 w-3.5" />
+            <span>{t(TERMINAL_TAB_ITEM.titleKey)}</span>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
