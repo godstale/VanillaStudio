@@ -178,3 +178,6 @@
 
 ## [2026-09-30] wave5 | R2 revision-MCP merged, wave 5 complete
 - Lane R2 (T4.20, T4.18, T4.19) merged into feat/m2-agents (8e5470d), no conflicts (lane rebased onto P merge first). Notes accepted: snapshot_scene serves host captures (.b64 sidecar, real headless stays in T5.4); update_task_status writes claim board file, runner treats done as claim. All 5 wave-5 lanes merged. See: [[parallel-execution]]
+
+## [2026-09-30] wave5 | verification green, wave 5 complete
+- Full verification on feat/m2-agents: lint pass, typecheck pass, vitest 90 files 632 tests pass, cargo 165 pass 0 fail 4 ignored. Fixed: stray char from X2 merge (CenterWorkspace), flaky pipeline restore test (waitFor on holder.api). Wave 5 all merged: T2, P, D2, X2, R2. See: [[parallel-execution]]
