@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 import { Preview } from '@/components/review/Preview';
 import { ParamsPanel } from '@/components/review/ParamsPanel';
 import { DesignPanel } from '@/components/review/DesignPanel';
+import { RevisionPanel } from '@/components/review/RevisionPanel';
 import { Scrubber } from '@/components/review/Scrubber';
 import { BUILT_IN_PALETTES } from '@/lib/design/palettes';
 
@@ -59,7 +60,9 @@ function ReviewBody({ root, server, onRetry }: { root: string; server: PreviewSe
   const [zoom, setZoom] = useState<PreviewZoom>('fit');
   const [background, setBackground] = useState<PreviewBackground>('checker');
   const [device, setDevice] = useState<(typeof DEVICE_PRESETS)[number]['id']>('desktop');
-  const [sideTab, setSideTab] = useState<'params' | 'design'>('params');
+  // The right column hosts params (V), design palettes (D2) and revision
+  // requests (T4.18, R2).
+  const [sideTab, setSideTab] = useState<'params' | 'design' | 'revision'>('params');
   const deviceWidth = DEVICE_PRESETS.find((d) => d.id === device)?.width ?? null;
   const showDevices = project.outputType === 'web';
   const serverUrl = server.phase === 'running' ? server.url : null;
@@ -111,8 +114,12 @@ function ReviewBody({ root, server, onRetry }: { root: string; server: PreviewSe
           <Preview serverUrl={serverUrl} format={project.format} zoom={zoom} background={background} deviceWidth={showDevices ? deviceWidth : null} />
         </div>
         <div className="flex shrink-0 flex-col">
-          <div className="flex w-72 shrink-0 items-center gap-1 border-l border-border bg-background px-2 py-1" role="group" aria-label={t('palette.panel.title')}>
-            {(['params', 'design'] as const).map((tab) => (
+          <div
+            className={cn('flex shrink-0 items-center gap-1 border-l border-border bg-background px-2 py-1')}
+            role="group"
+            aria-label={t('palette.panel.title')}
+          >
+            {(['params', 'design', 'revision'] as const).map((tab) => (
               <Button
                 key={tab}
                 size="sm"
@@ -121,11 +128,19 @@ function ReviewBody({ root, server, onRetry }: { root: string; server: PreviewSe
                 aria-pressed={sideTab === tab}
                 onClick={() => setSideTab(tab)}
               >
-                {t(`palette.tabs.${tab}`)}
+                {tab === 'revision' ? t('review.revision.title') : t(`palette.tabs.${tab}`)}
               </Button>
             ))}
           </div>
-          {sideTab === 'params' ? <ParamsPanel root={root} /> : <DesignPanel root={root} palettes={BUILT_IN_PALETTES} />}
+          {sideTab === 'params' ? (
+            <ParamsPanel root={root} />
+          ) : sideTab === 'design' ? (
+            <DesignPanel root={root} palettes={BUILT_IN_PALETTES} />
+          ) : (
+            <aside className="flex w-72 shrink-0 flex-col border-l border-border bg-background">
+              <RevisionPanel root={root} />
+            </aside>
+          )}
         </div>
       </div>
       <Scrubber fps={project.fps} timeKind={timeKindOf(project.outputType)} />

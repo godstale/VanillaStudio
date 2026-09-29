@@ -22,7 +22,8 @@ pub struct CapturePayload {
     pub sha256: String,
 }
 
-/// Capture PNGs under `<root>/reviews`, oldest first.
+/// Capture PNGs under `<root>/reviews`, oldest first (`.png` binaries and the
+/// host's `.png.b64` base64 sidecars).
 pub fn list_captures(root: &Path) -> Vec<PathBuf> {
     let mut out = Vec::new();
     let Ok(entries) = std::fs::read_dir(root.join("reviews")) else {
@@ -30,9 +31,8 @@ pub fn list_captures(root: &Path) -> Vec<PathBuf> {
     };
     for entry in entries.filter_map(|e| e.ok()) {
         let p = entry.path();
-        if p.is_file()
-            && p.extension().and_then(|e| e.to_str()).is_some_and(|e| e.eq_ignore_ascii_case("png"))
-        {
+        let lower = p.file_name().and_then(|n| n.to_str()).map(str::to_ascii_lowercase).unwrap_or_default();
+        if p.is_file() && (lower.ends_with(".png") || lower.ends_with(".png.b64")) {
             out.push(p);
         }
     }
@@ -41,37 +41,62 @@ pub fn list_captures(root: &Path) -> Vec<PathBuf> {
 }
 
 fn capture_name_valid(name: &str) -> bool {
-    // One plain file name, PNG only: no directories, no escapes.
+    // One plain file name, PNG only: no directories, no escapes. The `.png.b64`
+    // suffix is the host's base64 sidecar (T4.18: the WebView cannot write
+    // binary files, so the PNG bytes travel as base64 text).
     !name.is_empty()
-        && name.len() <= 100
-        && name.to_ascii_lowercase().ends_with(".png")
+        && name.len() <= 110
+        && (name.to_ascii_lowercase().ends_with(".png")
+            || name.to_ascii_lowercase().ends_with(".png.b64"))
         && !name.contains(['/', '\\'])
         && !name.contains("..")
         && Path::new(name).components().count() == 1
 }
 
-fn read_png(path: &Path) -> Result<(u64, String, String), String> {
+fn png_payload(file_name: &str, bytes: &[u8]) -> Result<CapturePayload, String> {
+    if bytes.len() < PNG_MAGIC.len() || &bytes[..PNG_MAGIC.len()] != PNG_MAGIC {
+        return Err(format!("Not a PNG file: {file_name}"));
+    }
+    let mut hasher = <sha2::Sha256 as sha2::Digest>::new();
+    use sha2::Digest as _;
+    hasher.update(bytes);
+    let sha256 = hex::encode(hasher.finalize());
+    let data_url = format!("data:image/png;base64,{}", base64::Engine::encode(
+        &base64::engine::general_purpose::STANDARD,
+        bytes,
+    ));
+    Ok(CapturePayload {
+        name: file_name.to_string(),
+        data_url,
+        size_bytes: bytes.len() as u64,
+        sha256,
+    })
+}
+
+fn read_png_file(path: &Path) -> Result<CapturePayload, String> {
     let meta = std::fs::metadata(path).map_err(|e| format!("Cannot read {}: {e}", path.display()))?;
     if meta.len() > MAX_PNG_BYTES {
         return Err(format!("Capture too large ({} bytes, max 10 MiB)", meta.len()));
     }
     let bytes = std::fs::read(path).map_err(|e| format!("Cannot read {}: {e}", path.display()))?;
-    if bytes.len() < PNG_MAGIC.len() || &bytes[..PNG_MAGIC.len()] != PNG_MAGIC {
-        return Err(format!("Not a PNG file: {}", path.display()));
-    }
-    let mut hasher = <sha2::Sha256 as sha2::Digest>::new();
-    use sha2::Digest as _;
-    hasher.update(&bytes);
-    let sha256 = hex::encode(hasher.finalize());
-    let data_url = format!("data:image/png;base64,{}", base64::Engine::encode(
-        &base64::engine::general_purpose::STANDARD,
-        &bytes,
-    ));
-    Ok((bytes.len() as u64, data_url, sha256))
+    let file_name = path.file_name().and_then(|n| n.to_str()).unwrap_or("capture.png");
+    png_payload(file_name, &bytes)
 }
 
-/// Read one capture. `name` selects `reviews/<name>`; without it the newest
-/// capture is served. Errors name the recovery (`capture` in the review UI).
+fn read_b64_file(path: &Path, display_name: &str) -> Result<CapturePayload, String> {
+    let meta = std::fs::metadata(path).map_err(|e| format!("Cannot read {}: {e}", path.display()))?;
+    if meta.len() > MAX_PNG_BYTES {
+        return Err(format!("Capture too large ({} bytes, max 10 MiB)", meta.len()));
+    }
+    let text = std::fs::read_to_string(path).map_err(|e| format!("Cannot read {}: {e}", path.display()))?;
+    let bytes = base64::Engine::decode(&base64::engine::general_purpose::STANDARD, text.trim())
+        .map_err(|e| format!("Capture is not valid base64: {e}"))?;
+    png_payload(display_name, &bytes)
+}
+
+/// Read one capture. `name` selects `reviews/<name>` (`R-001.png` also finds
+/// the host's `R-001.png.b64` sidecar); without it the newest capture is
+/// served. Errors name the recovery (`capture` in the review UI).
 pub fn read_capture(root: &Path, name: Option<&str>) -> Result<CapturePayload, String> {
     let path = match name {
         Some(n) => {
@@ -79,10 +104,24 @@ pub fn read_capture(root: &Path, name: Option<&str>) -> Result<CapturePayload, S
                 return Err(format!("Invalid capture name: {n:?}"));
             }
             let p = root.join("reviews").join(n);
-            if !p.is_file() {
+            if p.is_file() {
+                p
+            } else if n.to_ascii_lowercase().ends_with(".png") {
+                // Prefer the binary, fall back to the host sidecar.
+                let sidecar = root.join("reviews").join(format!("{n}.b64"));
+                if sidecar.is_file() {
+                    let display = sidecar
+                        .file_name()
+                        .and_then(|f| f.to_str())
+                        .and_then(|f| f.strip_suffix(".b64"))
+                        .unwrap_or(n)
+                        .to_string();
+                    return read_b64_file(&sidecar, &display);
+                }
+                return Err(format!("No such capture: reviews/{n}"));
+            } else {
                 return Err(format!("No such capture: reviews/{n}"));
             }
-            p
         }
         None => list_captures(root)
             .pop()
@@ -90,9 +129,14 @@ pub fn read_capture(root: &Path, name: Option<&str>) -> Result<CapturePayload, S
                 "No captures yet. Ask the host to take one (review UI capture), then call again.".to_string()
             })?,
     };
-    let file_name = path.file_name().and_then(|n| n.to_str()).unwrap_or("capture.png").to_string();
-    let (size_bytes, data_url, sha256) = read_png(&path)?;
-    Ok(CapturePayload { name: file_name, data_url, size_bytes, sha256 })
+    let file_name = path.file_name().and_then(|n| n.to_str()).unwrap_or("capture.png.b64");
+    let lower = file_name.to_ascii_lowercase();
+    if lower.ends_with(".png.b64") {
+        // Display the `.png` name the review file references (keep its case).
+        let cut = file_name.len() - ".b64".len();
+        return read_b64_file(&path, &file_name[..cut]);
+    }
+    read_png_file(&path)
 }
 
 #[cfg(test)]
@@ -148,5 +192,25 @@ mod tests {
         let empty = tempfile::tempdir().unwrap();
         fs::create_dir_all(empty.path().join("reviews")).unwrap();
         assert!(read_capture(empty.path(), None).is_err());
+    }
+
+    #[test]
+    fn serves_host_base64_sidecar() {
+        // T4.18 sidecar: the WebView stores PNG bytes as base64 text.
+        use base64::Engine as _;
+        let b64 = base64::engine::general_purpose::STANDARD.encode(TINY_PNG);
+        let tmp = root_with(&[("R-001.png.b64", b64.as_bytes())]);
+        // By the `.png` name (what the review file references)…
+        let cap = read_capture(tmp.path(), Some("R-001.png")).unwrap();
+        assert_eq!(cap.name, "R-001.png");
+        assert!(cap.data_url.starts_with("data:image/png;base64,"));
+        // …by the sidecar name, and as the newest capture.
+        assert_eq!(read_capture(tmp.path(), Some("R-001.png.b64")).unwrap().name, "R-001.png");
+        assert_eq!(read_capture(tmp.path(), None).unwrap().name, "R-001.png");
+        let names: Vec<String> = list_captures(tmp.path())
+            .iter()
+            .map(|p| p.file_name().unwrap().to_string_lossy().into_owned())
+            .collect();
+        assert_eq!(names, vec!["R-001.png.b64".to_string()]);
     }
 }
