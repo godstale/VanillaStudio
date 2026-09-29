@@ -24,3 +24,4 @@ export {
   useTime,
 } from './clock';
 export type { ActiveSegment, Clock, ClockMode, ClockOptions, Renderer, Segment } from './clock';
+export * from './helpers';
