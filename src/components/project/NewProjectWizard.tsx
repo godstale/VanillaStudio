@@ -125,7 +125,7 @@ export function NewProjectWizard({ open, onOpenChange, onCreated }: NewProjectWi
       );
       await onCreated?.({ path: created.path, manifest: result.manifest });
       requestInstall?.(created.path);
-      await seedOpenTabs([
+      await seedOpenTabs(created.path, [
         { id: 'brief:main', type: 'brief', title: t('shell.tab.brief'), pane: 'primary' },
       ]);
       setWorkspaceRoot(created.path);
