@@ -166,3 +166,6 @@
 
 ## [2026-09-29] lint | Wiki health check
 - Ran lint. See lint-report.md for details.
+
+## [2026-09-29] wave5 | P pipeline-flow merged
+- Lane P (T3.6, T3.13, T3.11, T3.14) merged into feat/m2-agents (50fea64), no conflicts. Runner API (createRunner, runAll, TaskRunRecord) handed to lane R2 for T4.18. See: [[parallel-execution]]

@@ -280,7 +280,7 @@ Vanilla Studio P4 구현, 레인 {{LANE}}을 수행하라.
 | 4 | K 체크포인트·스킬 | `feat/m3-k-checkpoint` | 병합 완료 | `2682d41` | T3.10·T3.15·T6.1 |
 | 4 | V 검수 스튜디오 | `feat/m4-v-review` | 병합 완료 | `886b80f` | T4.10·T4.11·T4.12·T4.13·T4.14·T4.21, notify 8.2.0 추가 |
 | 4 | X Export 워커 | `feat/m5-x-export` | 병합 완료 | `aaac3eb` | T5.1·T5.3·T5.4·T5.5·T5.6·T5.8 |
-| 5 | P 파이프라인 흐름 | `feat/m3-p-flow` | 진행 중 | — | T3.6→T3.13→T3.11→T3.14 |
+| 5 | P 파이프라인 흐름 | `feat/m3-p-flow` | 병합 완료 | `50fea64` | T3.6·T3.13·T3.11·T3.14 |
 | 5 | D2 디자인·팔레트 | `feat/m4-d2-palette` | 진행 중 | — | T4.15→T4.16→T4.17 |
 | 5 | R2 수정요청·MCP | `feat/m4-r2-revision` | 진행 중 | — | T4.20→T4.18→T4.19, P 병합 후 rebase |
 | 5 | X2 Export UI | `feat/m5-x2-export-ui` | 진행 중 | — | T5.2→T5.9→T5.7 |
