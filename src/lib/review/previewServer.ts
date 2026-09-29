@@ -51,7 +51,8 @@ export function reduceServerState(state: PreviewServerState, e: PreviewEvent): P
 // start/stop calls for one project run strictly one after another, so a quick unmount (or the dev-mode
 // double effect) can never leave a server running that nobody owns.
 const queues = new Map<string, Promise<unknown>>();
-function enqueue<T>(dir: string, job: () => Promise<T>): Promise<T> {
+/** Run per-project jobs strictly one after another (shared with the file watcher). */
+export function enqueueDirJob<T>(dir: string, job: () => Promise<T>): Promise<T> {
   const run = (queues.get(dir) ?? Promise.resolve()).then(job, job);
   queues.set(dir, run.catch(() => undefined));
   return run;
@@ -86,13 +87,13 @@ export function usePreviewServer(
       if (e.kind === 'log') onLog?.(e);
       setState((s) => reduceServerState(s, e));
     };
-    enqueue(projectDir, () => api.start(projectDir, onEvent)).then(
+    enqueueDirJob(projectDir, () => api.start(projectDir, onEvent)).then(
       (info) => alive && setState((s) => (s.phase === 'running' ? s : { phase: 'running', url: info.url })),
       (err: unknown) => alive && setState({ phase: 'failed', error: String(err) }),
     );
     return () => {
       alive = false;
-      void enqueue(projectDir, () => api.stop(projectDir)).catch(() => undefined);
+      void enqueueDirJob(projectDir, () => api.stop(projectDir)).catch(() => undefined);
     };
     // onLog is read once per start on purpose.
     // eslint-disable-next-line react-hooks/exhaustive-deps

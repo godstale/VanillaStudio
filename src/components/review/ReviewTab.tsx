@@ -3,6 +3,7 @@ import { AlertTriangle, Loader2, Minus, Plus, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BridgeProvider } from '@/lib/review/BridgeContext';
 import { useBridge } from '@/lib/review/bridgeContextValue';
+import { useHmrGuard } from '@/lib/review/hmrGuard';
 import { previewOriginOf } from '@/lib/review/bridgeProtocol';
 import { DEVICE_PRESETS, nextZoom, type PreviewBackground, type PreviewZoom } from '@/lib/review/previewLayout';
 import { usePreviewServer, type PreviewServerState } from '@/lib/review/previewServer';
@@ -49,6 +50,8 @@ function ReviewBody({ root, server, onRetry }: { root: string; server: PreviewSe
   const { t } = useLanguage();
   const project = useReviewProject(root);
   const bridge = useBridge();
+  // HMR miss recovery (T4.12): silent unless Vite drops a change.
+  useHmrGuard(root, bridge);
   const [zoom, setZoom] = useState<PreviewZoom>('fit');
   const [background, setBackground] = useState<PreviewBackground>('checker');
   const [device, setDevice] = useState<(typeof DEVICE_PRESETS)[number]['id']>('desktop');
