@@ -357,3 +357,37 @@ async fn policy_denies_outside_paths_without_asking() {
     )));
     r.session.close();
 }
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn fs_requests_outside_the_project_are_refused_and_reported() {
+    let Some(r) = rig().await else { return };
+    let outside = r.project.path().canonicalize().unwrap().parent().unwrap().join("agent-host-outside.txt");
+    std::fs::write(&outside, "secret").unwrap();
+    r.session.prompt(format!("fsread:{}", outside.display())).await.unwrap();
+    assert!(r.message_text().starts_with("fs:err:"), "{}", r.message_text());
+    assert!(!r.message_text().contains("secret"));
+    r.session.prompt(format!("fswrite:{}:pwned", outside.display())).await.unwrap();
+    assert_eq!(std::fs::read_to_string(&outside).unwrap(), "secret");
+    let denied = r.events().into_iter().filter(|e| matches!(e, AgentEvent::FsAccess { allowed: false, .. })).count();
+    assert_eq!(denied, 2);
+    std::fs::remove_file(&outside).ok();
+    r.session.close();
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn session_events_are_logged_to_the_project_session_file() {
+    let Some(r) = rig().await else { return };
+    r.session.prompt("hello".into()).await.unwrap();
+    r.session.close();
+    r.wait_for("closed", |e| matches!(e, AgentEvent::Closed { .. })).await;
+    let path = crate::agent_host::log::log_path(&r.project.path().canonicalize().unwrap(), "mock-sess-1");
+    let lines: Vec<Value> = std::fs::read_to_string(&path).unwrap().lines().map(|l| serde_json::from_str(l).unwrap()).collect();
+    let types: Vec<&str> = lines.iter().map(|l| l["event"]["type"].as_str().unwrap()).collect();
+    assert_eq!(types.first(), Some(&"started"));
+    assert_eq!(types.last(), Some(&"closed"));
+    for wanted in ["promptSent", "update", "promptDone"] {
+        assert!(types.contains(&wanted), "{wanted} missing in {types:?}");
+    }
+    let sent = lines.iter().find(|l| l["event"]["type"] == "promptSent").unwrap();
+    assert_eq!(sent["event"]["text"], "hello");
+}

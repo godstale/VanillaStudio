@@ -79,6 +79,8 @@ pub enum AgentEvent {
         decided_by: DecidedBy,
         reason: String,
     },
+    /// A prompt was sent to the agent (recorded so the session log can be replayed).
+    PromptSent { session_id: String, text: String },
     /// A `session/prompt` turn ended. `stop_reason`: end_turn, max_tokens, max_turn_requests, refusal, cancelled.
     PromptDone { session_id: String, stop_reason: String },
     /// A fs request from the agent was handled (allowed or denied by the scope check).

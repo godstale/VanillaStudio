@@ -4,6 +4,7 @@
 pub mod events;
 pub mod fs;
 pub mod launch;
+pub mod log;
 pub mod permission;
 pub mod session;
 

@@ -134,6 +134,7 @@ fn tail_string(tail: &Mutex<VecDeque<String>>) -> String {
 
 /// Spawn the agent and complete the ACP handshake. Events flow to `emit` from now on.
 pub async fn start(params: StartParams, emit: Emit) -> Result<SessionHandle, HostError> {
+    let emit = crate::agent_host::log::with_log(params.project_dir.clone(), emit);
     let mut proc = spawn_agent(&params.launch, &params.project_dir, &params.path_env)?;
     let stderr_tail: Arc<Mutex<VecDeque<String>>> = Arc::default();
     let sid_cell: Arc<OnceLock<String>> = Arc::default();
@@ -349,6 +350,7 @@ async fn run(
                             let _ = cx.send_notification(CancelNotification::new(sid.clone()));
                         }
                         Command::Prompt { text, reply } => {
+                            emit_m(AgentEvent::PromptSent { session_id: sid_str.clone(), text: text.clone() });
                             let turn = cx.send_request(PromptRequest::new(sid.clone(), text_block(text))).block_task();
                             tokio::pin!(turn);
                             let outcome = loop {
