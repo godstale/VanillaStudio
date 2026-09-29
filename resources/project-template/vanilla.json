@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "name": "{{projectName}}",
+  "outputType": "web",
+  "format": { "width": 1920, "height": 1080 },
+  "template": null,
+  "palette": { "id": "vanilla-default", "source": "builtin" },
+  "agents": { "default": "claude-code", "enabled": ["claude-code"] },
+  "runtime": { "version": "0.0.0" },
+  "createdAt": "{{createdAt}}"
+}
