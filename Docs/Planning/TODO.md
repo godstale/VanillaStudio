@@ -95,9 +95,9 @@ M4b 검수 스튜디오
 - [x] T4.15 디자인 패널: 팔레트 교체(미리보기 `setDesign` → 적용 시 `colors` 재작성 + 본문 hex 갱신 + 체크포인트), 대비 경고 — 대상: `src/components/review/DesignPanel.tsx` · 완료 판정: 교체·되돌리기, 파일 바이트 보존 · 선행: T4.11, T3.5 · (F-PAL-02, F-PAL-04)
 - [x] T4.16 팔레트 라이브러리(내장 팔레트 로드, 검색·필터, `palette.json` 스키마) — 대상: `src/lib/design/palettes.ts`, `resources/palettes/`, 템플릿 사이드패널 탭 · 완료 판정: 목록·적용 · 선행: T4.15 · (F-PAL-01)
 - [x] T4.17 팔레트 편집기 탭(역할별 색, OKLCH 슬라이더, 잠금, 대비 표) — 대상: `src/components/design/PaletteEditor.tsx` · 완료 판정: 저장·재사용 · 선행: T4.16 · (F-PAL-03)
-- [ ] T4.18 수정 요청(대상·시각·코멘트·스크린샷 `capture`, `reviews/R-NNN.md`, 계획서 Revision 절, 에이전트 요청) — 대상: `src/lib/review/revision.ts`, UI · 완료 판정: 목 에이전트로 R-001 생성·반영 흐름 · 선행: T4.11, T3.14 · (F-REV-04)
-- [ ] T4.19 체크포인트 전/후 비교(스크린샷 나란히) — 대상: `src/components/review/Compare.tsx` · 완료 판정: 두 체크포인트 비교 표시 · 선행: T4.18, T3.10 · (F-REV-05, S)
-- [ ] T4.20 MCP 도구 실구현: `snapshot_scene`(헤드리스 캡처), `check_scene`, `get_review`, `update_task_status` — 대상: `src-tauri/src/mcp_server/tools/*` · 완료 판정: 에이전트가 스냅샷을 보고 수정하는 데모 · 선행: T2.10, T4.3, T4.8 · (F-AGT-06)
+- [x] T4.18 수정 요청(대상·시각·코멘트·스크린샷 `capture`, `reviews/R-NNN.md`, 계획서 Revision 절, 에이전트 요청) — 대상: `src/lib/review/revision.ts`, UI · 완료 판정: 목 에이전트로 R-001 생성·반영 흐름 · 선행: T4.11, T3.14 · (F-REV-04)
+- [x] T4.19 체크포인트 전/후 비교(스크린샷 나란히) — 대상: `src/components/review/Compare.tsx` · 완료 판정: 두 체크포인트 비교 표시 · 선행: T4.18, T3.10 · (F-REV-05, S)
+- [x] T4.20 MCP 도구 실구현: `snapshot_scene`(헤드리스 캡처), `check_scene`, `get_review`, `update_task_status` — 대상: `src-tauri/src/mcp_server/tools/*` · 완료 판정: 에이전트가 스냅샷을 보고 수정하는 데모 · 선행: T2.10, T4.3, T4.8 · (F-AGT-06)
 - [x] T4.21 CDP E2E 하네스(앱 실행 → 미리보기 흐름 검증) — 대상: `tests/e2e/*.mjs` · 완료 판정: CI 스크립트로 1개 시나리오 통과 · 선행: T4.11
 - [ ] T4.22 M4 마무리: 데모 ①~⑥, `milestone-m4.md` · 선행: T4.1~T4.21
 
