@@ -25,3 +25,5 @@ export { exportImageShots } from './image';
 export type { ImageDeps } from './image';
 export { buildImagePptx, buildSlidesPdf, exportSlides, SLIDE_POINTS } from './slides';
 export type { SlidesDeps } from './slides';
+export { buildHyperframesArgs, BYTES_PER_WORKER, exportVideo, prepareRenderBundle, resolveHyperframesBin, resolveWorkerCount, runHyperframes } from './video';
+export type { HyperframesCommand, HyperframesRunOptions, RenderBundleOptions, RenderOptions, VideoDeps } from './video';
