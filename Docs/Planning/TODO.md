@@ -61,8 +61,8 @@
 - [x] T3.5 [레인 D · W1] `src/lib/design` 이관(S7 파서·재작성·역할 파생·대비) + 테스트 이관 — 대상: `src/lib/design/*` · 완료 판정: S7 테스트 10개 통과 · 선행: T1.3 · (F-DSN-02)
 - [ ] T3.6 Plan 생성 흐름: 요청 → 파일 감시 → `plan.json`·`DESIGN.md` 검증 → 오류 자동 재요청(최대 2회) → 사용자 표시 — 대상: `src/lib/pipeline/planStep.ts` · 완료 판정: 목 에이전트로 재요청 루프 테스트 · 선행: T2.7, T3.3, T3.4, T3.5 · (F-PIP-02)
 - [x] T3.7 DESIGN.md 공식 CLI lint(워커 경유, stdin 닫기, `orphaned-tokens` 필터, 버전 고정) — 대상: `packages/export-worker/src/designLint.ts` · 완료 판정: 샘플 lint 결과 JSON · 선행: T1.3 · (F-DSN-02)
-- [ ] T3.8 기획서 뷰어(스토리보드 카드·Asset 목록·타임라인 막대·파라미터 표·디자인 요약·`plan.md` 미리보기) — 대상: `src/components/pipeline/plan/*` · 완료 판정: 샘플 `plan.json` 렌더 · 선행: T3.4 · (F-PIP-03)
-- [ ] T3.9 디자인 탭(토큰 시각화·원문 편집·검사 결과) — 대상: `src/components/design/DesignTab.tsx` · 완료 판정: 샘플 DESIGN.md 표시·수정 저장 · 선행: T3.5 · (F-DSN-04)
+- [x] T3.8 기획서 뷰어(스토리보드 카드·Asset 목록·타임라인 막대·파라미터 표·디자인 요약·`plan.md` 미리보기) — 대상: `src/components/pipeline/plan/*` · 완료 판정: 샘플 `plan.json` 렌더 · 선행: T3.4 · (F-PIP-03)
+- [x] T3.9 디자인 탭(토큰 시각화·원문 편집·검사 결과) — 대상: `src/components/design/DesignTab.tsx` · 완료 판정: 샘플 DESIGN.md 표시·수정 저장 · 선행: T3.5 · (F-DSN-04)
 - [ ] T3.10 git 체크포인트(초기화·자동 커밋·히스토리 목록, git 없으면 폴더 스냅샷) — 대상: `src-tauri/src/commands/project_commands.rs`(checkpoint) · 완료 판정: 승인 시 커밋 생성 테스트 · 선행: T1.13 · (F-PRJ-04, D-013)
 - [ ] T3.11 승인·수정 요청 흐름(Plan) — 대상: `planStep.ts`, 뷰어 · 완료 판정: 승인 → 체크포인트 → 다음 단계 활성화 · 선행: T3.8, T3.10 · (F-PIP-03)
 - [x] T3.12 `tasks.json` 스키마 + 위상 정렬 + 순환 검출 — 대상: `src/lib/pipeline/schemas/tasks.ts`, `topo.ts` · 완료 판정: 단위 테스트 · 선행: —
