@@ -43,7 +43,8 @@
     "resources": {
       "../resources/project-template": "resources/project-template",
       "../resources/runtime": "resources/runtime",
-      "../resources/workers": "resources/workers"
+      "../resources/workers": "resources/workers",
+      "../resources/skills": "resources/skills"
     }
   }
 }
