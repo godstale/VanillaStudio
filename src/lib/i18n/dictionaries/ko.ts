@@ -347,6 +347,21 @@ const ko = {
   'terminal.exited': '프로세스가 종료되었습니다.',
   'terminal.exitedCode': '프로세스가 종료되었습니다(코드 {code}).',
   'terminal.failed': '터미널을 시작하지 못했습니다: {error}',
+  'pipeline.stage.brief': '1. 브리프',
+  'pipeline.stage.plan': '2. 기획서',
+  'pipeline.stage.prompts': '3. 구현 프롬프트',
+  'pipeline.stage.build': '4. 구현',
+  'pipeline.stage.review': '5. 검수',
+  'pipeline.stage.export': '6. 내보내기',
+  'pipeline.status.draft': '진행 중',
+  'pipeline.status.approved': '승인됨',
+  'pipeline.status.done': '완료',
+  'pipeline.status.locked': '잠김',
+  'pipeline.status.current': '현재 단계',
+  'pipeline.panel.title': '파이프라인',
+  'pipeline.panel.noProject': '프로젝트 폴더를 열면 단계가 표시됩니다.',
+  'pipeline.panel.reopen': '다시 열기',
+  'pipeline.panel.reopenHint': '이후 단계의 승인·완료가 초기화됩니다.',
 };
 
 export type Dict = typeof ko;

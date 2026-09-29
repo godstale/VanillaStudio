@@ -350,6 +350,21 @@ const en: Dict = {
   'terminal.exited': 'The process has exited.',
   'terminal.exitedCode': 'The process exited (code {code}).',
   'terminal.failed': 'Could not start the terminal: {error}',
+  'pipeline.stage.brief': '1. Brief',
+  'pipeline.stage.plan': '2. Plan',
+  'pipeline.stage.prompts': '3. Prompts',
+  'pipeline.stage.build': '4. Build',
+  'pipeline.stage.review': '5. Review',
+  'pipeline.stage.export': '6. Export',
+  'pipeline.status.draft': 'In progress',
+  'pipeline.status.approved': 'Approved',
+  'pipeline.status.done': 'Done',
+  'pipeline.status.locked': 'Locked',
+  'pipeline.status.current': 'Current',
+  'pipeline.panel.title': 'Pipeline',
+  'pipeline.panel.noProject': 'Open a project folder to see its stages.',
+  'pipeline.panel.reopen': 'Reopen',
+  'pipeline.panel.reopenHint': 'Later stages lose their approval.',
 };
 
 export default en;

@@ -54,7 +54,7 @@
 
 ## M3 파이프라인 (branch: `feat/m3-pipeline`)
 
-- [ ] T3.1 파이프라인 상태 Context·`pipeline_state` 저장·파이프라인 사이드패널 — 대상: `src/lib/pipeline/PipelineContext.tsx`, `src/components/pipeline/*` · 완료 판정: 단계 표시·전환 테스트 · 선행: T1.17
+- [x] T3.1 파이프라인 상태 Context·`pipeline_state` 저장·파이프라인 사이드패널 — 대상: `src/lib/pipeline/PipelineContext.tsx`, `src/components/pipeline/*` · 완료 판정: 단계 표시·전환 테스트 · 선행: T1.17
 - [ ] T3.2 Brief 편집기(구조화 폼 + 자유 서술, 브랜드 색·폰트 입력) + 자료 업로드(`brief/materials/`, 라이선스 메모) — 대상: `src/components/pipeline/brief/*` · 완료 판정: `brief/brief.md` 생성·재열기 · 선행: T3.1 · (F-PIP-01)
 - [ ] T3.3 프롬프트 프리앰블(영문) Plan·Prompts·Build·Revision + 조립기(파일 경로 참조, 출력 언어) — 대상: `src/lib/pipeline/prompts/*.md`, `src/lib/pipeline/assemble.ts` · 완료 판정: 조립 결과 스냅샷 테스트 · 선행: T3.1
 - [x] T3.4 `plan.json` zod 스키마(`design` 필드, 토큰 참조 기본값) — 대상: `src/lib/pipeline/schemas/plan.ts` · 완료 판정: 예제 유효·무효 테스트 · 선행: T1.7
