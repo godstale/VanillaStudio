@@ -196,3 +196,6 @@
 
 ## [2026-09-30] wave6 | Q1 palettes merged
 - Lane Q1 (T6.3, T6.9) merged into feat/m2-agents (f8f6857), no conflicts. Built-in palettes now 24. See: [[parallel-execution]]
+
+## [2026-09-30] wave6 | Q2 templates merged
+- Lane Q2 (T6.4, T6.5, T6.6, T6.7) merged into feat/m2-agents (0cadf96). Conflict: TODO T6.3-T6.7 checkboxes, kept all checked. Leftover: gallery select-to-wizard wiring for T6.10/wave 7. See: [[parallel-execution]]

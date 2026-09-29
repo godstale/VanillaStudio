@@ -307,5 +307,5 @@ Vanilla Studio P4 구현, 레인 {{LANE}}을 수행하라.
 | 5 | T2 템플릿 설치 | `feat/m6-t2-templates` | 병합 완료 | `4c1354c` | T6.2 |
 | 6 | O M5 나머지 | `feat/m5-o-embed` | 진행 중 | — | T5.10→T5.11 |
 | 6 | Q1 팔레트 확장 | `feat/m6-q1-palettes` | 병합 완료 | `f8f6857` | T6.3·T6.9, 내장 24종 |
-| 6 | Q2 템플릿·갤러리 | `feat/m6-q2-templates` | 진행 중 | — | T6.4→T6.5→T6.6→T6.7 |
+| 6 | Q2 템플릿·갤러리 | `feat/m6-q2-templates` | 병합 완료 | `0cadf96` | T6.4·T6.5·T6.6·T6.7, TODO 체크박스 충돌 해결 |
 | 6 | Q3 플레이그라운드 | `feat/m6-q3-playground` | 진행 중 | — | T6.8→T6.10 |
