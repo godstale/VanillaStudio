@@ -10,6 +10,7 @@ export interface SqlDatabase {
 import initSql from './migrations/0001_init.sql?raw';
 import globalSql from './migrations/0002_global.sql?raw';
 import projectSql from './migrations/0003_project.sql?raw';
+import playgroundSql from './migrations/0004_playground.sql?raw';
 
 // Project data folder inside a user project (Technical-Design §8.2).
 export const PROJECT_DATA_DIR = '.vanilla';
@@ -19,9 +20,9 @@ export type MigrationScope = 'global' | 'project' | 'all';
 // All statements are idempotent (IF NOT EXISTS), so they run on every open.
 // 0001 is shared; 0002 is global-only; 0003 is project-only.
 const MIGRATION_SQL: Record<MigrationScope, string[]> = {
-  global: [initSql, globalSql],
+  global: [initSql, globalSql, playgroundSql],
   project: [initSql, projectSql],
-  all: [initSql, globalSql, projectSql],
+  all: [initSql, globalSql, playgroundSql, projectSql],
 };
 
 export function splitSqlStatements(sql: string): string[] {
@@ -51,6 +52,8 @@ export class MemorySqlFallback implements SqlDatabase {
 
   constructor() {
     this.tables.set('app_settings', new Map());
+    this.tables.set('playground_items', new Map());
+    this.tables.set('playground_meta', new Map());
   }
 
   async execute(
@@ -96,8 +99,7 @@ export class MemorySqlFallback implements SqlDatabase {
       });
       return { rowsAffected: 1 };
     }
-    if (q.startsWith('UPDATE app_settings SET')) {
-      const [
+    if (q.startsWith('UPDATE app_settings SET')) {      const [
         open_tabs,
         active_tab_id,
         theme,
@@ -118,6 +120,35 @@ export class MemorySqlFallback implements SqlDatabase {
       }
       return { rowsAffected: 1 };
     }
+    if (q.startsWith('INSERT INTO playground_items')) {
+      const [id, title, kind, dir_path, created_at, updated_at] = bindValues;
+      this.tables.get('playground_items')?.set(id as string, {
+        id,
+        title,
+        kind,
+        dir_path,
+        created_at,
+        updated_at,
+      });
+      return { rowsAffected: 1 };
+    }
+    if (q.startsWith('INSERT INTO playground_meta')) {
+      const [item_id, tags, source_project] = bindValues;
+      this.tables.get('playground_meta')?.set(item_id as string, {
+        item_id,
+        tags,
+        source_project,
+      });
+      return { rowsAffected: 1 };
+    }
+    if (q.startsWith('DELETE FROM playground_meta')) {
+      this.tables.get('playground_meta')?.delete(bindValues[0] as string);
+      return { rowsAffected: 1 };
+    }
+    if (q.startsWith('DELETE FROM playground_items')) {
+      this.tables.get('playground_items')?.delete(bindValues[0] as string);
+      return { rowsAffected: 1 };
+    }
     throw new Error(
       `MemorySqlFallback: unsupported statement: ${q.slice(0, 80)}`,
     );
@@ -127,6 +158,15 @@ export class MemorySqlFallback implements SqlDatabase {
     const q = norm(query);
     if (q.startsWith("SELECT * FROM app_settings WHERE id = 'singleton'")) {
       return Array.from(this.tables.get('app_settings')?.values() ?? []) as T;
+    }
+    if (q.startsWith('SELECT') && q.includes('FROM playground_items')) {
+      const items = this.tables.get('playground_items');
+      const meta = this.tables.get('playground_meta');
+      return Array.from(items?.values() ?? []).map((row) => ({
+        ...(row as Row),
+        tags: (meta?.get((row as Row).id as string) as Row | undefined)?.tags ?? '[]',
+        source_project: (meta?.get((row as Row).id as string) as Row | undefined)?.source_project ?? null,
+      })) as T;
     }
     throw new Error(`MemorySqlFallback: unsupported query: ${q.slice(0, 80)}`);
   }
