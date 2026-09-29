@@ -32,6 +32,9 @@ last_updated: 2026-09-29
 | D-016 | 컬러 팔레트 = DESIGN.md 색 역할 토큰, 교체는 에이전트 없이 | Accepted (2026-09-29) | [[ColorPalette]] |
 | D-017 | HyperFrames 프리셋·카탈로그는 참고 자료로만 | Accepted (2026-09-29) | [[research-2026-09-29-design-md-hyperframes]] |
 | D-018 | 에이전트 세션 격리(전역 설정 제외 + 셸 ask 규칙) | Accepted (2026-09-29) | [[PermissionPolicy]], [[poc-s3]] |
+| D-019 | FFmpeg 다운로드 메이저 8 고정 | Proposed (2026-09-29) | [[milestone-m1]] |
+| D-020 | `vanilla.json` 필드 계약(M1 구현분) | Proposed (2026-09-29) | [[milestone-m1]] |
+| D-021 | assetProtocol 스코프·Bridge 스키마 보완 | Proposed (2026-09-29) | [[milestone-m1]] |
 
 ## Connections
 

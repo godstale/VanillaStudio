@@ -50,11 +50,15 @@
 
 ## 6. DB 테이블 추가하기
 
-1. `src/lib/db/migrations/0001_init.sql`에 `CREATE TABLE` 추가.
-2. 같은 문장을 `src/lib/db/client.ts`의 `MIGRATION_STATEMENTS`에 추가.
-3. `MemorySqlFallback`의 `execute`/`select`에 해당 테이블 분기를 추가
-   (테스트·웹 프리뷰용. 패턴은 `items` 분기를 복사).
-4. `src/lib/db/repositories/<도메인>Repo.ts`에 CRUD 작성.
+마이그레이션은 `src/lib/db/migrations/*.sql`을 `?raw`로 읽어 `client.ts`가 실행한다(문장 복제 없음).
+모든 문장은 `IF NOT EXISTS`로 멱등이다.
+
+1. 범위에 맞는 파일에 `CREATE TABLE`을 추가한다: `0001_init.sql`(전역·프로젝트 공통), `0002_global.sql`(전역 DB만), `0003_project.sql`(프로젝트 DB만). 새 파일이 필요하면 `0004_*`처럼 번호를 잇고 `client.ts`의 `MIGRATION_SQL`에 등록한다.
+2. `MemorySqlFallback`의 `execute`/`select`에 해당 테이블 분기를 추가한다(테스트·웹 프리뷰용).
+3. `src/lib/db/repositories/<도메인>Repo.ts`에 CRUD를 작성한다.
+4. `migrations.test.ts`가 `node:sqlite`로 실제 SQL을 실행해 검증한다. 새 테이블을 기대 목록에 추가한다.
+
+병렬 작업 시 마이그레이션은 레인 A만 추가한다(`Docs/Planning/Parallel-Execution.md` §4).
 
 ## 7. 문구(i18n) 추가하기
 
@@ -64,10 +68,9 @@
 
 ## 8. 예제 도메인 제거하기
 
-`collections`·`extensions` 예제가 필요 없으면:
+`collections`·`extensions` 예제는 Vanilla Studio M1(T1.4)에서 이미 제거했다. 같은 방식으로 다른 예제를
+걷어낼 때의 순서는 다음과 같다.
 
-- `src/components/collections/`, `src/components/extensions/`,
-  `src/lib/collections/`, `src/lib/extensions/` 삭제.
-- `CenterWorkspace`에서 해당 타입·분기 제거, `SidePanel`·`ActivityBar`에서 항목 제거,
-  `workspaceTab.ts`에서 타입 제거, 사전에서 `collections*`·`extensions*`·
-  `collectionEditor*`·`extensionViewer*` 키 제거, `items` 테이블 제거(§6 역순).
+- 컴포넌트·lib·타입 삭제, `CenterWorkspace`·`SidePanel`·`ActivityBar`의 분기 제거,
+  `workspaceTab.ts` 타입 제거, 사전 키 제거, 테이블 제거(§6 역순).
+- `grep`으로 참조 0건을 확인한다.

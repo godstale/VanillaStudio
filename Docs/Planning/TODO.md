@@ -7,9 +7,9 @@
 
 ## ▶ 진입점 (2026-09-29)
 
-- **다음 작업: 웨이브 0 — T1.1 → T1.3 (단독 세션 1개)**. 브랜치는 `feat/m1-foundation` → `feat/m1-w0-workspace`.
-- 그다음은 웨이브 1 병렬 레인 A·B·C·D, 웨이브 2 레인 B′·C′다. 배치·워크트리·공유 파일 규칙·세션 시작 프롬프트는 **`Docs/Planning/Parallel-Execution.md`**에 있다.
-- 항목의 `[레인 X · Wn]` 태그는 담당 레인과 웨이브를 뜻한다. 태그가 없는 항목(M2 이후)은 M1 마무리 때 배치한다.
+- **M1 완료**(main 병합·push는 사용자 승인 대기). 기록: `wiki/sources/milestone-m1.md`.
+- **다음 작업**: M2 에이전트(T2.1~) 브랜치 `feat/m2-agents`. M3의 T3.1·T3.2·T3.3·T3.4·T3.8·T3.9·T3.12와 M4a의 T4.9는 M2와 무관하게 병렬 진행 가능. 레인 배치는 `Docs/Planning/Parallel-Execution.md`(M2·M3 레인은 M1 마무리 때 추가)
+- 항목의 `[레인 X · Wn]` 태그는 담당 레인과 웨이브를 뜻한다. 태그가 없는 항목(M2 이후)은 레인 배치 때 붙인다.
 
 ---
 
@@ -32,7 +32,7 @@
 - [x] T1.15 [레인 B′ · W2] 앱 소유 프로세스: 의존성 설치(`pnpm install`, 마법사 1회 동의, `package.json` 변경 시 재확인) — 대상: `src-tauri/src/commands/process_commands.rs` · 완료 판정: 고정 argv만 허용(테스트), 진행 로그 표시 · 선행: T1.8, T1.14 · (D-012)
 - [x] T1.16 [레인 C′ · W2] 프로젝트 열기·최근 프로젝트·폴더 신뢰 확인(템플릿 기능 재사용) — 대상: `src/lib/project/*`, `src/components/workspace/*` · 완료 판정: 재실행 후 최근 목록에서 열림, 신뢰 전에는 에이전트 기능 비활성 · 선행: T1.14 · (F-PRJ-03)
 - [x] T1.17 [레인 A · W1] 액티비티바·탭 타입 등록(pipeline·explorer·agent·templates·playground, welcome·brief·plan·prompts·design·review·export 등 빈 뷰) — 대상: `src/components/layout/*`, `Docs/Extension-Guide.md` 절차 · 완료 판정: 모든 탭이 빈 상태로 열림 · 선행: T1.4
-- [ ] T1.18 [레인 조정 · 마무리] M1 마무리: 데모 수행, `wiki/sources/milestone-m1.md`, 문서 동기화 · 완료 판정: 계획서 §2 M1 데모 ①~④ · 선행: T1.1~T1.17
+- [x] T1.18 [레인 조정 · 마무리] M1 마무리: 데모 수행, `wiki/sources/milestone-m1.md`, 문서 동기화 · 완료 판정: 계획서 §2 M1 데모 ①~④ · 선행: T1.1~T1.17
 
 ## M2 에이전트 (branch: `feat/m2-agents`)
 

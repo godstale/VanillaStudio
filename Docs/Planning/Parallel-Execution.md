@@ -11,6 +11,10 @@
 
 | 순서 | 무엇을 | 누가 | 브랜치 / 워크트리 |
 | --- | --- | --- | --- |
+| 완료 | M1 웨이브 0~2 (T1.1~T1.18) | — | `feat/m1-foundation`(병합 완료) |
+| **다음** | `feat/m1-foundation` → main 병합(사용자 승인 후), 그다음 M2 에이전트 + M3 병렬 가능분 + T4.9 레인 구성 | 조정 세션 | M2 레인 배치는 별도 갱신 |
+
+--- | --- | --- | --- |
 | **1 (지금)** | **웨이브 0**: T1.1 기준선 확인 → T1.3 pnpm 워크스페이스 도입 | 단독 세션 1개 | `feat/m1-foundation`(통합 브랜치, main에서 생성) → 작업 브랜치 `feat/m1-w0-workspace` |
 | 2 | 웨이브 0 병합 후 **웨이브 1**: 레인 A·B·C·D 동시 시작 | 세션 4개 | 레인별 워크트리 (§3) |
 | 3 | 웨이브 1의 선행 항목이 끝나면 **웨이브 2**: M1 통합 레인 B′·C′ | 세션 2개 | §3 |
@@ -208,11 +212,11 @@ Vanilla Studio P4 구현, 레인 {{LANE}}을 수행하라.
 
 | 웨이브 | 레인 | 브랜치 | 상태 | 병합 커밋 | 비고 |
 | --- | --- | --- | --- | --- | --- |
-| 0 | 워크스페이스 | `feat/m1-w0-workspace` | ▶ 다음 | — | 진입점 |
-| 1 | A 앱 셸 | `feat/m1-a-shell` | 대기 | — | |
-| 1 | B Rust·Doctor | `feat/m1-b-process` | 대기 | — | |
-| 1 | C 프로젝트 모델 | `feat/m1-c-project` | 대기 | — | |
-| 1 | D 런타임·디자인 | `feat/m1-d-runtime` | 대기 | — | M4a 선행분 |
-| 2 | B′ Doctor UI·설치 | `feat/m1-b2-doctor-ui` | 대기 | — | A·B 병합 후 |
-| 2 | C′ 스캐폴딩·마법사 | `feat/m1-c2-scaffold` | 대기 | — | A·B·C 병합 후 |
-| — | M1 마무리(T1.18) | `feat/m1-foundation` → main | 대기 | — | 사용자 확인 |
+| 0 | 워크스페이스 | `feat/m1-w0-workspace` | 병합 완료 | `7b3453c` | |
+| 1 | A 앱 셸 | `feat/m1-a-shell` | 병합 완료 | `a692f2b` | |
+| 1 | B Rust·Doctor | `feat/m1-b-process` | 병합 완료 | `996bfbf` | |
+| 1 | C 프로젝트 모델 | `feat/m1-c-project` | 병합 완료 | `7cd0327` | |
+| 1 | D 런타임·디자인 | `feat/m1-d-runtime` | 병합 완료 | `9c9084c` | M4a 선행분(T4.9는 이월) |
+| 2 | B′ Doctor UI·설치 | `feat/m1-b2-doctor-ui` | 병합 완료 | `7ac1c99` | 마법사 연결은 조정 세션 |
+| 2 | C′ 스캐폴딩·마법사 | `feat/m1-c2-scaffold` | 병합 완료 | `93d6fe0` | |
+| — | M1 마무리(T1.18) | `feat/m1-foundation` → main | 완료, main 병합 승인 대기 | — | 사용자 확인 |

@@ -145,3 +145,21 @@
   - 세션은 프로젝트의 `AGENTS.md`/`CLAUDE.md`·프로젝트 스킬(템플릿·`vanilla-core`)만 사용한다.
 - **사용자 결정(2026-09-29)**: 제안대로 승인.
 - **영향**: 사용자의 개인 전역 CLAUDE.md·스킬·MCP 커넥터는 Vanilla 프로젝트 세션에 적용되지 않는다. 필요하면 설정 화면에 "전역 설정 사용(고급)" 토글을 두되, 켜도 셸 ask 규칙은 유지한다.
+
+## D-019 FFmpeg 다운로드 메이저 계열을 8로 고정 — Proposed (2026-09-29)
+
+- **맥락**: M1 T1.10 구현. BtbN 릴리스에는 8.1, 9.0, master가 함께 올라온다. S1은 8.1로 렌더 결정성을 검증했고, S6에서 9.0도 렌더는 성공했지만 출력 바이트가 달랐다.
+- **제안**: 앱이 내려받는 FFmpeg는 메이저 8 계열로 고정한다(`PINNED_MAJOR = 8`). 9로 올리려면 결정성 재검증 후 상수를 바꾼다. 다운로드 자산명과 SHA-256은 `tools/ffmpeg/ffmpeg.json`에 기록한다.
+- **영향**: Doctor의 FFmpeg 판정은 메이저 8 미만을 "업데이트 필요"로 본다. 사용자 결정 전에는 이 값을 바꾸지 않는다.
+
+## D-020 `vanilla.json` 필드 계약(M1 구현분) — Proposed (2026-09-29)
+
+- **맥락**: 설계서에 `vanilla.json` 필드 정의가 없어 T1.7이 기획서 §6·§8.1을 근거로 정했다.
+- **제안**: 필드는 `version`, `name`, `outputType`, `format`(유형별: video는 fps·durationSec 필수), `template`, `palette{id,source}`, `agents{default,enabled}`, `runtime.version`, `createdAt`이다. 에이전트 ID는 `claude-code`·`codex`·`opencode`·`hermes`·`agy`, 기본 팔레트 ID는 `vanilla-default`, 스캐폴딩 플레이스홀더는 `{{projectName}}`·`{{createdAt}}`이다. 스키마 원본은 `src/lib/project/schema.ts`.
+- **영향**: 확정되면 설계서 §8·§9와 `vanilla-core` 스킬(T6.1)에 반영하고 `version` 필드로 이후 변경을 관리한다(AGENTS.md §4-5).
+
+## D-021 assetProtocol 스코프와 Bridge 스키마 보완(M1 구현분) — Proposed (2026-09-29)
+
+- **assetProtocol**: Tauri의 스코프는 추가만 되고 회수할 수 없다(`forbid_directory`는 영구·우선). 그래서 이번 세션에 연 프로젝트 폴더는 앱 재시작까지 읽기 가능하게 남는다. 설계서 §10("현재 프로젝트로 동적 제한")과 다르다. 대안은 정적 스코프를 없애고 프로젝트별 커스텀 프로토콜을 쓰는 것이다.
+- **Bridge(설계서 §5 보완)**: `capture` payload에 선택 필드 `id`를 두고 `captured` 응답이 그대로 돌려준다. `setDesign` payload는 `{colors: {...} | null}`, `ready.design.roles`는 역할명→해석된 색 맵이다. `setDesign` 값은 hex 또는 함수형 색 표기만 허용한다.
+- **영향**: 호스트(T4.11)가 위 스키마에 맞춘다. 사용자 결정 전에는 설계서를 고치지 않는다.

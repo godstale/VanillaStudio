@@ -95,3 +95,22 @@
 - `src/components/ui/`는 shadcn CLI로만 추가하고 직접 수정하지 않습니다.
 - 파일/폴더명은 이 트리의 위치를 그대로 따릅니다. 구조 변경이 필요하면
   이 문서와 코드를 함께 갱신합니다.
+
+## Vanilla Studio 추가·변경분 (M1 기준)
+
+위 트리는 기반 템플릿 원본이다. 다음이 달라졌거나 추가됐다(설계서 §9가 진실 공급원).
+
+| 위치 | 내용 |
+| --- | --- |
+| `pnpm-workspace.yaml`, `packages/runtime`, `packages/export-worker` | pnpm 워크스페이스(T1.3). 루트 `typecheck`가 패키지까지 돈다. lint·vitest는 `packages/**`를 자동 포함, `spikes/`는 제외 |
+| `packages/runtime/` | `@vanilla/runtime`: `defineScene`·시계·준비 신호·`VanillaCanvas`·Bridge 클라이언트·디자인 Provider·결정성 도우미·`eslint-plugin`(`check_scene`), `vite.ts`(디자인 토큰 플러그인) |
+| `src/lib/design/` | DESIGN.md 파서·재작성·역할 파생·대비(S7 이관) |
+| `src/lib/project/`, `src/lib/types/project.ts` | `vanilla.json` zod 스키마·마법사 검증·열기·에이전트 접근 판정 |
+| `src/components/project/` | `NewProjectWizard`, `ProjectInstall`(pnpm install 동의·로그를 마법사 밖에서 소유) |
+| `src/components/doctor/` | Doctor 화면·배지·FFmpeg 동의·설치 다이얼로그 |
+| `src/components/layout/shellRegistry.ts` | 액티비티바·탭 종류 등록(pipeline·explorer·agent·templates·playground, brief·plan·prompts·design·review·export) |
+| `src/lib/db/migrations/0002_global.sql`, `0003_project.sql` | 전역·프로젝트 테이블 골격. `collections`·`extensions` 예제 도메인은 제거됨 |
+| 프로젝트 데이터 폴더 | `<project>/.vanilla/`(템플릿의 `.app-data` 대체, `.gitignore` 등록) |
+| `resources/project-template/`, `resources/design/` | 새 프로젝트 스캐폴딩 원본, 기본 DESIGN.md. `tauri.conf.json`의 `bundle.resources`로 번들 |
+| `src-tauri/src/process/` | 프로세스 실행 공통(PATHEXT·fresh PATH·Job Object·타임아웃), FFmpeg 다운로드 |
+| `src-tauri/src/commands/` | 추가: `doctor_commands`, `project_commands`, `process_commands`(앱 소유 프로세스, 고정 argv) |

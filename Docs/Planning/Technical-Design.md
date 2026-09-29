@@ -1,6 +1,6 @@
 # Vanilla Studio 기술 설계서 (Technical Design)
 
-- 문서 버전: v0.3 (2026-09-29) — v0.2: 디자인 토큰 파이프라인(§4.4), 팔레트 관련 Bridge·DB·코드 구조 / v0.3: D-011 범위 수정(유형별 시간 모드), D-012~D-014 확정
+- 문서 버전: v0.4 (2026-09-29) — v0.4: M1 구현 반영(§8.2 마이그레이션 방식, §8.3 vanilla.json 필드, D-020 Proposed) / v0.2: 디자인 토큰 파이프라인(§4.4), 팔레트 관련 Bridge·DB·코드 구조 / v0.3: D-011 범위 수정(유형별 시간 모드), D-012~D-014 확정
 - 선행 문서: `Docs/Planning/Product-Spec.md`, `Docs/Planning/Decisions.md`
 - 템플릿 공통 아키텍처(`Docs/Architecture.md`)는 **템플릿 원본으로 유지**하고, 이 문서가 Vanilla Studio 고유 설계의 진실 공급원이다. 충돌 시 이 문서가 우선한다.
 - ⚠️ 표시 항목은 PoC(`Feasibility-Risks.md` §3)로 확정해야 하는 가정이다.
@@ -355,7 +355,11 @@ render 모드와 HyperFrames seek의 연결, 준비 대기 신호는 S1에서 �
 | `reviews` | 수정 요청 인덱스(파일은 `reviews/`) |
 | `export_jobs` | export 작업 이력 |
 
-마이그레이션은 템플릿 방식(`src/lib/db/migrations/*.sql` + `client.ts` 동기화)을 따른다.
+마이그레이션은 `src/lib/db/migrations/*.sql`(0001 공통·0002 전역·0003 프로젝트)을 `?raw`로 읽어 `client.ts`가 실행한다(M1 구현). 여러 Provider가 동시에 여는 경우를 위해 DB 초기화 promise는 공유한다.
+
+### 8.3 `vanilla.json` (M1 구현분, D-020 Proposed)
+
+필드: `version`·`name`·`outputType`·`format`·`template`·`palette{id,source}`·`agents{default,enabled}`·`runtime.version`·`createdAt`. 스키마 원본은 `src/lib/project/schema.ts`(zod)이며, 사용자 결정(D-020) 후 이 절을 확정한다.
 
 ---
 

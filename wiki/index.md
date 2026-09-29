@@ -62,6 +62,7 @@
 - [[DevelopmentPhases]] — 개발 단계 P0~P7 (플레이북: `Docs/Playbook/`)
 - [[phase-p0-setup]] — P0 준비 로그
 - [[phase-p2-planning]] — P2 상세 기획 로그
+- [[milestone-m1]] — M1 기반(앱 골격·Doctor·프로젝트 생성) 마일스톤 로그
 - [[phase-p3-implementation-plan]] — P3 구현 계획(+PoC·TODO) 로그
 - PoC 로그 (P3):
   - [[poc-s1]] — HyperFrames로 React+R3F MP4 렌더 ✅ 통과

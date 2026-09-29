@@ -127,3 +127,9 @@
 
 ## [2026-09-29] lint | Wiki health check
 - orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] milestone | M1 기반 완료
+- 웨이브 0~2 병합(`feat/m1-foundation`), 통합 수정(.vanilla·DB 경쟁·경로 접두어·마법사-설치 연결), 실제 앱 CDP 확인. 결정안 D-019~D-021(Proposed). → [[milestone-m1]]
+
+## [2026-09-29] lint | Wiki health check
+- orphans 0, broken links 0. → `wiki/lint-report.md`
