@@ -96,6 +96,34 @@ pub fn resolve_spec(spec: &LaunchSpec, app_data: &Path) -> Result<LaunchSpec, Ho
     Ok(LaunchSpec { command, args: spec.args.iter().map(|a| expand(a, app_data)).collect(), env })
 }
 
+/// The mode a session is forced back to when the agent starts in, or moves to, a blocked mode.
+pub const SAFE_MODE_ID: &str = "default";
+
+/// Modes that skip the app's permission gate (D-010).
+///
+/// Claude Code's `bypassPermissions` accepts every tool call without `canUseTool`, so the host
+/// never sees the request and cannot scope-check paths or ask for network access; `auto` lets a
+/// classifier decide instead of the user. Explicit ask rules (shell) survive both, but the rest of
+/// the policy would not. Other agents' mode ids are unverified (Codex `full-access` is the likely
+/// counterpart, see poc-s3), so only Claude Code is locked for now.
+pub fn is_blocked_mode(agent_id: &str, mode_id: &str) -> bool {
+    agent_id == "claude-code" && matches!(mode_id, "bypassPermissions" | "auto")
+}
+
+/// `session/new` `modes` (JSON) as the UI should see it: blocked modes are not offered, and a
+/// blocked current mode is shown as [`SAFE_MODE_ID`] (the caller switches the agent to match).
+pub fn sanitize_modes(agent_id: &str, modes: &Value) -> Value {
+    let Value::Object(obj) = modes else { return modes.clone() };
+    let mut obj = obj.clone();
+    if let Some(Value::Array(list)) = obj.get_mut("availableModes") {
+        list.retain(|m| !m.get("id").and_then(Value::as_str).is_some_and(|id| is_blocked_mode(agent_id, id)));
+    }
+    if obj.get("currentModeId").and_then(Value::as_str).is_some_and(|id| is_blocked_mode(agent_id, id)) {
+        obj.insert("currentModeId".into(), json!(SAFE_MODE_ID));
+    }
+    Value::Object(obj)
+}
+
 /// Build the `_meta` for `session/new` (D-018).
 ///
 /// For Claude Code the host always forces user-global settings out (`settingSources: ["project"]`)
@@ -118,6 +146,8 @@ pub fn build_session_meta(agent_id: &str, options: &Value, use_global_settings: 
         *opts = json!({});
     }
     let opts = opts.as_object_mut().unwrap();
+    // Removes bypassPermissions from the mode catalog (the adapter then clamps it to `default`).
+    opts.insert("allowDangerouslySkipPermissions".into(), json!(false));
     opts.insert(
         "settingSources".into(),
         if use_global_settings { json!(["user", "project", "local"]) } else { json!(["project"]) },
@@ -263,6 +293,30 @@ mod tests {
         let m = build_session_meta("claude-code", &json!({}), true);
         assert_eq!(m["claudeCode"]["options"]["settingSources"], json!(["user", "project", "local"]));
         assert_eq!(ask_of(&m), ["Bash", "PowerShell"]);
+    }
+
+    #[test]
+    fn claude_meta_always_removes_the_bypass_mode() {
+        let hostile = json!({ "claudeCode": { "options": { "allowDangerouslySkipPermissions": true } } });
+        for global in [false, true] {
+            let m = build_session_meta("claude-code", &hostile, global);
+            assert_eq!(m["claudeCode"]["options"]["allowDangerouslySkipPermissions"], json!(false));
+        }
+    }
+
+    #[test]
+    fn blocked_modes_are_hidden_and_the_current_one_is_reset() {
+        let modes = json!({ "currentModeId": "bypassPermissions", "availableModes": [
+            { "id": "default" }, { "id": "plan" }, { "id": "auto" }, { "id": "bypassPermissions" }] });
+        let s = sanitize_modes("claude-code", &modes);
+        assert_eq!(s["currentModeId"], "default");
+        assert_eq!(s["availableModes"], json!([{ "id": "default" }, { "id": "plan" }]));
+        // an allowed current mode stays; other agents are untouched
+        let plan = json!({ "currentModeId": "plan", "availableModes": [{ "id": "plan" }] });
+        assert_eq!(sanitize_modes("claude-code", &plan), plan);
+        assert_eq!(sanitize_modes("opencode", &modes), modes);
+        assert_eq!(sanitize_modes("claude-code", &Value::Null), Value::Null);
+        assert!(is_blocked_mode("claude-code", "auto") && !is_blocked_mode("claude-code", "acceptEdits"));
     }
 
     #[test]

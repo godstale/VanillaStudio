@@ -79,7 +79,7 @@ pub fn input_from_request(req: &RequestPermissionRequest) -> Input {
 
 /// Prefix of the app's own MCP tools (`vanilla-tools` server, T2.10). The agent reports them as
 /// `mcp__<server>__<tool>` with an empty/`other` kind (PoC S3).
-pub const APP_MCP_PREFIX: &str = "mcp__vanilla__";
+pub const APP_MCP_PREFIX: &str = "mcp__vanilla-tools__";
 /// App state inside a project. Agents have no business editing it; edits there are always asked.
 pub const PROTECTED_DIR: &str = ".vanilla";
 
@@ -253,11 +253,11 @@ mod tests {
     #[test]
     fn s3_app_mcp_tool_is_allowed_by_name_prefix() {
         let f = fixture();
-        let d = decide(&f, json!({ "toolCallId": "t", "kind": "other", "name": "mcp__vanilla__vanilla_ping", "title": "mcp__vanilla__vanilla_ping",
-            "rawInput": { "message": "hi" }, "_meta": { "claudeCode": { "toolName": "mcp__vanilla__vanilla_ping", "mcpServer": { "name": "vanilla", "source": "dynamic" } } } }));
+        let d = decide(&f, json!({ "toolCallId": "t", "kind": "other", "name": "mcp__vanilla-tools__vanilla_ping", "title": "mcp__vanilla-tools__vanilla_ping",
+            "rawInput": { "message": "hi" }, "_meta": { "claudeCode": { "toolName": "mcp__vanilla-tools__vanilla_ping", "mcpServer": { "name": "vanilla-tools", "source": "dynamic" } } } }));
         assert_eq!(d, Decision::AutoAllow("app-mcp"));
         // some adapters send no kind at all
-        let d = decide(&f, json!({ "toolCallId": "t", "title": "mcp__vanilla__snapshot_scene" }));
+        let d = decide(&f, json!({ "toolCallId": "t", "title": "mcp__vanilla-tools__snapshot_scene" }));
         assert_eq!(d, Decision::AutoAllow("app-mcp"));
     }
 
@@ -265,14 +265,17 @@ mod tests {
     fn mcp_lookalikes_and_foreign_servers_are_asked() {
         let f = fixture();
         // a project-level .mcp.json server that is also called "vanilla"
-        let spoof = decide(&f, json!({ "toolCallId": "t", "kind": "other", "name": "mcp__vanilla__x", "title": "mcp__vanilla__x",
-            "_meta": { "claudeCode": { "mcpServer": { "name": "vanilla", "source": "project" } } } }));
+        let spoof = decide(&f, json!({ "toolCallId": "t", "kind": "other", "name": "mcp__vanilla-tools__x", "title": "mcp__vanilla-tools__x",
+            "_meta": { "claudeCode": { "mcpServer": { "name": "vanilla-tools", "source": "project" } } } }));
         assert_eq!(spoof, Decision::Ask("mcp"));
         let other = decide(&f, json!({ "toolCallId": "t", "kind": "other", "name": "mcp__github__create_issue", "title": "mcp__github__create_issue" }));
         assert_eq!(other, Decision::Ask("mcp"));
         // the prefix must be a real prefix
         let near = decide(&f, json!({ "toolCallId": "t", "kind": "other", "name": "mcp__vanillax__y", "title": "y" }));
         assert_eq!(near, Decision::Ask("mcp"));
+        // the server is registered as `vanilla-tools`; the PoC-era `vanilla` name is not the app's
+        let old = decide(&f, json!({ "toolCallId": "t", "kind": "other", "name": "mcp__vanilla__ping", "title": "y" }));
+        assert_eq!(old, Decision::Ask("mcp"));
         let unknown = decide(&f, json!({ "toolCallId": "t", "kind": "other", "name": "SomethingNew", "title": "SomethingNew" }));
         assert_eq!(unknown, Decision::Ask("unclassified"));
     }
@@ -280,7 +283,7 @@ mod tests {
     #[test]
     fn app_mcp_tool_with_an_outside_path_argument_is_denied() {
         let f = fixture();
-        let d = decide(&f, json!({ "toolCallId": "t", "kind": "other", "name": "mcp__vanilla__read_file", "title": "x", "rawInput": { "path": p(&f.outside) } }));
+        let d = decide(&f, json!({ "toolCallId": "t", "kind": "other", "name": "mcp__vanilla-tools__read_file", "title": "x", "rawInput": { "path": p(&f.outside) } }));
         assert_eq!(d, Decision::Deny("outside-project"));
     }
 

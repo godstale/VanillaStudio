@@ -6,6 +6,7 @@
 //! must exist, and the launch spec is validated (argv only, no shell).
 
 use crate::agent_host::events::{AgentEvent, Emit};
+use crate::agent_host::mcp;
 use crate::agent_host::launch::{resolve_spec, HostError, LaunchSpec, McpHttpSpec};
 use crate::agent_host::session::{start, SessionHandle, StartParams};
 use crate::commands::fs_commands::{get_active_workspace_internal, resolve_and_verify_workspace_path};
@@ -46,6 +47,9 @@ pub struct StartAgentParams {
     pub use_global_settings: bool,
     #[serde(default)]
     pub mcp_servers: Vec<McpHttpSpec>,
+    /// ACP session id of an earlier session to continue (T2.13). Needs `loadSession` (or `resume`).
+    #[serde(default)]
+    pub resume_session_id: Option<String>,
 }
 
 /// Validate everything that does not need a running process. Returns the canonical project dir
@@ -60,6 +64,11 @@ pub fn prepare_start(p: &StartAgentParams, app_data: &Path) -> Result<(PathBuf, 
     let project = resolve_and_verify_workspace_path(&p.project_dir, None, true).map_err(HostError::OutsideWorkspace)?;
     if !project.is_dir() {
         return Err(HostError::OutsideWorkspace(p.project_dir.clone()));
+    }
+    if let Some(id) = &p.resume_session_id {
+        if id.is_empty() || id.chars().count() > 200 || id.chars().any(char::is_control) {
+            return Err(HostError::InvalidSpec("bad resume session id".into()));
+        }
     }
     let spec = resolve_spec(&p.launch, app_data)?;
     let adapters = app_data.join("adapters");
@@ -91,6 +100,12 @@ pub async fn start_agent_session<R: tauri::Runtime>(
         }
         let _ = on_event.send(e);
     });
+    // The app's own MCP tools (T2.10): a per-session token, revoked when the session ends.
+    let lease = mcp::shared_server().await.map(|s| mcp::McpLease::issue(&s));
+    let emit = match &lease {
+        Some(l) => l.revoke_on_close(emit),
+        None => emit,
+    };
     let handle = start(
         StartParams {
             agent_id: params.agent_id,
@@ -99,12 +114,18 @@ pub async fn start_agent_session<R: tauri::Runtime>(
             path_env: process::fresh_path(),
             session_options: params.session_options,
             use_global_settings: params.use_global_settings,
-            mcp_servers: params.mcp_servers,
+            mcp_servers: mcp::merge_servers(lease.as_ref().map(|l| l.spec()), params.mcp_servers),
+            resume_session_id: params.resume_session_id,
         },
         emit,
     )
     .await
-    .map_err(|e| e.to_string())?;
+    .map_err(|e| {
+        if let Some(l) = &lease {
+            l.revoke();
+        }
+        e.to_string()
+    })?;
     let id = handle.session_id.clone();
     let handle = Arc::new(handle);
     with_sessions(|m| m.insert(id.clone(), handle.clone()));
@@ -161,6 +182,7 @@ mod tests {
             session_options: Value::Null,
             use_global_settings: false,
             mcp_servers: vec![],
+            resume_session_id: None,
         }
     }
 
@@ -199,6 +221,12 @@ mod tests {
         let mut bad = params(&proj, true);
         bad.launch.command = "node && calc".into();
         assert!(matches!(prepare_start(&bad, &app_data), Err(HostError::InvalidSpec(_))));
+        // resume ids are opaque agent ids, but not arbitrary text
+        let mut resume = params(&proj, true);
+        resume.resume_session_id = Some("sess\n1".into());
+        assert!(matches!(prepare_start(&resume, &app_data), Err(HostError::InvalidSpec(_))));
+        resume.resume_session_id = Some("sess-1".into());
+        assert!(prepare_start(&resume, &app_data).is_ok());
         set_active_workspace_internal(None);
         // set_active_workspace_internal also chdirs into the (temporary) workspace
         std::env::set_current_dir(original_cwd).unwrap();
