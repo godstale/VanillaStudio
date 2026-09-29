@@ -10,6 +10,7 @@ import { useWorkspaceTabs } from '@/lib/context/WorkspaceTabsContext';
 import { loadExportJobs, type ExportJobRow } from '@/lib/export/exportRepo';
 import { isExportKind } from '@/lib/export/exportModel';
 import { PlaygroundProvider } from '@/lib/playground/PlaygroundContext';
+import { PlaygroundExtras } from './PlaygroundExtras';
 import { usePlayground } from '@/lib/playground/playgroundContextValue';
 import { collectTags, searchItems, titleFromDir, type PlaygroundFilter } from '@/lib/playground/store';
 import { PLAYGROUND_KINDS, type PlaygroundKind } from '@/lib/playground/types';
@@ -260,6 +261,7 @@ function AddFromExport() {
 
 export function PlaygroundPanel() {
   const { t } = useLanguage();
+  const [section, setSection] = useState<'items' | 'io'>('items');
   return (
     <PlaygroundProvider>
       <div data-testid="playground-panel" className="flex h-full min-h-0 flex-col">
@@ -267,8 +269,36 @@ export function PlaygroundPanel() {
           <FlaskConical className="h-3.5 w-3.5 text-primary" aria-hidden />
           <h2 className="flex-1 text-xs font-semibold text-foreground">{t('playground.panel.title')}</h2>
         </div>
-        <ItemList />
-        <AddFromExport />
+        <div className="flex shrink-0 items-center gap-1 border-b border-border p-2" role="group" aria-label={t('playground.panel.title')}>
+          <Button
+            size="sm"
+            variant={section === 'items' ? 'secondary' : 'ghost'}
+            className="h-6 flex-1 px-2 text-xs"
+            aria-pressed={section === 'items'}
+            onClick={() => setSection('items')}
+          >
+            {t('playground.panel.title')}
+          </Button>
+          <Button
+            size="sm"
+            variant={section === 'io' ? 'secondary' : 'ghost'}
+            className="h-6 flex-1 px-2 text-xs"
+            aria-pressed={section === 'io'}
+            onClick={() => setSection('io')}
+          >
+            {t('playground.io.title')}
+          </Button>
+        </div>
+        {section === 'items' ? (
+          <>
+            <ItemList />
+            <AddFromExport />
+          </>
+        ) : (
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            <PlaygroundExtras />
+          </div>
+        )}
       </div>
     </PlaygroundProvider>
   );
