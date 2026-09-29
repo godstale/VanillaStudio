@@ -16,6 +16,7 @@ import {
   WorkspaceProvider,
   useWorkspace,
 } from '@/lib/context/WorkspaceContext';
+import { ProjectInstallProvider } from '@/components/project/ProjectInstall';
 import { TrustWorkspaceDialog } from '@/components/workspace/TrustWorkspaceDialog';
 import type { SidePanelView } from '@/lib/types/workspaceTab';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
@@ -101,7 +102,9 @@ export function Workspace() {
     <WorkspaceProvider>
       <WorkspaceTabsProvider>
         <SidePanelProvider>
-          <WorkspaceContent />
+          <ProjectInstallProvider>
+            <WorkspaceContent />
+          </ProjectInstallProvider>
           <TrustWorkspaceDialog />
         </SidePanelProvider>
       </WorkspaceTabsProvider>

@@ -17,7 +17,7 @@
 
 ---
 
-# 기반 템플릿: WorkspaceTemplate
+# Vanilla Studio (기반 템플릿: WorkspaceTemplate)
 
 폴더 기반 데스크탑 앱을 **빠르고 손쉽게 시작**하기 위한 Tauri 2 + React 19 +
 TypeScript 스타터 템플릿입니다. (브랜딩 교체는 구현 단계 M1에서 진행)

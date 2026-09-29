@@ -17,7 +17,7 @@ export default defineConfig({
     watch: {
       ignored: [
         '**/src-tauri/**',
-        '**/.app-data/**',
+        '**/.vanilla/**',
         '**/*.db',
         '**/*.db-*',
         '**/*.sqlite*',

@@ -20,10 +20,11 @@ pub fn get_active_workspace_internal() -> Option<String> {
 }
 
 #[tauri::command]
-pub fn set_active_workspace(path: Option<String>) -> Result<(), String> {
+pub fn set_active_workspace<R: Runtime>(app: AppHandle<R>, path: Option<String>) -> Result<(), String> {
     set_active_workspace_internal(path.clone());
     if let Some(ref p) = path {
         let _ = ensure_app_dir(p.clone());
+        let _ = super::project_commands::allow_project_assets(&app, p);
     }
     Ok(())
 }
@@ -34,9 +35,9 @@ pub fn ensure_app_dir(workspace_root: String) -> Result<String, String> {
     if !ws_path.is_dir() {
         return Err(format!("Workspace root is not a valid directory: {}", workspace_root));
     }
-    let app_dir = ws_path.join(".app-data");
+    let app_dir = ws_path.join(".vanilla");
     if !app_dir.exists() {
-        std::fs::create_dir_all(&app_dir).map_err(|e| format!("Failed to create .app-data dir: {}", e))?;
+        std::fs::create_dir_all(&app_dir).map_err(|e| format!("Failed to create .vanilla dir: {}", e))?;
     }
     let gitignore_path = app_dir.join(".gitignore");
     if !gitignore_path.exists() {

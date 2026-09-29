@@ -17,7 +17,7 @@
 | 7   | 패키지명 변경                     | `package.json` (`name`)                                                                                    |
 | 8   | HTML 타이틀 변경                  | `index.html` (`<title>`)                                                                                   |
 | 9   | 저장소 키 접두사 변경(선택)       | `wt_` → 프로젝트 접두사 (`src/lib/i18n/types.ts`, `ThemeContext.tsx`, `WorkspaceContext.tsx`, `client.ts`) |
-| 10  | 프로젝트 데이터 폴더명 변경(선택) | `.app-data` (`src-tauri/src/commands/fs_commands.rs`, `client.ts`, `vite.config.ts`)                       |
+| 10  | 프로젝트 데이터 폴더명 변경(선택) | `.vanilla`(적용 완료) (`src-tauri/src/commands/fs_commands.rs`, `client.ts`, `vite.config.ts`)                       |
 | 11  | 브랜드 색 변경(선택)              | `design/tokens.json`의 `brand` → `node design/build-theme.mjs`                                             |
 
 ## 2. 로고 규격(플레이스홀더 기준)

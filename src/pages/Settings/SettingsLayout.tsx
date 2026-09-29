@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Sliders, AppWindow } from 'lucide-react';
+import { ArrowLeft, Sliders, AppWindow, Stethoscope } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { APP_NAME, APP_VERSION } from '@/lib/brand';
@@ -11,6 +11,12 @@ const NAV_ITEMS = [
     path: '/settings/app',
     labelKey: 'settings.app',
     icon: AppWindow,
+    end: false,
+  },
+  {
+    path: '/settings/doctor',
+    labelKey: 'doctor.title',
+    icon: Stethoscope,
     end: false,
   },
 ];

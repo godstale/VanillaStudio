@@ -1,6 +1,10 @@
 pub mod commands;
+pub mod process;
 
+use commands::doctor_commands::*;
 use commands::fs_commands::*;
+use commands::project_commands::*;
+use commands::process_commands::*;
 use commands::search_commands::*;
 use commands::shell_commands::*;
 
@@ -48,6 +52,12 @@ pub fn run() {
             grep_files,
             find_files,
             run_shell,
+            doctor_check,
+            ffmpeg_download,
+            ffmpeg_download_cancel,
+            scaffold_project,
+            install_project_deps,
+            install_project_deps_cancel,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

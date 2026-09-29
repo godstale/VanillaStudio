@@ -23,7 +23,6 @@ describe('settingsRepo (MemorySqlFallback)', () => {
       activeTabId: null,
       theme: DEFAULT_APP_SETTINGS.theme,
       language: 'ko',
-      enabledExtensions: [],
       trustedWorkspaces: [],
       lastWorkspaceRoot: null,
     });
@@ -40,12 +39,5 @@ describe('settingsRepo (MemorySqlFallback)', () => {
     expect(settings.theme).toBe('dark');
     expect(settings.openTabs).toHaveLength(1);
     expect(settings.activeTabId).toBe('welcome:1');
-  });
-
-  it('round-trips the enabled extension list', async () => {
-    await updateSettings({ enabledExtensions: ['demo-ext'] });
-    expect((await getSettings()).enabledExtensions).toEqual(['demo-ext']);
-    await updateSettings({ enabledExtensions: [] });
-    expect((await getSettings()).enabledExtensions).toEqual([]);
   });
 });

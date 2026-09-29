@@ -8,7 +8,6 @@ export interface AppSettings {
   activeTabId: string | null;
   theme: ThemeMode;
   language: Locale;
-  enabledExtensions: string[];
   trustedWorkspaces: string[];
   lastWorkspaceRoot: string | null;
 }
