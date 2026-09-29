@@ -193,3 +193,6 @@
 
 ## [2026-09-30] lint | Wiki health check (lane N, T4.22)
 - 50 pages, orphans 1 (wiki/sources/milestone-m4.md; overview.md 연결은 조정 세션에 인계), broken links 0. See: [[parallel-execution]]
+
+## [2026-09-30] wave6 | Q1 palettes merged
+- Lane Q1 (T6.3, T6.9) merged into feat/m2-agents (f8f6857), no conflicts. Built-in palettes now 24. See: [[parallel-execution]]

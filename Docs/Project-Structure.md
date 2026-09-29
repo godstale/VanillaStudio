@@ -115,4 +115,6 @@
 | `src-tauri/src/process/` | 프로세스 실행 공통(PATHEXT·fresh PATH·Job Object·타임아웃), FFmpeg 다운로드 |
 | `src-tauri/src/commands/` | 추가: `doctor_commands`, `project_commands`, `process_commands`(앱 소유 프로세스, 고정 argv) |
 | `src/lib/templates/` | `template.json`·`palette.json` zod 스키마·파서·설치 계획(T6.2). `palette.json` 정본은 `src/lib/design/palettes.ts`, `templates/palette.ts`는 별칭 re-export |
+| `src/lib/design/extract.ts`, `harmony.ts` | 팔레트 추출·조화 생성·비교 스냅샷 순수 함수(T6.9) |
 | `resources/skills/` | `vanilla-core` 스킬(T6.1). `tauri.conf.json`의 `bundle.resources`로 번들 |
+| `resources/palettes/` | 내장 팔레트 24종(T6.3). 추가 시 `palettes.ts` 명시 import 1줄 |

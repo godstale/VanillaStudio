@@ -305,3 +305,7 @@ Vanilla Studio P4 구현, 레인 {{LANE}}을 수행하라.
 | 6 | N M4 마무리 | `feat/m4-n-wrap` | 병합 완료 | `e53ff00` | T4.22, milestone-m4 |
 | 5 | X2 Export UI | `feat/m5-x2-export-ui` | 병합 완료 | `dfdb8f7` | T5.2·T5.9·T5.7, CenterWorkspace prompts/export 충돌 해결 |
 | 5 | T2 템플릿 설치 | `feat/m6-t2-templates` | 병합 완료 | `4c1354c` | T6.2 |
+| 6 | O M5 나머지 | `feat/m5-o-embed` | 진행 중 | — | T5.10→T5.11 |
+| 6 | Q1 팔레트 확장 | `feat/m6-q1-palettes` | 병합 완료 | `f8f6857` | T6.3·T6.9, 내장 24종 |
+| 6 | Q2 템플릿·갤러리 | `feat/m6-q2-templates` | 진행 중 | — | T6.4→T6.5→T6.6→T6.7 |
+| 6 | Q3 플레이그라운드 | `feat/m6-q3-playground` | 진행 중 | — | T6.8→T6.10 |
