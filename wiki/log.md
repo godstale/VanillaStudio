@@ -181,3 +181,9 @@
 
 ## [2026-09-30] wave5 | verification green, wave 5 complete
 - Full verification on feat/m2-agents: lint pass, typecheck pass, vitest 90 files 632 tests pass, cargo 165 pass 0 fail 4 ignored. Fixed: stray char from X2 merge (CenterWorkspace), flaky pipeline restore test (waitFor on holder.api). Wave 5 all merged: T2, P, D2, X2, R2. See: [[parallel-execution]]
+
+## [2026-09-30] milestone | M3 pipeline milestone done
+- T3.16 done by lane M: mock-based end-to-end demo (brief, plan retry loop, viewer approval, prompts, 3-task runner, task graph, design tab) on feat/m2-agents code. Wrote [[milestone-m3]]. Manual remainder: real-agent Build demo. See: [[milestone-m3]]
+
+## [2026-09-30] lint | Wiki health check
+- Ran lint. See lint-report.md for details.
