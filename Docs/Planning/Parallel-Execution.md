@@ -259,8 +259,8 @@ Vanilla Studio P4 구현, 레인 {{LANE}}을 수행하라.
 | 3 | E 에이전트 호스트 | `feat/m2-e-host` | 병합 완료 | `2876209` | T2.1~T2.6 |
 | 3 | R 런타임·워커 | `feat/m4-r-runtime` | 병합 완료 | — | T4.9·T3.7, `feat/m2-agents`에 병합 |
 | 3 | H 파이프라인 UI | `feat/m3-h-pipeline` | 병합 완료 | `e961560` | `feat/m2-agents`에 병합 |
-| 4 | F 에이전트 프런트 | `feat/m2-f-agent-ui` | 완료, 병합 대기 | — | T2.7·T2.8·T2.9, 커밋 `7bcd345`·`51f16ea`·`48295f2`·`df4c12e` |
-| 4 | E2 호스트 후속 | `feat/m2-e2-host-followup` | 완료, 병합 대기 | — | T2.10 판정(rmcp 확정)·T2.13·T2.12, 커밋 `b124681`·`15b6a78` |
-| 4 | K 체크포인트·스킬 | `feat/m3-k-checkpoint` | 완료, 병합 대기 | — | T3.10·T3.15·T6.1, 커밋 `31f0308`·`39e9f99`·`8b57003`·`2b655f7` |
-| 4 | V 검수 스튜디오 | `feat/m4-v-review` | 완료, 병합 대기 | — | T4.10·T4.11·T4.12·T4.13·T4.14·T4.21, 커밋 `5982dbf`·`0918227`·`04d45e6`·`ac06a12`·`e4c94e6`·`684c510` |
-| 4 | X Export 워커 | `feat/m5-x-export` | 완료, 병합 대기 | — | T5.1·T5.3·T5.4·T5.5·T5.6·T5.8, 커밋 `bcd4a04`·`2df8309`·`13a274a`·`8a9d8f8`·`8fd5294`·`0c7e509` |
+| 4 | F 에이전트 프런트 | `feat/m2-f-agent-ui` | 병합 완료 | `6492cd5` | T2.7·T2.8·T2.9 |
+| 4 | E2 호스트 후속 | `feat/m2-e2-host-followup` | 병합 완료 | `6daac8a` | T2.10 판정(rmcp 확정)·T2.13·T2.12 |
+| 4 | K 체크포인트·스킬 | `feat/m3-k-checkpoint` | 병합 완료 | `2682d41` | T3.10·T3.15·T6.1 |
+| 4 | V 검수 스튜디오 | `feat/m4-v-review` | 병합 완료 | `886b80f` | T4.10·T4.11·T4.12·T4.13·T4.14·T4.21, notify 8.2.0 추가 |
+| 4 | X Export 워커 | `feat/m5-x-export` | 병합 완료 | `aaac3eb` | T5.1·T5.3·T5.4·T5.5·T5.6·T5.8 |

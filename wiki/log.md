@@ -151,3 +151,6 @@
 
 ## [2026-09-29] wave4 | V review-studio done
 - Lane V (T4.10, T4.11, T4.12, T4.13, T4.14, T4.21) done, awaiting merge. E2E run-review-preview.mjs PASS. New dep: notify 8.2.0. T4.14 checkpoint hookup left for T3.11 lane. All 5 wave-4 lanes now complete. See: [[parallel-execution]]
+
+## [2026-09-29] wave4 | merged into feat/m2-agents
+- All 5 lanes merged (K 2682d41, E2 6daac8a, X aaac3eb, V 886b80f, F 6492cd5). Conflicts: i18n ko/en only, kept both prefixes. Fix: raw NUL in ParamsPanel.tsx replaced with unicode escapes. Verification: lint pass, typecheck pass, vitest 68 files 484 tests pass, cargo 137 pass 0 fail 4 ignored. See: [[parallel-execution]]
