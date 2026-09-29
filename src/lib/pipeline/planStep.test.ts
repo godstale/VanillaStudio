@@ -4,8 +4,10 @@ import designSample from '@/lib/design/__fixtures__/DESIGN.md?raw';
 import type { StopReason } from '@/lib/agents/types';
 import {
   PLAN_MAX_RETRIES,
+  approvePlan,
   buildPlanRequest,
   buildPlanRetry,
+  requestPlanRevision,
   runPlanFlow,
   validatePlanArtifacts,
   type PlanArtifactSnapshot,
@@ -58,6 +60,75 @@ describe('plan prompts', () => {
     const text = buildPlanRetry({ locale: 'en', errors: ['plan/plan.json: scenes: required'] });
     expect(text).toContain('plan/plan.json: scenes: required');
     expect(text).toContain('in English');
+  });
+});
+
+describe('approvePlan', () => {
+  it('inits, commits and marks approved', async () => {
+    const calls: string[] = [];
+    const outcome = await approvePlan({
+      ensureInit: async () => {
+        calls.push('init');
+      },
+      commit: async (message: string) => {
+        calls.push(`commit:${message}`);
+        return 'abc123';
+      },
+      markApproved: (checkpoint: string | null) => {
+        calls.push(`approved:${checkpoint}`);
+        return { ok: true };
+      },
+    });
+    expect(outcome).toEqual({ ok: true, checkpoint: 'abc123' });
+    expect(calls).toEqual(['init', 'commit:plan approved', 'approved:abc123']);
+  });
+
+  it('reports a checkpoint failure', async () => {
+    const outcome = await approvePlan({
+      ensureInit: async () => {
+        throw new Error('no git');
+      },
+      commit: async () => 'never',
+      markApproved: () => ({ ok: true }),
+    });
+    expect(outcome).toEqual({ ok: false, stage: 'checkpoint', error: 'no git' });
+  });
+
+  it('reports a locked transition', async () => {
+    const outcome = await approvePlan({
+      ensureInit: async () => undefined,
+      commit: async () => 'abc123',
+      markApproved: () => ({ ok: false, reason: 'locked' }),
+    });
+    expect(outcome).toEqual({ ok: false, stage: 'transition', error: 'locked' });
+  });
+});
+
+describe('requestPlanRevision', () => {
+  it('sends the comment and reopens the stage', async () => {
+    const send = vi.fn<(text: string) => Promise<StopReason>>(async () => 'end_turn');
+    const outcome = await requestPlanRevision(
+      { send, reopen: () => ({ ok: true }) },
+      { locale: 'ko', userInput: 'Add a second scene.' },
+    );
+    expect(outcome).toEqual({ ok: true, reopened: true });
+    expect(send.mock.calls[0]?.[0]).toContain('Add a second scene.');
+  });
+
+  it('rejects an empty comment without sending', async () => {
+    const send = vi.fn<(text: string) => Promise<StopReason>>(async () => 'end_turn');
+    const outcome = await requestPlanRevision({ send, reopen: () => ({ ok: true }) }, { locale: 'ko', userInput: '  ' });
+    expect(outcome).toEqual({ ok: false, stage: 'send', error: 'empty-comment' });
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it('treats an unapproved stage as sent but not reopened', async () => {
+    const send = vi.fn<(text: string) => Promise<StopReason>>(async () => 'end_turn');
+    const outcome = await requestPlanRevision(
+      { send, reopen: () => ({ ok: false, reason: 'no-change' }) },
+      { locale: 'ko', userInput: 'Fix the tone.' },
+    );
+    expect(outcome).toEqual({ ok: true, reopened: false });
   });
 });
 

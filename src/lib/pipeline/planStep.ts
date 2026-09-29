@@ -74,6 +74,69 @@ export function buildPlanRetry(input: PlanRequestInput & { errors: string[] }): 
   return assemblePrompt({ kind: 'plan', ...input, errors: input.errors });
 }
 
+export interface PlanApprovalDeps {
+  /** checkpointInit 래퍼. 승인 흐름 진입 전에 1회(멱등). */
+  ensureInit: () => Promise<void>;
+  /** checkpointCommit 래퍼. 커밋 id를 돌려준다. */
+  commit: (message: string) => Promise<string>;
+  /** 파이프라인 plan → approved 전이. */
+  markApproved: (checkpoint: string | null) => { ok: true } | { ok: false; reason: string };
+}
+
+export type PlanApprovalOutcome =
+  | { ok: true; checkpoint: string }
+  | { ok: false; stage: 'checkpoint' | 'transition'; error: string };
+
+/**
+ * Plan 승인: 체크포인트 보장 → 자동 커밋 → 다음 단계 활성화.
+ * checkpointInit/checkpointCommit 래퍼(src/lib/project/checkpoint.ts)를 넘긴다.
+ */
+export async function approvePlan(
+  deps: PlanApprovalDeps,
+  message = 'plan approved',
+): Promise<PlanApprovalOutcome> {
+  try {
+    await deps.ensureInit();
+  } catch (e) {
+    return { ok: false, stage: 'checkpoint', error: e instanceof Error ? e.message : String(e) };
+  }
+  let checkpoint: string;
+  try {
+    checkpoint = await deps.commit(message);
+  } catch (e) {
+    return { ok: false, stage: 'checkpoint', error: e instanceof Error ? e.message : String(e) };
+  }
+  const moved = deps.markApproved(checkpoint);
+  if (!moved.ok) return { ok: false, stage: 'transition', error: moved.reason };
+  return { ok: true, checkpoint };
+}
+
+export interface PlanRevisionDeps {
+  /** 에이전트에 수정 요청 전송. useAgentSession().sendPrompt를 그대로 넘긴다. */
+  send: (text: string) => Promise<StopReason>;
+  /** 파이프라인 plan → draft 전이(뒤 단계 승인 무효화). 미승인 상태의 no-change는 무시한다. */
+  reopen: () => { ok: true } | { ok: false; reason: string };
+}
+
+export type PlanRevisionOutcome =
+  | { ok: true; reopened: boolean }
+  | { ok: false; stage: 'send'; error: string };
+
+/** Plan 수정 요청: 코멘트를 에이전트에 보내고 단계를 다시 연다. */
+export async function requestPlanRevision(
+  deps: PlanRevisionDeps,
+  input: PlanRequestInput,
+): Promise<PlanRevisionOutcome> {
+  const comment = input.userInput?.trim() ?? '';
+  if (comment === '') return { ok: false, stage: 'send', error: 'empty-comment' };
+  try {
+    await deps.send(buildPlanRequest(input));
+  } catch (e) {
+    return { ok: false, stage: 'send', error: e instanceof Error ? e.message : String(e) };
+  }
+  const moved = deps.reopen();
+  return { ok: true, reopened: moved.ok };
+}
 export interface PlanFlowDeps {
   /** 에이전트에 프롬프트 전송. useAgentSession().sendPrompt를 그대로 넘긴다. */
   send: (text: string) => Promise<StopReason>;
