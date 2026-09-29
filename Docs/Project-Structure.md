@@ -114,5 +114,5 @@
 | `resources/project-template/`, `resources/design/` | 새 프로젝트 스캐폴딩 원본, 기본 DESIGN.md. `tauri.conf.json`의 `bundle.resources`로 번들 |
 | `src-tauri/src/process/` | 프로세스 실행 공통(PATHEXT·fresh PATH·Job Object·타임아웃), FFmpeg 다운로드 |
 | `src-tauri/src/commands/` | 추가: `doctor_commands`, `project_commands`, `process_commands`(앱 소유 프로세스, 고정 argv) |
-| `src/lib/templates/` | `template.json`·`palette.json` zod 스키마·파서·설치 계획(T6.2). `palette.ts`가 정본, `src/lib/design/palettes.ts`는 re-export로 정리 예정 |
+| `src/lib/templates/` | `template.json`·`palette.json` zod 스키마·파서·설치 계획(T6.2). `palette.json` 정본은 `src/lib/design/palettes.ts`, `templates/palette.ts`는 별칭 re-export |
 | `resources/skills/` | `vanilla-core` 스킬(T6.1). `tauri.conf.json`의 `bundle.resources`로 번들 |

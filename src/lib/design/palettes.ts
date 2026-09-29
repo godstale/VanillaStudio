@@ -15,9 +15,11 @@ import paperDawn from '../../../resources/palettes/paper-dawn.json';
 const slug = z.string().regex(/^[a-z0-9][a-z0-9-]*$/, 'kebab-case id');
 
 // Product-Spec §8.2 `palette.json`. Unknown keys are allowed so newer files still load.
+export const PALETTE_VERSION = 1;
+
 export const paletteFileSchema = z
   .object({
-    version: z.literal(1),
+    version: z.literal(PALETTE_VERSION),
     id: slug,
     name: z.string().trim().min(1).max(80),
     tags: z.array(z.string().trim().min(1).max(24)).max(12).default([]),

@@ -169,3 +169,6 @@
 
 ## [2026-09-29] wave5 | P pipeline-flow merged
 - Lane P (T3.6, T3.13, T3.11, T3.14) merged into feat/m2-agents (50fea64), no conflicts. Runner API (createRunner, runAll, TaskRunRecord) handed to lane R2 for T4.18. See: [[parallel-execution]]
+
+## [2026-09-29] wave5 | D2 palette merged
+- Lane D2 (T4.15, T4.16, T4.17) merged into feat/m2-agents (d23328e), no conflicts. Follow-up: unified palette.json contract on src/lib/design/palettes.ts, templates/palette.ts is now an alias re-export (both suites pass). See: [[parallel-execution]]
