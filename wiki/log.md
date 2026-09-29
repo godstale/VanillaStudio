@@ -148,3 +148,6 @@
 
 ## [2026-09-29] wave4 | X export-worker done
 - Lane X (T5.1, T5.3, T5.4, T5.5, T5.6, T5.8) done, awaiting merge. Deps added: jszip, puppeteer-core, pptxgenjs, pdf-lib (Feasibility-Risks s2.9 entry left to coordinator). Note: pipeline.test.tsx one flaky failure in lane H area, passed on rerun. See: [[parallel-execution]]
+
+## [2026-09-29] wave4 | V review-studio done
+- Lane V (T4.10, T4.11, T4.12, T4.13, T4.14, T4.21) done, awaiting merge. E2E run-review-preview.mjs PASS. New dep: notify 8.2.0. T4.14 checkpoint hookup left for T3.11 lane. All 5 wave-4 lanes now complete. See: [[parallel-execution]]
