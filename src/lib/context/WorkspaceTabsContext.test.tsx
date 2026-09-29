@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { SqlDatabase } from '@/lib/db/client';
+import type { WorkspaceTab } from '@/lib/types/workspaceTab';
 
 vi.mock('@tauri-apps/api/core', () => ({
   invoke: vi.fn().mockResolvedValue(undefined),
@@ -43,8 +44,8 @@ function useBoth() {
   return { ws: useWorkspace(), tabs: useWorkspaceTabs() };
 }
 
-const brief = { id: 'brief:main', type: 'brief', title: 'Brief', pane: 'primary' as const };
-const plan = { id: 'plan:main', type: 'plan', title: 'Plan', pane: 'primary' as const };
+const brief: WorkspaceTab = { id: 'brief:main', type: 'brief', title: 'Brief', pane: 'primary' };
+const plan: WorkspaceTab = { id: 'plan:main', type: 'plan', title: 'Plan', pane: 'primary' };
 
 async function tabsOf(root: string) {
   const db = (await import('@/lib/db/client')).getProjectDatabase(root);

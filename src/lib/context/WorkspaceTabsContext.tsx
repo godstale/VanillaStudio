@@ -107,9 +107,6 @@ export function WorkspaceTabsProvider({
   useEffect(() => {
     if (isWithoutWorkspace) return;
     let active = true;
-    setInternalTabs([]);
-    setInternalActiveTabId(null);
-    setInternalSecondaryActiveTabId(null);
     void (async () => {
       try {
         const settings = await settingsRepo.getSettings(
