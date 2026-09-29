@@ -50,7 +50,7 @@
 - [x] T2.11 PTY 폴백(portable-pty + xterm.js 탭, AGY 실행) — 대상: `src-tauri/src/commands/pty_commands.rs`, `src/components/terminal/*` · 완료 판정: AGY가 터미널 탭에서 대화 가능 · 선행: T1.8 · (F-AGT-04)
 - [x] T2.12 Codex 재검증(설치 후 `acp-probe`) + 지원 매트릭스 문서화 — 대상: `wiki/sources/poc-s3.md` 갱신 · 완료 판정: 매트릭스 표 · 선행: T2.3
 - [x] T2.13 세션 재개(loadSession) — 대상: `agent_host`, `agent_sessions` 테이블 · 완료 판정: 앱 재시작 후 이어서 대화 · 선행: T2.8 · (F-AGT-07, S)
-- [ ] T2.14 M2 마무리: 데모, `milestone-m2.md` · 선행: T2.1~T2.12
+- [x] T2.14 M2 마무리: 데모, `milestone-m2.md` · 선행: T2.1~T2.12
 
 ## M3 파이프라인 (branch: `feat/m3-pipeline`)
 
