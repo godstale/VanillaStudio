@@ -40,6 +40,9 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "resources": { "../resources/project-template": "resources/project-template" }
+    "resources": {
+      "../resources/project-template": "resources/project-template",
+      "../resources/runtime": "resources/runtime"
+    }
   }
 }

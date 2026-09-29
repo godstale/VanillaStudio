@@ -135,6 +135,38 @@ fn copy_template(
     Ok(())
 }
 
+/// Byte-for-byte copy (no placeholder substitution, no package.json rename) of the runtime package.
+fn copy_dir_plain(src: &Path, dst: &Path) -> Result<(), String> {
+    fs::create_dir_all(dst).map_err(|e| format!("mkdir {}: {e}", dst.display()))?;
+    for entry in fs::read_dir(src).map_err(|e| format!("read {}: {e}", src.display()))? {
+        let entry = entry.map_err(|e| e.to_string())?;
+        let ft = entry.file_type().map_err(|e| e.to_string())?;
+        if ft.is_symlink() {
+            return Err(format!("Runtime contains a symlink: {}", entry.path().display()));
+        }
+        let name = entry.file_name();
+        if ft.is_dir() {
+            if SKIP_DIRS.contains(&name.to_string_lossy().as_ref()) {
+                continue;
+            }
+            copy_dir_plain(&entry.path(), &dst.join(&name))?;
+        } else {
+            fs::copy(entry.path(), dst.join(&name))
+                .map_err(|e| format!("copy {}: {e}", name.to_string_lossy()))?;
+        }
+    }
+    Ok(())
+}
+
+/// The project's package.json links `@vanilla/runtime` to `./vanilla/runtime`, so scaffolding must
+/// place the runtime there or `pnpm install` fails.
+pub fn install_runtime(runtime_dir: &Path, project_dir: &Path) -> Result<(), String> {
+    if !runtime_dir.is_dir() {
+        return Err(format!("Runtime not found: {}", runtime_dir.display()));
+    }
+    copy_dir_plain(runtime_dir, &project_dir.join("vanilla").join("runtime"))
+}
+
 /// Copy `template_dir` into `<parent_dir>/<folder_name>`.
 /// The new folder must not exist (or be an empty directory) and must stay inside `parent_dir`
 /// after symlinks are resolved. `manifest_json` (validated by the frontend) replaces vanilla.json.
@@ -238,22 +270,19 @@ pub fn scaffold_from_template(
     }
 }
 
-fn resolve_template_dir<R: Runtime>(app: &AppHandle<R>) -> Result<PathBuf, String> {
+fn resolve_resource_dir<R: Runtime>(app: &AppHandle<R>, name: &str) -> Result<PathBuf, String> {
     if let Ok(res) = app.path().resource_dir() {
-        let p = res.join("resources").join("project-template");
+        let p = res.join("resources").join(name);
         if p.is_dir() {
             return Ok(p);
         }
     }
     // dev fallback: repo checkout
-    let dev = Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("..")
-        .join("resources")
-        .join("project-template");
+    let dev = Path::new(env!("CARGO_MANIFEST_DIR")).join("..").join("resources").join(name);
     if dev.is_dir() {
         return dev.canonicalize().map_err(|e| e.to_string());
     }
-    Err("Project template resources not found".into())
+    Err(format!("Resources not found: {name}"))
 }
 
 /// `canonicalize` yields `\\?\C:\...` on Windows; the frontend uses this path as the workspace
@@ -289,19 +318,26 @@ pub fn scaffold_project<R: Runtime>(
     project_name: String,
     manifest_json: String,
 ) -> Result<ScaffoldResult, String> {
-    let template = resolve_template_dir(&app)?;
+    let template = resolve_resource_dir(&app, "project-template")?;
+    let runtime = resolve_resource_dir(&app, "runtime")?;
     let created_at = serde_json::from_str::<serde_json::Value>(&manifest_json)
         .ok()
         .and_then(|v| v.get("createdAt").and_then(|c| c.as_str().map(String::from)))
         .unwrap_or_default();
-    scaffold_from_template(
+    let mut result = scaffold_from_template(
         &template,
         Path::new(&parent_dir),
         &folder_name,
         &project_name,
         &manifest_json,
         &created_at,
-    )
+    )?;
+    if let Err(e) = install_runtime(&runtime, Path::new(&result.path)) {
+        let _ = fs::remove_dir_all(&result.path);
+        return Err(e);
+    }
+    result.files.push("vanilla/runtime/".into());
+    Ok(result)
 }
 
 #[cfg(test)]
@@ -321,6 +357,23 @@ mod tests {
 
     fn manifest(name: &str) -> String {
         format!(r#"{{"version":1,"name":"{name}","createdAt":"2026-01-01T00:00:00.000Z"}}"#)
+    }
+
+    #[test]
+    fn install_runtime_copies_package_verbatim_without_rename() {
+        let runtime = Path::new(env!("CARGO_MANIFEST_DIR")).join("../resources/runtime");
+        let tmp = tempfile::tempdir().unwrap();
+        install_runtime(&runtime, tmp.path()).unwrap();
+        let pkg = fs::read_to_string(tmp.path().join("vanilla/runtime/package.json")).unwrap();
+        assert!(pkg.contains("\"@vanilla/runtime\""), "package name must stay @vanilla/runtime");
+        assert!(tmp.path().join("vanilla/runtime/vite.js").is_file());
+        assert!(!tmp.path().join("vanilla/runtime/node_modules").exists());
+    }
+
+    #[test]
+    fn install_runtime_rejects_missing_source() {
+        let tmp = tempfile::tempdir().unwrap();
+        assert!(install_runtime(&tmp.path().join("nope"), tmp.path()).is_err());
     }
 
     #[test]
