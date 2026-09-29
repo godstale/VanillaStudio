@@ -2,6 +2,7 @@ pub mod agent_host;
 pub mod commands;
 pub mod mcp_server;
 pub mod process;
+pub mod watch;
 
 use commands::agent_commands::*;
 use commands::doctor_commands::*;
@@ -11,6 +12,7 @@ use commands::process_commands::*;
 use commands::pty_commands::*;
 use commands::search_commands::*;
 use commands::shell_commands::*;
+use watch::{start_preview_watch, stop_preview_watch};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -67,6 +69,10 @@ pub fn run() {
             checkpoint_history,
             install_project_deps,
             install_project_deps_cancel,
+            start_preview_server,
+            stop_preview_server,
+            start_preview_watch,
+            stop_preview_watch,
             pty_start,
             pty_write,
             pty_resize,
