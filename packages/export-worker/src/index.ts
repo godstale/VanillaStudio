@@ -19,3 +19,5 @@ export { runExport, spawnFixed } from './run';
 export type { SpawnOptions, SpawnResult, StepContext, Steps } from './run';
 export { exportWeb, resolveViteBin, runViteBuild, ZIP_EPOCH, zipDirectory } from './web';
 export type { ViteBuildOptions, WebDeps } from './web';
+export { buildShotUrl, captureShots, launchManagedBrowser, resolveChromeExecutable, serveStatic } from './capture';
+export type { CaptureOptions, LaunchBrowser, ScreenshotType, Shot, ShotBrowser, ShotPage, StaticServer } from './capture';
