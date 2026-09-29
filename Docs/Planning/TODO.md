@@ -110,7 +110,7 @@ M4b 검수 스튜디오
 - [x] T5.5 image export(PNG/JPG/WebP, 변형 일괄) — 대상: `packages/export-worker/src/image.ts` · 완료 판정: 규격·배율별 파일 · 선행: T5.4 · (F-EXP-03)
 - [x] T5.6 slides 이미지 PPTX + PDF — 대상: `packages/export-worker/src/slides.ts` · 완료 판정: `verify-pptx.ps1`로 장수·크기 확인 · 선행: T5.4 · (F-EXP-04)
 - [ ] T5.7 편집 PPTX(Beta): 번들 벤더링, `exportToPptx`, `wrap` 후처리, 폰트 파일·안내 동봉 — 대상: `packages/export-worker/src/slidesEditable.ts`, `resources/workers/vendor/dom-to-pptx.bundle.js` · 완료 판정: PowerPoint에서 텍스트 편집 가능·겹침 없음 · 선행: T5.6 · (F-EXP-05)
-- [ ] T5.8 video: render 빌드 → HyperFrames render(`--workers` 메모리 기준, `data-no-timeline`) → MP4/WebM + 포스터 — 대상: `packages/export-worker/src/video.ts` · 완료 판정: 샘플 15초 1080p MP4, 두 번 렌더 동일 · 선행: T4.2, T4.3, T1.10 · (F-EXP-06)
+- [x] T5.8 video: render 빌드 → HyperFrames render(`--workers` 메모리 기준, `data-no-timeline`) → MP4/WebM + 포스터 — 대상: `packages/export-worker/src/video.ts` · 완료 판정: 샘플 15초 1080p MP4, 두 번 렌더 동일 · 선행: T4.2, T4.3, T1.10 · (F-EXP-06)
 - [ ] T5.9 export 옵션 다이얼로그(유형별) — 대상: `src/components/export/ExportDialog.tsx` · 완료 판정: 유형별 옵션 저장 · 선행: T5.2
 - [ ] T5.10 임베드 패키지(ES 모듈 + Web Component + React 래퍼) — 대상: `packages/export-worker/src/embed.ts` · 완료 판정: 외부 HTML에서 `<vanilla-scene>` 동작 · 선행: T5.3 · (F-EXP-02, S)
 - [ ] T5.11 M5 마무리: 5개 형식 데모, `milestone-m5.md` · 선행: T5.1~T5.9
