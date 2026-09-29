@@ -1,6 +1,7 @@
 pub mod commands;
 pub mod process;
 
+use commands::doctor_commands::*;
 use commands::fs_commands::*;
 use commands::search_commands::*;
 use commands::shell_commands::*;
@@ -49,6 +50,7 @@ pub fn run() {
             grep_files,
             find_files,
             run_shell,
+            doctor_check,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
