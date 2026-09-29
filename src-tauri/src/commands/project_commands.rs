@@ -222,7 +222,7 @@ pub fn scaffold_from_template(
         }
         files.sort();
         Ok(ScaffoldResult {
-            path: canonical.to_string_lossy().to_string(),
+            path: display_path(&canonical),
             files,
         })
     };
@@ -254,6 +254,16 @@ fn resolve_template_dir<R: Runtime>(app: &AppHandle<R>) -> Result<PathBuf, Strin
         return dev.canonicalize().map_err(|e| e.to_string());
     }
     Err("Project template resources not found".into())
+}
+
+/// `canonicalize` yields `\\?\C:\...` on Windows; the frontend uses this path as the workspace
+/// root (DB path, recent list, scope checks), so hand it back in the plain form.
+fn display_path(p: &Path) -> String {
+    let s = p.to_string_lossy();
+    match s.strip_prefix(r"\\?\") {
+        Some(rest) if !rest.starts_with(r"UNC\") => rest.to_string(),
+        _ => s.to_string(),
+    }
 }
 
 /// Canonical directory to open in the asset protocol scope, or None when `path` is not a directory.
@@ -297,6 +307,13 @@ pub fn scaffold_project<R: Runtime>(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn display_path_strips_verbatim_prefix_only_for_drive_paths() {
+        assert_eq!(display_path(Path::new(r"\\?\C:\a\b")), r"C:\a\b");
+        assert_eq!(display_path(Path::new(r"\\?\UNC\srv\share")), r"\\?\UNC\srv\share");
+        assert_eq!(display_path(Path::new(r"C:\a")), r"C:\a");
+    }
 
     fn template() -> PathBuf {
         Path::new(env!("CARGO_MANIFEST_DIR")).join("../resources/project-template")

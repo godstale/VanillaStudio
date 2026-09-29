@@ -125,8 +125,8 @@ export class MemorySqlFallback implements SqlDatabase {
 
 let activeWorkspaceRoot: string | null = null;
 let mockDb: SqlDatabase | null = null;
-let globalDb: SqlDatabase | null = null;
 let globalMigrationDone = false;
+const projectInits = new Map<string, Promise<SqlDatabase>>();
 const projectDbs = new Map<string, SqlDatabase>();
 
 export function setActiveWorkspaceRoot(root: string | null): void {
@@ -154,6 +154,21 @@ function isTauriEnvironment(): boolean {
   return typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
 }
 
+// Concurrent callers (several providers mount at once) must share one open+migrate, otherwise
+// their migration statements race and SQLite reports "database is locked".
+let globalInit: Promise<SqlDatabase> | null = null;
+
+async function initGlobalDatabase(): Promise<SqlDatabase> {
+  if (!isTauriEnvironment()) {
+    const memDb = new MemorySqlFallback();
+    await runMigrations(memDb, 'global');
+    return memDb;
+  }
+  const db = await Database.load('sqlite:app.db');
+  await runMigrations(db, 'global');
+  return db;
+}
+
 export async function getGlobalDatabase(): Promise<SqlDatabase> {
   if (mockDb) {
     if (!globalMigrationDone) {
@@ -162,24 +177,19 @@ export async function getGlobalDatabase(): Promise<SqlDatabase> {
     }
     return mockDb;
   }
-  if (globalDb) {
-    if (!globalMigrationDone) {
-      await runMigrations(globalDb, 'global');
-      globalMigrationDone = true;
-    }
-    return globalDb;
+  if (!globalInit) {
+    globalInit = initGlobalDatabase().then(
+      (db) => {
+        globalMigrationDone = true;
+        return db;
+      },
+      (err) => {
+        globalInit = null;
+        throw err;
+      },
+    );
   }
-  if (!isTauriEnvironment()) {
-    globalDb = new MemorySqlFallback();
-    await runMigrations(globalDb, 'global');
-    globalMigrationDone = true;
-    return globalDb;
-  }
-  const db = await Database.load('sqlite:app.db');
-  globalDb = db;
-  await runMigrations(db, 'global');
-  globalMigrationDone = true;
-  return db;
+  return globalInit;
 }
 
 export async function getProjectDatabase(
@@ -205,10 +215,28 @@ export async function getProjectDatabase(
   if (cached) {
     return cached;
   }
+  let init = projectInits.get(root);
+  if (!init) {
+    init = initProjectDatabase(root).then(
+      (db) => {
+        projectDbs.set(root, db);
+        projectInits.delete(root);
+        return db;
+      },
+      (err) => {
+        projectInits.delete(root);
+        throw err;
+      },
+    );
+    projectInits.set(root, init);
+  }
+  return init;
+}
+
+async function initProjectDatabase(root: string): Promise<SqlDatabase> {
   if (!isTauriEnvironment()) {
     const memDb = new MemorySqlFallback();
     await runMigrations(memDb, 'project');
-    projectDbs.set(root, memDb);
     return memDb;
   }
   try {
@@ -224,7 +252,6 @@ export async function getProjectDatabase(
     `sqlite:${normalized}/${PROJECT_DATA_DIR}/app.db`,
   );
   await runMigrations(db, 'project');
-  projectDbs.set(root, db);
   return db;
 }
 
