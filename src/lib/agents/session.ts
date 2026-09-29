@@ -114,6 +114,21 @@ export function defaultAgent(agents: AgentEntry[]): AgentEntry {
   return agents.find((a) => a.isDefault && a.enabled) ?? agents[0];
 }
 
+/** First pending request: the active session wins, otherwise creation order. */
+export function firstPending(
+  store: AgentStoreState,
+): { sessionId: string; request: PendingPermission } | null {
+  const active = store.activeSessionId ? store.sessions[store.activeSessionId] : undefined;
+  const first = active?.pendingPermissions[0];
+  if (active && first) return { sessionId: active.sessionId, request: first };
+  for (const id of store.order) {
+    const session = store.sessions[id];
+    const next = session?.pendingPermissions[0];
+    if (session && next) return { sessionId: session.sessionId, request: next };
+  }
+  return null;
+}
+
 /** Type guard for the event union, narrowed for reducer switches. */
 export function isAgentEvent(value: unknown): value is AgentEvent {
   return (

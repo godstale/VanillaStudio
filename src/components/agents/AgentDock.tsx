@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Bot, ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { AgentPanel } from '@/components/agents/AgentPanel';
+import { PermissionDialog } from '@/components/agents/PermissionDialog';
 import { cn } from '@/lib/utils';
 
 // Right dock: collapsible agent conversation column. It owns its open state so
@@ -51,6 +52,7 @@ export function AgentDock() {
         </button>
       </div>
       <AgentPanel />
+      <PermissionDialog />
     </aside>
   );
 }
