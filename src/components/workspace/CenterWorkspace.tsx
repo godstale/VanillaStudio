@@ -23,6 +23,7 @@ import { TerminalTab } from '@/components/terminal/TerminalTab';
 import { BriefEditor } from '@/components/pipeline/brief/BriefEditor';
 import { DesignTab } from '@/components/design/DesignTab';
 import { ReviewTab } from '@/components/review/ReviewTab';
+import { ExportTab } from '@/components/export/ExportTab';
 import { PlanViewer } from '@/components/pipeline/plan/PlanViewer';
 import { WelcomeGuide } from '@/components/workspace/WelcomeGuide';
 import { cn } from '@/lib/utils';
@@ -57,8 +58,9 @@ function renderTabContent(tab: WorkspaceTab) {
       return <DesignTab />;
     case 'review':
       return <ReviewTab />;
-    case 'prompts':
     case 'export':
+      return <ExportTab />;
+    case 'prompts':
       return <EmptyTabView tab={tab} />;
     default:
       return null;

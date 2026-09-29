@@ -579,6 +579,21 @@ const ko = {
   'agentPanel.permission.allowOnce': '이번만 허용',
   'agentPanel.permission.rejectOnce': '거부',
   'agentPanel.permission.dismiss': '닫기',
+
+  'export.panel.title': '내보내기 작업',
+  'export.panel.empty': '아직 내보내기 작업이 없습니다. 내보내기 탭에서 새 작업을 시작하세요.',
+  'export.panel.noProject': '프로젝트 폴더를 열면 내보내기 작업을 시작할 수 있습니다.',
+  'export.panel.clearFinished': '완료된 작업 지우기',
+  'export.status.queued': '대기 중',
+  'export.status.running': '실행 중',
+  'export.status.done': '완료',
+  'export.status.failed': '실패',
+  'export.status.cancelled': '취소됨',
+  'export.job.cancel': '취소',
+  'export.job.logs': '로그',
+  'export.job.files': '결과 파일',
+  'export.job.progress': '{percent}% · {step}',
+  'export.job.error': '오류: {error}',
 };
 
 export type Dict = typeof ko;

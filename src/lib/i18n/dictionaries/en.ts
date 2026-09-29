@@ -582,6 +582,21 @@ const en: Dict = {
   'agentPanel.permission.allowOnce': 'Allow once',
   'agentPanel.permission.rejectOnce': 'Deny',
   'agentPanel.permission.dismiss': 'Dismiss',
+
+  'export.panel.title': 'Export jobs',
+  'export.panel.empty': 'No export jobs yet. Start a new job from the Export tab.',
+  'export.panel.noProject': 'Open a project folder to start exporting.',
+  'export.panel.clearFinished': 'Clear finished jobs',
+  'export.status.queued': 'Queued',
+  'export.status.running': 'Running',
+  'export.status.done': 'Done',
+  'export.status.failed': 'Failed',
+  'export.status.cancelled': 'Cancelled',
+  'export.job.cancel': 'Cancel',
+  'export.job.logs': 'Logs',
+  'export.job.files': 'Output files',
+  'export.job.progress': '{percent}% · {step}',
+  'export.job.error': 'Error: {error}',
 };
 
 export default en;

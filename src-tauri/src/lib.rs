@@ -6,6 +6,7 @@ pub mod watch;
 
 use commands::agent_commands::*;
 use commands::doctor_commands::*;
+use commands::export_commands::*;
 use commands::fs_commands::*;
 use commands::project_commands::*;
 use commands::process_commands::*;
@@ -85,6 +86,8 @@ pub fn run() {
             cancel_agent_prompt,
             respond_agent_permission,
             close_agent_session,
+            start_export_job,
+            cancel_export_job,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
