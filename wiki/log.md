@@ -202,3 +202,9 @@
 
 ## [2026-09-30] wave6 | Q3 playground merged
 - Lane Q3 (T6.8, T6.10) merged into feat/m2-agents (8ed3c1b). Conflicts: TODO checkboxes and i18n ko/en, kept both. Accepted: playground as DB reference index (app state per design s8.1; copy_to_playground Rust cmd may follow), 0004 migration file approach. See: [[parallel-execution]]
+
+## [2026-09-30] milestone | M5 export done (lane O: T5.10+T5.11)
+- Lane O done: T5.10 `embed.ts` (ES module + `<vanilla-scene>` + React wrapper, headless-Chrome verified), T5.11 demo 4/5 auto-pass (web zip, image variants + determinism, slides PPTX 3 / PDF 3p, embed). Video MP4 environment-blocked (workers:2 stall, workers:1 frame-0 stall / localhost blip) → T7.2. Handoffs to wave 7: slidesEditable evaluate-string bug, runViteBuild/Rust cwd unset, vanilla-export.mjs bundle unwired. Wrote [[milestone-m5]].
+
+## [2026-09-30] lint | Wiki health check
+- 50 pages, orphans 1 (`milestone-m5` — inbound from `overview.md` pending, coordinator links at merge), broken links 0. → `wiki/lint-report.md`

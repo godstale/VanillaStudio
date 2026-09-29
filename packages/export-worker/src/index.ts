@@ -19,6 +19,17 @@ export { runExport, spawnFixed } from './run';
 export type { SpawnOptions, SpawnResult, StepContext, Steps } from './run';
 export { exportWeb, resolveViteBin, runViteBuild, ZIP_EPOCH, zipDirectory } from './web';
 export type { ViteBuildOptions, WebDeps } from './web';
+export {
+  EMBED_ELEMENT,
+  EMBED_EXAMPLE_FILE,
+  EMBED_MODULE_FILE,
+  REACT_WRAPPER_FILE,
+  buildEmbedExample,
+  buildEmbedModule,
+  buildReactWrapper,
+  exportEmbed,
+} from './embed';
+export type { EmbedDeps } from './embed';
 export { buildShotUrl, captureShots, launchManagedBrowser, resolveChromeExecutable, serveStatic } from './capture';
 export type { CaptureOptions, LaunchBrowser, ScreenshotType, Shot, ShotBrowser, ShotPage, StaticServer } from './capture';
 export { exportImageShots } from './image';
