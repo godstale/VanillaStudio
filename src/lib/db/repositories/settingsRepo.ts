@@ -47,7 +47,7 @@ async function fetchOrInitRow(db: SqlDatabase): Promise<SettingsRow> {
     return rows[0];
   }
   await db.execute(
-    `INSERT INTO app_settings (
+    `INSERT OR IGNORE INTO app_settings (
       id, open_tabs, active_tab_id, theme, language,
       trusted_workspaces, last_workspace_root
     ) VALUES (?, ?, ?, ?, ?, ?, ?)`,

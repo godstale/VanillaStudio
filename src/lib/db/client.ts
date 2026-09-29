@@ -66,7 +66,10 @@ export class MemorySqlFallback implements SqlDatabase {
     ) {
       return { rowsAffected: 0 };
     }
-    if (q.startsWith('INSERT INTO app_settings')) {
+    if (
+      q.startsWith('INSERT INTO app_settings') ||
+      q.startsWith('INSERT OR IGNORE INTO app_settings')
+    ) {
       const [
         id,
         open_tabs,
@@ -76,6 +79,12 @@ export class MemorySqlFallback implements SqlDatabase {
         trusted_workspaces,
         last_workspace_root,
       ] = bindValues;
+      if (
+        q.startsWith('INSERT OR IGNORE') &&
+        this.tables.get('app_settings')?.has(id as string)
+      ) {
+        return { rowsAffected: 0 };
+      }
       this.tables.get('app_settings')?.set(id as string, {
         id,
         open_tabs,
