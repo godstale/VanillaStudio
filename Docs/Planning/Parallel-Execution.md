@@ -254,3 +254,13 @@ Vanilla Studio P4 구현, 레인 {{LANE}}을 수행하라.
 | 2 | B′ Doctor UI·설치 | `feat/m1-b2-doctor-ui` | 병합 완료 | `7ac1c99` | 마법사 연결은 조정 세션 |
 | 2 | C′ 스캐폴딩·마법사 | `feat/m1-c2-scaffold` | 병합 완료 | `93d6fe0` | |
 | — | M1 마무리(T1.18) | `feat/m1-foundation` → main | 완료, main 병합 승인 대기 | — | 사용자 확인 |
+| 3 | S 셸 이월 | `feat/m1-s-shell-fixes` | 병합 완료 | — | `feat/m2-agents`에 병합 |
+| 3 | G MCP·PTY | `feat/m2-g-mcp-pty` | 병합 완료 | — | `feat/m2-agents`에 병합 |
+| 3 | E 에이전트 호스트 | `feat/m2-e-host` | 병합 완료 | `2876209` | T2.1~T2.6 |
+| 3 | R 런타임·워커 | `feat/m4-r-runtime` | 병합 완료 | — | T4.9·T3.7, `feat/m2-agents`에 병합 |
+| 3 | H 파이프라인 UI | `feat/m3-h-pipeline` | 병합 완료 | `e961560` | `feat/m2-agents`에 병합 |
+| 4 | F 에이전트 프런트 | `feat/m2-f-agent-ui` | 진행 중 | — | T2.7→T2.8→T2.9, 재개됨(2026-09-29) |
+| 4 | E2 호스트 후속 | `feat/m2-e2-host-followup` | 완료, 병합 대기 | — | T2.10 판정(rmcp 확정)·T2.13·T2.12, 커밋 `b124681`·`15b6a78` |
+| 4 | K 체크포인트·스킬 | `feat/m3-k-checkpoint` | 진행 중 | — | T3.10→T3.15→T6.1, 재개됨(2026-09-29) |
+| 4 | V 검수 스튜디오 | `feat/m4-v-review` | 진행 중 | — | T4.10 커밋됨, T4.11~ 진행 중, 재개됨(2026-09-29) |
+| 4 | X Export 워커 | `feat/m5-x-export` | 진행 중 | — | T5.1→T5.3→T5.4→T5.5→T5.6→T5.8, 재개됨(2026-09-29) |

@@ -133,3 +133,9 @@
 
 ## [2026-09-29] lint | Wiki health check
 - orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] wave4 | E2 host follow-up done
+- Lane E2 (T2.10 verdict, T2.13, T2.12) done, awaiting merge. T2.10 verdict: Rust rmcp+axum, Node sidecar rejected. Server name vanilla-tools fixed. Doc updates requested: Implementation-Plan.md s6 MCP warning removal, Technical-Design.md s3.2 stale mcp prefix, Started.resumed mirror passed to lane F. See: [[parallel-execution]]
+
+## [2026-09-29] lint | Wiki health check
+- Ran lint. See lint-report.md for details.
