@@ -195,9 +195,15 @@ importers:
       '@react-three/fiber':
         specifier: ^9.8.1
         version: 9.8.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(three@0.179.1)
+      '@types/estree':
+        specifier: ^1.0.9
+        version: 1.0.9
       '@types/three':
         specifier: ^0.179.0
         version: 0.179.0
+      eslint:
+        specifier: ^10.11.0
+        version: 10.11.0(jiti@1.21.7)
       react:
         specifier: ^19.1.0
         version: 19.3.0
@@ -207,6 +213,9 @@ importers:
       three:
         specifier: ^0.179.1
         version: 0.179.1
+      typescript-eslint:
+        specifier: ^8.70.1
+        version: 8.70.1(eslint@10.11.0(jiti@1.21.7))(typescript@5.8.3)
 
 packages:
 

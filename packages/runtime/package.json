@@ -4,6 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./vite": "./vite.ts",
+    "./eslint-plugin": "./eslint-plugin/index.ts",
+    "./design": "./src/designFile.tsx"
+  },
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
@@ -12,15 +18,19 @@
   },
   "devDependencies": {
     "@react-three/fiber": "^9.8.1",
+    "@types/estree": "^1.0.9",
     "@types/three": "^0.179.0",
+    "eslint": "^10.11.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "three": "^0.179.1"
+    "three": "^0.179.1",
+    "typescript-eslint": "^8.70.1"
   },
   "peerDependencies": {
+    "@react-three/fiber": "^9.3.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "three": "^0.179.0",
-    "@react-three/fiber": "^9.3.0"
+    "eslint": "^10.0.0"
   }
 }
