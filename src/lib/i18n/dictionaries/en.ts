@@ -124,7 +124,7 @@ const en: Dict = {
   'settingsApp.desc': 'Manage workspace data and layout.',
   'settingsApp.storage': 'Storage',
   'settingsApp.storageDesc':
-    'Project data lives in .app-data/app.db inside the folder; shared settings live in the global DB.',
+    'Project data lives in .vanilla/app.db inside the folder; shared settings live in the global DB.',
   'settingsApp.resetLayout': 'Reset layout',
   'settingsApp.resetLayoutDesc': 'Close all open tabs and split state.',
   'settingsApp.resetLayoutDone': 'Layout has been reset.',

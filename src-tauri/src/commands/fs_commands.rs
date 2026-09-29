@@ -34,9 +34,9 @@ pub fn ensure_app_dir(workspace_root: String) -> Result<String, String> {
     if !ws_path.is_dir() {
         return Err(format!("Workspace root is not a valid directory: {}", workspace_root));
     }
-    let app_dir = ws_path.join(".app-data");
+    let app_dir = ws_path.join(".vanilla");
     if !app_dir.exists() {
-        std::fs::create_dir_all(&app_dir).map_err(|e| format!("Failed to create .app-data dir: {}", e))?;
+        std::fs::create_dir_all(&app_dir).map_err(|e| format!("Failed to create .vanilla dir: {}", e))?;
     }
     let gitignore_path = app_dir.join(".gitignore");
     if !gitignore_path.exists() {

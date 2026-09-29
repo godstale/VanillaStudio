@@ -122,7 +122,7 @@ const ko = {
   'settingsApp.desc': '작업 공간 데이터와 레이아웃을 관리합니다.',
   'settingsApp.storage': '저장소',
   'settingsApp.storageDesc':
-    '프로젝트 데이터는 폴더 안 .app-data/app.db에, 공통 설정은 전역 DB에 저장됩니다.',
+    '프로젝트 데이터는 폴더 안 .vanilla/app.db에, 공통 설정은 전역 DB에 저장됩니다.',
   'settingsApp.resetLayout': '레이아웃 초기화',
   'settingsApp.resetLayoutDesc': '열린 탭과 분할 상태를 모두 닫습니다.',
   'settingsApp.resetLayoutDone': '레이아웃을 초기화했습니다.',
