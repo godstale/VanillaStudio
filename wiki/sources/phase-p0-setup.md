@@ -24,7 +24,7 @@ Tauri 2 + React 19 워크스페이스 스타터 템플릿에서 시작했다. �
 
 - 환경: Windows 11, Node v22.13.0, pnpm 10.32.1, rustc 1.97.1
 - `pnpm install --frozen-lockfile` 성공 / `pnpm lint` 통과 / `pnpm typecheck` 통과 / `pnpm test` 3 files·10 tests 통과
-- `pnpm tauri dev`(데스크탑 실행)는 아직 확인하지 않음 → M1 시작 시 확인
+- `pnpm tauri dev`(데스크탑 실행): 2026-09-29 M1 웨이브 0(T1.1)에서 확인. 콜드 Rust 빌드 약 1분 5초(452 crate), `app.exe` 창이 뜸(창 제목은 아직 템플릿 값 "WorkspaceTemplate" — T1.2에서 교체). 오류 없음.
 
 ## Problems & Fixes
 

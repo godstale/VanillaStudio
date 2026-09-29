@@ -121,3 +121,9 @@
 
 ## [2026-09-29] update | 기본 브랜치 이름 변경
 - `master` → `main`. AGENTS.md·구현 계획·병렬 실행 가이드·P4 프롬프트의 브랜치 이름 갱신(과거 기록은 그대로). → [[overview]]
+
+## [2026-09-29] update | M1 웨이브 0 (T1.1, T1.3)
+- `pnpm tauri dev` 기준선 확인(창 뜸, 콜드 빌드 ~1분). pnpm 워크스페이스 도입: `packages/runtime`, `packages/export-worker`(빈 패키지+스모크 테스트). 루트 typecheck에 패키지 typecheck 연결, lint·vitest는 `packages/**` 자동 포함, spikes 제외 유지. → [[phase-p0-setup]]
+
+## [2026-09-29] lint | Wiki health check
+- orphans 0, broken links 0. → `wiki/lint-report.md`
