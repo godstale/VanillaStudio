@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Check, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { EmptyPanel } from '@/components/sidepanel/EmptyPanel';
 import { PaletteLibrary } from '@/components/design/PaletteLibrary';
+import { TemplateGallery } from './TemplateGallery';
 import { useSafeWorkspace } from '@/lib/context/WorkspaceContext';
 import { useWorkspaceTabs } from '@/lib/context/WorkspaceTabsContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -60,8 +60,9 @@ function ApplyPaletteButton({ root, palette }: { root: string | null; palette: P
   );
 }
 
-// Templates side panel (Product-Spec §4.1): installed templates and the palette library
-// as sub-tabs. Template installation itself arrives with T6.2; the palette tab is live.
+// Templates side panel (Product-Spec §4.1): the built-in template gallery and
+// the palette library as sub-tabs. Full install-into-new-project wiring
+// arrives with the wizard (T6.10 follow-up); the gallery selects and previews.
 export function TemplatesPanel() {
   const { t } = useLanguage();
   const root = useSafeWorkspace()?.workspaceRoot ?? null;
@@ -108,7 +109,7 @@ export function TemplatesPanel() {
       </div>
       {tab === 'templates' ? (
         <div className="min-h-0 flex-1">
-          <EmptyPanel view="templates" />
+          <TemplateGallery />
         </div>
       ) : (
         <div className="min-h-0 flex-1 overflow-y-auto p-2">

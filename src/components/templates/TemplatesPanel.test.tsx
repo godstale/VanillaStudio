@@ -75,9 +75,12 @@ describe('TemplatesPanel', () => {
     mocks.files.set(`${ROOT}/vanilla.json`, MANIFEST);
   });
 
-  it('keeps the templates placeholder on the first tab', () => {
+  it('shows the template gallery on the first tab', () => {
     renderWithProviders(<TemplatesPanel />);
-    expect(screen.getByTestId('empty-panel-templates')).toBeTruthy();
+    expect(screen.getByTestId('template-gallery')).toBeTruthy();
+    for (const id of ['editorial-slides', 'product-showcase-video', 'kinetic-type-web']) {
+      expect(screen.getByTestId(`template-card-${id}`)).toBeTruthy();
+    }
   });
 
   it('lists built-in palettes with search and scheme filter', async () => {

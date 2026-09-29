@@ -745,6 +745,16 @@ const en: Dict = {
   'export.dialog.cancel': 'Cancel',
   'export.dialog.confirm': 'Start export',
   'export.dialog.startFailed': 'Could not start: {error}',
+
+  'templates.gallery.title': 'Template gallery',
+  'templates.gallery.search': 'Search templates… (name, description, tags)',
+  'templates.gallery.empty': 'No templates match.',
+  'templates.gallery.typeAll': 'All types',
+  'templates.gallery.tagAll': 'All tags',
+  'templates.gallery.palette': 'Palette',
+  'templates.gallery.select': 'Select',
+  'templates.gallery.selected': 'Selected',
+  'templates.gallery.templates': 'templates',
 };
 
 export default en;
