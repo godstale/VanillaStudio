@@ -5,6 +5,7 @@ import {
   PanelResizeHandle,
   type ImperativePanelHandle,
 } from 'react-resizable-panels';
+import { AgentDock } from '@/components/agents/AgentDock';
 
 export interface WorkspaceLayoutProps {
   sidePanelRef: RefObject<ImperativePanelHandle | null>;
@@ -24,11 +25,12 @@ export function WorkspaceLayout({
   centerWorkspace,
 }: WorkspaceLayoutProps) {
   return (
-    <PanelGroup
-      direction="horizontal"
-      autoSaveId="apptemplate-layout-v1"
-      className="h-full w-full overflow-hidden"
-    >
+    <div className="flex h-full w-full overflow-hidden">
+      <PanelGroup
+        direction="horizontal"
+        autoSaveId="apptemplate-layout-v1"
+        className="h-full min-w-0 flex-1 overflow-hidden"
+      >
       <Panel
         id="apptemplate-side-panel"
         order={1}
@@ -50,6 +52,8 @@ export function WorkspaceLayout({
       >
         {centerWorkspace}
       </Panel>
-    </PanelGroup>
+      </PanelGroup>
+      <AgentDock />
+    </div>
   );
 }

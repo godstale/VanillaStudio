@@ -64,6 +64,11 @@ export function SessionProvider({
         ? agents.find((a) => a.id === agentId)
         : defaultAgent(agents);
       if (!entry) throw new Error('no-agent');
+      if (entry.mode !== 'acp') {
+        const reason = 'terminal-mode';
+        setLastError(reason);
+        throw new Error(reason);
+      }
       setLastError(null);
       try {
         return await startAgentSession(
