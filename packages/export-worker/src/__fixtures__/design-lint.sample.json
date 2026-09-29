@@ -1,0 +1,18 @@
+{
+  "status": "ok",
+  "passed": true,
+  "cliVersion": "0.4.0",
+  "findings": [
+    {
+      "severity": "info",
+      "message": "Design system defines 9 colors, 3 typography scales, 1 rounding level, 3 spacing tokens, 1 component.",
+      "rule": "token-summary"
+    }
+  ],
+  "summary": {
+    "errors": 0,
+    "warnings": 0,
+    "infos": 1
+  },
+  "filtered": 5
+}
