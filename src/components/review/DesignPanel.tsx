@@ -3,6 +3,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { AlertTriangle, Loader2, RotateCcw } from 'lucide-react';
 import { ColorSwatches } from '@/components/design/DesignSummary';
 import { checkDesign } from '@/components/design/designChecks';
+import { PaletteLibrary } from '@/components/design/PaletteLibrary';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useBridge } from '@/lib/review/bridgeContextValue';
@@ -13,6 +14,7 @@ import {
   resolvePaletteColors,
   type PaletteOption,
 } from '@/lib/review/designApply';
+import { listProjectPalettes, type PaletteFile } from '@/lib/design/palettes';
 import { projectPath } from '@/lib/pipeline/briefFiles';
 import { DESIGN_PATH } from '@/lib/pipeline/planFiles';
 import { cn } from '@/lib/utils';
@@ -26,11 +28,12 @@ type ApplyState = 'idle' | 'applying' | 'applied' | 'error';
  * instant preview-only reflection through Bridge `setDesign`, contrast warnings, and
  * apply (DESIGN.md `colors` rewrite + prose hex update + checkpoint).
  */
-export function DesignPanel({ root, palettes }: { root: string; palettes: PaletteOption[] }) {
+export function DesignPanel({ root, palettes }: { root: string; palettes: PaletteFile[] }) {
   const bridge = useBridge();
   const { t } = useLanguage();
   const [original, setOriginal] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [projectPalettes, setProjectPalettes] = useState<PaletteFile[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [applyState, setApplyState] = useState<ApplyState>('idle');
   const [error, setError] = useState<string | null>(null);
@@ -53,6 +56,9 @@ export function DesignPanel({ root, palettes }: { root: string; palettes: Palett
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
+    listProjectPalettes(root).then((list) => {
+      if (!cancelled) setProjectPalettes(list);
+    });
     return () => {
       cancelled = true;
     };
@@ -60,7 +66,13 @@ export function DesignPanel({ root, palettes }: { root: string; palettes: Palett
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [root, bridge.readyCount]);
 
-  const selected = useMemo(() => palettes.find((p) => p.id === selectedId) ?? null, [palettes, selectedId]);
+  // Built-ins plus project-saved palettes; a project palette with the same id wins.
+  const library = useMemo(() => {
+    const byId = new Map(palettes.map((p) => [p.id, p]));
+    for (const p of projectPalettes) byId.set(p.id, p);
+    return [...byId.values()].sort((a, b) => a.name.localeCompare(b.name));
+  }, [palettes, projectPalettes]);
+  const selected = useMemo(() => library.find((p) => p.id === selectedId) ?? null, [library, selectedId]);
   const previewColors = useMemo(() => (selected ? resolvePaletteColors(selected.colors) : null), [selected]);
   const check = useMemo(() => checkDesign(original ?? ''), [original]);
 
@@ -72,7 +84,6 @@ export function DesignPanel({ root, palettes }: { root: string; palettes: Palett
     },
     [],
   );
-
   const apply = useCallback(async () => {
     if (!selected || applyState === 'applying') return;
     setApplyState('applying');
@@ -154,39 +165,14 @@ export function DesignPanel({ root, palettes }: { root: string; palettes: Palett
 
         <section className="space-y-2">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t('palette.library')}</h3>
-          {palettes.length === 0 ? (
+          {library.length === 0 ? (
             <p className="text-xs text-muted-foreground">{t('palette.empty')}</p>
           ) : (
-            <ul className="space-y-1.5" data-testid="design-palette-list">
-              {palettes.map((p) => {
-                const active = p.id === selectedId;
-                const roles = resolvePaletteColors(p.colors);
-                return (
-                  <li key={p.id}>
-                    <button
-                      type="button"
-                      data-testid={`palette-option-${p.id}`}
-                      aria-pressed={active}
-                      onClick={() => select(active ? null : p)}
-                      className={cn(
-                        'flex w-full items-center gap-2 rounded-md border p-2 text-left text-xs',
-                        active ? 'border-primary bg-primary/10' : 'border-border hover:bg-accent/40',
-                      )}
-                    >
-                      <span className="flex shrink-0 overflow-hidden rounded-sm border border-border" aria-hidden>
-                        {['canvas', 'ink', 'primary', 'accent'].map((role) => (
-                          <span key={role} className="h-5 w-5" style={{ backgroundColor: roles[role] }} />
-                        ))}
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate font-medium text-foreground">{p.name}</span>
-                        <span className="block font-mono text-muted-foreground">{p.id}</span>
-                      </span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
+            <PaletteLibrary
+              palettes={library}
+              selectedId={selectedId}
+              onSelect={(p) => select(p.id === selectedId ? null : p)}
+            />
           )}
           {!selected && <p className="text-xs text-muted-foreground">{t('palette.hint')}</p>}
         </section>

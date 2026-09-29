@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { BridgeContext, type BridgeContextValue } from '@/lib/review/bridgeContextValue';
 import type { ReadyInfo } from '@/lib/review/bridgeProtocol';
-import type { PaletteOption } from '@/lib/review/designApply';
+import type { PaletteFile } from '@/lib/design/palettes';
 import { DesignPanel } from './DesignPanel';
 
 const ROOT = 'C:/proj';
@@ -28,16 +28,22 @@ const MANIFEST = JSON.stringify({
   createdAt: '2026-09-29T00:00:00.000Z',
 });
 
-const GOOD: PaletteOption = {
+const GOOD: PaletteFile = {
+  version: 1,
   id: 'paper-dawn',
   name: 'Paper Dawn',
+  tags: ['editorial'],
+  scheme: 'light',
   source: 'builtin',
   colors: { canvas: '#FAF6EC', ink: '#1F2A5A', primary: '#8E4394', accent: '#F2C230' },
 };
 // Nearly identical canvas/ink: preview contrast must fail without blocking apply.
-const LOW: PaletteOption = {
+const LOW: PaletteFile = {
+  version: 1,
   id: 'low-contrast',
   name: 'Low Contrast',
+  tags: [],
+  scheme: 'light',
   source: 'builtin',
   colors: { canvas: '#888888', ink: '#8A8A8A', primary: '#1E2BFA', accent: '#F59E0B' },
 };
@@ -93,7 +99,7 @@ function stubBridge(): BridgeContextValue {
   };
 }
 
-function renderPanel(bridge: BridgeContextValue, palettes: PaletteOption[] = [GOOD, LOW]) {
+function renderPanel(bridge: BridgeContextValue, palettes: PaletteFile[] = [GOOD, LOW]) {
   return render(
     <LanguageProvider>
       <BridgeContext.Provider value={bridge}>

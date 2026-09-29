@@ -16,6 +16,7 @@ import { Preview } from '@/components/review/Preview';
 import { ParamsPanel } from '@/components/review/ParamsPanel';
 import { DesignPanel } from '@/components/review/DesignPanel';
 import { Scrubber } from '@/components/review/Scrubber';
+import { BUILT_IN_PALETTES } from '@/lib/design/palettes';
 
 const BACKGROUNDS: PreviewBackground[] = ['checker', 'canvas', 'light', 'dark'];
 
@@ -124,7 +125,7 @@ function ReviewBody({ root, server, onRetry }: { root: string; server: PreviewSe
               </Button>
             ))}
           </div>
-          {sideTab === 'params' ? <ParamsPanel root={root} /> : <DesignPanel root={root} palettes={[]} />}
+          {sideTab === 'params' ? <ParamsPanel root={root} /> : <DesignPanel root={root} palettes={BUILT_IN_PALETTES} />}
         </div>
       </div>
       <Scrubber fps={project.fps} timeKind={timeKindOf(project.outputType)} />

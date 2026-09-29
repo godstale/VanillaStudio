@@ -448,6 +448,7 @@ const ko = {
 
   'palette.tabs.params': '파라미터',
   'palette.tabs.design': '디자인',
+  'palette.tabs.library': '팔레트',
   'palette.panel.title': '디자인',
   'palette.loading': '불러오는 중…',
   'palette.missing': 'DESIGN.md가 없습니다. 프로젝트를 새로 만들면 자동으로 생성됩니다.',
@@ -468,6 +469,13 @@ const ko = {
   'palette.contrast.fail': '(기준 미달)',
   'palette.contrast.warning': '대비 기준에 못 미치는 쌍이 있습니다: {pairs}. 적용은 되지만 가독성을 확인하세요.',
   'palette.contrast.unavailable': '필수 색 역할이 없어 대비를 계산할 수 없습니다.',
+  'palette.applyNeedsProject': '프로젝트를 열면 적용할 수 있습니다.',
+  'palette.search.placeholder': '팔레트 검색… (이름·태그)',
+  'palette.search.noResults': '검색 결과가 없습니다.',
+  'palette.filter.scheme': '구성',
+  'palette.scheme.all': '전체',
+  'palette.scheme.light': '라이트',
+  'palette.scheme.dark': '다크',
 
   'checkpoint.title': '체크포인트',
   'checkpoint.statusGit': 'Git으로 기록 중',

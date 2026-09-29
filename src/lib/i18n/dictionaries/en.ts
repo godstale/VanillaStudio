@@ -451,6 +451,7 @@ const en: Dict = {
 
   'palette.tabs.params': 'Parameters',
   'palette.tabs.design': 'Design',
+  'palette.tabs.library': 'Palettes',
   'palette.panel.title': 'Design',
   'palette.loading': 'Loading…',
   'palette.missing': 'No DESIGN.md. It is created automatically with a new project.',
@@ -471,6 +472,13 @@ const en: Dict = {
   'palette.contrast.fail': '(below minimum)',
   'palette.contrast.warning': 'Some pairs miss the contrast bar: {pairs}. You can still apply, but check readability.',
   'palette.contrast.unavailable': 'Contrast cannot be computed without the core color roles.',
+  'palette.applyNeedsProject': 'Open a project to apply a palette.',
+  'palette.search.placeholder': 'Search palettes… (name, tags)',
+  'palette.search.noResults': 'No matching palettes.',
+  'palette.filter.scheme': 'Scheme',
+  'palette.scheme.all': 'All',
+  'palette.scheme.light': 'Light',
+  'palette.scheme.dark': 'Dark',
 
   'checkpoint.title': 'Checkpoints',
   'checkpoint.statusGit': 'Recording with git',

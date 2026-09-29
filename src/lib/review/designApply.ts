@@ -65,7 +65,8 @@ export async function updateManifestPalette(root: string, ref: { id: string; sou
 export async function applyPalette(root: string, palette: PaletteOption): Promise<ApplyPaletteResult> {
   const text = await loadDesignText(root);
   if (text === null) throw new Error('DESIGN.md not found');
-  const { text: next, bodyReplacements } = replaceColors(text, palette.colors, { updateProse: true });
+  // Derived roles are materialized so the file carries the complete token set.
+  const { text: next, bodyReplacements } = replaceColors(text, resolvePaletteColors(palette.colors), { updateProse: true });
   await invoke('write_text_file', {
     path: projectPath(root, DESIGN_PATH),
     contents: next,
