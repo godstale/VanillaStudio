@@ -20,6 +20,8 @@ import { ImageViewerTab } from '@/components/workspace/ImageViewerTab';
 import { EmptyTabView } from '@/components/workspace/EmptyTabView';
 import { STAGE_TAB_ICONS, TERMINAL_TAB_ITEM } from '@/components/layout/shellRegistry';
 import { TerminalTab } from '@/components/terminal/TerminalTab';
+import { STAGE_TAB_ICONS } from '@/components/layout/shellRegistry';
+import { BriefEditor } from '@/components/pipeline/brief/BriefEditor';
 import { WelcomeGuide } from '@/components/workspace/WelcomeGuide';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -46,6 +48,7 @@ function renderTabContent(tab: WorkspaceTab) {
     case 'terminal':
       return <TerminalTab />;
     case 'brief':
+      return <BriefEditor />;
     case 'plan':
     case 'prompts':
     case 'design':
