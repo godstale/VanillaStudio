@@ -1,3 +1,4 @@
+import { useProjectInstall } from './projectInstallContext';
 import { useState } from 'react';
 import { open as openDialog } from '@tauri-apps/plugin-dialog';
 import { FolderOpen, Loader2 } from 'lucide-react';
@@ -81,6 +82,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 export function NewProjectWizard({ open, onOpenChange, onCreated }: NewProjectWizardProps) {
+  const requestInstall = useProjectInstall();
   const { t } = useLanguage();
   const { setWorkspaceRoot } = useWorkspace();
   const [values, setValues] = useState<WizardValues>(defaultWizardValues);
@@ -122,6 +124,7 @@ export function NewProjectWizard({ open, onOpenChange, onCreated }: NewProjectWi
         result.manifestJson,
       );
       await onCreated?.({ path: created.path, manifest: result.manifest });
+      requestInstall?.(created.path);
       await seedOpenTabs([
         { id: 'brief:main', type: 'brief', title: t('shell.tab.brief'), pane: 'primary' },
       ]);
