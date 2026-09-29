@@ -23,3 +23,5 @@ export { buildShotUrl, captureShots, launchManagedBrowser, resolveChromeExecutab
 export type { CaptureOptions, LaunchBrowser, ScreenshotType, Shot, ShotBrowser, ShotPage, StaticServer } from './capture';
 export { exportImageShots } from './image';
 export type { ImageDeps } from './image';
+export { buildImagePptx, buildSlidesPdf, exportSlides, SLIDE_POINTS } from './slides';
+export type { SlidesDeps } from './slides';
