@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@google/design.md": "0.4.0",
+    "jszip": "^3.10.2",
     "zod": "^3.25.76"
   }
 }
