@@ -84,7 +84,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 export function NewProjectWizard({ open, onOpenChange, onCreated }: NewProjectWizardProps) {
   const requestInstall = useProjectInstall();
   const { t } = useLanguage();
-  const { setWorkspaceRoot } = useWorkspace();
+  const { setWorkspaceRoot, trustWorkspace } = useWorkspace();
   const [values, setValues] = useState<WizardValues>(defaultWizardValues);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -123,9 +123,11 @@ export function NewProjectWizard({ open, onOpenChange, onCreated }: NewProjectWi
         result.manifest.name,
         result.manifestJson,
       );
+      // 사용자가 방금 직접 만든 폴더이므로 신뢰 확인을 건너뛴다(AGENTS.md §7의 유일한 예외).
+      trustWorkspace(created.path);
       await onCreated?.({ path: created.path, manifest: result.manifest });
       requestInstall?.(created.path);
-      await seedOpenTabs([
+      await seedOpenTabs(created.path, [
         { id: 'brief:main', type: 'brief', title: t('shell.tab.brief'), pane: 'primary' },
       ]);
       setWorkspaceRoot(created.path);
