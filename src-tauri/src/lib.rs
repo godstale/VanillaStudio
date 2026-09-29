@@ -1,4 +1,5 @@
 pub mod commands;
+pub mod mcp_server;
 pub mod process;
 
 use commands::doctor_commands::*;

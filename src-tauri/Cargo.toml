@@ -33,6 +33,11 @@ reqwest = { version = "0.13.3", default-features = false, features = ["blocking"
 sha2 = "0.10.9"
 hex = "0.4.3"
 zip = "4.2.0"
+rmcp = { version = "2.2.0", features = ["server", "macros", "transport-streamable-http-server"] }
+axum = "0.8.4"
+tokio-util = "0.7.19"
+tokio = { version = "1.53.1", features = ["rt-multi-thread", "macros", "net", "sync", "time"] }
+rand = "0.9.5"
 
 [target."cfg(windows)".dependencies]
 windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_System_JobObjects", "Win32_System_Threading"] }
@@ -40,3 +45,4 @@ winreg = "0.56.0"
 
 [dev-dependencies]
 tempfile = "3.27.0"
+rmcp = { version = "2.2.0", features = ["client", "transport-streamable-http-client-reqwest"] }
