@@ -38,7 +38,7 @@
 
 - [x] T2.0 D-018(세션 격리) 사용자 결정 반영 — 대상: `Docs/Planning/Decisions.md` · 완료 판정: Accepted 기록(2026-09-29) · 선행: —
 - [x] T2.1 에이전트 레지스트리(기본값·사용자 설정, `sessionOptions`, 지원 등급) — 대상: `src/lib/agents/registry.ts`, 전역 DB `agents` · 완료 판정: 스키마 테스트 · 선행: T1.6, T2.0 · (F-AGT-05)
-- [ ] T2.2 ACP 어댑터 설치(버전 고정 npm 패키지를 앱 데이터에 1회 설치, 앱 소유 프로세스) — 대상: `process_commands.rs` · 완료 판정: `claude-agent-acp` 설치·버전 확인 · 선행: T1.15
+- [x] T2.2 ACP 어댑터 설치(버전 고정 npm 패키지를 앱 데이터에 1회 설치, 앱 소유 프로세스) — 대상: `process_commands.rs` · 완료 판정: `claude-agent-acp` 설치·버전 확인 · 선행: T1.15
 - [ ] T2.3 Rust `agent_host`: 프로세스 spawn(cwd=프로젝트), initialize(fs capability), session/new(격리 옵션·mcpServers), prompt, cancel — 대상: `src-tauri/src/agent_host/*.rs` · 완료 판정: 목 ACP 에이전트 통합 테스트 · 선행: T1.8, T2.1 · (F-AGT-01)
 - [ ] T2.4 권한 정책 모듈(D-010 + S3 규칙: `locations` canonicalize, `mcp__vanilla__` 식별, `allow_always` 숨김) — 대상: `src-tauri/src/agent_host/permission.rs` · 완료 판정: S3 시나리오 분류표 단위 테스트 전부 통과 · 선행: T2.3 · (F-AGT-02)
 - [ ] T2.5 fs 요청 핸들러(스코프 검사) + 세션 로그 `.vanilla/sessions/<id>.jsonl` — 대상: `agent_host/fs.rs`, `agent_host/log.rs` · 완료 판정: 스코프 밖 거부 테스트 · 선행: T2.3

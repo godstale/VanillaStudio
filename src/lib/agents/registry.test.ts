@@ -4,6 +4,7 @@ import { DatabaseSync, type SQLInputValue } from 'node:sqlite';
 import { runMigrations, type SqlDatabase } from '@/lib/db/client';
 import {
   BUILTIN_AGENTS,
+  CLAUDE_ADAPTER_VERSION,
   agentEntrySchema,
   loadAgents,
   mergeRegistry,
@@ -131,5 +132,16 @@ describe('registry persistence (real SQLite, migration 0002)', () => {
     const hermes = (await loadAgents(db)).find((a) => a.id === 'hermes')!;
     await saveAgent(db, { ...hermes, enabled: false });
     await expect(setDefaultAgent(db, 'hermes')).rejects.toThrow();
+  });
+});
+
+describe('adapter pin', () => {
+  it('matches the version pinned in process_commands.rs', async () => {
+    const { readFileSync } = await import('node:fs');
+    const rs = readFileSync('src-tauri/src/commands/process_commands.rs', 'utf8');
+    expect(rs).toContain(`CLAUDE_ADAPTER_VERSION: &str = "${CLAUDE_ADAPTER_VERSION}"`);
+    expect(rs).toContain(`CLAUDE_ADAPTER_DIR: &str = "claude-agent-acp@${CLAUDE_ADAPTER_VERSION}"`);
+    const claude = BUILTIN_AGENTS.find((a) => a.id === 'claude-code')!;
+    expect(claude.args[0]).toContain(`claude-agent-acp@${CLAUDE_ADAPTER_VERSION}/`);
   });
 });

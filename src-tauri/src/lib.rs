@@ -65,6 +65,9 @@ pub fn run() {
             pty_write,
             pty_resize,
             pty_kill,
+            install_claude_adapter,
+            install_claude_adapter_cancel,
+            claude_adapter_status,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
