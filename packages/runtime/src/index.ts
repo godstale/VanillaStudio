@@ -29,3 +29,5 @@ export { VanillaCanvas } from './canvas';
 export type { VanillaCanvasProps } from './canvas';
 export { canvasSettings } from './canvasSettings';
 export type { CanvasSettings, FrameLoop } from './canvasSettings';
+export { applyAndSettle, createReadiness, fontSpecs, readiness, ReadinessProvider, registerAsset, useReadiness } from './ready';
+export type { Readiness, ReadinessOptions } from './ready';

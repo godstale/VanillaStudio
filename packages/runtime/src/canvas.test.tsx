@@ -2,6 +2,7 @@ import { render } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ClockProvider, createClock, type ClockMode } from './clock';
 import { canvasSettings } from './canvasSettings';
+import { ReadinessProvider, createReadiness } from './ready';
 
 const fiber = vi.hoisted(() => ({
   props: null as null | Record<string, unknown>,
@@ -102,5 +103,36 @@ describe('<VanillaCanvas>', () => {
     unmount();
     clock.seek(1);
     expect(fiber.advance).not.toHaveBeenCalled();
+  });
+
+  it('holds readiness until the renderer is created, and releases it on unmount', async () => {
+    const readiness = createReadiness({ fonts: { ready: Promise.resolve(), load: () => Promise.resolve() } });
+    const clock = createClock({ mode: 'render' });
+    const view = render(
+      <ReadinessProvider value={readiness}>
+        <ClockProvider clock={clock}>
+          <VanillaCanvas />
+        </ClockProvider>
+      </ReadinessProvider>,
+    );
+    let ready = false;
+    void readiness.ready().then(() => (ready = true));
+    await new Promise((r) => setTimeout(r, 5));
+    expect(ready).toBe(false);
+    (fiber.props?.onCreated as (s: unknown) => void)({});
+    await new Promise((r) => setTimeout(r, 80)); // ready() waits one real animation frame
+    expect(ready).toBe(true);
+
+    // A second canvas that never gets created must not block a later capture once unmounted.
+    view.unmount();
+    const other = render(
+      <ReadinessProvider value={readiness}>
+        <ClockProvider clock={clock}>
+          <VanillaCanvas />
+        </ClockProvider>
+      </ReadinessProvider>,
+    );
+    other.unmount();
+    await readiness.ready();
   });
 });
