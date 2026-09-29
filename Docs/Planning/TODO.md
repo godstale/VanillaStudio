@@ -92,7 +92,7 @@ M4b 검수 스튜디오
 - [x] T4.12 HMR 누락 감지(Rust 파일 감시 + `hmr` 보고 비교 + `reload`/`init` 복원) — 대상: `src-tauri/src/watch.rs`, `BridgeContext.tsx` · 완료 판정: S4 30ms 연속 쓰기에서 최종본 표시 · 선행: T4.11
 - [x] T4.13 타임라인 스크러버(clock 유형: 재생·정지·프레임 이동·구간 반복·Scene 경계, free 유형: 재생/정지) — 대상: `src/components/review/Scrubber.tsx` · 완료 판정: 키보드 조작, 컴포넌트 테스트 · 선행: T4.11 · (F-REV-02)
 - [x] T4.14 파라미터 패널(스키마 → 폼, 즉시 반영, 저장 `params/*.values.json` + 체크포인트) — 대상: `src/components/review/ParamsPanel.tsx` · 완료 판정: 반영 < 100ms(CDP 측정) · 선행: T4.11 · (F-REV-03)
-- [ ] T4.15 디자인 패널: 팔레트 교체(미리보기 `setDesign` → 적용 시 `colors` 재작성 + 본문 hex 갱신 + 체크포인트), 대비 경고 — 대상: `src/components/review/DesignPanel.tsx` · 완료 판정: 교체·되돌리기, 파일 바이트 보존 · 선행: T4.11, T3.5 · (F-PAL-02, F-PAL-04)
+- [x] T4.15 디자인 패널: 팔레트 교체(미리보기 `setDesign` → 적용 시 `colors` 재작성 + 본문 hex 갱신 + 체크포인트), 대비 경고 — 대상: `src/components/review/DesignPanel.tsx` · 완료 판정: 교체·되돌리기, 파일 바이트 보존 · 선행: T4.11, T3.5 · (F-PAL-02, F-PAL-04)
 - [ ] T4.16 팔레트 라이브러리(내장 팔레트 로드, 검색·필터, `palette.json` 스키마) — 대상: `src/lib/design/palettes.ts`, `resources/palettes/`, 템플릿 사이드패널 탭 · 완료 판정: 목록·적용 · 선행: T4.15 · (F-PAL-01)
 - [ ] T4.17 팔레트 편집기 탭(역할별 색, OKLCH 슬라이더, 잠금, 대비 표) — 대상: `src/components/design/PaletteEditor.tsx` · 완료 판정: 저장·재사용 · 선행: T4.16 · (F-PAL-03)
 - [ ] T4.18 수정 요청(대상·시각·코멘트·스크린샷 `capture`, `reviews/R-NNN.md`, 계획서 Revision 절, 에이전트 요청) — 대상: `src/lib/review/revision.ts`, UI · 완료 판정: 목 에이전트로 R-001 생성·반영 흐름 · 선행: T4.11, T3.14 · (F-REV-04)
