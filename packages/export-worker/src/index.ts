@@ -21,3 +21,5 @@ export { exportWeb, resolveViteBin, runViteBuild, ZIP_EPOCH, zipDirectory } from
 export type { ViteBuildOptions, WebDeps } from './web';
 export { buildShotUrl, captureShots, launchManagedBrowser, resolveChromeExecutable, serveStatic } from './capture';
 export type { CaptureOptions, LaunchBrowser, ScreenshotType, Shot, ShotBrowser, ShotPage, StaticServer } from './capture';
+export { exportImageShots } from './image';
+export type { ImageDeps } from './image';
