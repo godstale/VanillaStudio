@@ -24,6 +24,7 @@ import { BriefEditor } from '@/components/pipeline/brief/BriefEditor';
 import { DesignTab } from '@/components/design/DesignTab';
 import { ReviewTab } from '@/components/review/ReviewTab';
 import { PlanViewer } from '@/components/pipeline/plan/PlanViewer';
+import { PromptsTab } from '@/components/pipeline/prompts/PromptsTab';
 import { WelcomeGuide } from '@/components/workspace/WelcomeGuide';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -58,6 +59,7 @@ function renderTabContent(tab: WorkspaceTab) {
     case 'review':
       return <ReviewTab />;
     case 'prompts':
+      return <PromptsTab />;
     case 'export':
       return <EmptyTabView tab={tab} />;
     default:
