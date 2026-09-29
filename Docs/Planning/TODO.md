@@ -67,7 +67,7 @@
 - [x] T3.11 승인·수정 요청 흐름(Plan) — 대상: `planStep.ts`, 뷰어 · 완료 판정: 승인 → 체크포인트 → 다음 단계 활성화 · 선행: T3.8, T3.10 · (F-PIP-03)
 - [x] T3.12 `tasks.json` 스키마 + 위상 정렬 + 순환 검출 — 대상: `src/lib/pipeline/schemas/tasks.ts`, `topo.ts` · 완료 판정: 단위 테스트 · 선행: —
 - [x] T3.13 Prompts 단계: 생성 요청, 트리 편집기(CodeMirror), 승인 — 대상: `src/components/pipeline/prompts/*` · 완료 판정: 샘플 트리 편집·승인 · 선행: T3.6, T3.12 · (F-PIP-04)
-- [ ] T3.14 태스크 실행기(자동·한 단계씩, 일시정지·재시도, `task_runs` 기록, 태스크 후 체크포인트) — 대상: `src/lib/pipeline/runner.ts` · 완료 판정: 목 에이전트로 3개 태스크 순차 실행 테스트 · 선행: T3.12, T2.7, T3.10 · (F-PIP-05)
+- [x] T3.14 태스크 실행기(자동·한 단계씩, 일시정지·재시도, `task_runs` 기록, 태스크 후 체크포인트) — 대상: `src/lib/pipeline/runner.ts` · 완료 판정: 목 에이전트로 3개 태스크 순차 실행 테스트 · 선행: T3.12, T2.7, T3.10 · (F-PIP-05)
 - [x] T3.15 (S) 태스크 그래프 시각화(의존성·상태) — 대상: `src/components/pipeline/prompts/TaskGraph.tsx` · 완료 판정: 샘플 `tasks.json` 그래프 표시 · 선행: T3.12 · (F-PIP-06)
 - [ ] T3.16 M3 마무리: 샘플 브리프로 Build까지 데모, `milestone-m3.md` · 선행: T3.1~T3.14
 
