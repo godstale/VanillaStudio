@@ -24,6 +24,9 @@ export {
   useTime,
 } from './clock';
 export type { ActiveSegment, Clock, ClockMode, ClockOptions, Renderer, Segment } from './clock';
+export { defineComposition, sceneStart } from './composition';
+export { CompositionView } from './CompositionView';
+export type { Composition, CompositionEntry, CompositionFormat, CompositionInput, ParamsBySceneId } from './composition';
 export * from './helpers';
 export { VanillaCanvas } from './canvas';
 export type { VanillaCanvasProps } from './canvas';

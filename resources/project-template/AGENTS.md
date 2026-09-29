@@ -23,6 +23,13 @@ brief -> plan -> prompts -> code -> review -> export. Work only on the stage the
 | `vanilla/runtime/` | app | Installed runtime. Do not edit. |
 | `.vanilla/`, `exports/` | app | Do not touch. |
 
+## Runtime API
+
+Read `vanilla/runtime/src/index.ts` for the exports of `@vanilla/runtime`. A scene is a module that default-exports
+`defineScene({ id, duration, params, Component })`; `src/composition.tsx` default-exports
+`defineComposition({ scenes: [...] })` (`overlap` on an entry crossfades into it; `time: 'free'` + `layout: 'sections'` for web).
+Use `useTime()` for animation and `param.*` for user-adjustable values.
+
 ## Design tokens
 
 Colors, typography and spacing come only from `DESIGN.md` tokens: CSS `var(--color-*)` or `useDesign()`.
