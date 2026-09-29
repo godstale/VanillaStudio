@@ -13,6 +13,7 @@ import { resolveAgentAccess } from '@/lib/project/access';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { cn } from '@/lib/utils';
 import { Preview } from '@/components/review/Preview';
+import { ParamsPanel } from '@/components/review/ParamsPanel';
 import { Scrubber } from '@/components/review/Scrubber';
 
 const BACKGROUNDS: PreviewBackground[] = ['checker', 'canvas', 'light', 'dark'];
@@ -101,9 +102,12 @@ function ReviewBody({ root, server, onRetry }: { root: string; server: PreviewSe
           <span className="break-all">{bridge.error.message}</span>
         </div>
       )}
-      <div className="relative min-h-0 flex-1">
-        <ServerStatus state={server} onRetry={onRetry} />
-        <Preview serverUrl={serverUrl} format={project.format} zoom={zoom} background={background} deviceWidth={showDevices ? deviceWidth : null} />
+      <div className="flex min-h-0 flex-1">
+        <div className="relative min-h-0 min-w-0 flex-1">
+          <ServerStatus state={server} onRetry={onRetry} />
+          <Preview serverUrl={serverUrl} format={project.format} zoom={zoom} background={background} deviceWidth={showDevices ? deviceWidth : null} />
+        </div>
+        <ParamsPanel root={root} />
       </div>
       <Scrubber fps={project.fps} timeKind={timeKindOf(project.outputType)} />
     </div>

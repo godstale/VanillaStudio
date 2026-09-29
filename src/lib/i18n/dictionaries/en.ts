@@ -508,6 +508,14 @@ const en: Dict = {
   'review.scrub.loopActive': 'Looping {start}–{end}',
   'review.scrub.currentScene': 'Scene {id}',
   'review.scrub.live': 'Live',
+  'review.params.title': 'Parameters',
+  'review.params.empty': 'Adjustable parameters appear once the preview connects.',
+  'review.params.noParams': 'No adjustable parameters.',
+  'review.params.scene': 'Scene',
+  'review.params.reset': 'Reset to defaults',
+  'review.params.saving': 'Saving…',
+  'review.params.saved': 'Saved',
+  'review.params.error': 'Could not save.',
 };
 
 export default en;

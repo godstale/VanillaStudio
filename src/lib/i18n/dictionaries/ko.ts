@@ -505,6 +505,14 @@ const ko = {
   'review.scrub.loopActive': '구간 반복 {start}–{end}',
   'review.scrub.currentScene': 'Scene {id}',
   'review.scrub.live': '실시간',
+  'review.params.title': '파라미터',
+  'review.params.empty': '미리보기가 연결되면 조절 가능한 파라미터가 표시됩니다.',
+  'review.params.noParams': '조절 가능한 파라미터가 없습니다.',
+  'review.params.scene': 'Scene',
+  'review.params.reset': '기본값으로 되돌리기',
+  'review.params.saving': '저장 중…',
+  'review.params.saved': '저장됨',
+  'review.params.error': '저장하지 못했습니다.',
 };
 
 export type Dict = typeof ko;
