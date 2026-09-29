@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "WorkspaceTemplate",
+  "productName": "Vanilla Studio",
   "version": "0.1.0",
-  "identifier": "com.example.workspace-template",
+  "identifier": "dev.vanilla.studio",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:14200",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "WorkspaceTemplate",
+        "title": "Vanilla Studio",
         "width": 1280,
         "height": 800,
         "resizable": true,
