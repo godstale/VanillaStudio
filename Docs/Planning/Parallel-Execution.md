@@ -84,6 +84,23 @@ M2(에이전트)와 M3(파이프라인)의 레인 배치는 M1을 마무리할 �
 
 ---
 
+## 2b. 웨이브 3 (M2 + M3·M4a 선행분 + M1 이월) — 통합 브랜치 `feat/m2-agents`
+
+M1은 main에 병합했다. 웨이브 3은 통합 브랜치 `feat/m2-agents`(main에서 생성)에 레인 5개를 병합한다. M3·M4a 항목도 이 브랜치에 병합한다(M3·M4의 마무리는 각 마일스톤 항목 완료 뒤).
+
+| 레인 | 브랜치 / 워크트리 | TODO 항목 | 소유 경로 | i18n 접두어 |
+| --- | --- | --- | --- | --- |
+| **E 에이전트 호스트** | `feat/m2-e-host` / `../VanillaStudio-m2-e` | T2.1 → T2.2 → T2.3 → T2.4 → T2.5 → T2.6 | `src/lib/agents/registry*`, `src-tauri/src/agent_host/**`, `src-tauri/src/commands/agent_commands.rs`, `src-tauri/src/commands/process_commands.rs`(T2.2), 전역 DB `agents` 사용 | `agent.*` |
+| **G MCP·PTY** | `feat/m2-g-mcp-pty` / `../VanillaStudio-m2-g` | T2.10 → T2.11 | `src-tauri/src/mcp_server/**`, `src-tauri/src/commands/pty_commands.rs`, `src/components/terminal/**` | `terminal.*` |
+| **H 파이프라인 UI** | `feat/m3-h-pipeline` / `../VanillaStudio-m3-h` | T3.4 → T3.12 → T3.1 → T3.3 → T3.2 → T3.8 → T3.9 | `src/lib/pipeline/**`, `src/components/pipeline/**`, `src/components/design/**` (탭 등록은 `shellRegistry.ts`·`CenterWorkspace.tsx` 최소 수정) | `pipeline.*`, `design.*` |
+| **R 런타임·워커** | `feat/m4-r-runtime` / `../VanillaStudio-m4-r` | T4.9 → T3.7 | `packages/runtime/**`, `packages/export-worker/**`, `resources/runtime/**`, `resources/project-template/**`(런타임 부트스트랩 교체) | 없음 |
+| **S 셸 이월** | `feat/m1-s-shell-fixes` / `../VanillaStudio-m1-s` | 이월 3건(프로젝트별 탭 저장소, 마법사로 만든 프로젝트 자동 신뢰, 템플릿 표기 정리) | `src/lib/context/**`, `src/components/workspace/**`, `src/components/project/NewProjectWizard.tsx`, `LICENSE`·`README.md` | `shell.*` |
+
+- 병합 순서: S → G → E → R → H (공유 파일 충돌이 적은 순). 웨이브 4(T2.7~T2.9, T2.12, T2.13, T3.6, T3.11, T3.13~)는 E 병합 후 배치한다.
+- `Cargo.lock`·`pnpm-lock.yaml` 충돌은 병합 시 재생성한다.
+
+---
+
 ## 3. 브랜치·워크트리
 
 ```powershell
