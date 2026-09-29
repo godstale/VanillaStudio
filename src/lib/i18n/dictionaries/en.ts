@@ -231,6 +231,100 @@ const en: Dict = {
   'project.recent.missing': 'Folder not found: {path}',
   'project.untrusted.notice': 'This folder is not trusted. Agent features (starting sessions, auto-loading skills) stay off until you trust it.',
   'project.untrusted.review': 'Review trust',
+  'doctor.title': 'Environment check',
+  'doctor.desc':
+    'Checks that the external tools Vanilla Studio relies on are installed.',
+  'doctor.recheck': 'Re-check',
+  'doctor.checking': 'Checking…',
+  'doctor.checkedIn': 'Checked in {ms} ms',
+  'doctor.failed': 'Could not run the check: {error}',
+  'doctor.summary.ok': 'Everything is ready',
+  'doctor.summary.blocking': '{n} required item(s) need attention',
+  'doctor.summary.warnings': '{n} optional item(s) to review',
+  'doctor.summary.noAgent':
+    'No coding agent is available. Install at least one',
+  'doctor.badge.open': 'Open environment check',
+  'doctor.required': 'Required',
+  'doctor.optional': 'Optional',
+  'doctor.version': 'Version',
+  'doctor.path': 'Path',
+  'doctor.fixLabel': 'How to fix',
+  'doctor.copy': 'Copy',
+  'doctor.copied': 'Copied',
+  'doctor.status.ok': 'OK',
+  'doctor.status.missing': 'Missing',
+  'doctor.status.outdated': 'Outdated',
+  'doctor.status.unsupported': 'Unsupported',
+  'doctor.status.not-logged-in': 'Not logged in',
+  'doctor.status.info': 'Info',
+  'doctor.detail.system-browser-only':
+    'Only a system browser was found (no dedicated render browser)',
+  'doctor.detail.claude-code-missing': 'Install Claude Code first',
+  'doctor.detail.login-state-unparsed': 'Could not determine the login state',
+  'doctor.check.node': 'Node.js',
+  'doctor.check.pnpm': 'pnpm',
+  'doctor.check.git': 'Git',
+  'doctor.check.claude-code': 'Claude Code',
+  'doctor.check.claude-login': 'Claude Code login',
+  'doctor.check.codex': 'Codex',
+  'doctor.check.opencode': 'OpenCode',
+  'doctor.check.hermes': 'Hermes',
+  'doctor.check.agy': 'AGY',
+  'doctor.check.ffmpeg': 'FFmpeg (video encoding)',
+  'doctor.check.render-browser': 'Render browser (Chrome Headless Shell)',
+  'doctor.check.webview2': 'WebView2 runtime',
+  'doctor.check.winget': 'winget (installer helper)',
+  'doctor.fix.install-node':
+    'Node.js 22 or newer is required. Install it with the command below or get the LTS from nodejs.org.',
+  'doctor.fix.upgrade-node':
+    'Your Node.js is too old (22 or newer required). Upgrade to the LTS with the command below.',
+  'doctor.fix.enable-pnpm':
+    'Enable pnpm through the corepack bundled with Node.js. Run the command below in a terminal.',
+  'doctor.fix.install-node-then-pnpm':
+    'corepack was not found. Install Node.js first, then enable pnpm with the command below.',
+  'doctor.fix.install-git':
+    'Install Git with the command below or from git-scm.com.',
+  'doctor.fix.install-claude-code':
+    'Install Claude Code. See the installation page below.',
+  'doctor.fix.claude-login':
+    'Claude Code is not signed in. Run the command below in a terminal.',
+  'doctor.fix.install-codex': 'Install the Codex CLI. Node.js is required.',
+  'doctor.fix.install-opencode':
+    'Install OpenCode. Follow the instructions on opencode.ai.',
+  'doctor.fix.install-hermes':
+    'Install the Hermes agent. Follow the installation notes in its project documentation.',
+  'doctor.fix.install-agy':
+    'Install AGY. Follow the vendor installation instructions.',
+  'doctor.fix.download-ffmpeg':
+    'Video export needs a recent FFmpeg with libx264. The app can download a verified build into its own data folder only.',
+  'doctor.fix.install-render-browser':
+    'No render browser was found. Install Chrome Headless Shell with the command below.',
+  'doctor.fix.install-webview2':
+    'The WebView2 runtime is required. Install it from the address below, then restart the app.',
+  'doctor.fix.winget-manual':
+    'winget was not found. Install the items above manually from their pages. Updating App Installer from the Microsoft Store provides winget.',
+  'doctor.ffmpeg.download': 'Download FFmpeg',
+  'doctor.ffmpeg.consent.title': 'Download FFmpeg?',
+  'doctor.ffmpeg.consent.desc':
+    'This downloads FFmpeg (a GPL build) from the internet for video export. Review the details below and confirm to continue.',
+  'doctor.ffmpeg.consent.source':
+    'Source: latest GitHub release of BtbN/FFmpeg-Builds (api.github.com, github.com)',
+  'doctor.ffmpeg.consent.target':
+    'Destination: tools/ffmpeg in the app data folder (the system PATH is not changed)',
+  'doctor.ffmpeg.consent.verify':
+    'The file is verified with SHA-256; nothing is kept if it fails or is cancelled.',
+  'doctor.ffmpeg.consent.confirm': 'Agree and download',
+  'doctor.ffmpeg.consent.cancel': 'Cancel',
+  'doctor.ffmpeg.cancel': 'Cancel download',
+  'doctor.ffmpeg.stage.selected': 'Selected: {asset} ({mb} MB)',
+  'doctor.ffmpeg.stage.download': 'Downloading… {percent}%',
+  'doctor.ffmpeg.stage.verified': 'SHA-256 verified',
+  'doctor.ffmpeg.stage.extracted': 'Installed',
+  'doctor.ffmpeg.done': 'FFmpeg installed',
+  'doctor.ffmpeg.doneNotOk': 'Installed, but the libx264 check failed',
+  'doctor.ffmpeg.cancelled': 'Download cancelled',
+  'doctor.ffmpeg.alreadyRunning': 'A download is already running',
+  'doctor.ffmpeg.failed': 'Download failed: {error}',
 };
 
 export default en;

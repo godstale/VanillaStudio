@@ -3,6 +3,7 @@ import Workspace from '@/pages/Workspace';
 import SettingsLayout from '@/pages/Settings/SettingsLayout';
 import SettingsGeneral from '@/pages/Settings/SettingsGeneral';
 import SettingsApp from '@/pages/Settings/SettingsApp';
+import SettingsDoctor from '@/pages/Settings/SettingsDoctor';
 
 import { ThemeProvider } from '@/lib/context/ThemeContext';
 import { SettingsProvider } from '@/lib/context/SettingsContext';
@@ -21,6 +22,7 @@ export default function App() {
                 <Route index element={<SettingsGeneral />} />
                 <Route path="general" element={<SettingsGeneral />} />
                 <Route path="app" element={<SettingsApp />} />
+                <Route path="doctor" element={<SettingsDoctor />} />
               </Route>
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
