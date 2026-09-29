@@ -181,3 +181,12 @@
 
 ## [2026-09-30] wave5 | verification green, wave 5 complete
 - Full verification on feat/m2-agents: lint pass, typecheck pass, vitest 90 files 632 tests pass, cargo 165 pass 0 fail 4 ignored. Fixed: stray char from X2 merge (CenterWorkspace), flaky pipeline restore test (waitFor on holder.api). Wave 5 all merged: T2, P, D2, X2, R2. See: [[parallel-execution]]
+
+## [2026-09-30] milestone | M4 review-runtime done
+- T4.22 done by lane N: demos ①~⑥ in automation scope (unit suites + harness re-check, live WebView2/manual/agent-chat/clean-VM excluded and listed). Wrote [[milestone-m4]]. Verification: lint pass, typecheck pass, vitest 90 files 632 tests pass, cargo 165 pass 0 fail 4 ignored. See: [[parallel-execution]]
+
+## [2026-09-30] lint | Wiki health check
+- Ran lint. See lint-report.md for details.
+
+## [2026-09-30] lint | Wiki health check (lane N, T4.22)
+- 50 pages, orphans 1 (wiki/sources/milestone-m4.md; overview.md 연결은 조정 세션에 인계), broken links 0. See: [[parallel-execution]]
