@@ -113,8 +113,24 @@ M1은 main에 병합했다. 웨이브 3은 통합 브랜치 `feat/m2-agents`(mai
 | **V 검수 스튜디오** | `feat/m4-v-review` / `../VanillaStudio-m4-v` | T4.10 → T4.11 → T4.12 → T4.13 → T4.14 → T4.21 | `resources/workers/vite-runner.mjs`, `src-tauri/src/commands/process_commands.rs`(프리뷰 job), `src-tauri/src/watch.rs`, `src/lib/review/**`, `src/components/review/**`, `tests/e2e/**` | `review.*` |
 | **X Export 워커** | `feat/m5-x-export` / `../VanillaStudio-m5-x` | T5.1 → T5.3 → T5.4 → T5.5 → T5.6 → T5.8 | `packages/export-worker/**`, `resources/workers/**`(vite-runner 제외) | 없음 |
 
-- 웨이브 5(에이전트 의존 흐름): T3.6, T3.11, T3.13, T3.14, T4.15~T4.20, T5.2, T5.7, T5.9, T6.x. 병합 순서: K → E2 → X → V → F.
+- 웨이브 5(에이전트 의존 흐름): T3.6, T3.11, T3.13, T3.14, T4.15~T4.20, T5.2, T5.7, T5.9, T6.x (아래 §2d).
+- 웨이브 4 병합 순서(완료): K → E2 → X → V → F.
 - 사람이 확인할 항목(자동화 불가): 실제 Claude Code·Codex·AGY 대화, PowerPoint에서 편집 PPTX, 깨끗한 Windows VM.
+
+---
+
+## 2d. 웨이브 5 (M3·M4b·M5·M6 의존 흐름) — 통합 브랜치 `feat/m2-agents`
+
+| 레인 | 브랜치 / 워크트리 | TODO 항목 | 소유 경로 | i18n 접두어 |
+| --- | --- | --- | --- | --- |
+| **P 파이프라인 흐름** | `feat/m3-p-flow` / `../VanillaStudio-m3-p` | T3.6 → T3.13 → T3.11 → T3.14 | `src/lib/pipeline/planStep.ts`, `src/lib/pipeline/runner.ts`, `src/components/pipeline/prompts/*`(편집기·승인), 기획서 뷰어 승인 배선(최소 수정) | `pipeline.*` |
+| **D2 디자인·팔레트** | `feat/m4-d2-palette` / `../VanillaStudio-m4-d2` | T4.15 → T4.16 → T4.17 | `src/components/review/DesignPanel.tsx`, `src/lib/design/palettes.ts`, `resources/palettes/`, `src/components/design/PaletteEditor.tsx`, 템플릿 사이드패널 탭(최소 수정) | `palette.*` |
+| **R2 수정요청·MCP** | `feat/m4-r2-revision` / `../VanillaStudio-m4-r2` | T4.20 → T4.18 → T4.19 | `src-tauri/src/mcp_server/tools/*`, `src/lib/review/revision.ts` + 수정요청 UI, `src/components/review/Compare.tsx` | `review.*` |
+| **X2 Export UI** | `feat/m5-x2-export-ui` / `../VanillaStudio-m5-x2` | T5.2 → T5.9 → T5.7 | `src/lib/export/*`, `src/components/export/*`, `packages/export-worker/src/slidesEditable.ts`, `resources/workers/vendor/**` | `export.*` |
+| **T2 템플릿 설치** | `feat/m6-t2-templates` / `../VanillaStudio-m6-t2` | T6.2 | `src/lib/templates/*` | `templates.*` |
+
+- 의존: R2의 T4.18은 P의 T3.14 인터페이스(runner 상태·`task_runs`)를 전제로 한다. 병합 순서: T2 → D2 → X2 → P → R2 (R2는 P 병합 후 rebase·재검증).
+- T2.14 M2 마무리는 조정 세션이 직접 수행한다(코드 전부 병합됨, 데모+`milestone-m2.md`).
 
 ---
 
