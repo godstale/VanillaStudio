@@ -63,6 +63,8 @@ pub fn run() {
             scaffold_project,
             install_project_deps,
             install_project_deps_cancel,
+            start_preview_server,
+            stop_preview_server,
             pty_start,
             pty_write,
             pty_resize,

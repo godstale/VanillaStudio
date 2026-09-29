@@ -87,7 +87,7 @@ M4a 런타임 패키지 (`packages/runtime`, M2·M3와 병렬 가능)
 
 M4b 검수 스튜디오
 
-- [ ] T4.10 프리뷰 서버 프로세스(`vite-runner.mjs`, 127.0.0.1, 포트 보고, 재시작) — 대상: `resources/workers/vite-runner.mjs`, `process_commands.rs` · 완료 판정: 프로젝트 열면 서버 기동, 종료 시 정리 · 선행: T1.15
+- [x] T4.10 프리뷰 서버 프로세스(`vite-runner.mjs`, 127.0.0.1, 포트 보고, 재시작) — 대상: `resources/workers/vite-runner.mjs`, `process_commands.rs` · 완료 판정: 프로젝트 열면 서버 기동, 종료 시 정리 · 선행: T1.15
 - [ ] T4.11 미리보기 iframe + Bridge 호스트 Context(origin 검사, 비율 유지·확대·배경·기기 폭) — 대상: `src/lib/review/BridgeContext.tsx`, `src/components/review/Preview.tsx` · 완료 판정: CDP E2E로 ready 수신 · 선행: T4.10, T4.6 · (F-REV-01, F-REV-06)
 - [ ] T4.12 HMR 누락 감지(Rust 파일 감시 + `hmr` 보고 비교 + `reload`/`init` 복원) — 대상: `src-tauri/src/watch.rs`, `BridgeContext.tsx` · 완료 판정: S4 30ms 연속 쓰기에서 최종본 표시 · 선행: T4.11
 - [ ] T4.13 타임라인 스크러버(clock 유형: 재생·정지·프레임 이동·구간 반복·Scene 경계, free 유형: 재생/정지) — 대상: `src/components/review/Scrubber.tsx` · 완료 판정: 키보드 조작, 컴포넌트 테스트 · 선행: T4.11 · (F-REV-02)
