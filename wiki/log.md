@@ -175,3 +175,6 @@
 
 ## [2026-09-30] wave5 | X2 export-UI merged
 - Lane X2 (T5.2, T5.9, T5.7) merged into feat/m2-agents (dfdb8f7). Conflict: CenterWorkspace prompts tab (P lane PromptsTab kept, X2 export case kept, stale EmptyTabView dropped). Note: vanilla-export.mjs bundle not wired yet, deferred to T5.11/release. See: [[parallel-execution]]
+
+## [2026-09-30] wave5 | R2 revision-MCP merged, wave 5 complete
+- Lane R2 (T4.20, T4.18, T4.19) merged into feat/m2-agents (8e5470d), no conflicts (lane rebased onto P merge first). Notes accepted: snapshot_scene serves host captures (.b64 sidecar, real headless stays in T5.4); update_task_status writes claim board file, runner treats done as claim. All 5 wave-5 lanes merged. See: [[parallel-execution]]

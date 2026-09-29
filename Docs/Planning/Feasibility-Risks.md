@@ -109,6 +109,7 @@
 | HyperFrames 카탈로그 항목 | 저장소 Apache-2.0, 항목별 `license` 필드는 선택 ⚠️ | 참고용(D-017). GSAP 기반이므로 복사하지 않고 런타임으로 재구현, 차용 시 항목별 확인 + `CREDITS.md` |
 | `yaml` / `culori` | ISC / MIT | 사용 가능 |
 | M1 추가 Rust crate: `reqwest`, `sha2`, `hex`, `zip`, `winreg`, `windows-sys`(+dev `tempfile`) | MIT 또는 Apache-2.0 | 사용 가능(FFmpeg 다운로드·SHA-256·zip 해제·레지스트리 PATH·Job Object) |
+| M4 추가 Rust crate: `schemars`(MIT, 기존 transitive를 직접 의존으로 승격) | MIT | 사용 가능(MCP 도구 스키마, T4.20) |
 | M1 추가 JS: `zod`(런타임), `@react-three/fiber`·`three`(런타임 peer/dev), `@types/culori` | MIT | 사용 가능 |
 | M5 추가 JS(export-worker): `jszip`, `pptxgenjs`, `pdf-lib`, `puppeteer-core` | MIT / MIT / MIT / Apache-2.0 | 사용 가능. `puppeteer-core`는 브라우저 미포함(관리 브라우저·시스템 Edge 사용) |
 | 내장 팔레트 | 자체 제작(CC0로 배포) | 외부 팔레트 사이트의 색 조합을 그대로 가져오지 않음 |
