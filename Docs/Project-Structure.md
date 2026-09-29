@@ -109,7 +109,7 @@
 | `src/components/project/` | `NewProjectWizard`, `ProjectInstall`(pnpm install 동의·로그를 마법사 밖에서 소유) |
 | `src/components/doctor/` | Doctor 화면·배지·FFmpeg 동의·설치 다이얼로그 |
 | `src/components/layout/shellRegistry.ts` | 액티비티바·탭 종류 등록(pipeline·explorer·agent·templates·playground, brief·plan·prompts·design·review·export) |
-| `src/lib/db/migrations/0002_global.sql`, `0003_project.sql` | 전역·프로젝트 테이블 골격. `collections`·`extensions` 예제 도메인은 제거됨 |
+| `src/lib/db/migrations/0002_global.sql`, `0003_project.sql`, `0004_playground.sql` | 전역·프로젝트 테이블 골격 + 플레이그라운드 인덱스. `collections`·`extensions` 예제 도메인은 제거됨 |
 | 프로젝트 데이터 폴더 | `<project>/.vanilla/`(템플릿의 `.app-data` 대체, `.gitignore` 등록) |
 | `resources/project-template/`, `resources/design/` | 새 프로젝트 스캐폴딩 원본, 기본 DESIGN.md. `tauri.conf.json`의 `bundle.resources`로 번들 |
 | `src-tauri/src/process/` | 프로세스 실행 공통(PATHEXT·fresh PATH·Job Object·타임아웃), FFmpeg 다운로드 |
