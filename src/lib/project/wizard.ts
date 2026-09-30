@@ -59,6 +59,8 @@ export interface WizardValues {
   agent: AgentId;
   /** 부모 폴더 절대 경로 */
   parentDir: string;
+  /** Built-in template id (gallery selection, W1 wiring). null = 없음 */
+  templateId: string | null;
 }
 
 export function defaultWizardValues(): WizardValues {
@@ -71,6 +73,7 @@ export function defaultWizardValues(): WizardValues {
     slideCount: DEFAULT_SLIDE_COUNT,
     agent: AGENT_IDS[0],
     parentDir: '',
+    templateId: null,
   };
 }
 
@@ -92,14 +95,14 @@ export function buildFormat(v: WizardValues): ProjectFormat {
   return format;
 }
 
-/** 새 프로젝트의 vanilla.json. 템플릿은 없음, 팔레트는 기본 고정(설계서: 웨이브 2 범위). */
+/** 새 프로젝트의 vanilla.json. 팔레트는 기본 고정(설계서: 웨이브 2 범위). */
 export function buildManifest(v: WizardValues, now: Date = new Date()): ProjectManifest {
   return {
     version: VANILLA_MANIFEST_VERSION,
     name: v.name.trim(),
     outputType: v.outputType,
     format: buildFormat(v),
-    template: null,
+    template: v.templateId ? { id: v.templateId } : null,
     palette: { id: 'vanilla-default', source: 'builtin' },
     agents: { default: v.agent, enabled: [v.agent] },
     runtime: { version: '0.0.0' },

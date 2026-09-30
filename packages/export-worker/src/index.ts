@@ -38,6 +38,7 @@ export { buildImagePptx, buildSlidesPdf, exportSlides, SLIDE_POINTS } from './sl
 export type { SlidesDeps } from './slides';
 export {
   applyWrapNone,
+  buildEditableExportExpression,
   bundleProjectFonts,
   collectProjectFonts,
   EDITABLE_FILE,

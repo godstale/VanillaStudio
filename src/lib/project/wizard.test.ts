@@ -35,11 +35,20 @@ describe('wizard manifest', () => {
     expect(buildManifest(withOutputType(base(), 'web')).format).toEqual({ width: 1440, height: 900 });
   });
 
-  it('template is none, palette is the builtin default, agent is enabled', () => {
+  it('template is none by default, a chosen id is carried into the manifest', () => {
     const m = buildManifest(base({ agent: 'codex' }));
     expect(m.template).toBeNull();
     expect(m.palette).toEqual({ id: 'vanilla-default', source: 'builtin' });
     expect(m.agents).toEqual({ default: 'codex', enabled: ['codex'] });
+    const withTemplate = buildManifest(base({ templateId: 'editorial-slides' }));
+    expect(withTemplate.template).toEqual({ id: 'editorial-slides' });
+    expect(validateWizard(base({ templateId: 'editorial-slides' })).ok).toBe(true);
+  });
+
+  it('rejects a template id that is not a slug', () => {
+    expect(validateWizard(base({ templateId: 'Bad Id!' }))).toMatchObject({
+      errorKey: 'project.error.invalidManifest',
+    });
   });
 
   it('manifest JSON round-trips through parseProjectManifest', () => {
