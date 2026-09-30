@@ -217,3 +217,6 @@
 
 ## [2026-09-30] wave7 | W4 user-docs merged
 - Lane W4 (T7.3) merged into feat/m2-agents (c95a891), no conflicts. User-Guide 4 docs plus in-app links card. See: [[parallel-execution]]
+
+## [2026-09-30] wave7 | W3 release-config merged
+- Lane W3 (T7.1, T7.4) merged into feat/m2-agents (0b1dfbe). Conflict: TODO T7.3/T7.4 checkboxes, kept both checked. Follow-ups: tauri.conf resources verified 6 entries incl. skills; license table corrected (jszip dual, design.md CLI field missing, fontsource OFL). pnpm tauri build not run (deferred to T7.2 VM). See: [[parallel-execution]]

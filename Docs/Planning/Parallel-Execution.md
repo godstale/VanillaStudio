@@ -327,3 +327,4 @@ Vanilla Studio P4 구현, 레인 {{LANE}}을 수행하라.
 | 6 | Q3 플레이그라운드 | `feat/m6-q3-playground` | 병합 완료 | `8ed3c1b` | T6.8·T6.10, TODO·i18n 충돌 해결 |
 | 7 | W2 M6 마무리 | `feat/m6-w-wrap` | 병합 완료 | `e1f7318` | T6.11, milestone-m6 |
 | 7 | W4 사용자 문서 | `feat/m7-user-docs` | 병합 완료 | `c95a891` | T7.3, User-Guide 4건 |
+| 7 | W3 릴리스 설정 | `feat/m7-release-conf` | 병합 완료 | `0b1dfbe` | T7.1·T7.4, TODO 체크박스 충돌 해결 |
