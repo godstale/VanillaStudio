@@ -1,4 +1,7 @@
 // @vitest-environment node
+import { mkdtempSync, realpathSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import { CancelledError } from './job';
 import { runExport, spawnFixed, type Steps } from './run';
@@ -84,5 +87,20 @@ describe('spawnFixed', () => {
     const c = new AbortController();
     c.abort();
     await expect(spawnFixed(process.execPath, ['-e', ''], { signal: c.signal })).rejects.toThrow(CancelledError);
+  });
+
+  it('runs the child with the given cwd', async () => {
+    const dir = realpathSync(mkdtempSync(path.join(tmpdir(), 'vanilla-cwd-')));
+    try {
+      const lines: string[] = [];
+      const r = await spawnFixed(process.execPath, ['-e', 'console.log(process.cwd())'], {
+        cwd: dir,
+        onLine: (_s, l) => lines.push(l),
+      });
+      expect(r.code).toBe(0);
+      expect(lines).toEqual([dir]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });

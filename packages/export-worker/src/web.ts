@@ -31,10 +31,11 @@ export function resolveViteBin(projectDir: string): string {
   return bin;
 }
 
-/** `node <vite> build --outDir <dist> --emptyOutDir` (fixed argv, D-012). */
+/** `node <vite> build --outDir <dist> --emptyOutDir` (fixed argv, D-012), run with the project dir. */
 export async function runViteBuild(options: ViteBuildOptions): Promise<void> {
   const viteBin = options.viteBin ?? resolveViteBin(options.projectDir);
   const r = await spawnFixed(options.node ?? process.execPath, [viteBin, 'build', '--outDir', options.distDir, '--emptyOutDir'], {
+    cwd: options.projectDir,
     ffmpeg: options.ffmpeg,
     signal: options.signal,
     onLine: options.onLog,

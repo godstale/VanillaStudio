@@ -12,6 +12,8 @@ import { CancelledError, formatEvent, throwIfCancelled, type ExportJob, type Job
 export interface SpawnOptions {
   env?: NodeJS.ProcessEnv;
   ffmpeg?: FfmpegPaths;
+  /** Working directory of the child. Export builds run with the project dir (W1 fix). */
+  cwd?: string;
   timeoutMs?: number;
   signal?: AbortSignal;
   /** Receives stdout/stderr lines while the child runs (forwarded as `log` events by runExport). */
@@ -38,6 +40,7 @@ export function spawnFixed(bin: string, args: readonly string[], options: SpawnO
     }
     const child = spawn(bin, [...args], {
       stdio: ['ignore', 'pipe', 'pipe'],
+      cwd: options.cwd,
       env: buildExportEnv(options.env ?? process.env, options.ffmpeg),
       windowsHide: true,
       shell: false,

@@ -1,11 +1,11 @@
 // @vitest-environment node
 import JSZip from 'jszip';
-import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 import type { WebJob } from './job';
-import { exportWeb, resolveViteBin, zipDirectory } from './web';
+import { exportWeb, resolveViteBin, runViteBuild, zipDirectory } from './web';
 
 const tmp = mkdtempSync(path.join(tmpdir(), 'vanilla-web-'));
 afterAll(() => rmSync(tmp, { recursive: true, force: true }));
@@ -40,6 +40,26 @@ describe('resolveViteBin', () => {
     writeFileSync(path.join(proj, 'node_modules', 'vite', 'bin', 'vite.js'), '');
     expect(resolveViteBin(proj)).toBe(path.join(proj, 'node_modules', 'vite', 'bin', 'vite.js'));
     expect(() => resolveViteBin(path.join(tmp, 'missing'))).toThrow(/vite not found/);
+  });
+});
+
+describe('runViteBuild (cwd)', () => {
+  it('runs vite with the project dir as its working directory', async () => {
+    const proj = realpathSync(mkdtempSync(path.join(tmpdir(), 'vanilla-vite-cwd-')));
+    const dist = path.join(tmp, 'vite-cwd-dist');
+    mkdirSync(dist, { recursive: true });
+    // Fake vite: records its own cwd next to --outDir, then exits 0.
+    const bin = path.join(proj, 'vite.js');
+    writeFileSync(
+      bin,
+      `const fs = require('node:fs');\n` +
+        `const path = require('node:path');\n` +
+        `const out = process.argv[process.argv.indexOf('--outDir') + 1];\n` +
+        `fs.writeFileSync(path.join(out, 'cwd.txt'), process.cwd());\n`,
+    );
+    await runViteBuild({ projectDir: proj, distDir: dist, viteBin: bin });
+    expect(readFileSync(path.join(dist, 'cwd.txt'), 'utf8')).toBe(proj);
+    rmSync(proj, { recursive: true, force: true });
   });
 });
 

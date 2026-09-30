@@ -137,6 +137,8 @@ pub struct ExportSpec {
     pub script: PathBuf,
     pub job_file: PathBuf,
     pub out_dir: PathBuf,
+    /// Verified workspace project dir: the worker's working directory (W1 fix).
+    pub project_dir: PathBuf,
     pub job_id: String,
     pub path_env: String,
 }
@@ -177,7 +179,7 @@ pub fn run_export(
         argv: argv.clone(),
     });
     let args: Vec<&str> = argv.iter().map(String::as_str).collect();
-    let opts = RunOptions { cwd: None, ..RunOptions::new(Duration::ZERO).path(&spec.path_env) };
+    let opts = RunOptions { cwd: Some(spec.project_dir.clone()), ..RunOptions::new(Duration::ZERO).path(&spec.path_env) };
     let mut child =
         base_command(&spec.node, &args, &opts).spawn().map_err(|e| format!("spawn:{e}"))?;
     #[cfg(windows)]
@@ -317,12 +319,13 @@ pub async fn start_export_job<R: tauri::Runtime>(
                 script,
                 job_file: job_file.clone(),
                 out_dir: validated.out_dir,
+                // The command already verified `dir` is the workspace project;
+                // the worker runs with it as cwd, the job file carries the
+                // validated out dir inside that project.
+                project_dir: dir,
                 job_id: job_id.clone(),
                 path_env: process::fresh_path(),
             };
-            // The command already verified `dir` is the workspace project; the
-            // job file carries the validated out dir inside that project.
-            let _ = &dir;
             run_export(&spec, &flag, emit)
         })();
         let _ = std::fs::remove_file(&job_file);
@@ -437,6 +440,7 @@ mod tests {
             script: script_path,
             job_file: dir.join("job.json"),
             out_dir,
+            project_dir: dir.to_path_buf(),
             job_id: job_id.to_string(),
             path_env: process::fresh_path(),
         }
@@ -461,6 +465,28 @@ mod tests {
         assert!(ev.contains(&ExportEvent::Progress { percent: 50.0, step: "build".into(), message: None }));
         assert!(ev.contains(&ExportEvent::Log { stream: "stdout".into(), line: "plain noise".into() }));
         assert!(ev.contains(&ExportEvent::Done { out_dir: "fake-out".into(), files: vec!["a.png".into()] }));
+    }
+
+    #[test]
+    fn run_uses_the_project_dir_as_cwd() {
+        let d = tempfile::tempdir().unwrap();
+        let project = d.path().join("proj");
+        std::fs::create_dir_all(&project).unwrap();
+        // A relative write lands in the worker cwd: it must be the project dir.
+        let spec = ExportSpec {
+            project_dir: project.clone(),
+            ..spec_with_script(
+                d.path(),
+                "import fs from 'node:fs';\nfs.writeFileSync('cwd-marker.txt', process.cwd());\n",
+                "cwd1",
+            )
+        };
+        let (emit, _) = collect();
+        run_export(&spec, &AtomicBool::new(false), emit).unwrap();
+        let marker = project.join("cwd-marker.txt");
+        assert!(marker.is_file(), "worker cwd was not the project dir");
+        let cwd = PathBuf::from(std::fs::read_to_string(&marker).unwrap());
+        assert_eq!(cwd.canonicalize().unwrap(), project.canonicalize().unwrap());
     }
 
     #[test]
