@@ -326,3 +326,4 @@ Vanilla Studio P4 구현, 레인 {{LANE}}을 수행하라.
 | 6 | Q2 템플릿·갤러리 | `feat/m6-q2-templates` | 병합 완료 | `0cadf96` | T6.4·T6.5·T6.6·T6.7, TODO 체크박스 충돌 해결 |
 | 6 | Q3 플레이그라운드 | `feat/m6-q3-playground` | 병합 완료 | `8ed3c1b` | T6.8·T6.10, TODO·i18n 충돌 해결 |
 | 7 | W2 M6 마무리 | `feat/m6-w-wrap` | 병합 완료 | `e1f7318` | T6.11, milestone-m6 |
+| 7 | W4 사용자 문서 | `feat/m7-user-docs` | 병합 완료 | `c95a891` | T7.3, User-Guide 4건 |

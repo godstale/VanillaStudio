@@ -214,3 +214,6 @@
 
 ## [2026-09-30] lint | Wiki health check (lane W2, T6.11)
 - 53 pages, orphans 1 (wiki/sources/milestone-m6.md; overview.md 연결은 조정 세션에 인계), broken links 0. See: [[parallel-execution]]
+
+## [2026-09-30] wave7 | W4 user-docs merged
+- Lane W4 (T7.3) merged into feat/m2-agents (c95a891), no conflicts. User-Guide 4 docs plus in-app links card. See: [[parallel-execution]]
