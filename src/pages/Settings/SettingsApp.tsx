@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useWorkspaceTabs } from '@/lib/context/WorkspaceTabsContext';
 import { useWorkspace } from '@/lib/context/WorkspaceContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import noticeText from '../../../NOTICE.md?raw';
 
 // Example app-level settings page: layout reset + recent-folder cleanup.
 // Add your own app settings here and persist them via SettingsContext.
@@ -72,6 +73,23 @@ export function SettingsApp() {
           </Button>
         </div>
         {notice && <p className="text-xs text-success">{notice}</p>}
+      </div>
+
+      <div className="border border-border rounded-xl p-5 bg-card/40 space-y-3">
+        <div>
+          <h3 className="text-sm font-semibold">{t('settingsApp.notice')}</h3>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            {t('settingsApp.noticeDesc')}
+          </p>
+        </div>
+        <details>
+          <summary className="text-xs font-medium cursor-pointer text-primary">
+            {t('settingsApp.noticeView')}
+          </summary>
+          <pre className="mt-2 max-h-96 overflow-auto whitespace-pre-wrap text-[11px] leading-relaxed border border-border rounded-lg p-3 bg-background">
+            {noticeText}
+          </pre>
+        </details>
       </div>
     </div>
   );
