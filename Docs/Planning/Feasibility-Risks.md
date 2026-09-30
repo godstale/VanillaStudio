@@ -111,7 +111,9 @@
 | M1 추가 Rust crate: `reqwest`, `sha2`, `hex`, `zip`, `winreg`, `windows-sys`(+dev `tempfile`) | MIT 또는 Apache-2.0 | 사용 가능(FFmpeg 다운로드·SHA-256·zip 해제·레지스트리 PATH·Job Object) |
 | M4 추가 Rust crate: `schemars`(MIT, 기존 transitive를 직접 의존으로 승격) | MIT | 사용 가능(MCP 도구 스키마, T4.20) |
 | M1 추가 JS: `zod`(런타임), `@react-three/fiber`·`three`(런타임 peer/dev), `@types/culori` | MIT | 사용 가능 |
-| M5 추가 JS(export-worker): `jszip`, `pptxgenjs`, `pdf-lib`, `puppeteer-core` | MIT / MIT / MIT / Apache-2.0 | 사용 가능. `puppeteer-core`는 브라우저 미포함(관리 브라우저·시스템 Edge 사용) |
+| M5 추가 JS(export-worker): `jszip`, `pptxgenjs`, `pdf-lib`, `puppeteer-core` | `jszip`은 MIT **OR** GPL-3.0-or-later(이중, T7.4 확인) / 나머지는 MIT·MIT·Apache-2.0 | 사용 가능. `puppeteer-core`는 브라우저 미포함(관리 브라우저·시스템 Edge 사용) |
+| M6 추가 JS: `@fontsource` 3종 | OFL-1.1 (T7.4 확인) | 사용 가능 |
+| `@google/design.md` CLI 라이선스 표기 | package에 `license` 필드 없음(T7.4 확인, 표의 Apache-2.0은 명세 기준) | 버전 고정 사용, 배포 전 법률 검토 시 재확인 |
 | 내장 팔레트 | 자체 제작(CC0로 배포) | 외부 팔레트 사이트의 색 조합을 그대로 가져오지 않음 |
 
 ### 2.10 디자인 시스템 표준화·팔레트 (RQ15·RQ16) — 위험도: 중

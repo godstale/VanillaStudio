@@ -131,6 +131,10 @@ const en: Dict = {
   'settingsApp.clearRecent': 'Clear recent folders',
   'settingsApp.clearRecentDesc': 'Empty the recently opened folder list.',
   'settingsApp.clearRecentDone': 'Recent folder list cleared.',
+  'settingsApp.notice': 'Open-source notices',
+  'settingsApp.noticeDesc':
+    'License information for third-party software bundled with or downloaded by the app.',
+  'settingsApp.noticeView': 'View NOTICE.md',
 
   'errorBoundary.title': 'Something went wrong',
   'errorBoundary.desc':

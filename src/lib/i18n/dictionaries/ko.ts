@@ -129,6 +129,10 @@ const ko = {
   'settingsApp.clearRecent': '최근 폴더 지우기',
   'settingsApp.clearRecentDesc': '최근에 연 폴더 목록을 비웁니다.',
   'settingsApp.clearRecentDone': '최근 폴더 목록을 비웠습니다.',
+  'settingsApp.notice': '오픈소스 고지',
+  'settingsApp.noticeDesc':
+    '앱에 포함되거나 앱이 내려받는 third-party 소프트웨어의 라이선스 안내입니다.',
+  'settingsApp.noticeView': 'NOTICE.md 보기',
 
   'errorBoundary.title': '문제가 발생했습니다',
   'errorBoundary.desc':
