@@ -52,6 +52,7 @@ vi.mock('@tauri-apps/api/core', () => ({
 }));
 vi.mock('@/lib/context/WorkspaceContext', () => ({
   useSafeWorkspace: () => ({ workspaceRoot: ROOT }),
+  useWorkspace: () => ({ workspaceRoot: ROOT, setWorkspaceRoot: () => {}, trustWorkspace: () => {} }),
 }));
 vi.mock('@/lib/context/WorkspaceTabsContext', () => ({
   useWorkspaceTabs: () => ({
@@ -81,6 +82,17 @@ describe('TemplatesPanel', () => {
     for (const id of ['editorial-slides', 'product-showcase-video', 'kinetic-type-web']) {
       expect(screen.getByTestId(`template-card-${id}`)).toBeTruthy();
     }
+  });
+
+  it('opens the new-project wizard with the selected template', async () => {
+    renderWithProviders(<TemplatesPanel />);
+    fireEvent.click(screen.getByTestId('template-select-editorial-slides'));
+    // The wizard shows the template name as its (selected, toggle-off) template choice.
+    const choice = await screen.findByRole('button', { name: 'Minimal Editorial Slides' });
+    expect(choice.getAttribute('aria-pressed')).toBe('true');
+    // Toggling it off returns the wizard to "no template".
+    fireEvent.click(choice);
+    expect(screen.queryByRole('button', { name: 'Minimal Editorial Slides' })).toBeNull();
   });
 
   it('lists built-in palettes with search and scheme filter', async () => {

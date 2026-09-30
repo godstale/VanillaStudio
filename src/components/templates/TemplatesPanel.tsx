@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Check, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PaletteLibrary } from '@/components/design/PaletteLibrary';
+import { NewProjectWizard } from '@/components/project/NewProjectWizard';
 import { TemplateGallery } from './TemplateGallery';
 import { useSafeWorkspace } from '@/lib/context/WorkspaceContext';
 import { useWorkspaceTabs } from '@/lib/context/WorkspaceTabsContext';
@@ -61,14 +62,16 @@ function ApplyPaletteButton({ root, palette }: { root: string | null; palette: P
 }
 
 // Templates side panel (Product-Spec §4.1): the built-in template gallery and
-// the palette library as sub-tabs. Full install-into-new-project wiring
-// arrives with the wizard (T6.10 follow-up); the gallery selects and previews.
+// the palette library as sub-tabs. Picking a gallery card opens the new-project
+// wizard with that template preselected (W1 wiring).
 export function TemplatesPanel() {
   const { t } = useLanguage();
   const root = useSafeWorkspace()?.workspaceRoot ?? null;
   const { openTab } = useWorkspaceTabs();
   const [tab, setTab] = useState<'templates' | 'palettes'>('templates');
   const [projectPalettes, setProjectPalettes] = useState<PaletteFile[]>([]);
+  const [wizardTemplate, setWizardTemplate] = useState<string | null>(null);
+  const [wizardOpen, setWizardOpen] = useState(false);
 
   useEffect(() => {
     if (!root) return;
@@ -109,7 +112,22 @@ export function TemplatesPanel() {
       </div>
       {tab === 'templates' ? (
         <div className="min-h-0 flex-1">
-          <TemplateGallery />
+          <TemplateGallery
+            onSelect={(id) => {
+              setWizardTemplate(id);
+              setWizardOpen(true);
+            }}
+          />
+          {/* key remounts per template so the wizard picks up each selection. */}
+          <NewProjectWizard
+            key={wizardTemplate ?? 'none'}
+            open={wizardOpen}
+            onOpenChange={(open) => {
+              setWizardOpen(open);
+              if (!open) setWizardTemplate(null);
+            }}
+            initialTemplateId={wizardTemplate}
+          />
         </div>
       ) : (
         <div className="min-h-0 flex-1 overflow-y-auto p-2">
