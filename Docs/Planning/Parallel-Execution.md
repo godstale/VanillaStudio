@@ -152,6 +152,22 @@ M1은 main에 병합했다. 웨이브 3은 통합 브랜치 `feat/m2-agents`(mai
 
 ---
 
+## 2f. 웨이브 7 (M6 마무리 + 릴리스 준비) — 통합 브랜치 `feat/m2-agents`
+
+수동 항목은 제외: T7.2 VM 실행, T7.5 서명(인증서 필요).
+
+| 레인 | 브랜치 / 워크트리 | TODO 항목 | 소유 경로 | i18n 접두어 |
+| --- | --- | --- | --- | --- |
+| **W1 잔여 수정** | `feat/w7-fixes` / `../VanillaStudio-w7-f` | O 인계 4건 (TODO 외) | `packages/export-worker/src/slidesEditable.ts`, `resources/workers/vite-runner.mjs`·번들 배선, `src-tauri/src/commands/process_commands.rs`(cwd), 갤러리→마법사 배선 | `templates.*`(기존 블록) |
+| **W2 M6 마무리** | `feat/m6-w-wrap` / `../VanillaStudio-m6-w` | T6.11 | `wiki/sources/milestone-m6.md`(신규) | — |
+| **W3 릴리스 설정** | `feat/m7-release-conf` / `../VanillaStudio-m7-r` | T7.1 → T7.4 | `src-tauri/tauri.conf.json`(bundle), `NOTICE.md`, 앱 정보 화면 | — |
+| **W4 사용자 문서** | `feat/m7-user-docs` / `../VanillaStudio-m7-d` | T7.3 | `Docs/User-Guide/*`(신규) | — |
+
+- W1 상세: ① slidesEditable `page.evaluate(문자열)` 미실행 → IIFE+JSON 래핑 수정(테스트로 21KB 덱 회귀 방지). ② `runViteBuild`·Rust `run_export`에 cwd=project 지정. ③ `vanilla-export.mjs` 번들을 `resources/workers/`에 연결(Rust 기대 경로와 일치). ④ 갤러리 onSelect → NewProjectWizard 적용 배선.
+- 병합 순서: W1 → W2 → W3 → W4.
+
+---
+
 ## 3. 브랜치·워크트리
 
 ```powershell
