@@ -65,6 +65,21 @@ export interface EditableSlideBrowser {
 
 export type LaunchEditableBrowser = (executablePath: string) => Promise<EditableSlideBrowser>;
 
+/**
+ * Build the browser expression for one slide conversion. `page.evaluate`
+ * treats a string first argument as an expression and ignores any extra
+ * args, so the call must be self-contained: an async IIFE with
+ * JSON-serialized arguments. Passing `(fnSource, sel, w, h)` never invoked
+ * the function and produced an empty deck (W1 fix).
+ */
+export function buildEditableExportExpression(selector: string, widthIn: number, heightIn: number): string {
+  const args = `${JSON.stringify(selector)}, ${JSON.stringify(widthIn)}, ${JSON.stringify(heightIn)}`;
+  return `(async (sel, w, h) => {
+    const blob = await globalThis.domToPptx.exportToPptx(sel, { width: w, height: h, skipDownload: true });
+    return Array.from(new Uint8Array(await blob.arrayBuffer()));
+  })(${args})`;
+}
+
 class PuppeteerEditablePage implements EditableSlidePage {
   constructor(
     private readonly page: Page,
@@ -86,15 +101,9 @@ class PuppeteerEditablePage implements EditableSlidePage {
   }
 
   async exportSlideHtml(selector: string, widthIn: number, heightIn: number): Promise<Uint8Array> {
-    const raw: unknown = await this.page.evaluate(
-      `async (sel, w, h) => {
-        const blob = await globalThis.domToPptx.exportToPptx(sel, { width: w, height: h, skipDownload: true });
-        return Array.from(new Uint8Array(await blob.arrayBuffer()));
-      }`,
-      selector,
-      widthIn,
-      heightIn,
-    );
+    // Single-argument call: `page.evaluate` treats a string as an expression
+    // and ignores extra args, so the slide conversion must be self-contained.
+    const raw: unknown = await this.page.evaluate(buildEditableExportExpression(selector, widthIn, heightIn));
     if (!Array.isArray(raw) || !raw.every((n: unknown) => typeof n === 'number')) {
       throw new Error('export worker: editable export returned no PPTX bytes');
     }

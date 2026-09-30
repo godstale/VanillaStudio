@@ -7,8 +7,10 @@ import { describe, expect, it } from 'vitest';
 import JSZip from 'jszip';
 import {
   applyWrapNone,
+  buildEditableExportExpression,
   bundleProjectFonts,
   EDITABLE_FILE,
+  EDITABLE_INCHES,
   exportEditableSlides,
   FONTS_GUIDE,
   mergeSlideDecks,
@@ -100,6 +102,56 @@ describe('postProcessDeck', () => {
     expect(patched).toBe(1);
     const zip = await JSZip.loadAsync(fixed);
     expect(await zip.file('ppt/slides/slide1.xml')?.async('string')).toContain('wrap="none"');
+  });
+});
+
+describe('buildEditableExportExpression', () => {
+  // ZIP magic, like a real one-slide deck (O lane: 21KB normal deck).
+  const DECK_BYTES = Uint8Array.from([0x50, 0x4b, 0x03, 0x04, 0x0a, 0x00, 0x01, 0x02]);
+
+  /**
+   * Evaluate with real `page.evaluate` semantics: a string first argument is
+   * an expression, extra args are ignored. The old
+   * `evaluate(fnSource, sel, w, h)` shape never invoked the function here.
+   */
+  async function evaluateLikePuppeteer(expr: string, ...extra: unknown[]): Promise<unknown> {
+    if (extra.length > 0) throw new Error('expression must be self-contained (single evaluate argument)');
+    const seen: { sel: unknown; width: unknown; height: unknown } = { sel: null, width: null, height: null };
+    const g = globalThis as unknown as Record<string, unknown>;
+    const prev = g['domToPptx'];
+    g['domToPptx'] = {
+      exportToPptx: (sel: unknown, opts: unknown) => {
+        const o = opts as { width: unknown; height: unknown };
+        seen.sel = sel;
+        seen.width = o.width;
+        seen.height = o.height;
+        return Promise.resolve(new Blob([DECK_BYTES]));
+      },
+    };
+    try {
+      const out: unknown = await eval(expr);
+      return { out, seen };
+    } finally {
+      if (prev === undefined) delete g['domToPptx'];
+      else g['domToPptx'] = prev;
+    }
+  }
+
+  it('is a self-invoking expression that yields deck bytes with no extra args', async () => {
+    const expr = buildEditableExportExpression('#root', EDITABLE_INCHES.width, EDITABLE_INCHES.height);
+    expect(expr.trimStart().startsWith('(async')).toBe(true);
+    const result = (await evaluateLikePuppeteer(expr)) as { out: unknown; seen: { sel: unknown; width: unknown; height: unknown } };
+    expect(Array.from(result.out as ArrayLike<number>)).toEqual(Array.from(DECK_BYTES));
+    expect(result.seen).toEqual({ sel: '#root', width: EDITABLE_INCHES.width, height: EDITABLE_INCHES.height });
+  });
+
+  it('escapes hostile selectors through JSON serialization', async () => {
+    const hostile = `#a"b\\c'd`;
+    const result = (await evaluateLikePuppeteer(
+      buildEditableExportExpression(hostile, 13.333, 7.5),
+    )) as { out: unknown; seen: { sel: unknown } };
+    expect(result.seen.sel).toBe(hostile);
+    expect(Array.from(result.out as ArrayLike<number>)).toEqual(Array.from(DECK_BYTES));
   });
 });
 
