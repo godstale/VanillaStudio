@@ -8,6 +8,11 @@ import React, {
 } from 'react';
 import type { WorkspaceTab } from '@/lib/types/workspaceTab';
 import * as settingsRepo from '@/lib/db/repositories/settingsRepo';
+import {
+  getGlobalDatabase,
+  getProjectDatabase,
+  type SqlDatabase,
+} from '@/lib/db/client';
 import { useSafeWorkspace } from './WorkspaceContext';
 
 export interface WorkspaceTabsContextValue {
@@ -50,6 +55,11 @@ const WorkspaceTabsContext = createContext<
   WorkspaceTabsContextValue | undefined
 >(undefined);
 
+// Tabs live in the project DB when a folder is open, otherwise in the global DB.
+function getTabsDatabase(root: string | null): Promise<SqlDatabase> {
+  return root ? getProjectDatabase(root) : getGlobalDatabase();
+}
+
 let tabCounter = 0;
 function generateTabId(type: string): string {
   tabCounter += 1;
@@ -74,75 +84,75 @@ export function WorkspaceTabsProvider({
   const [splitDirection, setSplitDirection] = useState<
     'horizontal' | 'vertical'
   >('horizontal');
-  const [isLoaded, setIsLoaded] = useState(false);
+  // Root whose tabs are currently held in state (undefined = nothing loaded yet).
+  // Deriving everything from it keeps a previous project's tabs from ever showing or saving.
+  const [loadedRoot, setLoadedRoot] = useState<string | null | undefined>(
+    undefined,
+  );
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const isWithoutWorkspace = hasWorkspaceContext && !workspaceRoot;
-  const tabs = isWithoutWorkspace ? [] : internalTabs;
-  const activeTabId = isWithoutWorkspace ? null : internalActiveTabId;
-  const secondaryActiveTabId = isWithoutWorkspace
-    ? null
-    : internalSecondaryActiveTabId;
+  const isLoaded = isWithoutWorkspace || loadedRoot === workspaceRoot;
+  const tabs = isWithoutWorkspace || !isLoaded ? [] : internalTabs;
+  const activeTabId =
+    isWithoutWorkspace || !isLoaded ? null : internalActiveTabId;
+  const secondaryActiveTabId =
+    isWithoutWorkspace || !isLoaded ? null : internalSecondaryActiveTabId;
 
   const primaryTabs = tabs.filter((t) => (t.pane ?? 'primary') === 'primary');
   const secondaryTabs = tabs.filter((t) => t.pane === 'secondary');
   const isSplit = secondaryTabs.length > 0 && primaryTabs.length > 0;
 
-  // Restore saved tabs from app_settings on mount
+  // Restore this project's tabs from its own DB (global DB when no folder scope exists).
   useEffect(() => {
+    if (isWithoutWorkspace) return;
     let active = true;
     void (async () => {
       try {
-        const settings = await settingsRepo.getSettings();
-        if (active && (!hasWorkspaceContext || workspaceRoot)) {
-          if (settings.openTabs && settings.openTabs.length > 0) {
-            setInternalTabs(settings.openTabs);
-            const savedPrimary = settings.openTabs.filter(
-              (t) => (t.pane ?? 'primary') === 'primary',
-            );
-            const savedSecondary = settings.openTabs.filter(
-              (t) => t.pane === 'secondary',
-            );
-            setInternalActiveTabId(
-              settings.activeTabId &&
-                savedPrimary.some((t) => t.id === settings.activeTabId)
-                ? settings.activeTabId
-                : (savedPrimary[0]?.id ?? null),
-            );
-            if (savedSecondary.length > 0) {
-              setInternalSecondaryActiveTabId(savedSecondary[0]?.id ?? null);
-            }
-          } else {
-            setInternalTabs((prev) => (prev.length > 0 ? prev : []));
-            setInternalActiveTabId((prev) => (prev ? prev : null));
-          }
-        }
+        const settings = await settingsRepo.getSettings(
+          await getTabsDatabase(workspaceRoot),
+        );
+        if (!active) return;
+        const saved = settings.openTabs;
+        const savedPrimary = saved.filter(
+          (t) => (t.pane ?? 'primary') === 'primary',
+        );
+        const savedSecondary = saved.filter((t) => t.pane === 'secondary');
+        setInternalTabs(saved);
+        setInternalActiveTabId(
+          settings.activeTabId &&
+            savedPrimary.some((t) => t.id === settings.activeTabId)
+            ? settings.activeTabId
+            : (savedPrimary[0]?.id ?? null),
+        );
+        setInternalSecondaryActiveTabId(savedSecondary[0]?.id ?? null);
       } catch (err) {
         console.error('Failed to restore workspace tabs:', err);
       } finally {
-        if (active) {
-          setIsLoaded(true);
-        }
+        if (active) setLoadedRoot(workspaceRoot);
       }
     })();
     return () => {
       active = false;
     };
-  }, [hasWorkspaceContext, workspaceRoot]);
+  }, [isWithoutWorkspace, workspaceRoot]);
 
-  // 500ms debounced persistence to app_settings
+  // 500ms debounced persistence into the DB of the root these tabs belong to.
   useEffect(() => {
     if (!isLoaded || isWithoutWorkspace) return;
-
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
+    const root = workspaceRoot;
 
     debounceTimerRef.current = setTimeout(() => {
-      void settingsRepo.updateSettings({
-        openTabs: internalTabs,
-        activeTabId: internalActiveTabId,
-      });
+      void (async () => {
+        try {
+          await settingsRepo.updateSettings(
+            { openTabs: internalTabs, activeTabId: internalActiveTabId },
+            await getTabsDatabase(root),
+          );
+        } catch (err) {
+          console.error('Failed to save workspace tabs:', err);
+        }
+      })();
     }, 500);
 
     return () => {
@@ -150,7 +160,13 @@ export function WorkspaceTabsProvider({
         clearTimeout(debounceTimerRef.current);
       }
     };
-  }, [internalTabs, internalActiveTabId, isLoaded, isWithoutWorkspace]);
+  }, [
+    internalTabs,
+    internalActiveTabId,
+    isLoaded,
+    isWithoutWorkspace,
+    workspaceRoot,
+  ]);
 
   const openTab = useCallback(
     (

@@ -428,6 +428,34 @@ pub fn copy_path(from: String, to: String, workspace_root: Option<String>) -> Re
     Ok(())
 }
 
+/// Copy one regular file from anywhere on disk into the workspace (e.g. brief materials).
+/// Unlike `copy_path`, the source may be outside the workspace; the destination may not.
+fn import_file(source: &Path, verified_dest: &Path) -> Result<(), String> {
+    let meta = std::fs::metadata(source)
+        .map_err(|e| format!("Source not readable '{}': {}", source.display(), e))?;
+    if !meta.is_file() {
+        return Err(format!("Source is not a file: {}", source.display()));
+    }
+    if verified_dest.exists() {
+        return Err(format!("이미 대상 경로가 존재합니다: {}", verified_dest.display()));
+    }
+    if let Some(parent) = verified_dest.parent() {
+        std::fs::create_dir_all(parent).map_err(|e| format!("Failed to create folder: {}", e))?;
+    }
+    std::fs::copy(source, verified_dest).map_err(|e| format!("Failed to copy file: {}", e))?;
+    Ok(())
+}
+
+#[tauri::command]
+pub fn import_external_file(
+    source: String,
+    dest: String,
+    workspace_root: Option<String>,
+) -> Result<(), String> {
+    let verified_dest = resolve_and_verify_workspace_path(&dest, workspace_root.as_deref(), false)?;
+    import_file(Path::new(&source), &verified_dest)
+}
+
 #[tauri::command]
 pub fn reveal_in_explorer(path: String, workspace_root: Option<String>) -> Result<(), String> {
     let verified = resolve_and_verify_workspace_path(&path, workspace_root.as_deref(), true)?;
@@ -464,3 +492,22 @@ pub fn reveal_in_explorer(path: String, workspace_root: Option<String>) -> Resul
     Ok(())
 }
 
+#[cfg(test)]
+mod import_tests {
+    use super::*;
+
+    #[test]
+    fn imports_file_and_refuses_overwrite_or_directories() {
+        let src_dir = tempfile::tempdir().unwrap();
+        let ws = tempfile::tempdir().unwrap();
+        let src = src_dir.path().join("logo.png");
+        std::fs::write(&src, b"png").unwrap();
+        let dest = ws.path().join("brief").join("materials").join("logo.png");
+
+        import_file(&src, &dest).unwrap();
+        assert_eq!(std::fs::read(&dest).unwrap(), b"png");
+        assert!(import_file(&src, &dest).is_err(), "must not overwrite");
+        assert!(import_file(src_dir.path(), &ws.path().join("x")).is_err(), "directories rejected");
+        assert!(import_file(&src_dir.path().join("missing"), &ws.path().join("y")).is_err());
+    }
+}

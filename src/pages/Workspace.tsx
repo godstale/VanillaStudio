@@ -16,6 +16,8 @@ import {
   WorkspaceProvider,
   useWorkspace,
 } from '@/lib/context/WorkspaceContext';
+import { PipelineProvider } from '@/lib/pipeline/PipelineContext';
+import { SessionProvider } from '@/lib/agents/SessionContext';
 import { ProjectInstallProvider } from '@/components/project/ProjectInstall';
 import { TrustWorkspaceDialog } from '@/components/workspace/TrustWorkspaceDialog';
 import type { SidePanelView } from '@/lib/types/workspaceTab';
@@ -102,9 +104,13 @@ export function Workspace() {
     <WorkspaceProvider>
       <WorkspaceTabsProvider>
         <SidePanelProvider>
-          <ProjectInstallProvider>
-            <WorkspaceContent />
-          </ProjectInstallProvider>
+          <PipelineProvider>
+          <SessionProvider>
+            <ProjectInstallProvider>
+              <WorkspaceContent />
+            </ProjectInstallProvider>
+          </SessionProvider>
+          </PipelineProvider>
           <TrustWorkspaceDialog />
         </SidePanelProvider>
       </WorkspaceTabsProvider>

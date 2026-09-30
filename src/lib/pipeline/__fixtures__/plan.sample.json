@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "outputType": "video",
+  "format": { "width": 1920, "height": 1080, "fps": 30, "durationSec": 15 },
+  "concept": {
+    "title": "Solar Parchment Intro",
+    "goal": "Introduce the studio in 15 seconds",
+    "audience": "Design-minded founders",
+    "tone": ["warm", "editorial"]
+  },
+  "design": { "file": "DESIGN.md", "palette": "biennale-yellow" },
+  "scenes": [
+    {
+      "id": "s1-intro",
+      "title": "Logo reveal",
+      "purpose": "Open with the mark",
+      "start": 0,
+      "end": 6,
+      "layout": "Logo centered on canvas, title below",
+      "assets": ["logo", "title"],
+      "animations": ["logo-reveal"],
+      "implementation": {
+        "approach": "R3F + custom shader",
+        "libraries": ["three", "@react-three/fiber"],
+        "reason": "Shader dissolve needs GPU"
+      },
+      "params": ["bgColor", "titleText"]
+    },
+    {
+      "id": "s2-outro",
+      "title": "Call to action",
+      "purpose": "Close with the tagline",
+      "start": 6,
+      "end": 15,
+      "layout": "Tagline left, logo right",
+      "assets": ["title"],
+      "animations": ["title-fade"],
+      "params": ["spin"]
+    }
+  ],
+  "assets": [
+    {
+      "id": "logo",
+      "kind": "three",
+      "description": "Extruded logo mark",
+      "implementation": { "approach": "three.js extrude" },
+      "params": ["spin"]
+    },
+    { "id": "title", "kind": "text", "description": "Headline", "params": [] }
+  ],
+  "animations": [
+    {
+      "id": "logo-reveal",
+      "target": "logo",
+      "start": 0.5,
+      "end": 2,
+      "easing": "expo.out",
+      "description": "Scale and dissolve in"
+    },
+    {
+      "id": "title-fade",
+      "target": "title",
+      "start": 6.5,
+      "end": 8,
+      "description": "Fade up"
+    }
+  ],
+  "params": [
+    { "id": "bgColor", "scope": "s1-intro", "type": "color", "default": "{colors.canvas}", "label": "Background" },
+    { "id": "titleText", "scope": "s1-intro", "type": "text", "default": "Vanilla Studio", "label": "Title" },
+    { "id": "spin", "scope": "global", "type": "number", "default": 1, "min": 0, "max": 4, "step": 0.1, "label": "Logo spin" }
+  ],
+  "customizationNotes": "Colors follow the palette; spin and title are user adjustable."
+}

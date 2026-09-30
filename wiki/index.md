@@ -63,6 +63,11 @@
 - [[phase-p0-setup]] — P0 준비 로그
 - [[phase-p2-planning]] — P2 상세 기획 로그
 - [[milestone-m1]] — M1 기반(앱 골격·Doctor·프로젝트 생성) 마일스톤 로그
+- [[milestone-m2]] — M2 에이전트(ACP 호스트·권한·MCP·PTY·프런트) 마일스톤 로그
+- [[milestone-m3]] — M3 파이프라인(Brief→Plan→Prompts→Build) 마일스톤 로그
+- [[milestone-m4]] — M4 검수·런타임(Scene 런타임·검수 스튜디오·팔레트·수정 요청·MCP) 마일스톤 로그
+- [[milestone-m5]] — M5 Export(워커·형식별 export·작업 큐·임베드) 마일스톤 로그
+- [[milestone-m6]] — M6 템플릿·플레이그라운드(스킬·내장 3종·팔레트 24종·갤러리·플레이그라운드) 마일스톤 로그
 - [[phase-p3-implementation-plan]] — P3 구현 계획(+PoC·TODO) 로그
 - PoC 로그 (P3):
   - [[poc-s1]] — HyperFrames로 React+R3F MP4 렌더 ✅ 통과

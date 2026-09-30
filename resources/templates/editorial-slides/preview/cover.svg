@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-label="Minimal Editorial Slides preview">
+  <rect width="1280" height="720" style="fill:var(--color-canvas)"/>
+  <rect x="160" y="120" width="960" height="480" style="fill:var(--color-surface)" rx="4"/>
+  <text x="240" y="220" font-family="Arial, sans-serif" font-size="24" letter-spacing="4" style="fill:var(--color-primary)">A VANILLA STUDIO TEMPLATE</text>
+  <rect x="240" y="252" width="96" height="6" style="fill:var(--color-primary)"/>
+  <text x="240" y="380" font-family="Georgia, serif" font-size="104" style="fill:var(--color-ink)">Quiet paper,</text>
+  <text x="240" y="492" font-family="Georgia, serif" font-size="104" style="fill:var(--color-ink)">loud ideas.</text>
+  <rect x="240" y="540" width="180" height="44" rx="22" style="fill:var(--color-accent)"/>
+  <text x="330" y="570" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" style="fill:var(--color-ink)">EDITORIAL</text>
+</svg>

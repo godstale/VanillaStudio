@@ -40,6 +40,21 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "resources": { "../resources/project-template": "resources/project-template" }
+    "resources": {
+      "../resources/project-template": "resources/project-template",
+      "../resources/runtime": "resources/runtime",
+      "../resources/workers": "resources/workers",
+      "../resources/palettes": "resources/palettes",
+      "../resources/templates": "resources/templates",
+      "../resources/skills": "resources/skills"
+    },
+    "shortDescription": "Brief to product pipeline studio",
+    "category": "DeveloperTool",
+    "windows": {
+      "webviewInstallMode": {
+        "type": "embedBootstrapper",
+        "silent": true
+      }
+    }
   }
 }

@@ -7,7 +7,10 @@ export type WorkspaceTabType =
   | 'prompts'
   | 'design'
   | 'review'
-  | 'export';
+  | 'export'
+  | 'palette'
+  | 'playground-item'
+  | 'terminal';
 
 export type SidePanelView =
   | 'pipeline'

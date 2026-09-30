@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "showcase-ember",
+  "name": "Showcase Ember",
+  "tags": ["dark", "warm", "cinematic"],
+  "scheme": "dark",
+  "colors": {
+    "canvas": "#1C1410",
+    "ink": "#F0E4D4",
+    "primary": "#E8837A",
+    "accent": "#E0B26A"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

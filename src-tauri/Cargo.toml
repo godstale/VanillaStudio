@@ -1,7 +1,7 @@
 [package]
 name = "app"
 version = "0.1.0"
-description = "A Tauri workspace-shell desktop app (template)"
+description = "Vanilla Studio desktop app"
 authors = ["you"]
 license = "MIT"
 repository = ""
@@ -33,6 +33,15 @@ reqwest = { version = "0.13.3", default-features = false, features = ["blocking"
 sha2 = "0.10.9"
 hex = "0.4.3"
 zip = "4.2.0"
+rmcp = { version = "2.2.0", features = ["server", "macros", "transport-streamable-http-server"] }
+schemars = "1"
+axum = "0.8.4"
+rand = "0.9.5"
+portable-pty = "0.9.0"
+agent-client-protocol = "2.2.0"
+tokio = { version = "1.53.1", features = ["rt", "rt-multi-thread", "macros", "net", "sync", "time", "io-util", "process"] }
+tokio-util = { version = "0.7.19", features = ["compat"] }
+notify = "8.2.0"
 
 [target."cfg(windows)".dependencies]
 windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_System_JobObjects", "Win32_System_Threading"] }
@@ -40,3 +49,4 @@ winreg = "0.56.0"
 
 [dev-dependencies]
 tempfile = "3.27.0"
+rmcp = { version = "2.2.0", features = ["client", "transport-streamable-http-client-reqwest"] }

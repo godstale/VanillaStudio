@@ -8,6 +8,8 @@ import {
   Plus,
   Columns2,
   Rows2,
+  Palette as PaletteIcon,
+  Play as PlayIcon,
   type LucideIcon,
 } from 'lucide-react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
@@ -17,8 +19,16 @@ import { useWorkspace } from '@/lib/context/WorkspaceContext';
 import type { WorkspaceTab, WorkspaceTabType } from '@/lib/types/workspaceTab';
 import { EditorTab } from '@/components/workspace/EditorTab';
 import { ImageViewerTab } from '@/components/workspace/ImageViewerTab';
-import { EmptyTabView } from '@/components/workspace/EmptyTabView';
-import { STAGE_TAB_ICONS } from '@/components/layout/shellRegistry';
+import { STAGE_TAB_ICONS, TERMINAL_TAB_ITEM } from '@/components/layout/shellRegistry';
+import { TerminalTab } from '@/components/terminal/TerminalTab';
+import { BriefEditor } from '@/components/pipeline/brief/BriefEditor';
+import { DesignTab } from '@/components/design/DesignTab';
+import { PaletteEditorTab } from '@/components/design/PaletteEditor';
+import { PlayerTab } from '@/components/playground/PlayerTab';
+import { ReviewTab } from '@/components/review/ReviewTab';
+import { ExportTab } from '@/components/export/ExportTab';
+import { PlanViewer } from '@/components/pipeline/plan/PlanViewer';
+import { PromptsTab } from '@/components/pipeline/prompts/PromptsTab';
 import { WelcomeGuide } from '@/components/workspace/WelcomeGuide';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -31,6 +41,9 @@ const TAB_ICONS: Record<WorkspaceTabType, LucideIcon> = {
   'image-viewer': ImageIcon,
   welcome: Compass,
   ...STAGE_TAB_ICONS,
+  palette: PaletteIcon,
+  'playground-item': PlayIcon,
+  terminal: TERMINAL_TAB_ITEM.icon,
 };
 
 function renderTabContent(tab: WorkspaceTab) {
@@ -41,13 +54,24 @@ function renderTabContent(tab: WorkspaceTab) {
       return <ImageViewerTab tab={tab} />;
     case 'welcome':
       return <WelcomeGuide />;
+    case 'terminal':
+      return <TerminalTab />;
     case 'brief':
+      return <BriefEditor />;
     case 'plan':
-    case 'prompts':
+      return <PlanViewer />;
     case 'design':
+      return <DesignTab />;
+    case 'palette':
+      return <PaletteEditorTab tab={tab} />;
+    case 'playground-item':
+      return <PlayerTab tab={tab} />;
     case 'review':
+      return <ReviewTab />;
+    case 'prompts':
+      return <PromptsTab />;
     case 'export':
-      return <EmptyTabView tab={tab} />;
+      return <ExportTab />;
     default:
       return null;
   }

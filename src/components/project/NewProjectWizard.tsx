@@ -26,6 +26,7 @@ import {
   type WizardValues,
 } from '@/lib/project/wizard';
 import { AGENT_IDS, OUTPUT_TYPES, type ProjectManifest } from '@/lib/types/project';
+import { BUILT_IN_TEMPLATES, getTemplate } from '@/lib/templates/builtin';
 import { cn } from '@/lib/utils';
 
 export interface CreatedProject {
@@ -41,6 +42,8 @@ export interface NewProjectWizardProps {
    * reject하면 마법사에 오류가 표시되고 프로젝트는 열리지 않는다(폴더는 남는다).
    */
   onCreated?: (project: CreatedProject) => Promise<void> | void;
+  /** 템플릿 갤러리에서 고른 내장 템플릿 id. 알 수 없는 id는 없음으로 취급한다. */
+  initialTemplateId?: string | null;
 }
 
 function Choice({
@@ -81,13 +84,20 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-export function NewProjectWizard({ open, onOpenChange, onCreated }: NewProjectWizardProps) {
+export function NewProjectWizard({ open, onOpenChange, onCreated, initialTemplateId }: NewProjectWizardProps) {
   const requestInstall = useProjectInstall();
   const { t } = useLanguage();
-  const { setWorkspaceRoot } = useWorkspace();
-  const [values, setValues] = useState<WizardValues>(defaultWizardValues);
+  const { setWorkspaceRoot, trustWorkspace } = useWorkspace();
+  const [values, setValues] = useState<WizardValues>(() => {
+    const base = defaultWizardValues();
+    const template = getTemplate(BUILT_IN_TEMPLATES, initialTemplateId ?? '');
+    if (!template) return base;
+    // 템플릿의 첫 출력 유형에 규격을 맞춘다(템플릿 이름은 데이터라 번역하지 않는다).
+    return { ...withOutputType(base, template.manifest.outputTypes[0]), templateId: template.manifest.id };
+  });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const selectedTemplate = getTemplate(BUILT_IN_TEMPLATES, values.templateId ?? '');
 
   const patch = (p: Partial<WizardValues>) => setValues((v) => ({ ...v, ...p }));
 
@@ -123,9 +133,11 @@ export function NewProjectWizard({ open, onOpenChange, onCreated }: NewProjectWi
         result.manifest.name,
         result.manifestJson,
       );
+      // 사용자가 방금 직접 만든 폴더이므로 신뢰 확인을 건너뛴다(AGENTS.md §7의 유일한 예외).
+      trustWorkspace(created.path);
       await onCreated?.({ path: created.path, manifest: result.manifest });
       requestInstall?.(created.path);
-      await seedOpenTabs([
+      await seedOpenTabs(created.path, [
         { id: 'brief:main', type: 'brief', title: t('shell.tab.brief'), pane: 'primary' },
       ]);
       setWorkspaceRoot(created.path);
@@ -229,9 +241,15 @@ export function NewProjectWizard({ open, onOpenChange, onCreated }: NewProjectWi
 
           <div className="grid grid-cols-2 gap-4">
             <Field label={t('project.field.template')}>
-              <Choice selected disabled>
-                {t('project.template.none')}
-              </Choice>
+              {selectedTemplate ? (
+                <Choice selected onClick={() => patch({ templateId: null })}>
+                  {selectedTemplate.manifest.name}
+                </Choice>
+              ) : (
+                <Choice selected disabled>
+                  {t('project.template.none')}
+                </Choice>
+              )}
             </Field>
             <Field label={t('project.field.palette')}>
               <Choice selected disabled>

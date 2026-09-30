@@ -84,6 +84,90 @@ M2(에이전트)와 M3(파이프라인)의 레인 배치는 M1을 마무리할 �
 
 ---
 
+## 2b. 웨이브 3 (M2 + M3·M4a 선행분 + M1 이월) — 통합 브랜치 `feat/m2-agents`
+
+M1은 main에 병합했다. 웨이브 3은 통합 브랜치 `feat/m2-agents`(main에서 생성)에 레인 5개를 병합한다. M3·M4a 항목도 이 브랜치에 병합한다(M3·M4의 마무리는 각 마일스톤 항목 완료 뒤).
+
+| 레인 | 브랜치 / 워크트리 | TODO 항목 | 소유 경로 | i18n 접두어 |
+| --- | --- | --- | --- | --- |
+| **E 에이전트 호스트** | `feat/m2-e-host` / `../VanillaStudio-m2-e` | T2.1 → T2.2 → T2.3 → T2.4 → T2.5 → T2.6 | `src/lib/agents/registry*`, `src-tauri/src/agent_host/**`, `src-tauri/src/commands/agent_commands.rs`, `src-tauri/src/commands/process_commands.rs`(T2.2), 전역 DB `agents` 사용 | `agent.*` |
+| **G MCP·PTY** | `feat/m2-g-mcp-pty` / `../VanillaStudio-m2-g` | T2.10 → T2.11 | `src-tauri/src/mcp_server/**`, `src-tauri/src/commands/pty_commands.rs`, `src/components/terminal/**` | `terminal.*` |
+| **H 파이프라인 UI** | `feat/m3-h-pipeline` / `../VanillaStudio-m3-h` | T3.4 → T3.12 → T3.1 → T3.3 → T3.2 → T3.8 → T3.9 | `src/lib/pipeline/**`, `src/components/pipeline/**`, `src/components/design/**` (탭 등록은 `shellRegistry.ts`·`CenterWorkspace.tsx` 최소 수정) | `pipeline.*`, `design.*` |
+| **R 런타임·워커** | `feat/m4-r-runtime` / `../VanillaStudio-m4-r` | T4.9 → T3.7 | `packages/runtime/**`, `packages/export-worker/**`, `resources/runtime/**`, `resources/project-template/**`(런타임 부트스트랩 교체) | 없음 |
+| **S 셸 이월** | `feat/m1-s-shell-fixes` / `../VanillaStudio-m1-s` | 이월 3건(프로젝트별 탭 저장소, 마법사로 만든 프로젝트 자동 신뢰, 템플릿 표기 정리) | `src/lib/context/**`, `src/components/workspace/**`, `src/components/project/NewProjectWizard.tsx`, `LICENSE`·`README.md` | `shell.*` |
+
+- 병합 순서: S → G → E → R → H (공유 파일 충돌이 적은 순). 웨이브 4(T2.7~T2.9, T2.12, T2.13, T3.6, T3.11, T3.13~)는 E 병합 후 배치한다.
+- `Cargo.lock`·`pnpm-lock.yaml` 충돌은 병합 시 재생성한다.
+
+---
+
+## 2c. 웨이브 4 (M2 후속 + M3·M4b·M5 선행분) — 통합 브랜치 `feat/m2-agents`
+
+웨이브 3(S·G·E·R·H)은 병합 완료. 웨이브 4는 같은 통합 브랜치에 레인 5개를 병합한다.
+
+| 레인 | 브랜치 / 워크트리 | TODO 항목 | 소유 경로 | i18n 접두어 |
+| --- | --- | --- | --- | --- |
+| **F 에이전트 프런트** | `feat/m2-f-agent-ui` / `../VanillaStudio-m2-f` | T2.7 → T2.8 → T2.9 | `src/lib/agents/SessionContext*`·리듀서, `src/components/agents/**`, 우측 도크(`src/components/layout/*` 최소 수정), `src/pages/Workspace.tsx` Provider 한 줄 | `agentPanel.*` |
+| **E2 호스트 후속** | `feat/m2-e2-host-followup` / `../VanillaStudio-m2-e2` | MCP 세션 연결(T2.10 판정), T2.13, T2.12 | `src-tauri/src/agent_host/**`, `src-tauri/src/commands/agent_commands.rs`, `src-tauri/src/mcp_server/**`, `wiki/sources/poc-s3.md`(T2.12만) | — |
+| **K 체크포인트·스킬** | `feat/m3-k-checkpoint` / `../VanillaStudio-m3-k` | T3.10 → T3.15 → T6.1 | `src-tauri/src/commands/project_commands.rs`(checkpoint), `src/lib/project/checkpoint*`, `src/components/pipeline/prompts/TaskGraph.tsx`, `resources/skills/vanilla-core/**` | `checkpoint.*` |
+| **V 검수 스튜디오** | `feat/m4-v-review` / `../VanillaStudio-m4-v` | T4.10 → T4.11 → T4.12 → T4.13 → T4.14 → T4.21 | `resources/workers/vite-runner.mjs`, `src-tauri/src/commands/process_commands.rs`(프리뷰 job), `src-tauri/src/watch.rs`, `src/lib/review/**`, `src/components/review/**`, `tests/e2e/**` | `review.*` |
+| **X Export 워커** | `feat/m5-x-export` / `../VanillaStudio-m5-x` | T5.1 → T5.3 → T5.4 → T5.5 → T5.6 → T5.8 | `packages/export-worker/**`, `resources/workers/**`(vite-runner 제외) | 없음 |
+
+- 웨이브 5(에이전트 의존 흐름): T3.6, T3.11, T3.13, T3.14, T4.15~T4.20, T5.2, T5.7, T5.9, T6.x (아래 §2d).
+- 웨이브 4 병합 순서(완료): K → E2 → X → V → F.
+- 사람이 확인할 항목(자동화 불가): 실제 Claude Code·Codex·AGY 대화, PowerPoint에서 편집 PPTX, 깨끗한 Windows VM.
+
+---
+
+## 2d. 웨이브 5 (M3·M4b·M5·M6 의존 흐름) — 통합 브랜치 `feat/m2-agents`
+
+| 레인 | 브랜치 / 워크트리 | TODO 항목 | 소유 경로 | i18n 접두어 |
+| --- | --- | --- | --- | --- |
+| **P 파이프라인 흐름** | `feat/m3-p-flow` / `../VanillaStudio-m3-p` | T3.6 → T3.13 → T3.11 → T3.14 | `src/lib/pipeline/planStep.ts`, `src/lib/pipeline/runner.ts`, `src/components/pipeline/prompts/*`(편집기·승인), 기획서 뷰어 승인 배선(최소 수정) | `pipeline.*` |
+| **D2 디자인·팔레트** | `feat/m4-d2-palette` / `../VanillaStudio-m4-d2` | T4.15 → T4.16 → T4.17 | `src/components/review/DesignPanel.tsx`, `src/lib/design/palettes.ts`, `resources/palettes/`, `src/components/design/PaletteEditor.tsx`, 템플릿 사이드패널 탭(최소 수정) | `palette.*` |
+| **R2 수정요청·MCP** | `feat/m4-r2-revision` / `../VanillaStudio-m4-r2` | T4.20 → T4.18 → T4.19 | `src-tauri/src/mcp_server/tools/*`, `src/lib/review/revision.ts` + 수정요청 UI, `src/components/review/Compare.tsx` | `review.*` |
+| **X2 Export UI** | `feat/m5-x2-export-ui` / `../VanillaStudio-m5-x2` | T5.2 → T5.9 → T5.7 | `src/lib/export/*`, `src/components/export/*`, `packages/export-worker/src/slidesEditable.ts`, `resources/workers/vendor/**` | `export.*` |
+| **T2 템플릿 설치** | `feat/m6-t2-templates` / `../VanillaStudio-m6-t2` | T6.2 | `src/lib/templates/*` | `templates.*` |
+
+- 의존: R2의 T4.18은 P의 T3.14 인터페이스(runner 상태·`task_runs`)를 전제로 한다. 병합 순서: T2 → D2 → X2 → P → R2 (R2는 P 병합 후 rebase·재검증).
+- T2.14 M2 마무리는 조정 세션이 직접 수행한다(코드 전부 병합됨, 데모+`milestone-m2.md`).
+
+---
+
+## 2e. 웨이브 6 (M3·M4·M5 마무리 + M6) — 통합 브랜치 `feat/m2-agents`
+
+수동 항목은 제외: 실제 에이전트 대화, PowerPoint 편집 PPTX 확인, 깨끗한 VM 실행(T7.2), 코드 서명(T7.5, 인증서 필요).
+
+| 레인 | 브랜치 / 워크트리 | TODO 항목 | 소유 경로 | i18n 접두어 |
+| --- | --- | --- | --- | --- |
+| **M M3 마무리** | `feat/m3-m-wrap` / `../VanillaStudio-m3-m` | T3.16 | `wiki/sources/milestone-m3.md`(신규), TODO 자기 체크만 | — |
+| **N M4 마무리** | `feat/m4-n-wrap` / `../VanillaStudio-m4-n` | T4.22 | `wiki/sources/milestone-m4.md`(신규), TODO 자기 체크만 | — |
+| **O M5 나머지** | `feat/m5-o-embed` / `../VanillaStudio-m5-o` | T5.10 → T5.11 | `packages/export-worker/src/embed.ts`(+test), `wiki/sources/milestone-m5.md`(신규) | — |
+| **Q1 팔레트 확장** | `feat/m6-q1-palettes` / `../VanillaStudio-m6-q1` | T6.3 → T6.9 | `resources/palettes/*.json`, `src/lib/design/extract.ts`, `src/lib/design/harmony.ts`(+tests) | `palette.*` |
+| **Q2 템플릿·갤러리** | `feat/m6-q2-templates` / `../VanillaStudio-m6-q2` | T6.4 → T6.5 → T6.6 → T6.7 | `resources/templates/**`, `src/components/templates/*` | `templates.*` |
+| **Q3 플레이그라운드** | `feat/m6-q3-playground` / `../VanillaStudio-m6-q3` | T6.8 → T6.10 | `src/lib/playground/*`, `src/components/playground/*`, T6.10 잔여(DESIGN.md IO·frame.md·가져오기 등) | `playground.*` |
+
+- Q3의 사용자 팔레트 부분은 D2의 병합 API(`listProjectPalettes`·`saveProjectPalette`) 위에서 구현한다(Q1 대기 불필요).
+- 병합 순서: M → N → O → Q1 → Q2 → Q3. T6.11·T7.1·T7.3·T7.4는 웨이브 7(웨이브 6 병합 후).
+
+---
+
+## 2f. 웨이브 7 (M6 마무리 + 릴리스 준비) — 통합 브랜치 `feat/m2-agents`
+
+수동 항목은 제외: T7.2 VM 실행, T7.5 서명(인증서 필요).
+
+| 레인 | 브랜치 / 워크트리 | TODO 항목 | 소유 경로 | i18n 접두어 |
+| --- | --- | --- | --- | --- |
+| **W1 잔여 수정** | `feat/w7-fixes` / `../VanillaStudio-w7-f` | O 인계 4건 (TODO 외) | `packages/export-worker/src/slidesEditable.ts`, `resources/workers/vite-runner.mjs`·번들 배선, `src-tauri/src/commands/process_commands.rs`(cwd), 갤러리→마법사 배선 | `templates.*`(기존 블록) |
+| **W2 M6 마무리** | `feat/m6-w-wrap` / `../VanillaStudio-m6-w` | T6.11 | `wiki/sources/milestone-m6.md`(신규) | — |
+| **W3 릴리스 설정** | `feat/m7-release-conf` / `../VanillaStudio-m7-r` | T7.1 → T7.4 | `src-tauri/tauri.conf.json`(bundle), `NOTICE.md`, 앱 정보 화면 | — |
+| **W4 사용자 문서** | `feat/m7-user-docs` / `../VanillaStudio-m7-d` | T7.3 | `Docs/User-Guide/*`(신규) | — |
+
+- W1 상세: ① slidesEditable `page.evaluate(문자열)` 미실행 → IIFE+JSON 래핑 수정(테스트로 21KB 덱 회귀 방지). ② `runViteBuild`·Rust `run_export`에 cwd=project 지정. ③ `vanilla-export.mjs` 번들을 `resources/workers/`에 연결(Rust 기대 경로와 일치). ④ 갤러리 onSelect → NewProjectWizard 적용 배선.
+- 병합 순서: W1 → W2 → W3 → W4.
+
+---
+
 ## 3. 브랜치·워크트리
 
 ```powershell
@@ -220,3 +304,28 @@ Vanilla Studio P4 구현, 레인 {{LANE}}을 수행하라.
 | 2 | B′ Doctor UI·설치 | `feat/m1-b2-doctor-ui` | 병합 완료 | `7ac1c99` | 마법사 연결은 조정 세션 |
 | 2 | C′ 스캐폴딩·마법사 | `feat/m1-c2-scaffold` | 병합 완료 | `93d6fe0` | |
 | — | M1 마무리(T1.18) | `feat/m1-foundation` → main | 완료, main 병합 승인 대기 | — | 사용자 확인 |
+| 3 | S 셸 이월 | `feat/m1-s-shell-fixes` | 병합 완료 | — | `feat/m2-agents`에 병합 |
+| 3 | G MCP·PTY | `feat/m2-g-mcp-pty` | 병합 완료 | — | `feat/m2-agents`에 병합 |
+| 3 | E 에이전트 호스트 | `feat/m2-e-host` | 병합 완료 | `2876209` | T2.1~T2.6 |
+| 3 | R 런타임·워커 | `feat/m4-r-runtime` | 병합 완료 | — | T4.9·T3.7, `feat/m2-agents`에 병합 |
+| 3 | H 파이프라인 UI | `feat/m3-h-pipeline` | 병합 완료 | `e961560` | `feat/m2-agents`에 병합 |
+| 4 | F 에이전트 프런트 | `feat/m2-f-agent-ui` | 병합 완료 | `6492cd5` | T2.7·T2.8·T2.9 |
+| 4 | E2 호스트 후속 | `feat/m2-e2-host-followup` | 병합 완료 | `6daac8a` | T2.10 판정(rmcp 확정)·T2.13·T2.12 |
+| 4 | K 체크포인트·스킬 | `feat/m3-k-checkpoint` | 병합 완료 | `2682d41` | T3.10·T3.15·T6.1 |
+| 4 | V 검수 스튜디오 | `feat/m4-v-review` | 병합 완료 | `886b80f` | T4.10·T4.11·T4.12·T4.13·T4.14·T4.21, notify 8.2.0 추가 |
+| 4 | X Export 워커 | `feat/m5-x-export` | 병합 완료 | `aaac3eb` | T5.1·T5.3·T5.4·T5.5·T5.6·T5.8 |
+| 5 | P 파이프라인 흐름 | `feat/m3-p-flow` | 병합 완료 | `50fea64` | T3.6·T3.13·T3.11·T3.14 |
+| 5 | D2 디자인·팔레트 | `feat/m4-d2-palette` | 병합 완료 | `d23328e` | T4.15·T4.16·T4.17 |
+| 5 | R2 수정요청·MCP | `feat/m4-r2-revision` | 병합 완료 | `8e5470d` | T4.20·T4.18·T4.19, P 병합본 rebase済 |
+| 6 | M M3 마무리 | `feat/m3-m-wrap` | 병합 완료 | `467d257` | T3.16, milestone-m3 |
+| 6 | N M4 마무리 | `feat/m4-n-wrap` | 병합 완료 | `e53ff00` | T4.22, milestone-m4 |
+| 5 | X2 Export UI | `feat/m5-x2-export-ui` | 병합 완료 | `dfdb8f7` | T5.2·T5.9·T5.7, CenterWorkspace prompts/export 충돌 해결 |
+| 5 | T2 템플릿 설치 | `feat/m6-t2-templates` | 병합 완료 | `4c1354c` | T6.2 |
+| 6 | O M5 나머지 | `feat/m5-o-embed` | 병합 완료 | `838c009` | T5.10·T5.11, video MP4 환경 차단→T7.2 |
+| 6 | Q1 팔레트 확장 | `feat/m6-q1-palettes` | 병합 완료 | `f8f6857` | T6.3·T6.9, 내장 24종 |
+| 6 | Q2 템플릿·갤러리 | `feat/m6-q2-templates` | 병합 완료 | `0cadf96` | T6.4·T6.5·T6.6·T6.7, TODO 체크박스 충돌 해결 |
+| 6 | Q3 플레이그라운드 | `feat/m6-q3-playground` | 병합 완료 | `8ed3c1b` | T6.8·T6.10, TODO·i18n 충돌 해결 |
+| 7 | W2 M6 마무리 | `feat/m6-w-wrap` | 병합 완료 | `e1f7318` | T6.11, milestone-m6 |
+| 7 | W4 사용자 문서 | `feat/m7-user-docs` | 병합 완료 | `c95a891` | T7.3, User-Guide 4건 |
+| 7 | W3 릴리스 설정 | `feat/m7-release-conf` | 병합 완료 | `0b1dfbe` | T7.1·T7.4, TODO 체크박스 충돌 해결 |
+| 7 | W1 잔여 수정 | `feat/w7-fixes` | 병합 완료 | `63a79cf` | O 인계 4건 (evaluate·cwd·번들·갤러리 배선) |

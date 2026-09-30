@@ -26,7 +26,7 @@ last_updated: 2026-09-29
 | 프로젝트 안 쓰기 | ✅ `kind=edit` 권한 요청 → 자동 허용 | `locations`에 절대 경로가 들어 있어 스코프 검사 가능 |
 | 셸(읽기 전용·쓰기 모두) | ✅ `kind=execute` 권한 요청 → 거부 시 우회하지 않음 | 선택지는 AllowOnce/RejectOnce뿐(AllowAlways 없음) |
 | 프로젝트 밖 읽기 | ✅ `kind=read` 권한 요청 → 앱이 거부 | 선택지에 AllowAlways 포함 → UI에서 숨김 |
-| 앱 MCP 도구(stdio) | ✅ `mcp__vanilla__vanilla_ping` | 권한 요청 `kind`가 비어 있음(other) → 이름 접두사로 분류 |
+| 앱 MCP 도구(stdio) | ✅ `mcp__vanilla-tools__vanilla_ping`(PoC 당시 서버명 `vanilla`, T2.10에서 `vanilla-tools`로 확정) | 권한 요청 `kind`가 비어 있음(other) → 이름 접두사로 분류 |
 | 앱 MCP 도구(HTTP) | ✅ 127.0.0.1 + Bearer 토큰 | 토큰 없는 요청은 401 |
 | 취소 | ✅ `session/cancel` 후 즉시 `stopReason: Cancelled` | |
 | fs capability(`fs/read_text_file`·`write_text_file`) | ⚠️ 호출되지 않음 | Claude Code는 자체 도구로 파일을 다룸. 앱의 fs 핸들러는 강제 지점이 아님 |
@@ -47,7 +47,7 @@ last_updated: 2026-09-29
    - 따라서 프로젝트 스코프 강제는 **권한 요청의 `locations` 검사**와 **Claude Code 자체 권한 체계(격리 설정)**로 한다.
    - 설계서의 "fs 요청은 Rust가 스코프 검사"는 fs를 쓰는 에이전트(다른 어댑터)용 방어선으로 유지한다.
 4. **MCP 도구 권한 요청의 kind 없음**
-   - 앱 자신의 MCP 도구는 `kind`가 비어 온다. `mcp__vanilla__` 접두사로 식별해 자동 허용한다. 다른 MCP 도구는 사용자 확인을 받는다.
+   - 앱 자신의 MCP 도구는 `kind`가 비어 온다. `mcp__vanilla-tools__` 접두사(서버명 `vanilla-tools`, T2.10 확정)로 식별해 자동 허용한다. 다른 MCP 도구는 사용자 확인을 받는다.
 5. **`AcpAgentConfig`에 cwd 설정 없음**
    - 어댑터 프로세스의 작업 폴더는 부모 프로세스를 따른다(세션 cwd는 `session/new`로 전달).
    - 앱에서는 프로세스를 직접 spawn해 cwd를 프로젝트로 두는 편이 안전하다(`AcpAgent`의 spawn 대신 자체 spawn 후 stdio 연결).
@@ -58,6 +58,19 @@ last_updated: 2026-09-29
 - 어댑터 옵션(`OPTION_REBUILDS_SESSION`)으로 `allowedTools`, `disallowedTools`, `tools`, `systemPrompt`, `skills`, `maxBudgetUsd`, `maxTurns`, `settingSources`, `settings`, `strictMcpConfig`를 줄 수 있다. 태스크별 예산 제한·도구 제한에 활용할 수 있다.
 - `usage_update._meta._claude/rateLimit`에 5시간·7일 사용률이 온다. 앱에서 사용량 경고를 표시할 수 있다.
 - Codex(`codex-acp`)는 CLI 미설치로 검증하지 못했다. 설치 후 같은 `acp-probe`로 재검증한다(시나리오는 에이전트 중립).
+
+## 지원 매트릭스 (T2.12, 2026-09-29)
+
+| 에이전트 | 어댑터 | session/new | 스트리밍 | 권한 정책 | MCP 호출 | 취소 | 재개 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Claude Code | `@agentclientprotocol/claude-agent-acp` 0.83.0 | ✅ | ✅ | ✅ (격리 설정 시) | ✅ `mcp__vanilla-tools__*` | ✅ | ✅ `session/load` (호스트 지원, T2.13) |
+| Codex | `codex-acp` (미설치) | ❓ 미검증 | ❓ | ❓ | ❓ | ❓ | ❓ |
+| OpenCode / Hermes | 네이티브 ACP (실험적) | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ |
+| AGY | ACP 어댑터 선택 시, 기본은 PTY 터미널 폴백(T2.11) | — | — | 터미널은 CLI 자체 권한 체계 | — | — | — |
+
+- 재검증 시도(2026-09-29): 이 작업 환경에 `codex`·`codex-acp`가 설치되어 있지 않음을 확인했다(`Get-Command`·npm 전역 목록). 로그인된 Codex CLI가 필요한 `acp-probe` 실측은 실행하지 못했으므로 Codex 행은 미검증으로 둔다.
+- 재검증 절차(환경이 갖춰지면): ① Codex CLI 설치·로그인 ② `spikes/s3-acp-claude`에서 어댑터를 `codex-acp`로 바꿔 `cargo build` ③ `$env:VANILLA_STRICT='1'` 후 `target/debug/acp-probe.exe all` ④ `node summarize.mjs out/session.jsonl`로 6개 시나리오(`shell-write`·`fs`·`shell`·`outside`·`mcp`·`cancel`) 판정 ⑤ 결과를 위 표에 기록한다.
+- Codex 모드 id(`full-access` 등 bypass 대응 항목)가 확인되면 `src-tauri/src/agent_host/launch.rs`의 `is_blocked_mode`에 반영한다(현재는 Claude Code의 `bypassPermissions`·`auto`만 차단, 목 에이전트 통합 테스트로 검증).
 
 ## 설계 반영
 

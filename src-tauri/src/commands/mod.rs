@@ -4,3 +4,6 @@ pub mod shell_commands;
 pub mod doctor_commands;
 pub mod project_commands;
 pub mod process_commands;
+pub mod pty_commands;
+pub mod agent_commands;
+pub mod export_commands;

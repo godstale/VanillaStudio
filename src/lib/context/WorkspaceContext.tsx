@@ -5,6 +5,7 @@ import {
   useEffect,
   useCallback,
   useMemo,
+  useRef,
   type ReactNode,
 } from 'react';
 import { invoke } from '@tauri-apps/api/core';
@@ -61,6 +62,7 @@ export interface WorkspaceContextValue {
   trustModalOpen: boolean;
   setTrustModalOpen: (open: boolean) => void;
   trustCurrentWorkspace: () => void;
+  trustWorkspace: (path: string) => void;
   rejectCurrentWorkspace: () => void;
 }
 
@@ -88,6 +90,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     const map = getStoredTrustMap();
     return Boolean(map[initialRoot]);
   });
+
+  const currentRootRef = useRef<string | null>(workspaceRoot);
 
   // Load and sync from app_settings (P4-05 migration from localStorage)
   useEffect(() => {
@@ -152,6 +156,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   }, [workspaceRoot]);
 
   const setWorkspaceRoot = useCallback((root: string | null) => {
+    currentRootRef.current = root;
     setActiveWorkspaceRoot(root);
     setWorkspaceRootState(root);
     try {
@@ -184,27 +189,30 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const trustCurrentWorkspace = useCallback(() => {
-    if (!workspaceRoot) return;
+  const trustWorkspace = useCallback((path: string) => {
     const map = getStoredTrustMap();
-    map[workspaceRoot] = true;
+    map[path] = true;
     saveTrustMap(map);
-    setIsTrusted(true);
-    setTrustModalOpen(false);
+    if (path === currentRootRef.current) {
+      setIsTrusted(true);
+      setTrustModalOpen(false);
+    }
 
     // Sync to SQLite app_settings
     void (async () => {
       try {
         const current = await settingsRepo.getSettings();
-        const next = Array.from(
-          new Set([...current.trustedWorkspaces, workspaceRoot]),
-        );
+        const next = Array.from(new Set([...current.trustedWorkspaces, path]));
         await settingsRepo.updateSettings({ trustedWorkspaces: next });
       } catch {
         // ignore
       }
     })();
-  }, [workspaceRoot]);
+  }, []);
+
+  const trustCurrentWorkspace = useCallback(() => {
+    if (workspaceRoot) trustWorkspace(workspaceRoot);
+  }, [workspaceRoot, trustWorkspace]);
 
   const rejectCurrentWorkspace = useCallback(() => {
     if (!workspaceRoot) return;
@@ -243,6 +251,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       trustModalOpen,
       setTrustModalOpen,
       trustCurrentWorkspace,
+      trustWorkspace,
       rejectCurrentWorkspace,
     }),
     [
@@ -253,6 +262,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       isTrusted,
       trustModalOpen,
       trustCurrentWorkspace,
+      trustWorkspace,
       rejectCurrentWorkspace,
     ],
   );

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "slate-grove",
+  "name": "Slate Grove",
+  "tags": ["light", "natural", "minimal"],
+  "scheme": "light",
+  "colors": {
+    "canvas": "#EFF3EF",
+    "ink": "#1B2925",
+    "primary": "#2353A3",
+    "accent": "#A33D2E"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

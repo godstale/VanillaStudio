@@ -1,5 +1,8 @@
 import type { SidePanelView } from '@/lib/types/workspaceTab';
 import { FileTree } from '@/components/explorer/FileTree';
+import { PipelinePanel } from '@/components/pipeline/PipelinePanel';
+import { PlaygroundPanel } from '@/components/playground/PlaygroundPanel';
+import { TemplatesPanel } from '@/components/templates/TemplatesPanel';
 import { EmptyPanel } from '@/components/sidepanel/EmptyPanel';
 
 export interface SidePanelProps {
@@ -18,10 +21,13 @@ export function SidePanel({ activeView }: SidePanelProps) {
     case 'explorer':
       return <FileTree />;
     case 'pipeline':
-    case 'agent':
+      return <PipelinePanel />;
     case 'templates':
-    case 'playground':
+      return <TemplatesPanel />;
+    case 'agent':
       return <EmptyPanel view={activeView} />;
+    case 'playground':
+      return <PlaygroundPanel />;
     default:
       return null;
   }

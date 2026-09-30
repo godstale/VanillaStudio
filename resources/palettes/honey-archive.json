@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "honey-archive",
+  "name": "Honey Archive",
+  "tags": ["light", "warm", "retro"],
+  "scheme": "light",
+  "colors": {
+    "canvas": "#FAF5E6",
+    "ink": "#33230E",
+    "primary": "#7A5200",
+    "accent": "#A31F4E"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

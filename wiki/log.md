@@ -133,3 +133,96 @@
 
 ## [2026-09-29] lint | Wiki health check
 - orphans 0, broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-29] wave4 | E2 host follow-up done
+- Lane E2 (T2.10 verdict, T2.13, T2.12) done, awaiting merge. T2.10 verdict: Rust rmcp+axum, Node sidecar rejected. Server name vanilla-tools fixed. Doc updates requested: Implementation-Plan.md s6 MCP warning removal, Technical-Design.md s3.2 stale mcp prefix, Started.resumed mirror passed to lane F. See: [[parallel-execution]]
+
+## [2026-09-29] lint | Wiki health check
+- Ran lint. See lint-report.md for details.
+
+## [2026-09-29] wave4 | K checkpoint-skill done
+- Lane K (T3.10, T3.15, T6.1) done, awaiting merge. Follow-ups passed on: bundle resources skills entry for T6.2 lane, checkpoint_init wiring in wizard for T3.11 lane. See: [[parallel-execution]]
+
+## [2026-09-29] wave4 | F agent-frontend done
+- Lane F (T2.7, T2.8, T2.9) done, awaiting merge. Human check needed: real Claude Code session start, chat, cancel, shell permission dialog. Leftover: ActivityBar agent icon still opens left EmptyPanel (SidePanel.tsx out of lane scope) for follow-up lane. See: [[parallel-execution]]
+
+## [2026-09-29] wave4 | X export-worker done
+- Lane X (T5.1, T5.3, T5.4, T5.5, T5.6, T5.8) done, awaiting merge. Deps added: jszip, puppeteer-core, pptxgenjs, pdf-lib (Feasibility-Risks s2.9 entry left to coordinator). Note: pipeline.test.tsx one flaky failure in lane H area, passed on rerun. See: [[parallel-execution]]
+
+## [2026-09-29] wave4 | V review-studio done
+- Lane V (T4.10, T4.11, T4.12, T4.13, T4.14, T4.21) done, awaiting merge. E2E run-review-preview.mjs PASS. New dep: notify 8.2.0. T4.14 checkpoint hookup left for T3.11 lane. All 5 wave-4 lanes now complete. See: [[parallel-execution]]
+
+## [2026-09-29] wave4 | merged into feat/m2-agents
+- All 5 lanes merged (K 2682d41, E2 6daac8a, X aaac3eb, V 886b80f, F 6492cd5). Conflicts: i18n ko/en only, kept both prefixes. Fix: raw NUL in ParamsPanel.tsx replaced with unicode escapes. Verification: lint pass, typecheck pass, vitest 68 files 484 tests pass, cargo 137 pass 0 fail 4 ignored. See: [[parallel-execution]]
+
+## [2026-09-29] milestone | M2 agent milestone done
+- T2.14 done by coordinator: verification (lint, typecheck, vitest 484, cargo 137) plus manual-check handoff. Wrote [[milestone-m2]]. Manual checks deferred: real agent chat, editable PPTX in PowerPoint, clean VM.
+
+## [2026-09-29] lint | Wiki health check
+- Ran lint. See lint-report.md for details.
+
+## [2026-09-29] lint | Wiki health check
+- Ran lint. See lint-report.md for details.
+
+## [2026-09-29] lint | Wiki health check
+- Ran lint. See lint-report.md for details.
+
+## [2026-09-29] wave5 | P pipeline-flow merged
+- Lane P (T3.6, T3.13, T3.11, T3.14) merged into feat/m2-agents (50fea64), no conflicts. Runner API (createRunner, runAll, TaskRunRecord) handed to lane R2 for T4.18. See: [[parallel-execution]]
+
+## [2026-09-29] wave5 | D2 palette merged
+- Lane D2 (T4.15, T4.16, T4.17) merged into feat/m2-agents (d23328e), no conflicts. Follow-up: unified palette.json contract on src/lib/design/palettes.ts, templates/palette.ts is now an alias re-export (both suites pass). See: [[parallel-execution]]
+
+## [2026-09-30] wave5 | X2 export-UI merged
+- Lane X2 (T5.2, T5.9, T5.7) merged into feat/m2-agents (dfdb8f7). Conflict: CenterWorkspace prompts tab (P lane PromptsTab kept, X2 export case kept, stale EmptyTabView dropped). Note: vanilla-export.mjs bundle not wired yet, deferred to T5.11/release. See: [[parallel-execution]]
+
+## [2026-09-30] wave5 | R2 revision-MCP merged, wave 5 complete
+- Lane R2 (T4.20, T4.18, T4.19) merged into feat/m2-agents (8e5470d), no conflicts (lane rebased onto P merge first). Notes accepted: snapshot_scene serves host captures (.b64 sidecar, real headless stays in T5.4); update_task_status writes claim board file, runner treats done as claim. All 5 wave-5 lanes merged. See: [[parallel-execution]]
+
+## [2026-09-30] wave5 | verification green, wave 5 complete
+- Full verification on feat/m2-agents: lint pass, typecheck pass, vitest 90 files 632 tests pass, cargo 165 pass 0 fail 4 ignored. Fixed: stray char from X2 merge (CenterWorkspace), flaky pipeline restore test (waitFor on holder.api). Wave 5 all merged: T2, P, D2, X2, R2. See: [[parallel-execution]]
+
+## [2026-09-30] milestone | M3 pipeline milestone done
+- T3.16 done by lane M: mock-based end-to-end demo (brief, plan retry loop, viewer approval, prompts, 3-task runner, task graph, design tab) on feat/m2-agents code. Wrote [[milestone-m3]]. Manual remainder: real-agent Build demo. See: [[milestone-m3]]
+
+## [2026-09-30] milestone | M4 review-runtime done
+- T4.22 done by lane N: demos ①~⑥ in automation scope (unit suites + harness re-check, live WebView2/manual/agent-chat/clean-VM excluded and listed). Wrote [[milestone-m4]]. Verification: lint pass, typecheck pass, vitest 90 files 632 tests pass, cargo 165 pass 0 fail 4 ignored. See: [[parallel-execution]]
+
+## [2026-09-30] lint | Wiki health check
+- Ran lint. See lint-report.md for details.
+
+## [2026-09-30] lint | Wiki health check (lane N, T4.22)
+- 50 pages, orphans 1 (wiki/sources/milestone-m4.md; overview.md 연결은 조정 세션에 인계), broken links 0. See: [[parallel-execution]]
+
+## [2026-09-30] wave6 | Q1 palettes merged
+- Lane Q1 (T6.3, T6.9) merged into feat/m2-agents (f8f6857), no conflicts. Built-in palettes now 24. See: [[parallel-execution]]
+
+## [2026-09-30] wave6 | Q2 templates merged
+- Lane Q2 (T6.4, T6.5, T6.6, T6.7) merged into feat/m2-agents (0cadf96). Conflict: TODO T6.3-T6.7 checkboxes, kept all checked. Leftover: gallery select-to-wizard wiring for T6.10/wave 7. See: [[parallel-execution]]
+
+## [2026-09-30] wave6 | Q3 playground merged
+- Lane Q3 (T6.8, T6.10) merged into feat/m2-agents (8ed3c1b). Conflicts: TODO checkboxes and i18n ko/en, kept both. Accepted: playground as DB reference index (app state per design s8.1; copy_to_playground Rust cmd may follow), 0004 migration file approach. See: [[parallel-execution]]
+
+## [2026-09-30] milestone | M5 export done (lane O: T5.10+T5.11)
+- Lane O done: T5.10 `embed.ts` (ES module + `<vanilla-scene>` + React wrapper, headless-Chrome verified), T5.11 demo 4/5 auto-pass (web zip, image variants + determinism, slides PPTX 3 / PDF 3p, embed). Video MP4 environment-blocked (workers:2 stall, workers:1 frame-0 stall / localhost blip) → T7.2. Handoffs to wave 7: slidesEditable evaluate-string bug, runViteBuild/Rust cwd unset, vanilla-export.mjs bundle unwired. Wrote [[milestone-m5]].
+
+## [2026-09-30] lint | Wiki health check
+- 50 pages, orphans 1 (`milestone-m5` — inbound from `overview.md` pending, coordinator links at merge), broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-30] milestone | M6 templates-playground done (lane W2: T6.11)
+- Lane W2 done: M6 demo ①~④ in automation scope (3 templates × 5 contract checks, install plan, gallery, 24 palettes + extract/harmony, playground store/player/IO — M6 area 22 files 124 tests; full suite 107 files 722 tests). Manual remainder: template × palette quality compare, editable PPTX in PowerPoint, clean VM → T7.2. Wrote [[milestone-m6]].
+
+## [2026-09-30] lint | Wiki health check (lane W2, T6.11)
+- 53 pages, orphans 1 (wiki/sources/milestone-m6.md; overview.md 연결은 조정 세션에 인계), broken links 0. See: [[parallel-execution]]
+
+## [2026-09-30] wave7 | W4 user-docs merged
+- Lane W4 (T7.3) merged into feat/m2-agents (c95a891), no conflicts. User-Guide 4 docs plus in-app links card. See: [[parallel-execution]]
+
+## [2026-09-30] wave7 | W3 release-config merged
+- Lane W3 (T7.1, T7.4) merged into feat/m2-agents (0b1dfbe). Conflict: TODO T7.3/T7.4 checkboxes, kept both checked. Follow-ups: tauri.conf resources verified 6 entries incl. skills; license table corrected (jszip dual, design.md CLI field missing, fontsource OFL). pnpm tauri build not run (deferred to T7.2 VM). See: [[parallel-execution]]
+
+## [2026-09-30] wave7 | W1 leftover-fixes merged, wave 7 complete
+- Lane W1 (O handoffs x4) merged into feat/m2-agents (63a79cf), no conflicts. Fixed: slidesEditable IIFE+JSON, vite/Rust cwd=project, vanilla-export.mjs bundle wired, gallery-to-wizard wiring. All wave-7 lanes merged. See: [[parallel-execution]]
+
+## [2026-09-30] all | final verification green, all automation done
+- Full verification on feat/m2-agents: lint pass, typecheck pass, vitest 109 files 741 tests pass, cargo 166 pass 0 fail 4 ignored. All TODO automated items complete. Remaining: manual checks (real agent chat, PowerPoint editable PPTX, clean VM T7.2, code sign T7.5) and main merge approval. See: [[parallel-execution]]

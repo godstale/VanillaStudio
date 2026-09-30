@@ -1,6 +1,6 @@
 # Vanilla Studio 구현 계획서 (Implementation Plan)
 
-- 문서 버전: v1.0 (2026-09-29)
+- 문서 버전: v1.1 (2026-09-29) — v1.1: M2 T2.10 MCP 구현 확정(rmcp+axum) 반영
 - 선행 문서: `Product-Spec.md` v0.3, `Technical-Design.md` v0.3, `Feasibility-Risks.md` v0.2, `Decisions.md`(D-001~D-018 모두 Accepted), PoC 결과(`wiki/sources/poc-s1`~`poc-s7`)
 - 골든 샘플(초안): `Docs/Verification/Golden-Samples.md`
 - 작업 목록: `Docs/Planning/TODO.md` (1~2시간 단위, 항목마다 대상 파일·완료 판정·선행 항목)
@@ -89,7 +89,7 @@ M1 기반 ──┬──▶ M2 에이전트 ──▶ M3 파이프라인 ──
 | 항목 | 확정 시점 | 판단 기준 |
 | --- | --- | --- |
 | pnpm 워크스페이스(`packages/runtime`, `packages/export-worker`) 도입 | M1 T1.3 | 루트 lint·typecheck·test와 공존, 빌드 산출물을 `resources/`로 복사 가능 |
-| MCP 서버 구현(Rust `rmcp` vs Node) | M2 | Streamable HTTP + Bearer 토큰, 앱 상태 접근 용이성 |
+| MCP 서버 구현(Rust `rmcp` vs Node) | M2 확정: Rust `rmcp`+`axum` (T2.10, Node 사이드카 기각 — 런타임 의존 제거·T4.20 상태 공유) | Streamable HTTP + Bearer 토큰, 앱 상태 접근 용이성 |
 | 로컬 HTTP 서버 크레이트(`axum`/`tiny_http`) | M2(MCP)·M6(플레이그라운드) | MCP와 정적 서빙을 한 서버로 처리할 수 있는지 |
 | 편집 PPTX 호환 폰트 필드(`DESIGN.md`) | M5 | S5 폰트 조건 대응 방식 |
 | `@google/design.md` CLI 고정 버전 | M3 | lint 결과 안정성 |

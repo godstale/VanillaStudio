@@ -1,12 +1,19 @@
+pub mod agent_host;
 pub mod commands;
+pub mod mcp_server;
 pub mod process;
+pub mod watch;
 
+use commands::agent_commands::*;
 use commands::doctor_commands::*;
+use commands::export_commands::*;
 use commands::fs_commands::*;
 use commands::project_commands::*;
 use commands::process_commands::*;
+use commands::pty_commands::*;
 use commands::search_commands::*;
 use commands::shell_commands::*;
+use watch::{start_preview_watch, stop_preview_watch};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -48,6 +55,7 @@ pub fn run() {
             delete_path,
             list_dir,
             copy_path,
+            import_external_file,
             reveal_in_explorer,
             grep_files,
             find_files,
@@ -56,8 +64,30 @@ pub fn run() {
             ffmpeg_download,
             ffmpeg_download_cancel,
             scaffold_project,
+            checkpoint_status,
+            checkpoint_init,
+            checkpoint_commit,
+            checkpoint_history,
             install_project_deps,
             install_project_deps_cancel,
+            start_preview_server,
+            stop_preview_server,
+            start_preview_watch,
+            stop_preview_watch,
+            pty_start,
+            pty_write,
+            pty_resize,
+            pty_kill,
+            install_claude_adapter,
+            install_claude_adapter_cancel,
+            claude_adapter_status,
+            start_agent_session,
+            send_agent_prompt,
+            cancel_agent_prompt,
+            respond_agent_permission,
+            close_agent_session,
+            start_export_job,
+            cancel_export_job,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

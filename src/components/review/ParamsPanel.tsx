@@ -1,0 +1,295 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { RotateCcw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useBridge } from '@/lib/review/bridgeContextValue';
+import type { ParamDef } from '@/lib/review/bridgeProtocol';
+import {
+  PARAMS_SAVE_DELAY_MS,
+  defaultValues,
+  effectiveValues,
+  loadSceneValues,
+  saveSceneValues,
+  type ParamValues,
+} from '@/lib/review/params';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { cn } from '@/lib/utils';
+
+type SaveState = 'idle' | 'saving' | 'saved' | 'error';
+
+const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
+
+function FieldLabel({ text }: { text: string }) {
+  return <span className="mb-1 block text-xs font-medium text-foreground">{text}</span>;
+}
+
+function ColorField({ value, onChange, label }: { value: unknown; onChange: (v: string) => void; label: string }) {
+  const text = typeof value === 'string' ? value : '#000000';
+  return (
+    <div>
+      <FieldLabel text={label} />
+      <div className="flex items-center gap-2">
+        <input
+          type="color"
+          aria-label={label}
+          value={HEX_COLOR.test(text) ? text : '#000000'}
+          onChange={(e) => onChange(e.target.value)}
+          className="h-9 w-10 shrink-0 cursor-pointer rounded-md border border-input bg-transparent p-1"
+        />
+        <Input value={text} onChange={(e) => onChange(e.target.value)} className="h-9" aria-label={`${label} hex`} />
+      </div>
+    </div>
+  );
+}
+
+function NumberField({
+  def,
+  value,
+  onChange,
+  label,
+}: {
+  def: Extract<ParamDef, { kind: 'number' }>;
+  value: unknown;
+  onChange: (v: number) => void;
+  label: string;
+}) {
+  const num = typeof value === 'number' ? value : def.default;
+  const range = def.min !== undefined && def.max !== undefined ? { min: def.min, max: def.max } : null;
+  return (
+    <div>
+      <FieldLabel text={label} />
+      <div className="flex items-center gap-2">
+        {range && (
+          <input
+            type="range"
+            aria-label={label}
+            min={range.min}
+            max={range.max}
+            step={def.step ?? (range.max - range.min) / 100}
+            value={num}
+            onChange={(e) => onChange(Number(e.target.value))}
+            className="min-w-0 flex-1"
+          />
+        )}
+        <Input
+          type="number"
+          aria-label={`${label} value`}
+          min={def.min}
+          max={def.max}
+          step={def.step ?? 'any'}
+          value={num}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className={cn('h-9', range && 'w-20 shrink-0')}
+        />
+      </div>
+    </div>
+  );
+}
+
+function TextField({ value, onChange, label }: { value: unknown; onChange: (v: string) => void; label: string }) {
+  return (
+    <div>
+      <FieldLabel text={label} />
+      <Input value={typeof value === 'string' ? value : ''} onChange={(e) => onChange(e.target.value)} aria-label={label} className="h-9" />
+    </div>
+  );
+}
+
+function BooleanField({ value, onChange, label }: { value: unknown; onChange: (v: boolean) => void; label: string }) {
+  return (
+    <label className="flex cursor-pointer items-center gap-2 text-xs text-foreground">
+      <input
+        type="checkbox"
+        aria-label={label}
+        checked={value === true}
+        onChange={(e) => onChange(e.target.checked)}
+        className="h-4 w-4 shrink-0 accent-primary"
+      />
+      {label}
+    </label>
+  );
+}
+
+function SelectField({
+  def,
+  value,
+  onChange,
+  label,
+}: {
+  def: Extract<ParamDef, { kind: 'select' }>;
+  value: unknown;
+  onChange: (v: string) => void;
+  label: string;
+}) {
+  return (
+    <div>
+      <FieldLabel text={label} />
+      <select
+        aria-label={label}
+        value={typeof value === 'string' ? value : def.default}
+        onChange={(e) => onChange(e.target.value)}
+        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm text-foreground shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+      >
+        {def.options.map((o) => (
+          <option key={o} value={o}>
+            {o}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+/**
+ * Parameter panel (F-REV-03): schema-driven form per Scene. Edits apply to the preview instantly
+ * through `setParams` and settle into `params/<scene>.values.json` after a short debounce.
+ */
+export function ParamsPanel({ root }: { root: string }) {
+  const bridge = useBridge();
+  const { t } = useLanguage();
+  const scenes = useMemo(() => bridge.ready?.scenes ?? [], [bridge.ready]);
+
+  const [sceneId, setSceneId] = useState<string | null>(null);
+  const [values, setValues] = useState<ParamValues>({});
+  const [saveState, setSaveState] = useState<SaveState>('idle');
+
+  // The explicit selection may point at a Scene that is gone (new preview, new project).
+  const active = scenes.find((s) => s.id === sceneId) ?? scenes[0] ?? null;
+  const activeId = active?.id ?? null;
+
+  // A new Scene (or project, or preview) starts from its file again.
+  const [loadKey, setLoadKey] = useState<string | null>(null);
+  const key = `${root}\\u0000${activeId ?? ''}\\u0000${bridge.readyCount}`;
+  if (loadKey !== key) {
+    setLoadKey(key);
+    setSaveState('idle');
+  }
+  const bridgeRef = useRef(bridge);
+  useEffect(() => {
+    bridgeRef.current = bridge;
+  }, [bridge]);
+  const allRef = useRef<Record<string, ParamValues>>({});
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // New preview (or project): load the user file and apply it on top of schema defaults.
+  useEffect(() => {
+    if (!activeId || !active) return;
+    let alive = true;
+    loadSceneValues(root, activeId, active.params).then(
+      (file) => {
+        if (!alive) return;
+        const effective = effectiveValues(active.params, file);
+        allRef.current = { ...allRef.current, [activeId]: effective };
+        bridgeRef.current.setParamsValues(allRef.current);
+        // The preview may already run (file edited outside) or arrive later (init restores it).
+        bridgeRef.current.setParams(activeId, effective);
+        setValues(effective);
+      },
+      () => alive && setSaveState('error'),
+    );
+    return () => {
+      alive = false;
+    };
+  }, [root, activeId, active, bridge.readyCount]);
+
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    [],
+  );
+
+  if (!active) {
+    return (
+      <aside data-testid="params-panel" className="flex w-72 shrink-0 flex-col border-l border-border bg-background p-3 text-xs text-muted-foreground">
+        {t('review.params.empty')}
+      </aside>
+    );
+  }
+
+  const edit = (key: string, v: unknown) => {
+    if (!activeId) return;
+    const next = { ...values, [key]: v };
+    setValues(next);
+    allRef.current = { ...allRef.current, [activeId]: next };
+    const b = bridgeRef.current;
+    b.setParamsValues(allRef.current);
+    b.setParams(activeId, next);
+    setSaveState('saving');
+    if (timer.current) clearTimeout(timer.current);
+    const snapshot = next;
+    timer.current = setTimeout(() => {
+      saveSceneValues(root, activeId, snapshot).then(
+        () => setSaveState('saved'),
+        () => setSaveState('error'),
+      );
+    }, PARAMS_SAVE_DELAY_MS);
+  };
+
+  const reset = () => {
+    if (!activeId) return;
+    const next = defaultValues(active.params);
+    setValues(next);
+    allRef.current = { ...allRef.current, [activeId]: next };
+    const b = bridgeRef.current;
+    b.setParamsValues(allRef.current);
+    b.setParams(activeId, next);
+    setSaveState('saving');
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => {
+      saveSceneValues(root, activeId, next).then(
+        () => setSaveState('saved'),
+        () => setSaveState('error'),
+      );
+    }, PARAMS_SAVE_DELAY_MS);
+  };
+
+  return (
+    <aside data-testid="params-panel" className="flex w-72 shrink-0 flex-col border-l border-border bg-background">
+      <div className="flex shrink-0 items-center gap-2 border-b border-border px-3 py-1.5">
+        <h2 className="text-xs font-semibold text-foreground">{t('review.params.title')}</h2>
+        {scenes.length > 1 && (
+          <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto" role="group" aria-label={t('review.params.scene')}>
+            {scenes.map((s) => (
+              <Button
+                key={s.id}
+                size="sm"
+                variant={s.id === activeId ? 'secondary' : 'ghost'}
+                className="h-6 shrink-0 px-2 text-xs"
+                aria-pressed={s.id === activeId}
+                onClick={() => setSceneId(s.id)}
+              >
+                {s.id}
+              </Button>
+            ))}
+          </div>
+        )}
+        <Button size="icon" variant="ghost" className="ml-auto h-6 w-6" aria-label={t('review.params.reset')} title={t('review.params.reset')} onClick={reset}>
+          <RotateCcw className="h-3.5 w-3.5" />
+        </Button>
+      </div>
+      <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-3">
+        {Object.entries(active.params).map(([key, def]) => {
+          const label = def.label ?? key;
+          const v = values[key];
+          switch (def.kind) {
+            case 'color':
+              return <ColorField key={key} label={label} value={v} onChange={(nv) => edit(key, nv)} />;
+            case 'number':
+              return <NumberField key={key} label={label} def={def} value={v} onChange={(nv) => edit(key, nv)} />;
+            case 'text':
+              return <TextField key={key} label={label} value={v} onChange={(nv) => edit(key, nv)} />;
+            case 'boolean':
+              return <BooleanField key={key} label={label} value={v} onChange={(nv) => edit(key, nv)} />;
+            case 'select':
+              return <SelectField key={key} label={label} def={def} value={v} onChange={(nv) => edit(key, nv)} />;
+          }
+        })}
+        {Object.keys(active.params).length === 0 && <p className="text-xs text-muted-foreground">{t('review.params.noParams')}</p>}
+      </div>
+      <div className="shrink-0 border-t border-border px-3 py-1.5 text-xs text-muted-foreground" data-testid="params-save-state" role="status">
+        {saveState !== 'idle' && t(`review.params.${saveState}`)}
+      </div>
+    </aside>
+  );
+}

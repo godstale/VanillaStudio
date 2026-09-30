@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "paper-dawn",
+  "name": "Paper Dawn",
+  "tags": ["editorial", "warm"],
+  "scheme": "light",
+  "colors": {
+    "canvas": "#FAF6EC",
+    "ink": "#1F2A5A",
+    "primary": "#8E4394",
+    "accent": "#F2C230"
+  },
+  "source": "builtin",
+  "license": "CC0-1.0"
+}

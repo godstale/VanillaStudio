@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-label="3D Product Showcase Video preview">
+  <rect width="1280" height="720" style="fill:var(--color-canvas)"/>
+  <ellipse cx="640" cy="590" rx="260" ry="36" style="fill:var(--color-accent)" opacity="0.35"/>
+  <rect x="500" y="180" width="280" height="380" rx="28" style="fill:var(--color-surface);stroke:var(--color-line);stroke-width:2"/>
+  <rect x="440" y="180" width="60" height="380" rx="12" style="fill:var(--color-primary)"/>
+  <circle cx="640" cy="370" r="52" style="fill:var(--color-primary)"/>
+  <text x="640" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" letter-spacing="6" style="fill:var(--color-primary)">EMBER ONE</text>
+  <rect x="880" y="260" width="280" height="120" rx="12" style="fill:var(--color-surface)"/>
+  <rect x="880" y="260" width="8" height="120" style="fill:var(--color-primary)"/>
+  <text x="908" y="310" font-family="Arial, sans-serif" font-size="26" style="fill:var(--color-ink)">38h battery</text>
+  <text x="908" y="348" font-family="Arial, sans-serif" font-size="26" style="fill:var(--color-accent)">Brass dial</text>
+</svg>
