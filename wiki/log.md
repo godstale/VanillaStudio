@@ -208,3 +208,9 @@
 
 ## [2026-09-30] lint | Wiki health check
 - 50 pages, orphans 1 (`milestone-m5` — inbound from `overview.md` pending, coordinator links at merge), broken links 0. → `wiki/lint-report.md`
+
+## [2026-09-30] milestone | M6 templates-playground done (lane W2: T6.11)
+- Lane W2 done: M6 demo ①~④ in automation scope (3 templates × 5 contract checks, install plan, gallery, 24 palettes + extract/harmony, playground store/player/IO — M6 area 22 files 124 tests; full suite 107 files 722 tests). Manual remainder: template × palette quality compare, editable PPTX in PowerPoint, clean VM → T7.2. Wrote [[milestone-m6]].
+
+## [2026-09-30] lint | Wiki health check (lane W2, T6.11)
+- 53 pages, orphans 1 (wiki/sources/milestone-m6.md; overview.md 연결은 조정 세션에 인계), broken links 0. See: [[parallel-execution]]

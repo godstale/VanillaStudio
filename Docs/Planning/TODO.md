@@ -127,7 +127,7 @@ M4b 검수 스튜디오
 - [x] T6.8 플레이그라운드 저장소·인덱스·플레이어(웹 iframe·video·이미지·PDF) — 대상: `src/lib/playground/*`, `src/components/playground/*` · 완료 판정: export 결과 추가·재생 · 선행: T5.2 · (F-PLY-01)
 - [x] T6.9 (S) 팔레트 추출·조화 생성·비교 스냅샷 — 대상: `src/lib/design/extract.ts`, `harmony.ts` · 완료 판정: 로고 이미지에서 핵심 4역할 배정 · 선행: T4.17 · (F-PAL-05~07)
 - [x] T6.10 (S) 템플릿 가져오기, 플레이그라운드 태그·검색, `frame.md` 지원, DESIGN.md 가져오기/내보내기, 사용자 팔레트 저장·가져오기·내보내기 · (F-TPL-03, F-PLY-02, F-DSN-06·07, F-PAL-08)
-- [ ] T6.11 M6 마무리: 데모, `milestone-m6.md` · 선행: T6.1~T6.8
+- [x] T6.11 M6 마무리: 데모, `milestone-m6.md` · 선행: T6.1~T6.8
 
 ## M7 릴리스 준비 (branch: `feat/m7-release`)
 

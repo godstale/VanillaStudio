@@ -1,11 +1,11 @@
 # Wiki Lint Report — 2026-09-30
 
-Scanned 50 pages.
+Scanned 53 pages.
 
 ## Structural Issues
 
 ### Orphan Pages (no inbound links)
-- `wiki\sources\milestone-m3.md`
+- `wiki\sources\milestone-m6.md`
 
 ## Graph-Aware Issues
 
