@@ -328,3 +328,4 @@ Vanilla Studio P4 구현, 레인 {{LANE}}을 수행하라.
 | 7 | W2 M6 마무리 | `feat/m6-w-wrap` | 병합 완료 | `e1f7318` | T6.11, milestone-m6 |
 | 7 | W4 사용자 문서 | `feat/m7-user-docs` | 병합 완료 | `c95a891` | T7.3, User-Guide 4건 |
 | 7 | W3 릴리스 설정 | `feat/m7-release-conf` | 병합 완료 | `0b1dfbe` | T7.1·T7.4, TODO 체크박스 충돌 해결 |
+| 7 | W1 잔여 수정 | `feat/w7-fixes` | 병합 완료 | `63a79cf` | O 인계 4건 (evaluate·cwd·번들·갤러리 배선) |

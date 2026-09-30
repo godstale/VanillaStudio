@@ -220,3 +220,6 @@
 
 ## [2026-09-30] wave7 | W3 release-config merged
 - Lane W3 (T7.1, T7.4) merged into feat/m2-agents (0b1dfbe). Conflict: TODO T7.3/T7.4 checkboxes, kept both checked. Follow-ups: tauri.conf resources verified 6 entries incl. skills; license table corrected (jszip dual, design.md CLI field missing, fontsource OFL). pnpm tauri build not run (deferred to T7.2 VM). See: [[parallel-execution]]
+
+## [2026-09-30] wave7 | W1 leftover-fixes merged, wave 7 complete
+- Lane W1 (O handoffs x4) merged into feat/m2-agents (63a79cf), no conflicts. Fixed: slidesEditable IIFE+JSON, vite/Rust cwd=project, vanilla-export.mjs bundle wired, gallery-to-wizard wiring. All wave-7 lanes merged. See: [[parallel-execution]]
