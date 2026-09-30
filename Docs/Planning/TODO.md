@@ -133,6 +133,6 @@ M4b 검수 스튜디오
 
 - [ ] T7.1 인스톨러 설정(WebView2 부트스트래퍼, 리소스 포함 확인, 앱 데이터 경로) — 대상: `src-tauri/tauri.conf.json` bundle · 완료 판정: `pnpm tauri build` 산출물 설치 · 선행: M6
 - [ ] T7.2 깨끗한 Windows VM 체크리스트 실행(Doctor 안내대로 준비 → 샘플 export) — 대상: `Docs/Verification/Clean-Install-Checklist.md` · 완료 판정: 전 항목 통과 · 선행: T7.1
-- [ ] T7.3 사용자 문서(시작하기, Doctor, 파이프라인, export 형식별 제약) — 대상: `Docs/User-Guide/*` · 완료 판정: 문서 링크 앱 내 표시 · 선행: T7.1
+- [x] T7.3 사용자 문서(시작하기, Doctor, 파이프라인, export 형식별 제약) — 대상: `Docs/User-Guide/*` · 완료 판정: 문서 링크 앱 내 표시 · 선행: T7.1
 - [ ] T7.4 라이선스 고지(NOTICE: HyperFrames·dom-to-pptx 등, FFmpeg GPL 다운로드 안내, 폰트 OFL) — 대상: `NOTICE.md`, 앱 정보 화면 · 완료 판정: 의존성 표와 일치 · 선행: T7.1
 - [ ] T7.5 코드 서명·자동 업데이트(사용자 인증서 준비 후) — 대상: `tauri.conf.json` · 완료 판정: 서명된 인스톨러 · 선행: 사용자 체크리스트 P6

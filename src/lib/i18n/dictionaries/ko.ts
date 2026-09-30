@@ -831,6 +831,13 @@ const ko = {
   'playground.palette.fromDesign': '현재 DESIGN.md에서 저장',
   'playground.palette.fromDesignSaved': '저장됨. 라이브러리에서 재사용할 수 있습니다.',
   'playground.palette.fromDesignFailed': '저장하지 못했습니다: {error}',
+
+  'userGuide.title': '사용자 문서',
+  'userGuide.desc': '저장소의 Docs/User-Guide/에 있는 안내서입니다. 아래 경로에서 열어 보세요.',
+  'userGuide.gettingStarted': '시작하기',
+  'userGuide.doctor': 'Doctor — 환경 점검',
+  'userGuide.pipeline': '파이프라인',
+  'userGuide.exportLimits': 'Export 형식별 제약',
 };
 
 export type Dict = typeof ko;

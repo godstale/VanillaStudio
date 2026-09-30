@@ -834,6 +834,13 @@ const en: Dict = {
   'playground.palette.fromDesign': 'Save from current DESIGN.md',
   'playground.palette.fromDesignSaved': 'Saved — reusable from the library.',
   'playground.palette.fromDesignFailed': 'Could not save: {error}',
+
+  'userGuide.title': 'User guide',
+  'userGuide.desc': 'Guides in the repo Docs/User-Guide/ folder. Open them at the paths below.',
+  'userGuide.gettingStarted': 'Getting started',
+  'userGuide.doctor': 'Doctor — environment check',
+  'userGuide.pipeline': 'Pipeline',
+  'userGuide.exportLimits': 'Export format limits',
 };
 
 export default en;

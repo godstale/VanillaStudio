@@ -30,6 +30,33 @@ export function SettingsApp() {
         </div>
       </div>
 
+      <div className="border border-border rounded-xl p-5 bg-card/40 space-y-3">
+        <div>
+          <h3 className="text-sm font-semibold">{t('userGuide.title')}</h3>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            {t('userGuide.desc')}
+          </p>
+        </div>
+        <ul className="text-xs space-y-1.5" data-testid="user-guide-links">
+          <li className="flex items-center justify-between gap-2">
+            <span>{t('userGuide.gettingStarted')}</span>
+            <code className="text-muted-foreground">Docs/User-Guide/01-getting-started.md</code>
+          </li>
+          <li className="flex items-center justify-between gap-2">
+            <span>{t('userGuide.doctor')}</span>
+            <code className="text-muted-foreground">Docs/User-Guide/02-doctor.md</code>
+          </li>
+          <li className="flex items-center justify-between gap-2">
+            <span>{t('userGuide.pipeline')}</span>
+            <code className="text-muted-foreground">Docs/User-Guide/03-pipeline.md</code>
+          </li>
+          <li className="flex items-center justify-between gap-2">
+            <span>{t('userGuide.exportLimits')}</span>
+            <code className="text-muted-foreground">Docs/User-Guide/04-export-limits.md</code>
+          </li>
+        </ul>
+      </div>
+
       <div className="border border-border rounded-xl p-5 bg-card/40 space-y-4">
         <div className="flex items-center justify-between gap-4">
           <div>
