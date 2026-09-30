@@ -5,6 +5,15 @@
 // `data-no-timeline`) → `hyperframes render --workers <mem-based>` →
 // MP4/WebM + poster still. Environment always goes through `buildExportEnv`
 // (T5.1: no tracking, no skill fetch, no Gemini vision).
+//
+// Release hardware baseline (M5 lesson, see `wiki/sources/milestone-m5.md`:
+// workers:2 stalled with 2 browsers and no navigation 3/3; workers:1 on the
+// GPU path reached frame 12/30 then `ERR_NETWORK_CHANGED`; later attempts
+// stalled at frame 0 on the same fixture/handshake, so host state, not code):
+// `--workers` stays memory-sized (~4GiB per worker, clamped to [1, cpus]),
+// and release/CI renders should prefer software GL (`--no-browser-gpu`
+// where the pinned HyperFrames supports it) for headless determinism.
+// Re-verify on release hardware in T7.2; this lane retries no renders.
 import { cpus, totalmem } from 'node:os';
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
@@ -13,7 +22,9 @@ import { throwIfCancelled, type VideoJob } from './job';
 import { spawnFixed, type StepContext } from './run';
 import { runViteBuild, type ViteBuildOptions } from './web';
 
-/** ~4GiB per render worker (S1: "V8 heap 4GB → 4 workers recommended"). */
+/** ~4GiB per render worker (S1: "V8 heap 4GB → 4 workers recommended").
+ * Release rule (M5): size from memory, never from CPU count alone — each
+ * worker holds a full headless browser + frame buffers. */
 export const BYTES_PER_WORKER = 4 * 1024 * 1024 * 1024;
 
 /** Size `--workers` from memory, clamped to [1, cpus]. */
