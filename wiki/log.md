@@ -232,3 +232,9 @@
 
 ## [2026-10-01] lint | Wiki health check
 - orphans 0, broken links 0. See lint-report.md for details.
+
+## [2026-10-02] verify | T7.2 dev-machine run done, 4 defects fixed
+- `Clean-Install-Checklist.md` v1.0 written and executed on dev PC (clean-VM rerun pending): `pnpm tauri build` OK (MSI 23.5MB + NSIS 19.9MB, unsigned), all 5 export formats via shipped bundle OK (web zip, PNG, slides PPTX 2/PDF, editable PPTX, video h264 3.0s + poster). PowerPoint COM: image deck + editable deck open, 1 text frame really edited+saved. Fixed: (1) bundle unconditional `Could not resolve proxy-agent` throw → `proxy-agent` 8.0.2 dep (MIT, §2.9) + no-stub regression test, (2) `kerberos` stub alias, (3) bundled CDP websocket failure → `pipe: true` launchers, (4) merged editable deck unopenable (shared notesSlide + stale app.xml) → strip+count fix with tests. Verification: lint pass, typecheck pass, vitest 109 files 745 tests pass. Remaining: clean-VM rerun, T7.5 (cert), real agent chat, tauri-dev visual check. See: [[overview]]
+
+## [2026-10-02] lint | Wiki health check
+- orphans 0, broken links 0. See lint-report.md for details.

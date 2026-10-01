@@ -170,9 +170,16 @@ class PuppeteerBrowser implements ShotBrowser {
   }
 }
 
-/** Default launcher: puppeteer-core over the managed headless shell (S2). */
+/**
+ * Default launcher: puppeteer-core over the managed headless shell (S2).
+ *
+ * CDP runs over stdio pipes (`pipe: true`) instead of a WebSocket: faster for
+ * localhost, no `--remote-debugging-port` to collide, and it avoids the
+ * bundled `ws` transport (T7.2: the single-file bundle cannot complete the
+ * CDP WebSocket session while source checkouts work).
+ */
 export function launchManagedBrowser(executablePath: string): Promise<ShotBrowser> {
-  return puppeteer.launch({ executablePath, headless: true }).then((b) => new PuppeteerBrowser(b));
+  return puppeteer.launch({ executablePath, headless: true, pipe: true }).then((b) => new PuppeteerBrowser(b));
 }
 
 export interface CaptureOptions {

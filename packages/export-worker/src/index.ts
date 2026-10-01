@@ -45,12 +45,14 @@ export {
   EDITABLE_INCHES,
   EDITABLE_SELECTOR,
   exportEditableSlides,
+  fixAppXmlSlideCount,
   FONTS_DIR,
   FONTS_GUIDE,
   MAX_BUNDLED_FONTS,
   mergeSlideDecks,
   postProcessDeck,
   resolveVendorBundle,
+  stripSharedNotesSlideRels,
   VENDOR_BUNDLE,
 } from './slidesEditable';
 export type { EditableDeps, EditableSlideBrowser, EditableSlidePage, LaunchEditableBrowser, WrapFix } from './slidesEditable';

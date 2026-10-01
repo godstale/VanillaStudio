@@ -12,9 +12,11 @@ import {
   EDITABLE_FILE,
   EDITABLE_INCHES,
   exportEditableSlides,
+  fixAppXmlSlideCount,
   FONTS_GUIDE,
   mergeSlideDecks,
   postProcessDeck,
+  stripSharedNotesSlideRels,
 } from './slidesEditable';
 import { CancelledError } from './job';
 import type { SlidesJob } from './job';
@@ -102,6 +104,80 @@ describe('postProcessDeck', () => {
     expect(patched).toBe(1);
     const zip = await JSZip.loadAsync(fixed);
     expect(await zip.file('ppt/slides/slide1.xml')?.async('string')).toContain('wrap="none"');
+  });
+});
+
+const NOTES_REL =
+  '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/notesSlide" Target="../notesSlides/notesSlide1.xml"/>';
+
+/** Deck shaped like real dom-to-pptx output: notes rels + docProps/app.xml. */
+async function realisticDeck(title: string): Promise<Uint8Array> {
+  const zip = new JSZip();
+  zip.file(
+    '[Content_Types].xml',
+    `<?xml version="1.0"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="rels"/><Override PartName="/ppt/presentation.xml" ContentType="presentation"/><Override PartName="/ppt/slides/slide1.xml" ContentType="slide"/></Types>`,
+  );
+  zip.file(
+    'ppt/presentation.xml',
+    `<p:presentation xmlns:p="p" xmlns:r="r"><p:sldIdLst><p:sldId id="256" r:id="rId2"/></p:sldIdLst></p:presentation>`,
+  );
+  zip.file(
+    'ppt/_rels/presentation.xml.rels',
+    `<Relationships xmlns="rels"><Relationship Id="rId1" Type="theme" Target="theme/theme1.xml"/><Relationship Id="rId2" Type="slide" Target="slides/slide1.xml"/></Relationships>`,
+  );
+  zip.file('ppt/slides/slide1.xml', `<p:sld xmlns:p="p"><p:cSld><p:spTree>${SINGLE_LINE.replace('Hello', title)}</p:spTree></p:cSld></p:sld>`);
+  zip.file(
+    'ppt/slides/_rels/slide1.xml.rels',
+    `<Relationships xmlns="rels"><Relationship Id="rId1" Type="layout" Target="../slideLayouts/slideLayout1.xml"/>${NOTES_REL}</Relationships>`,
+  );
+  zip.file('ppt/notesSlides/notesSlide1.xml', `<p:notes/>`);
+  zip.file(
+    'docProps/app.xml',
+    `<Properties xmlns="p"><Slides>1</Slides><HeadingPairs><vt:vector size="2" baseType="variant"><vt:variant><vt:lpstr>Slide Titles</vt:lpstr></vt:variant><vt:variant><vt:i4>1</vt:i4></vt:variant></vt:vector></HeadingPairs><TitlesOfParts><vt:vector size="1" baseType="lpstr"><vt:lpstr>Slide 1</vt:lpstr></vt:vector></TitlesOfParts></Properties>`,
+  );
+  return zip.generateAsync({ type: 'uint8array' });
+}
+
+describe('stripSharedNotesSlideRels', () => {
+  it('removes only the notesSlide relationship', () => {
+    const rels = `<Relationships xmlns="rels"><Relationship Id="rId1" Type="layout" Target="x"/>${NOTES_REL}</Relationships>`;
+    const { xml, stripped } = stripSharedNotesSlideRels(rels);
+    expect(stripped).toBe(1);
+    expect(xml).not.toContain('notesSlide');
+    expect(xml).toContain('rId1');
+  });
+
+  it('is a no-op without notes rels', () => {
+    const rels = `<Relationships xmlns="rels"><Relationship Id="rId1" Type="layout" Target="x"/></Relationships>`;
+    expect(stripSharedNotesSlideRels(rels)).toEqual({ xml: rels, stripped: 0 });
+  });
+});
+
+describe('fixAppXmlSlideCount', () => {
+  it('bumps Slides, title count and title entries', () => {
+    const app = `<Properties><Slides>1</Slides><vt:lpstr>Slide Titles</vt:lpstr></vt:variant><vt:variant><vt:i4>1</vt:i4><TitlesOfParts><vt:vector size="1" baseType="lpstr"><vt:lpstr>Slide 1</vt:lpstr></vt:vector></TitlesOfParts></Properties>`;
+    const fixed = fixAppXmlSlideCount(app, 1, 3);
+    expect(fixed).toContain('<Slides>3</Slides>');
+    expect(fixed).toContain('<vt:i4>3</vt:i4>');
+    expect(fixed).toContain('<vt:lpstr>Slide 2</vt:lpstr>');
+    expect(fixed).toContain('<vt:lpstr>Slide 3</vt:lpstr>');
+    expect(fixed).toContain('size="3"');
+  });
+});
+
+describe('mergeSlideDecks powerpoint compatibility (T7.2)', () => {
+  it('strips donor notesSlide rels and fixes app.xml counts', async () => {
+    const merged = await mergeSlideDecks([await realisticDeck('A'), await realisticDeck('B')]);
+    const zip = await JSZip.loadAsync(merged);
+    // Base slide keeps its notes; the transplanted slide must not share them
+    // (PowerPoint refuses decks where two slides share one notes slide).
+    expect(await zip.file('ppt/slides/_rels/slide1.xml.rels')?.async('string')).toContain('notesSlide');
+    expect(await zip.file('ppt/slides/_rels/slide2.xml.rels')?.async('string')).not.toContain('notesSlide');
+    expect(await zip.file('ppt/slides/_rels/slide2.xml.rels')?.async('string')).toContain('slideLayout');
+    const app = (await zip.file('docProps/app.xml')?.async('string')) ?? '';
+    expect(app).toContain('<Slides>2</Slides>');
+    expect(app).toContain('<vt:i4>2</vt:i4>');
+    expect(app).toContain('<vt:lpstr>Slide 2</vt:lpstr>');
   });
 });
 

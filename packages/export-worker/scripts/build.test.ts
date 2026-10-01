@@ -4,7 +4,7 @@
 // `worker-not-found` when it is missing, so building the bundle and
 // smoke-running its fixed argv is the contract test.
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdtempSync, rmSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -28,6 +28,10 @@ describe('export worker bundle (vanilla-export.mjs)', () => {
       } catch (e) {
         expect((e as { status?: number }).status).toBe(1);
       }
+      // T7.2: `--help` and error paths exit before the end of the bundle, so
+      // they cannot catch an unconditional `Could not resolve` throw from an
+      // unbundled optional peer (e.g. `kerberos`) that kills every real job.
+      expect(readFileSync(bundle, 'utf8')).not.toContain('Could not resolve');
     } finally {
       rmSync(out, { recursive: true, force: true });
     }

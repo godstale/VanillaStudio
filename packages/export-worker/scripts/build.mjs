@@ -11,7 +11,7 @@
 //                       already live here, so the output dir is never wiped.
 // `tauri.conf.json` `bundle.resources` already maps `../resources/workers`,
 // so the new file ships in the installer with no T7.1 change needed.
-import { builtinModules } from 'node:module';
+import { builtinModules, createRequire } from 'node:module';
 import { mkdirSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -28,12 +28,39 @@ const pkgDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const repoRoot = path.resolve(pkgDir, '../..');
 const outDir = path.resolve(process.argv[2] ?? path.join(repoRoot, 'resources', 'workers'));
 
+// `ws` ships a pure-JS fallback for its optional native peer `bufferutil`
+// (`ws/lib/buffer-util.js`). Without this alias Vite inlines an empty `{}` in
+// its place, so every masked WebSocket frame >= 48 bytes (i.e. nearly every
+// CDP command) throws `bufferUtil$1.mask is not a function` — surfacing from
+// the browser launcher as a misleading "browser is already running" error
+// (T7.2 fix). The fallback keeps the bundle portable (no native code).
+// Note: resolved as a file path because the `ws` exports map hides `lib/`,
+// and via `puppeteer-core` because `ws` is its transitive dependency
+// (pnpm does not hoist it to the package root).
+const fourthPartyRequire = createRequire(path.join(pkgDir, 'package.json'));
+const puppeteerCorePackageJson = fourthPartyRequire.resolve('puppeteer-core/package.json');
+const wsPackageJson = createRequire(puppeteerCorePackageJson).resolve('ws/package.json');
+const wsBufferUtilFallback = path.join(path.dirname(wsPackageJson), 'lib', 'buffer-util.js');
+
 mkdirSync(outDir, { recursive: true });
 
 await build({
   configFile: false,
   root: pkgDir,
   logLevel: 'warn',
+  resolve: {
+    alias: [
+      // Optional native peer of `proxy-agent-negotiate` (Negotiate proxy auth
+      // only). It cannot be installed portably, so the stub
+      // (`scripts/kerberos.stub.mjs`) stands in: importing succeeds, using it
+      // throws at the call site. Without this Vite emits an unconditional
+      // `Could not resolve "kerberos"` throw at the end of the bundle that
+      // kills every real export job (T7.2 fix).
+      { find: /^kerberos$/, replacement: path.join(pkgDir, 'scripts', 'kerberos.stub.mjs') },
+      // See `wsBufferUtilFallback` above (T7.2 fix).
+      { find: /^bufferutil$/, replacement: wsBufferUtilFallback },
+    ],
+  },
   build: {
     ssr: true,
     outDir,
@@ -50,7 +77,9 @@ await build({
     },
   },
   // Bundle every npm dependency (jszip, pptxgenjs, pdf-lib, puppeteer-core,
-  // zod, @google/design.md); only Node built-ins stay external.
+  // zod, @google/design.md, proxy-agent); only Node built-ins stay external.
+  // The uninstallable optional native peer `kerberos` is aliased to a stub
+  // (see `resolve.alias` above), never left as an unconditional throw.
   ssr: { noExternal: true },
 });
 

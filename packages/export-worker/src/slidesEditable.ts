@@ -133,9 +133,11 @@ class PuppeteerEditableBrowser implements EditableSlideBrowser {
   }
 }
 
-/** Default launcher: puppeteer-core over the managed headless shell (S2). */
+/** Default launcher: puppeteer-core over stdio pipes (see `launchManagedBrowser`). */
 export function launchEditableBrowser(executablePath: string, bundleCode: string): Promise<EditableSlideBrowser> {
-  return puppeteer.launch({ executablePath, headless: true }).then((b) => new PuppeteerEditableBrowser(b, bundleCode));
+  return puppeteer
+    .launch({ executablePath, headless: true, pipe: true })
+    .then((b) => new PuppeteerEditableBrowser(b, bundleCode));
 }
 
 // ---- wrap="none" post-processing (S5) ----------------------------------------
@@ -168,11 +170,51 @@ export function applyWrapNone(slideXml: string): WrapFix {
 
 const SLIDE_TYPE = 'application/vnd.openxmlformats-officedocument.presentationml.slide+xml';
 const SLIDE_REL = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide';
+const NOTES_SLIDE_REL = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/notesSlide';
 
 function maxId(text: string, re: RegExp): number {
   let max = 0;
   for (const m of text.matchAll(re)) max = Math.max(max, Number(m[1]));
   return max;
+}
+
+/**
+ * Remove `notesSlide` relationships from a slide rels document. Donor decks
+ * each carry their own notes slide, but the merge keeps the base deck's notes
+ * parts only — two slides sharing one notes slide makes PowerPoint refuse to
+ * open the merged deck (T7.2). A slide without notes is valid OOXML.
+ */
+export function stripSharedNotesSlideRels(relsXml: string): { xml: string; stripped: number } {
+  let stripped = 0;
+  const escaped = NOTES_SLIDE_REL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const xml = relsXml.replace(new RegExp(`<Relationship\\b[^>]*?${escaped}"[^>]*?/>\\s*`, 'g'), () => {
+    stripped += 1;
+    return '';
+  });
+  return { xml, stripped };
+}
+
+/**
+ * Bring `docProps/app.xml` slide metadata in line with the merged slide count
+ * (`<Slides>`, the "Slide Titles" heading-pair count and the title entries).
+ * PowerPoint tolerates a stale count for opening, but the properties dialog
+ * and search indexing read these. No-op when the part is absent.
+ */
+export function fixAppXmlSlideCount(appXml: string, baseSlides: number, totalSlides: number): string {
+  let out = appXml.replace(/<Slides>\d+<\/Slides>/, `<Slides>${totalSlides}</Slides>`);
+  out = out.replace(
+    /(<vt:lpstr>Slide Titles<\/vt:lpstr><\/vt:variant>\s*<vt:variant><vt:i4>)\d+/,
+    `$1${totalSlides}`,
+  );
+  const titles: string[] = [];
+  for (let i = baseSlides + 1; i <= totalSlides; i++) titles.push(`<vt:lpstr>Slide ${i}</vt:lpstr>`);
+  if (titles.length > 0) {
+    out = out.replace(/<vt:vector size="(\d+)" baseType="lpstr">/, (tag: string, size: string) => {
+      const extra = titles.join('');
+      return tag.replace(`size="${size}"`, `size="${Number(size) + titles.length}"`) + extra;
+    });
+  }
+  return out;
 }
 
 /**
@@ -194,6 +236,7 @@ export async function mergeSlideDecks(decks: readonly Uint8Array[]): Promise<Uin
   let contentTypes = await readText(base, '[Content_Types].xml');
   let nextSldId = Math.max(256, maxId(presentation, /<p:sldId\b[^>]*\bid="(\d+)"/g) + 1);
   let nextRId = maxId(presentationRels, /\bId="rId(\d+)"/g) + 1;
+  const baseSlideCount = slideCount;
 
   for (const donorBytes of decks.slice(1)) {
     const donor = await JSZip.loadAsync(donorBytes);
@@ -202,7 +245,12 @@ export async function mergeSlideDecks(decks: readonly Uint8Array[]): Promise<Uin
     const slideRelsName = `ppt/slides/_rels/slide${slideCount}.xml.rels`;
     base.file(slideName, await readText(donor, 'ppt/slides/slide1.xml'));
     const donorRels = donor.file('ppt/slides/_rels/slide1.xml.rels');
-    if (donorRels) base.file(slideRelsName, await donorRels.async('string'));
+    if (donorRels) {
+      // Donor notes slides are not transplanted (the base deck's notes parts
+      // stay) — strip the rel so no two slides share one notes slide (T7.2).
+      const { xml } = stripSharedNotesSlideRels(await donorRels.async('string'));
+      base.file(slideRelsName, xml);
+    }
     // Shared parts (embedded fonts, media): same project → same bytes, keep the base copy.
     for (const [name, entry] of Object.entries(donor.files)) {
       if (entry.dir) continue;
@@ -241,6 +289,10 @@ export async function mergeSlideDecks(decks: readonly Uint8Array[]): Promise<Uin
   base.file('ppt/presentation.xml', presentation);
   base.file('ppt/_rels/presentation.xml.rels', presentationRels);
   base.file('[Content_Types].xml', contentTypes);
+  const appXml = base.file('docProps/app.xml');
+  if (appXml) {
+    base.file('docProps/app.xml', fixAppXmlSlideCount(await appXml.async('string'), baseSlideCount, slideCount));
+  }
   return base.generateAsync({ type: 'uint8array' });
 }
 

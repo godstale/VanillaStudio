@@ -8,7 +8,8 @@ last_updated: 2026-10-01
 
 ## 현재 상태 (2026-10-01)
 
-- 개발 단계: **P4 구현 — 자동화 항목 전부 완료(`feat/m2-agents` → main 병합 d00981a, `fix/white-screen-csp` 병합)**. 잔여: 수동 항목 T7.2(깨끗한 Windows VM 체크리스트)·T7.5(코드 서명·자동 업데이트) + main push 승인 대기. 마일스톤 로그: [[milestone-m1]]·[[milestone-m2]]·[[milestone-m3]]·[[milestone-m4]]·[[milestone-m5]]·[[milestone-m6]], 병렬 배치: [[parallel-execution]] (`Docs/Planning/Parallel-Execution.md`)
+- 개발 단계: **P4 구현 — 자동화 항목 전부 완료 + T7.2 개발-PC 검증 완료(아래)**. 잔여: clean VM 재실행(T7.2 §4)·T7.5(인증서)·main push 승인 대기. 마일스톤 로그: [[milestone-m1]]·[[milestone-m2]]·[[milestone-m3]]·[[milestone-m4]]·[[milestone-m5]]·[[milestone-m6]], 병렬 배치: [[parallel-execution]] (`Docs/Planning/Parallel-Execution.md`)
+- T7.2 개발-PC 실행(2026-10-02, `Docs/Verification/Clean-Install-Checklist.md`): 인스톨러 빌드(MSI+NSIS, 미서명) ✓, 5종 export(출하 번들) ✓ — 실행 중 결함 4건 수정(번들 optional-peer throw·번들 CDP 소켓→pipe 전환·편집PPTX notes 병합) + PowerPoint 실편집 검증 ✓. video MP4(h264·3.0초) ✓
 
 - PoC S1~S7 완료(통과 5, 조건부 2), 계획: [[implementation-plan]] (`Docs/Planning/TODO.md`)
 - 브랜치: main(2026-09-29 master에서 이름 변경). `Docs/images/`는 로컬 전용(.gitignore)
