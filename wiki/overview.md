@@ -3,14 +3,15 @@ title: 'Overview'
 type: overview
 tags: [overview]
 sources: []
-last_updated: 2026-09-29
+last_updated: 2026-10-01
 ---
 
-## 현재 상태 (2026-09-29)
+## 현재 상태 (2026-10-01)
 
-- 개발 단계: **P4 구현 — M2 에이전트 완료(`feat/m2-agents` 병합, main 병합·push 승인 대기)**. 다음: 웨이브 5(T3.6·T3.11·T3.13·T3.14·T4.15~T4.20·T5.2·T5.7·T5.9·T6.2). 마일스톤 로그: [[milestone-m1]]·[[milestone-m2]]·[[milestone-m3]]·[[milestone-m4]]·[[milestone-m5]]·[[milestone-m6]], 병렬 배치: [[parallel-execution]] (`Docs/Planning/Parallel-Execution.md`)
+- 개발 단계: **P4 구현 — 자동화 항목 전부 완료(`feat/m2-agents` → main 병합 d00981a, `fix/white-screen-csp` 병합)**. 잔여: 수동 항목 T7.2(깨끗한 Windows VM 체크리스트)·T7.5(코드 서명·자동 업데이트) + main push 승인 대기. 마일스톤 로그: [[milestone-m1]]·[[milestone-m2]]·[[milestone-m3]]·[[milestone-m4]]·[[milestone-m5]]·[[milestone-m6]], 병렬 배치: [[parallel-execution]] (`Docs/Planning/Parallel-Execution.md`)
+
 - PoC S1~S7 완료(통과 5, 조건부 2), 계획: [[implementation-plan]] (`Docs/Planning/TODO.md`)
-- 브랜치: main(2026-09-29 master에서 이름 변경; P3까지 병합). `Docs/images/`는 로컬 전용(.gitignore)
+- 브랜치: main(2026-09-29 master에서 이름 변경). `Docs/images/`는 로컬 전용(.gitignore)
 - 2026-09-29 기획 보강: [[DesignMd]] 표준 채택(D-015), [[ColorPalette]] 기능(D-016), HyperFrames 참고 자료 보관(D-017) → 기획서·설계서 v0.2, PoC S7 추가
 - 결정 D-001~D-018 모두 Accepted (D-018 에이전트 세션 격리 2026-09-29 승인)
 - 골든 샘플 초안: [[golden-samples]] — 사용자 확정 대기 D-011은 범위 수정: 시간 함수 계약은 영상·이미지(캡처) 유형만 ([[decisions]])

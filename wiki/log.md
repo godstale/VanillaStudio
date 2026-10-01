@@ -226,3 +226,9 @@
 
 ## [2026-09-30] all | final verification green, all automation done
 - Full verification on feat/m2-agents: lint pass, typecheck pass, vitest 109 files 741 tests pass, cargo 166 pass 0 fail 4 ignored. All TODO automated items complete. Remaining: manual checks (real agent chat, PowerPoint editable PPTX, clean VM T7.2, code sign T7.5) and main merge approval. See: [[parallel-execution]]
+
+## [2026-10-01] fix | white-screen CSP resume done, overview synced
+- Resumed interrupted `fix/white-screen-csp` (devUrl `http://localhost:14200` blocked by old CSP → white screen in `pnpm tauri dev`). Fix keeps `frame-src 127.0.0.1` + localhost allowances (design §10 consistent). Verification: lint pass, typecheck pass, vitest 109 files 741 tests pass, `pnpm build` pass. Merged into main (push pending approval). Overview current-status updated from stale M2 to all-automation-done. Remaining manual: T7.2 clean VM, T7.5 code sign. See: [[overview]]
+
+## [2026-10-01] lint | Wiki health check
+- orphans 0, broken links 0. See lint-report.md for details.
