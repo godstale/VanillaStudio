@@ -23,6 +23,8 @@ export interface CatalogEntry {
   type?: SceneType;
   /** 부모까지 병합한 사용 가능한 템플릿. 오류가 있으면 없다. */
   template?: GuideTemplate;
+  /** 병합 전 템플릿(편집기가 자식 파일 내용을 그대로 보여 줄 때 쓴다). 읽을 수 없으면 없다. */
+  raw?: GuideTemplate;
   /** 사용을 거부하는 이유(검증 실패·부모 없음·순환 등). */
   error?: string;
   /** 읽다가 건너뛴 파일들(너무 큼·심링크…). */
@@ -102,7 +104,7 @@ export function buildCatalog(builtin: GuideTemplate[], global: RawTemplateFolder
 
   const entries: CatalogEntry[] = raws.map((r) => {
     const res = resolve(r, 0);
-    return { ref: r.ref, source: r.source, type: res.template?.meta.type ?? r.raw?.meta.type, template: res.template, error: res.error, skipped: r.skipped };
+    return { ref: r.ref, source: r.source, type: res.template?.meta.type ?? r.raw?.meta.type, template: res.template, raw: r.raw, error: res.error, skipped: r.skipped };
   });
 
   const best = (ref: string): CatalogEntry | null => {

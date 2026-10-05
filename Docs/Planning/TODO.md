@@ -61,7 +61,7 @@
 - [x] T3.9 [레인 E · W2] 3d `three-scene-v1` 가이드 작성(씬 구성·재질·조명·카메라 경로·후처리·성능 예산·결정성)·용어집·스키마 — 대상: `resources/guides/3d/three-scene-v1@1/*`, `resources/glossary/3d.json` · 완료 판정: 완비 + 스키마 테스트 · 선행: T2.6, T3.1 · (D-028, D-024)
 - [x] T3.10 [레인 A · W3] 3d 인스펙터 섹션(씬·재질·조명·카메라·성능 예산) — 대상: `src/components/inspector/threed/*` · 완료 판정: 샘플 편집·저장 · 선행: T3.9, T3.2, T2.11
 - [x] T3.11 [레인 D · W3] DESIGN 인스펙터 섹션·워크스페이스 DESIGN 편집(팔레트 라이브러리 선택, 분위기(mood) 키워드, 토큰 편집, 대비 경고, 신 오버라이드 `extends` 토글) — 대상: `src/components/inspector/DesignSection.tsx`, `src/lib/design/*` · 완료 판정: 팔레트 적용 시 `colors`만 교체·본문 바이트 보존 테스트(v1 S7 이관 확인) · 선행: T2.11 · (D-015·D-016)
-- [ ] T3.12 [레인 B · W3] 사용자 정의 템플릿: 복제·편집·`extends` 저장 UI, 우선순위 해석(워크스페이스 > `templatesDir` > 내장), 검증 실패 시 사용 거부 — 대상: `src/lib/guides/resolve.ts`, `src/components/guides/TemplateEditor.tsx` · 완료 판정: 복제 → 필드 추가 → 신에 적용 → 렌더 반영 E2E · 선행: T3.3, T3.6 · (D-031)
+- [x] T3.12 [레인 B · W3] 사용자 정의 템플릿: 복제·편집·`extends` 저장 UI, 우선순위 해석(워크스페이스 > `templatesDir` > 내장), 검증 실패 시 사용 거부 — 대상: `src/lib/guides/resolve.ts`, `src/components/guides/TemplateEditor.tsx` · 완료 판정: 복제 → 필드 추가 → 신에 적용 → 렌더 반영 E2E · 선행: T3.3, T3.6 · (D-031)
 - [ ] T3.13 [레인 A · W4] 사용자 프롬프트 편집(CodeMirror)·프롬프트 미리보기(클립보드 내용)·가이드 재렌더 트리거 — 대상: `src/components/inspector/PromptSection.tsx` · 완료 판정: 편집 → `prompts/user-prompt.md` 저장·미리보기 갱신 · 선행: T2.9, T2.11
 - [ ] T3.14 [레인 B · W4] 템플릿 갤러리·v1 `resources/templates/*` 제거, 팔레트 라이브러리는 유지 연결 — 대상: `src/components/templates/*`, `resources/templates/*` · 완료 판정: 참조 0건, lint·typecheck·test 통과 · 선행: T3.11
 - [ ] T3.15 [단독 · 마무리] V3 마무리: 데모 ①~④, `milestone-v3.md`, Playbook 프롬프트 갱신 · 선행: T3.1~T3.14
