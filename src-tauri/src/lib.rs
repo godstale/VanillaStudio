@@ -13,6 +13,7 @@ use commands::process_commands::*;
 use commands::pty_commands::*;
 use commands::search_commands::*;
 use commands::shell_commands::*;
+use commands::workspace_commands::*;
 use watch::{start_preview_watch, stop_preview_watch};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -86,6 +87,10 @@ pub fn run() {
             cancel_agent_prompt,
             respond_agent_permission,
             close_agent_session,
+            inspect_workspace_folder,
+            create_workspace,
+            open_workspace,
+            verify_workspace_path,
             start_export_job,
             cancel_export_job,
         ])
