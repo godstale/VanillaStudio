@@ -14,7 +14,7 @@
 | 4 | `Docs/Planning/Technical-Design.md` | 기술 설계서 v1.0(v2 기준) — **Vanilla Studio 고유 설계의 진실 공급원** |
 | 5 | `Docs/Planning/Feasibility-Risks.md` | 구현 난점·리스크·PoC |
 | 6 | `Docs/Planning/Decisions.md` | 결정 기록(D-NNN). Proposed 항목은 사용자 확인 전 전제로 삼지 않는다 |
-| 6a | `Docs/Planning/Implementation-Plan.md`, `Docs/Planning/TODO.md` | 구현 계획(마일스톤 M1~M7)과 작업 목록. **구현 작업은 TODO 항목 단위로 진행하고 체크한다**. TODO 맨 위 "▶ 진입점"이 다음 작업이다 |
+| 6a | `Docs/Planning/Implementation-Plan.md`, `Docs/Planning/TODO.md` | v2 구현 계획(마일스톤 V1~V7)과 작업 목록(v1 M1~M7 이력은 `legacy/`). **구현 작업은 TODO 항목 단위로 진행하고 체크한다**. TODO 맨 위 "▶ 진입점"이 다음 작업이다 |
 | 6b | `Docs/Planning/Parallel-Execution.md` | 여러 세션 병렬 실행: 웨이브·레인 배치, 소유 경로, 공유 파일 규칙, 세션 시작 프롬프트, 완료 보고 형식 |
 | 7 | `Docs/Playbook/README.md` | 개발 단계(P0~P7)별 할 일·산출물 |
 | 8 | `Docs/Architecture.md`, `Docs/Project-Structure.md`, `Docs/Extension-Guide.md` | 기반 템플릿 구조(원본 유지). 충돌 시 `Technical-Design.md` 우선 |

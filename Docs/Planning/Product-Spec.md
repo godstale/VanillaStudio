@@ -3,6 +3,7 @@
 - 문서 버전: v0.3 (2026-09-29) — v0.2: 디자인 시스템(`DESIGN.md`)·컬러 팔레트(§8, D-015~D-017) / v0.3: 결정 D-011~D-014·D-017 확정 반영(시간 함수 계약 범위, MCP 도구 M)
 - 입력: `Docs/Vanilla-Studio-Requirements.txt`, 인터뷰 결정(`Docs/Planning/Decisions.md`)
 - 관련 문서: `Docs/Planning/Technical-Design.md`(기술 설계), `Docs/Planning/Feasibility-Risks.md`(구현 난점·리스크)
+- ⚠️ **v1 기획서(참고용)**: 2026-10-05부터 제품 정의의 진실 공급원은 `Refactor-Spec-v2.md`(v2 Scene 워크스페이스)이다. 이 문서의 파이프라인·ACP·검수 스튜디오 서술은 v2에서 대체되며, 디자인 시스템(§8)·시간 계약 서술은 v2에서도 유효하다.
 - 상태: 초안 — 구현 계획서 작성 전 PoC 결과에 따라 갱신
 
 ---

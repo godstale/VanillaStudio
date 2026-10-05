@@ -270,3 +270,10 @@ Ran lint. See lint-report.md for details.
 ## [2026-10-05] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
+
+## [2026-10-05] update | v2 docs revised: Technical-Design v1.0, AGENTS.md v2, Implementation-Plan v2.0, TODO v2.0
+- D-022~D-033 Accepted (D-010/D-018 Superseded). v1 plan/TODO/parallel guide moved to `Docs/Planning/legacy/`. Next: V1 foundation (T1.0). See: [[implementation-plan]], [[technical-design]], [[parallel-execution]]
+
+## [2026-10-05] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.

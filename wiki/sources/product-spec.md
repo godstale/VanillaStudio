@@ -5,7 +5,7 @@ tags: [planning, spec, phase-p2]
 date: 2026-09-28
 source_file: Docs/Planning/Product-Spec.md
 sources: [vanilla-studio-requirements]
-last_updated: 2026-09-29
+last_updated: 2026-10-05
 ---
 
 ## Summary
@@ -27,3 +27,7 @@ P2 핵심 산출물. [[VanillaStudio]]의 제품 원칙 7개, 결과물 유형 5
 - [[technical-design]] — 구현 방식
 - [[decisions]] — 근거가 된 결정
 - [[DevelopmentPhases]] — P2 산출물
+
+## 상태 (2026-10-05)
+
+v1 기획서로 격하. 제품 정의는 [[refactor-spec-v2]]가 대체한다.

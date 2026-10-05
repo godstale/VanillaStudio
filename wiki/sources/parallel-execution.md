@@ -1,11 +1,11 @@
 ---
-title: 'Parallel Execution Guide v1.0 (병렬 실행 가이드)'
+title: 'Parallel Execution Guide v2.0 (병렬 실행 가이드)'
 type: source
 tags: [process, parallel, phase-p4, handoff]
 date: 2026-09-29
 source_file: Docs/Planning/Parallel-Execution.md
 sources: [implementation-plan]
-last_updated: 2026-09-29
+last_updated: 2026-10-05
 ---
 
 ## Summary
@@ -26,3 +26,7 @@ P4 구현을 여러 에이전트 세션에서 동시에 진행하기 위한 배�
 ## Connections
 
 - [[implementation-plan]], [[phase-p3-implementation-plan]], [[DevelopmentPhases]]
+
+## v2 개정 (2026-10-05)
+
+V1~V7용 레인(A UI·B Rust·C 스키마/가이드·D 런타임/디자인·E 콘텐츠)과 웨이브 배치로 재작성. v1 가이드는 `Docs/Planning/legacy/Parallel-Execution-v1.md`.

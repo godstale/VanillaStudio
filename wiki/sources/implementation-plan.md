@@ -1,11 +1,11 @@
 ---
-title: 'Implementation Plan v1.0 + TODO (구현 계획서)'
+title: 'Implementation Plan v2.0 + TODO (구현 계획서)'
 type: source
 tags: [planning, implementation-plan, todo, phase-p3]
 date: 2026-09-29
 source_file: Docs/Planning/Implementation-Plan.md
 sources: [poc-s1, poc-s2, poc-s3, poc-s4, poc-s5, poc-s6, poc-s7]
-last_updated: 2026-09-29
+last_updated: 2026-10-05
 ---
 
 ## Summary
@@ -27,3 +27,7 @@ P3 최종 산출물이다. PoC 7건의 결론을 요약하고 다음을 정의�
 ## Connections
 
 - [[phase-p3-implementation-plan]], [[DevelopmentPhases]], [[product-spec]], [[technical-design]], [[feasibility-risks]]
+
+## v2 개정 (2026-10-05)
+
+마일스톤 V1~V7(기반 정리·Scene CRUD·가이드·터미널 실행·레퍼런스·시퀀스·패키지/릴리스). v1 계획·TODO는 `Docs/Planning/legacy/`로 이동. 기획: [[refactor-spec-v2]], 설계: [[technical-design]], 병렬 배치: [[parallel-execution]].
