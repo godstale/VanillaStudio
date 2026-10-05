@@ -18,6 +18,8 @@ export interface SceneNodeData extends Record<string, unknown> {
   onOpenFolder?: (slug: string) => void;
   /** 에이전트 실행(터미널 도크). 없으면 버튼이 꺼진다. */
   onRunAgent?: (slug: string) => void;
+  /** 미리보기 열기(인스펙터 미리보기 탭). 없으면 버튼이 꺼진다. */
+  onPlay?: (slug: string) => void;
 }
 
 export type SceneFlowNode = Node<SceneNodeData, 'scene'>;
@@ -72,7 +74,12 @@ function SceneNodeView({ data, selected }: NodeProps<SceneFlowNode>) {
           <Terminal className="h-3 w-3" />
           {t('scene.runAgent')}
         </button>
-        <button type="button" disabled title={t('scene.comingSoon')} className="nodrag flex flex-1 items-center justify-center gap-1 rounded border border-border px-1 py-1 opacity-50">
+        <button
+          type="button"
+          disabled={!data.onPlay || Boolean(data.error)}
+          onClick={() => data.onPlay?.(data.slug)}
+          className="nodrag flex flex-1 items-center justify-center gap-1 rounded border border-border px-1 py-1 hover:bg-accent disabled:opacity-50"
+        >
           <Play className="h-3 w-3" />
           {t('scene.play')}
         </button>

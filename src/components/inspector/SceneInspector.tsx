@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/input';
 import { SceneForm } from '@/components/guides/SceneForm';
 import { MarkdownEditor } from '@/components/guides/MarkdownEditor';
 import { DesignSection } from './DesignSection';
+import { INSPECTOR_TABS, type InspectorTab } from './inspectorTabs';
+import { PreviewPanel } from '@/components/scene/PreviewPanel';
 import type { GuideContext } from '@/lib/guides/agentsMd';
 import { promptForScene } from '@/lib/agents/clipboard';
 import type { GuideTemplate } from '@/lib/guides/template';
@@ -13,8 +15,8 @@ import { sceneSchema, type Scene } from '@/lib/scene/schema';
 import { cn } from '@/lib/utils';
 
 const AUTOSAVE_MS = 600;
-const TABS = ['overview', 'guide', 'design', 'references', 'prompt', 'history'] as const;
-type Tab = (typeof TABS)[number];
+const TABS = INSPECTOR_TABS;
+type Tab = InspectorTab;
 const LATER: Tab[] = ['references', 'history'];
 
 export interface SceneInspectorProps {
@@ -27,6 +29,11 @@ export interface SceneInspectorProps {
   template: GuideTemplate | null;
   /** template이 null일 때 사용자에게 보여 줄 이유. */
   templateError?: string;
+  /** workspace.json.canvas. 미리보기에 주입한다. */
+  canvas?: { width: number; height: number; fps: number };
+  /** 탭을 바깥에서 제어한다(노드의 재생 버튼이 미리보기 탭을 연다). 생략하면 스스로 관리한다. */
+  tab?: InspectorTab;
+  onTabChange?: (tab: InspectorTab) => void;
   /** scene.json 저장 + 가이드 재렌더. 실패하면 던진다. */
   onSave: (scene: Scene) => Promise<void>;
   /** 이름 변경(폴더 이름도 바뀐다). */
@@ -103,9 +110,14 @@ function useAutosave(onSave: (s: Scene) => Promise<void>) {
 }
 
 /** 노드를 고르면 우측에 열리는 신 편집 패널. 선택이 바뀌면 `key`로 새로 마운트해 쓴다. */
-export function SceneInspector({ workspace, root, slug, scene, template, templateError, onSave, onRename }: SceneInspectorProps) {
+export function SceneInspector({ workspace, root, slug, scene, template, templateError, canvas, tab: tabProp, onTabChange, onSave, onRename }: SceneInspectorProps) {
   const { t } = useLanguage();
-  const [tab, setTab] = useState<Tab>('overview');
+  const [ownTab, setOwnTab] = useState<Tab>('overview');
+  const tab = tabProp ?? ownTab;
+  const setTab = (next: Tab) => {
+    setOwnTab(next);
+    onTabChange?.(next);
+  };
   const [draft, setDraft] = useState<Scene>(scene);
   const [name, setName] = useState(scene.name);
   const [copied, setCopied] = useState(false);
@@ -220,6 +232,13 @@ export function SceneInspector({ workspace, root, slug, scene, template, templat
         )}
 
         {tab === 'design' && <DesignSection root={root} slug={slug} />}
+
+        {tab === 'preview' &&
+          (canvas ? (
+            <PreviewPanel root={root} slug={slug} sceneType={draft.type} canvas={canvas} entry={draft.runtime.entry} />
+          ) : (
+            <p className="text-xs text-muted-foreground">{t('inspector.later')}</p>
+          ))}
 
         {tab === 'prompt' && (
           <>

@@ -27,3 +27,30 @@ Do not use generative image/video AI services. Record every external resource in
 | `.vanilla/` | app | Do not touch. |
 
 Canvas size and fps come from `workspace.json`; do not hard-code them.
+
+## Runtime
+
+Scenes are built on `@vanilla/runtime` (installed at `vanilla/runtime/`; do not edit it). Read `vanilla/runtime/src/index.ts` for the API.
+A scene's entry `scenes/<slug>/src/index.html` loads a bootstrap that calls `mountVanilla(composition)` from `@vanilla/runtime/app`.
+- Motion and 3D scenes: animate with `useTime()` and `param.*`; the same time gives the same frame.
+- Static pages: use `useSteps()` for step input (`click`, `key:<Key>`, `choice:<label>`); nothing advances on its own.
+- Read the frame size and fps with `useFrame()`; never hard-code them.
+- Colors, type and spacing: CSS `var(--color-*)` or `useDesign()` only.
+
+Keep React components in scene modules (`defineScene`), never in `composition.tsx`, so edits hot-update instead of reloading the page.
+Bootstrap (`scenes/<slug>/src/main.tsx`). Keep the hot-update block so edits do not reload the page or lose the playhead:
+
+```ts
+import { mountVanilla } from '@vanilla/runtime/app';
+import type { Composition } from '@vanilla/runtime';
+import composition from './composition';
+
+let dispose = mountVanilla(composition);
+if (import.meta.hot) {
+  import.meta.hot.accept('./composition', (mod) => {
+    if (!mod) return;
+    dispose();
+    dispose = mountVanilla((mod as unknown as { default: Composition }).default);
+  });
+}
+```

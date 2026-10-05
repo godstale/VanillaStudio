@@ -126,7 +126,36 @@ fn copy_template(src: &Path, dst: &Path, vars: &[(&str, &str)]) -> Result<(), St
     Ok(())
 }
 
-fn create(dir: &Path, name: &str, canvas: Canvas, template: &Path) -> Result<String, String> {
+/// 런타임 패키지를 `vanilla/runtime/`에 그대로 복사한다(치환 없음). 워크스페이스 package.json이 `link:./vanilla/runtime`으로 가리킨다.
+/// node_modules·심링크는 건너뛰거나 거부한다.
+fn install_runtime(runtime: &Path, workspace: &Path) -> Result<(), String> {
+    if !runtime.is_dir() {
+        return Err(format!("Runtime not found: {}", runtime.display()));
+    }
+    fn copy(src: &Path, dst: &Path) -> Result<(), String> {
+        fs::create_dir_all(dst).map_err(|e| e.to_string())?;
+        for entry in fs::read_dir(src).map_err(|e| e.to_string())? {
+            let entry = entry.map_err(|e| e.to_string())?;
+            let ft = entry.file_type().map_err(|e| e.to_string())?;
+            if ft.is_symlink() {
+                return Err(format!("Runtime contains a symlink: {}", entry.path().display()));
+            }
+            let name = entry.file_name();
+            if ft.is_dir() {
+                if name == "node_modules" {
+                    continue;
+                }
+                copy(&entry.path(), &dst.join(&name))?;
+            } else {
+                fs::copy(entry.path(), dst.join(&name)).map_err(|e| e.to_string())?;
+            }
+        }
+        Ok(())
+    }
+    copy(runtime, &workspace.join("vanilla").join("runtime"))
+}
+
+fn create(dir: &Path, name: &str, canvas: Canvas, template: &Path, runtime: &Path) -> Result<String, String> {
     if name.trim().is_empty() {
         return Err("Workspace name must not be empty".into());
     }
@@ -135,12 +164,31 @@ fn create(dir: &Path, name: &str, canvas: Canvas, template: &Path) -> Result<Str
     }
     let id = new_workspace_id();
     let name = name.trim();
-    copy_template(template, dir, &[("workspaceName", name), ("workspaceId", &id), ("workspaceSlug", &slug(name))])?;
-    let file = WorkspaceFile { version: 1, workspace_id: id.clone(), name: name.to_string(), canvas };
-    let mut json = serde_json::to_string_pretty(&file).map_err(|e| e.to_string())?;
-    json.push('\n');
-    fs::write(dir.join(WORKSPACE_FILE), json).map_err(|e| e.to_string())?;
+    let build = || -> Result<(), String> {
+        copy_template(template, dir, &[("workspaceName", name), ("workspaceId", &id), ("workspaceSlug", &slug(name))])?;
+        install_runtime(runtime, dir)?;
+        let file = WorkspaceFile { version: 1, workspace_id: id.clone(), name: name.to_string(), canvas };
+        let mut json = serde_json::to_string_pretty(&file).map_err(|e| e.to_string())?;
+        json.push('\n');
+        fs::write(dir.join(WORKSPACE_FILE), json).map_err(|e| e.to_string())
+    };
+    if let Err(e) = build() {
+        // 폴더는 비어 있었으므로(.git 제외) 만들다 만 파일을 모두 치워 다시 시도할 수 있게 한다.
+        clear_except_git(dir);
+        return Err(e);
+    }
     Ok(id)
+}
+
+fn clear_except_git(dir: &Path) {
+    let Ok(rd) = fs::read_dir(dir) else { return };
+    for entry in rd.filter_map(Result::ok) {
+        if entry.file_name() == ".git" {
+            continue;
+        }
+        let p = entry.path();
+        let _ = if p.is_dir() { fs::remove_dir_all(&p) } else { fs::remove_file(&p) };
+    }
 }
 
 #[tauri::command]
@@ -151,7 +199,8 @@ pub fn inspect_workspace_folder(path: String) -> Result<FolderKind, String> {
 #[tauri::command]
 pub fn create_workspace<R: Runtime>(app: AppHandle<R>, path: String, name: String, canvas: Canvas) -> Result<String, String> {
     let template = resolve_resource_dir(&app, "workspace-template")?;
-    create(Path::new(&path), &name, canvas, &template)
+    let runtime = resolve_resource_dir(&app, "runtime")?;
+    create(Path::new(&path), &name, canvas, &template, &runtime)
 }
 
 /// 유효한 워크스페이스 폴더를 열고 파일 명령의 활성 스코프로 설정한다.
@@ -180,6 +229,10 @@ mod tests {
         Path::new(env!("CARGO_MANIFEST_DIR")).join("../resources/workspace-template")
     }
 
+    fn rt() -> PathBuf {
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("../resources/runtime")
+    }
+
     fn canvas() -> Canvas {
         Canvas { aspect: "16:9".into(), width: 1920, height: 1080, fps: 30 }
     }
@@ -195,7 +248,7 @@ mod tests {
     #[test]
     fn create_then_inspect_and_key_order() {
         let d = tempfile::tempdir().unwrap();
-        let id = create(d.path(), " Demo ", canvas(), &tpl()).unwrap();
+        let id = create(d.path(), " Demo ", canvas(), &tpl(), &rt()).unwrap();
         assert!(id.starts_with("ws_"));
         assert_eq!(
             inspect(d.path()).unwrap(),
@@ -210,7 +263,7 @@ mod tests {
     #[test]
     fn scaffold_renders_identity_header() {
         let d = tempfile::tempdir().unwrap();
-        let id = create(d.path(), "My Reel", canvas(), &tpl()).unwrap();
+        let id = create(d.path(), "My Reel", canvas(), &tpl(), &rt()).unwrap();
         let agents = fs::read_to_string(d.path().join("AGENTS.md")).unwrap();
         assert!(agents.contains("My Reel") && agents.contains(&format!("workspaceId: {id}")));
         assert!(!agents.contains("{{"));
@@ -222,15 +275,38 @@ mod tests {
     }
 
     #[test]
+    fn scaffold_installs_the_runtime_for_the_link_dependency() {
+        let d = tempfile::tempdir().unwrap();
+        create(d.path(), "Reel", canvas(), &tpl(), &rt()).unwrap();
+        let installed = d.path().join("vanilla/runtime");
+        assert!(installed.join("package.json").is_file());
+        assert!(installed.join("src/index.ts").is_file());
+        assert!(!installed.join("node_modules").exists());
+        let pkg = fs::read_to_string(d.path().join("package.json")).unwrap();
+        assert!(pkg.contains("\"@vanilla/runtime\": \"link:./vanilla/runtime\""));
+        assert!(d.path().join("tsconfig.json").is_file());
+    }
+
+    #[test]
+    fn a_missing_runtime_fails_the_whole_creation_before_workspace_json_is_written() {
+        let d = tempfile::tempdir().unwrap();
+        assert!(create(d.path(), "Reel", canvas(), &tpl(), &d.path().join("nope")).is_err());
+        assert!(!d.path().join(WORKSPACE_FILE).exists());
+        // 만들다 만 파일이 남지 않아 같은 폴더로 다시 시도할 수 있다
+        assert_eq!(inspect(d.path()).unwrap(), FolderKind::Empty);
+        assert!(create(d.path(), "Reel", canvas(), &tpl(), &rt()).is_ok());
+    }
+
+    #[test]
     fn refuses_nonempty_and_existing_workspace() {
         let d = tempfile::tempdir().unwrap();
         fs::write(d.path().join("a.txt"), "x").unwrap();
         assert_eq!(inspect(d.path()).unwrap(), FolderKind::Other);
-        assert!(create(d.path(), "n", canvas(), &tpl()).is_err());
+        assert!(create(d.path(), "n", canvas(), &tpl(), &rt()).is_err());
 
         let w = tempfile::tempdir().unwrap();
-        create(w.path(), "n", canvas(), &tpl()).unwrap();
-        assert!(create(w.path(), "n", canvas(), &tpl()).is_err());
+        create(w.path(), "n", canvas(), &tpl(), &rt()).unwrap();
+        assert!(create(w.path(), "n", canvas(), &tpl(), &rt()).is_err());
     }
 
     #[test]

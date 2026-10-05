@@ -32,9 +32,9 @@ beforeEach(() => vi.useFakeTimers());
 afterEach(() => vi.useRealTimers());
 
 describe('SceneInspector', () => {
-  it('shows the six section tabs; later ones are placeholders', () => {
+  it('shows the seven section tabs; later ones are placeholders', () => {
     setup();
-    expect(screen.getAllByRole('tab')).toHaveLength(6);
+    expect(screen.getAllByRole('tab')).toHaveLength(7);
     fireEvent.click(tab(/레퍼런스|References/));
     expect(screen.getByText(/이후 단계|later step/)).toBeTruthy();
   });

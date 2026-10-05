@@ -123,10 +123,15 @@ export function previewOriginOf(url: string | null): string | null {
 }
 
 /** URL loaded into the iframe. `?host=` turns the runtime Bridge on and fixes the origin it talks to. */
-export function previewFrameUrl(serverUrl: string, hostOrigin: string): string {
+export function previewFrameUrl(serverUrl: string, hostOrigin: string, entry = '/'): string {
   const u = new URL(serverUrl);
-  u.pathname = '/';
+  // 신 미리보기는 워크스페이스 루트 서버의 `scenes/<slug>/src/index.html`을 연다. 경로는 항상 서버 안의 절대 경로다.
+  u.pathname = entry.startsWith('/') && !entry.includes('..') ? entry : '/';
   u.search = '';
+  u.searchParams.set('mode', 'preview');
   u.searchParams.set('host', hostOrigin);
   return u.toString();
 }
+
+/** 워크스페이스 안 신의 미리보기 경로. */
+export const sceneEntryPath = (slug: string, entry = 'src/index.html'): string => `/scenes/${slug}/${entry}`;

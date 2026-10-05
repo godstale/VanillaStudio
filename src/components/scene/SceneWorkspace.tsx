@@ -10,6 +10,7 @@ import { createScene, listScenes, refreshStatuses, renameScene, writeScene, type
 import type { Scene } from '@/lib/scene/schema';
 import { SlotPortal } from '@/components/layout/AppShell';
 import { SceneInspector } from '@/components/inspector/SceneInspector';
+import type { InspectorTab } from '@/components/inspector/inspectorTabs';
 import { TemplatesProvider } from '@/components/guides/TemplatesContext';
 import { useTemplates } from '@/components/guides/templatesContextValue';
 import { useSafeTerminals } from '@/components/terminal/terminalContextValue';
@@ -32,6 +33,8 @@ export interface SceneWorkspaceProps {
   onViewChange?: (view: Viewport) => void;
   /** workspace.json의 기본 에이전트 id. */
   defaultAgent?: string;
+  /** workspace.json.canvas. 미리보기에 주입한다. */
+  canvas?: { width: number; height: number; fps: number };
 }
 
 interface Loaded {
@@ -39,7 +42,7 @@ interface Loaded {
   sequence: Sequence;
 }
 
-function buildNodes(loaded: Loaded, onOpenFolder: (slug: string) => void, onRunAgent?: (slug: string) => void): SceneFlowNode[] {
+function buildNodes(loaded: Loaded, onOpenFolder: (slug: string) => void, onRunAgent?: (slug: string) => void, onPlay?: (slug: string) => void): SceneFlowNode[] {
   const pos = new Map(loaded.sequence.nodes.map((n) => [n.sceneId, n.pos]));
   let broken = 0;
   return loaded.entries.map((e): SceneFlowNode => {
@@ -47,7 +50,7 @@ function buildNodes(loaded: Loaded, onOpenFolder: (slug: string) => void, onRunA
     if (!s) {
       // scene.json을 읽지 못한 폴더: id가 없어 시퀀스에 넣지 못하므로 아래 줄에 임시 배치한다.
       const position = { x: (broken++ % 4) * 300, y: 600 + Math.floor(broken / 4) * 300 };
-      return { id: `slug:${e.slug}`, type: 'scene', position, draggable: false, data: { slug: e.slug, name: e.slug, type: 'static', status: 'draft', referenceCount: 0, error: e.error ?? 'invalid', onOpenFolder, onRunAgent } };
+      return { id: `slug:${e.slug}`, type: 'scene', position, draggable: false, data: { slug: e.slug, name: e.slug, type: 'static', status: 'draft', referenceCount: 0, error: e.error ?? 'invalid', onOpenFolder, onRunAgent, onPlay } };
     }
     return {
       id: s.id,
@@ -62,12 +65,13 @@ function buildNodes(loaded: Loaded, onOpenFolder: (slug: string) => void, onRunA
         referenceCount: s.references.length,
         onOpenFolder,
         onRunAgent,
+        onPlay,
       },
     };
   });
 }
 
-function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defaultAgent }: SceneWorkspaceProps) {
+function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defaultAgent, canvas }: SceneWorkspaceProps) {
   // 부모가 매 렌더 새 객체를 넘겨도 콜백·효과가 다시 만들어지지 않게 값으로 고정한다.
   const workspace = useMemo(() => ({ id: workspaceProp.id, name: workspaceProp.name }), [workspaceProp.id, workspaceProp.name]);
   const { t } = useLanguage();
@@ -89,6 +93,9 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
   const runRef = useRef<(slug: string) => void>(() => undefined);
   // 노드에 넘기는 콜백은 참조가 바뀌지 않게 고정하고, 최신 동작은 ref로 읽는다(터미널 상태가 바뀔 때마다 노드를 다시 만들지 않기 위해).
   const onRunAgent = useCallback((slug: string) => runRef.current(slug), []);
+  const [inspectorTab, setInspectorTab] = useState<InspectorTab>('overview');
+  const playRef = useRef<(slug: string) => void>(() => undefined);
+  const onPlay = useCallback((slug: string) => playRef.current(slug), []);
 
   const openFolder = useCallback(
     (slug: string) => {
@@ -118,11 +125,11 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
       // 선택 상태는 다시 읽어도 유지한다.
       setNodes((prev) => {
         const selected = new Set(prev.filter((n) => n.selected).map((n) => n.id));
-        return buildNodes(loaded, openFolder, hasTerminals ? onRunAgent : undefined).map((n) => (selected.has(n.id) ? { ...n, selected: true } : n));
+        return buildNodes(loaded, openFolder, hasTerminals ? onRunAgent : undefined, canvas ? onPlay : undefined).map((n) => (selected.has(n.id) ? { ...n, selected: true } : n));
       });
       setLoadError(null);
     },
-    [openFolder, hasTerminals, onRunAgent],
+    [openFolder, hasTerminals, onRunAgent, canvas, onPlay],
   );
 
   const fail = useCallback((e: unknown) => setLoadError(e instanceof Error ? e.message : String(e)), []);
@@ -199,6 +206,16 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
     };
   }, [terminals, workspace, resolve, defaultAgent, t, beginReview]);
 
+  // 노드의 재생 버튼: 그 신을 선택하고 인스펙터의 미리보기 탭을 연다.
+  useEffect(() => {
+    playRef.current = (slug: string) => {
+      const id = entriesRef.current.find((e) => e.slug === slug)?.scene?.id;
+      if (!id) return;
+      setNodes((ns) => ns.map((n) => ({ ...n, selected: n.id === id })));
+      setInspectorTab('preview');
+    };
+  }, []);
+
   const selected = nodes.find((n) => n.selected && !n.data.error);
   const selectedEntry = selected ? entries.find((e) => e.scene?.id === selected.id) : undefined;
 
@@ -264,6 +281,9 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
             scene={selectedEntry.scene}
             template={resolve(selectedEntry.scene)}
             templateError={catalog.get(selectedEntry.scene.template)?.error}
+            canvas={canvas}
+            tab={inspectorTab}
+            onTabChange={setInspectorTab}
             onSave={saveScene}
             onRename={renameSelected}
           />

@@ -69,6 +69,7 @@ export function Workspace() {
       workspace={{ id: result.ws.workspaceId, name: result.ws.name }}
       initialView={result.ws.view}
       defaultAgent={result.ws.defaultAgent}
+      canvas={result.ws.canvas}
       onViewChange={onViewChange}
     />
   );
