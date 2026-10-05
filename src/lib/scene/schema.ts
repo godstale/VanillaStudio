@@ -171,9 +171,10 @@ const scene3dSchema = z
   })
   .strict();
 
-type Issue = { path: (string | number)[]; message: string };
+export type Issue = { path: (string | number)[]; message: string };
 
-function checkBeats(scene: { duration: { seconds: number }; beats: { id: string; start: number; end: number }[] }): Issue[] {
+/** 시간 구조 검사(편집기에도 쓴다). 비어 있으면 문제 없음(초안). */
+export function checkBeats(scene: { duration: { seconds: number }; beats: { id: string; start: number; end: number }[] }): Issue[] {
   const issues: Issue[] = [];
   const { beats } = scene;
   if (beats.length === 0) return issues; // 초안: 에이전트가 채울 때까지 비어 있을 수 있다.

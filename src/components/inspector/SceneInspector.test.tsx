@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
-import { newScene, type Scene } from '@/lib/scene/schema';
+import { newScene, sceneSchema, type Scene } from '@/lib/scene/schema';
 import { SceneInspector } from './SceneInspector';
 
 const scene = newScene({ id: 'scn_AAA', name: 'Intro', type: 'motion', template: 'commercial@1' });
@@ -105,5 +105,36 @@ describe('SceneInspector', () => {
     fireEvent.click(screen.getByRole('button', { name: /복사|Copy/ }));
     await act(async () => {});
     expect(writeText).toHaveBeenCalledWith(preview);
+  });
+
+  it('guide tab edits a field, autosaves a valid scene and re-renders on save', async () => {
+    const { onSave } = setup();
+    fireEvent.click(tab(/가이드|Guide/));
+    fireEvent.change(screen.getByLabelText(/^분위기$|^Mood$/), { target: { value: 'warm' } });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(700);
+    });
+    expect(onSave).toHaveBeenCalledOnce();
+    const saved = onSave.mock.calls[0][0] as Scene;
+    expect(sceneSchema.safeParse(saved).success).toBe(true);
+    expect((saved as { visualStyle: { mood: string } }).visualStyle.mood).toBe('warm');
+  });
+
+  it('does not save an invalid intermediate state, then saves once it is fixed', async () => {
+    const { onSave } = setup();
+    fireEvent.click(tab(/가이드|Guide/));
+    const hold = screen.getByLabelText(/마지막 유지 시간|Final hold/);
+    fireEvent.change(hold, { target: { value: '0.3' } }); // below the 0.7 s rule
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(700);
+    });
+    expect(onSave).not.toHaveBeenCalled();
+    expect(screen.getByRole('status').textContent).toMatch(/저장하지 않았습니다|Not saved/);
+    fireEvent.change(hold, { target: { value: '0.9' } });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(700);
+    });
+    expect(onSave).toHaveBeenCalledOnce();
+    expect((onSave.mock.calls[0][0] as { endCard: { holdSeconds: number } }).endCard.holdSeconds).toBe(0.9);
   });
 });

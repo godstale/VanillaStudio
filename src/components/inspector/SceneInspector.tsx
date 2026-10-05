@@ -2,17 +2,18 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { SceneForm } from '@/components/guides/SceneForm';
 import type { GuideContext } from '@/lib/guides/agentsMd';
 import { assemblePrompt } from '@/lib/guides/prompts';
 import { defaultTemplateFor, getBuiltinTemplate } from '@/lib/guides/template';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
-import type { Scene } from '@/lib/scene/schema';
+import { sceneSchema, type Scene } from '@/lib/scene/schema';
 import { cn } from '@/lib/utils';
 
 const AUTOSAVE_MS = 600;
 const TABS = ['overview', 'guide', 'design', 'references', 'prompt', 'history'] as const;
 type Tab = (typeof TABS)[number];
-const LATER: Tab[] = ['guide', 'design', 'references', 'history'];
+const LATER: Tab[] = ['design', 'references', 'history'];
 
 export interface SceneInspectorProps {
   workspace: { id: string; name: string };
@@ -23,7 +24,7 @@ export interface SceneInspectorProps {
   onRename: (name: string) => Promise<void>;
 }
 
-type SaveState = 'idle' | 'saving' | 'saved' | 'error';
+type SaveState = 'idle' | 'saving' | 'saved' | 'error' | 'invalid';
 
 const area = 'min-h-16 w-full rounded-md border border-input bg-background px-3 py-2 text-sm';
 
@@ -39,6 +40,7 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
 /** 값이 바뀌면 잠시 뒤 저장한다. 언마운트·선택 전환 전에 남은 변경은 즉시 저장한다. */
 function useAutosave(onSave: (s: Scene) => Promise<void>) {
   const [state, setState] = useState<SaveState>('idle');
+  const [invalid, setInvalid] = useState('');
   const pending = useRef<Scene | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const saveRef = useRef(onSave);
@@ -63,6 +65,16 @@ function useAutosave(onSave: (s: Scene) => Promise<void>) {
 
   const schedule = useCallback(
     (next: Scene) => {
+      // 스키마에 맞지 않는 중간 상태(예: 키 이름이 빈 스텝)는 저장하지 않고 이유만 보여 준다. 고치면 다시 저장된다.
+      const check = sceneSchema.safeParse(next);
+      if (!check.success) {
+        pending.current = null;
+        if (timer.current) clearTimeout(timer.current);
+        const issue = check.error.issues[0];
+        setInvalid(`${issue.path.join('.')} ${issue.message}`.trim());
+        setState('invalid');
+        return;
+      }
       pending.current = next;
       if (timer.current) clearTimeout(timer.current);
       timer.current = setTimeout(() => void flush(), AUTOSAVE_MS);
@@ -78,7 +90,7 @@ function useAutosave(onSave: (s: Scene) => Promise<void>) {
     [],
   );
 
-  return { state, schedule, flush };
+  return { state, invalid, schedule, flush };
 }
 
 /** 노드를 고르면 우측에 열리는 신 편집 패널. 선택이 바뀌면 `key`로 새로 마운트해 쓴다. */
@@ -88,7 +100,7 @@ export function SceneInspector({ workspace, scene, onSave, onRename }: SceneInsp
   const [draft, setDraft] = useState<Scene>(scene);
   const [name, setName] = useState(scene.name);
   const [copied, setCopied] = useState(false);
-  const { state, schedule, flush } = useAutosave(onSave);
+  const { state, invalid, schedule, flush } = useAutosave(onSave);
 
   const edit = (patch: (s: Scene) => Scene) => {
     const next = patch(draft);
@@ -187,6 +199,13 @@ export function SceneInspector({ workspace, scene, onSave, onRename }: SceneInsp
           </>
         )}
 
+        {tab === 'guide' && (
+          <>
+            <p className="text-[11px] text-muted-foreground">{t('inspector.tab.guide.hint')}</p>
+            <SceneForm scene={draft} template={ctx.template} onChange={(next) => edit(() => next)} />
+          </>
+        )}
+
         {tab === 'prompt' && (
           <>
             <Field label={t('inspector.userPrompt')}>
@@ -212,6 +231,7 @@ export function SceneInspector({ workspace, scene, onSave, onRename }: SceneInsp
         {state === 'saving' && t('inspector.saving')}
         {state === 'saved' && t('inspector.saved')}
         {state === 'error' && <span className="text-destructive">{t('inspector.saveFailed')}</span>}
+        {state === 'invalid' && <span className="text-warning">{t('inspector.invalid', { message: invalid })}</span>}
       </div>
     </div>
   );
