@@ -371,6 +371,8 @@ const ko = {
   'design.section.overrideDesc': '{path}가 워크스페이스 DESIGN.md를 상속하고 필요한 토큰만 덮어씁니다.',
   'design.section.overrideOn': '오버라이드 파일이 있습니다. 직접 편집하세요(앱은 삭제하지 않습니다).',
   'design.section.overrideCreate': '오버라이드 파일 만들기',
+  'inspector.templateUnusable': '템플릿 {ref}을(를) 쓸 수 없습니다: {reason}',
+  'inspector.templateMissing': '템플릿을 찾을 수 없습니다.',
   'shell.scenes.empty': '신 목록은 이후 단계에서 구현됩니다.',
   'shell.playground.empty': '플레이그라운드는 이후 단계에서 구현됩니다.',
   'shell.view.pipeline': '파이프라인',

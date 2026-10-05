@@ -4,6 +4,7 @@ import { renderGuideMd } from '@/lib/guides/guideMd';
 import { renderPromptFiles } from '@/lib/guides/prompts';
 import { defaultTemplateFor, getBuiltinTemplate, type GuideTemplate } from '@/lib/guides/template';
 import { checkGuide } from '@/lib/guides/guideMd';
+import { applyTemplateDefaults } from '@/lib/guides/merge';
 import { fileExists, projectPath, readOptionalFile } from '@/lib/workspace/files';
 import { evaluateStatus } from './status';
 import { newScene, parseScene, serializeScene, type Scene, type SceneType } from './schema';
@@ -31,10 +32,10 @@ export interface SceneEntry {
 
 const scenePath = (slug: string, rel: string) => `scenes/${slug}/${rel}`;
 
-function templateFor(scene: Scene): GuideTemplate {
-  // 알 수 없는 템플릿(예: 다른 PC의 사용자 템플릿)은 같은 타입의 내장 템플릿으로 대체한다. 사용자 템플릿 해석은 V3.
-  return getBuiltinTemplate(scene.template) ?? defaultTemplateFor(scene.type);
-}
+/** 신이 쓰는 템플릿을 찾는 함수. 못 찾거나 사용을 거부하면 null — 그러면 scene.json만 쓰고 생성물은 건드리지 않는다(D-031). */
+export type TemplateResolver = (scene: Scene) => GuideTemplate | null;
+
+export const builtinResolver: TemplateResolver = (scene) => getBuiltinTemplate(scene.template);
 
 /** 순수: 신 상태 → 쓸 생성물 파일들. `existingAgents`가 있으면 AGENTS.md는 마커 구간만 갱신한다. */
 export function renderSceneFiles(ctx: GuideContext, existing: { agents: string | null; claude: string | null }): Record<string, string> {
@@ -52,13 +53,15 @@ async function write(root: string, rel: string, contents: string): Promise<void>
 }
 
 /** scene.json을 쓰고 생성물을 다시 렌더한다. */
-export async function writeScene(root: string, slug: string, workspace: WorkspaceRef, scene: Scene): Promise<void> {
+export async function writeScene(root: string, slug: string, workspace: WorkspaceRef, scene: Scene, resolve: TemplateResolver = builtinResolver): Promise<void> {
+  const template = resolve(scene);
+  await write(root, scenePath(slug, 'scene.json'), serializeScene(scene));
+  if (!template) return; // 템플릿을 쓸 수 없으면 생성물을 다시 만들지 않는다.
   const [agents, claude] = await Promise.all([
     readOptionalFile(root, scenePath(slug, 'AGENTS.md')),
     readOptionalFile(root, scenePath(slug, 'CLAUDE.md')),
   ]);
-  const files = renderSceneFiles({ workspace, scene, template: templateFor(scene) }, { agents, claude });
-  await write(root, scenePath(slug, 'scene.json'), serializeScene(scene));
+  const files = renderSceneFiles({ workspace, scene, template }, { agents, claude });
   for (const [rel, text] of Object.entries(files)) await write(root, scenePath(slug, rel), text);
 }
 
@@ -95,17 +98,17 @@ export interface CreateSceneInput {
   name: string;
   type: SceneType;
   language?: 'ko' | 'en';
-  /** `<id>@<ver>`. 생략하면 그 타입의 기본 내장 템플릿. */
-  template?: string;
+  /** 해석이 끝난 템플릿(사용자 템플릿 포함). 생략하면 그 타입의 기본 내장 템플릿. */
+  template?: GuideTemplate;
 }
 
 export async function createScene(root: string, workspace: WorkspaceRef, input: CreateSceneInput): Promise<{ slug: string; scene: Scene }> {
-  const template = input.template ? getBuiltinTemplate(input.template) : defaultTemplateFor(input.type);
-  if (!template || template.meta.type !== input.type) throw new Error(`Unknown ${input.type} template: ${input.template}`);
+  const template = input.template ?? defaultTemplateFor(input.type);
+  if (template.meta.type !== input.type) throw new Error(`Template ${template.ref} is for ${template.meta.type}, not ${input.type}`);
   const info = await invoke<SceneInfo>('create_scene', { workspaceRoot: root, name: input.name });
   try {
-    const scene = newScene({ id: info.sceneId, name: input.name.trim(), type: input.type, template: template.ref, language: input.language });
-    await writeScene(root, info.slug, workspace, scene);
+    const scene = applyTemplateDefaults(newScene({ id: info.sceneId, name: input.name.trim(), type: input.type, template: template.ref, language: input.language }), template);
+    await writeScene(root, info.slug, workspace, scene, () => template);
     return { slug: info.slug, scene };
   } catch (e) {
     // 반쯤 만들어진 폴더를 남기지 않는다(휴지통으로 이동).
@@ -114,20 +117,20 @@ export async function createScene(root: string, workspace: WorkspaceRef, input: 
   }
 }
 
-export async function renameScene(root: string, workspace: WorkspaceRef, slug: string, newName: string): Promise<{ slug: string; scene: Scene }> {
+export async function renameScene(root: string, workspace: WorkspaceRef, slug: string, newName: string, resolve: TemplateResolver = builtinResolver): Promise<{ slug: string; scene: Scene }> {
   const current = await readScene(root, slug);
   const info = await invoke<SceneInfo>('rename_scene', { workspaceRoot: root, slug, newName });
   const scene = { ...current, name: newName.trim() } as Scene;
-  await writeScene(root, info.slug, workspace, scene);
+  await writeScene(root, info.slug, workspace, scene, resolve);
   return { slug: info.slug, scene };
 }
 
-export async function duplicateScene(root: string, workspace: WorkspaceRef, slug: string, newName: string): Promise<{ slug: string; scene: Scene }> {
+export async function duplicateScene(root: string, workspace: WorkspaceRef, slug: string, newName: string, resolve: TemplateResolver = builtinResolver): Promise<{ slug: string; scene: Scene }> {
   const current = await readScene(root, slug);
   const info = await invoke<SceneInfo>('duplicate_scene', { workspaceRoot: root, slug, newName });
   // 복제본은 새 id를 가지며 실행 상태는 초안으로 되돌린다.
   const scene = { ...current, id: info.sceneId, name: newName.trim(), status: 'draft' } as Scene;
-  await writeScene(root, info.slug, workspace, scene);
+  await writeScene(root, info.slug, workspace, scene, resolve);
   return { slug: info.slug, scene };
 }
 
@@ -140,7 +143,7 @@ export function deleteScene(root: string, slug: string): Promise<string> {
  * 파일 상태(엔트리 유무·GUIDE.md 일치)에서 본 상태가 저장된 상태와 다른 신만 scene.json에 반영한다.
  * 바뀐 신이 있으면 true. 스스로의 쓰기가 만든 변경 알림에는 더 바뀔 것이 없어 멈춘다.
  */
-export async function refreshStatuses(root: string, workspace: WorkspaceRef, entries: SceneEntry[]): Promise<boolean> {
+export async function refreshStatuses(root: string, workspace: WorkspaceRef, entries: SceneEntry[], resolve: TemplateResolver = builtinResolver): Promise<boolean> {
   let changed = false;
   for (const { slug, scene } of entries) {
     if (!scene) continue;
@@ -150,19 +153,19 @@ export async function refreshStatuses(root: string, workspace: WorkspaceRef, ent
     ]);
     const status = evaluateStatus({ scene, entryExists, guide: checkGuide(guideText, scene) });
     if (status === scene.status) continue;
-    await writeScene(root, slug, workspace, { ...scene, status } as Scene);
+    await writeScene(root, slug, workspace, { ...scene, status } as Scene, resolve);
     changed = true;
   }
   return changed;
 }
 
 /** 설정(캔버스·템플릿 위치)이 바뀌었을 때 모든 신의 생성물을 다시 렌더한다. 다시 쓴 신 수를 돌려준다. */
-export async function rerenderAllScenes(root: string, workspace: WorkspaceRef): Promise<number> {
+export async function rerenderAllScenes(root: string, workspace: WorkspaceRef, resolve: TemplateResolver = builtinResolver): Promise<number> {
   const entries = await listScenes(root);
   let n = 0;
   for (const { slug, scene } of entries) {
     if (!scene) continue;
-    await writeScene(root, slug, workspace, scene);
+    await writeScene(root, slug, workspace, scene, resolve);
     n += 1;
   }
   return n;

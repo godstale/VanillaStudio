@@ -373,6 +373,8 @@ const en: Dict = {
   'design.section.overrideDesc': '{path} inherits the workspace DESIGN.md and overrides only the tokens it needs.',
   'design.section.overrideOn': 'An override file exists. Edit it yourself (the app never deletes it).',
   'design.section.overrideCreate': 'Create override file',
+  'inspector.templateUnusable': 'Template {ref} cannot be used: {reason}',
+  'inspector.templateMissing': 'Template not found.',
   'shell.scenes.empty': 'The scene list arrives in a later step.',
   'shell.playground.empty': 'The playground arrives in a later step.',
   'shell.view.pipeline': 'Pipeline',

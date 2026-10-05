@@ -31,7 +31,7 @@ describe('NewSceneDialog', () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: ' My Scene ' } });
     fireEvent.click(screen.getByDisplayValue(type));
     fireEvent.click(create());
-    await waitFor(() => expect(onCreate).toHaveBeenCalledWith({ name: 'My Scene', type, template }));
+    await waitFor(() => expect(onCreate).toHaveBeenCalledWith({ name: 'My Scene', type, template: expect.objectContaining({ ref: template }) }));
     await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false));
   });
 

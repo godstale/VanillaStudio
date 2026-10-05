@@ -8,3 +8,4 @@ pub mod pty_commands;
 pub mod export_commands;
 pub mod workspace_commands;
 pub mod scene_commands;
+pub mod template_commands;

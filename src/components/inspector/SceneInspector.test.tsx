@@ -2,16 +2,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { newScene, sceneSchema, type Scene } from '@/lib/scene/schema';
+import { defaultTemplateFor } from '@/lib/guides/template';
 import { SceneInspector } from './SceneInspector';
 
 const scene = newScene({ id: 'scn_AAA', name: 'Intro', type: 'motion', template: 'commercial@1' });
 
-function setup(over: { onSave?: (s: Scene) => Promise<void>; onRename?: (n: string) => Promise<void> } = {}) {
+function setup(over: { onSave?: (s: Scene) => Promise<void>; onRename?: (n: string) => Promise<void>; template?: ReturnType<typeof defaultTemplateFor> | null; templateError?: string } = {}) {
   const onSave = over.onSave ?? vi.fn(async () => undefined);
   const onRename = over.onRename ?? vi.fn(async () => undefined);
   const view = render(
     <LanguageProvider>
-      <SceneInspector workspace={{ id: 'ws_1', name: 'W' }} root="/w" slug="intro" scene={scene} onSave={onSave} onRename={onRename} />
+      <SceneInspector workspace={{ id: 'ws_1', name: 'W' }} root="/w" slug="intro" scene={scene} template={over.template === undefined ? defaultTemplateFor('motion') : over.template} templateError={over.templateError} onSave={onSave} onRename={onRename} />
     </LanguageProvider>,
   );
   return { onSave: onSave as ReturnType<typeof vi.fn>, onRename: onRename as ReturnType<typeof vi.fn>, ...view };
@@ -136,5 +137,16 @@ describe('SceneInspector', () => {
     });
     expect(onSave).toHaveBeenCalledOnce();
     expect((onSave.mock.calls[0][0] as { endCard: { holdSeconds: number } }).endCard.holdSeconds).toBe(0.9);
+  });
+
+  it('refuses guide editing and the prompt preview when the template cannot be used', () => {
+    setup({ template: null, templateError: 'commercial@1: cannot hide "id"' });
+    fireEvent.click(tab(/가이드|Guide/));
+    expect(screen.getByRole('alert').textContent).toContain('cannot hide "id"');
+    expect(screen.queryByTestId('scene-form')).toBeNull();
+    fireEvent.click(tab(/프롬프트|Prompt/));
+    expect(screen.getByRole('alert')).toBeTruthy();
+    expect((screen.getByRole('button', { name: /복사|Copy/ }) as HTMLButtonElement).disabled).toBe(true);
+    expect(screen.getByTestId('prompt-preview').textContent).toBe('');
   });
 });

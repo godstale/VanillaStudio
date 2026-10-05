@@ -2,7 +2,8 @@ import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { listBuiltinTemplates } from '@/lib/guides/template';
+import { useTemplates } from '@/components/guides/templatesContextValue';
+import type { GuideTemplate } from '@/lib/guides/template';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { SCENE_TYPES, type SceneType } from '@/lib/scene/schema';
 import { cn } from '@/lib/utils';
@@ -10,7 +11,7 @@ import { cn } from '@/lib/utils';
 export interface NewSceneValues {
   name: string;
   type: SceneType;
-  template: string;
+  template: GuideTemplate;
 }
 
 export interface NewSceneDialogProps {
@@ -27,17 +28,17 @@ export function NewSceneDialog({ open, onOpenChange, onCreate }: NewSceneDialogP
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const templates = useMemo(() => listBuiltinTemplates(), []);
-  const forType = templates.filter((x) => x.meta.type === type);
-  const template = forType.find((x) => x.ref === chosen[type])?.ref ?? forType[0]?.ref ?? '';
-  const canCreate = name.trim().length > 0 && template !== '' && !busy;
+  const { catalog } = useTemplates();
+  const forType = useMemo(() => catalog.usable(type).flatMap((e) => (e.template ? [{ ...e.template, source: e.source }] : [])), [catalog, type]);
+  const chosenTemplate = forType.find((x) => x.ref === chosen[type]) ?? forType[0];
+  const canCreate = name.trim().length > 0 && chosenTemplate !== undefined && !busy;
 
   async function submit() {
-    if (!canCreate) return;
+    if (!canCreate || !chosenTemplate) return;
     setBusy(true);
     setError(null);
     try {
-      await onCreate({ name: name.trim(), type, template });
+      await onCreate({ name: name.trim(), type, template: chosenTemplate });
       setName('');
       onOpenChange(false);
     } catch (e) {
@@ -85,13 +86,13 @@ export function NewSceneDialog({ open, onOpenChange, onCreate }: NewSceneDialogP
           <label className="flex flex-col gap-1 text-sm">
             {t('scene.new.template')}
             <select
-              value={template}
+              value={chosenTemplate?.ref ?? ''}
               onChange={(e) => setChosen({ ...chosen, [type]: e.target.value })}
               className="h-9 rounded-md border border-input bg-background px-2 text-sm"
             >
               {forType.map((x) => (
                 <option key={x.ref} value={x.ref}>
-                  {x.meta.label[locale === 'en' ? 'en' : 'ko']} ({x.ref})
+                  {x.meta.label[locale === 'en' ? 'en' : 'ko']} ({x.ref}{x.source === 'builtin' ? '' : ` · ${x.source}`})
                 </option>
               ))}
             </select>

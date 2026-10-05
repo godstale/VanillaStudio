@@ -6,7 +6,7 @@ import { SceneForm } from '@/components/guides/SceneForm';
 import { DesignSection } from './DesignSection';
 import type { GuideContext } from '@/lib/guides/agentsMd';
 import { assemblePrompt } from '@/lib/guides/prompts';
-import { defaultTemplateFor, getBuiltinTemplate } from '@/lib/guides/template';
+import type { GuideTemplate } from '@/lib/guides/template';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { sceneSchema, type Scene } from '@/lib/scene/schema';
 import { cn } from '@/lib/utils';
@@ -22,6 +22,10 @@ export interface SceneInspectorProps {
   root: string;
   slug: string;
   scene: Scene;
+  /** 이 신이 쓰는 해석 끝난 템플릿. 사용을 거부했거나 못 찾으면 null(가이드 편집·프롬프트 미리보기는 막힌다). */
+  template: GuideTemplate | null;
+  /** template이 null일 때 사용자에게 보여 줄 이유. */
+  templateError?: string;
   /** scene.json 저장 + 가이드 재렌더. 실패하면 던진다. */
   onSave: (scene: Scene) => Promise<void>;
   /** 이름 변경(폴더 이름도 바뀐다). */
@@ -98,7 +102,7 @@ function useAutosave(onSave: (s: Scene) => Promise<void>) {
 }
 
 /** 노드를 고르면 우측에 열리는 신 편집 패널. 선택이 바뀌면 `key`로 새로 마운트해 쓴다. */
-export function SceneInspector({ workspace, root, slug, scene, onSave, onRename }: SceneInspectorProps) {
+export function SceneInspector({ workspace, root, slug, scene, template, templateError, onSave, onRename }: SceneInspectorProps) {
   const { t } = useLanguage();
   const [tab, setTab] = useState<Tab>('overview');
   const [draft, setDraft] = useState<Scene>(scene);
@@ -122,12 +126,12 @@ export function SceneInspector({ workspace, root, slug, scene, onSave, onRename 
     await onRename(trimmed).catch(() => setName(scene.name));
   }
 
-  const ctx: GuideContext = {
-    workspace,
-    scene: draft,
-    template: getBuiltinTemplate(draft.template) ?? defaultTemplateFor(draft.type),
-  };
-  const prompt = tab === 'prompt' ? assemblePrompt('generate', ctx) : '';
+  const prompt = tab === 'prompt' && template ? assemblePrompt('generate', { workspace, scene: draft, template } satisfies GuideContext) : '';
+  const unusable = template === null ? (
+    <p role="alert" className="rounded bg-destructive/10 p-2 text-xs text-destructive">
+      {t('inspector.templateUnusable', { ref: draft.template, reason: templateError ?? t('inspector.templateMissing') })}
+    </p>
+  ) : null;
 
   async function copyPrompt() {
     try {
@@ -205,8 +209,12 @@ export function SceneInspector({ workspace, root, slug, scene, onSave, onRename 
 
         {tab === 'guide' && (
           <>
-            <p className="text-[11px] text-muted-foreground">{t('inspector.tab.guide.hint')}</p>
-            <SceneForm scene={draft} template={ctx.template} onChange={(next) => edit(() => next)} />
+            {unusable ?? (
+              <>
+                <p className="text-[11px] text-muted-foreground">{t('inspector.tab.guide.hint')}</p>
+                <SceneForm scene={draft} template={template!} onChange={(next) => edit(() => next)} />
+              </>
+            )}
           </>
         )}
 
@@ -219,11 +227,12 @@ export function SceneInspector({ workspace, root, slug, scene, onSave, onRename 
             </Field>
             <div className="flex items-center justify-between">
               <span className="text-xs text-muted-foreground">{t('inspector.promptPreview')}</span>
-              <Button size="sm" variant="outline" onClick={() => void copyPrompt()}>
+              <Button size="sm" variant="outline" disabled={!template} onClick={() => void copyPrompt()}>
                 <Copy className="mr-1 h-3 w-3" />
                 {copied ? t('inspector.copied') : t('inspector.copy')}
               </Button>
             </div>
+            {unusable}
             <pre data-testid="prompt-preview" className="whitespace-pre-wrap rounded-md border border-border bg-muted p-2 text-xs">
               {prompt}
             </pre>

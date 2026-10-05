@@ -10,6 +10,7 @@ use commands::pty_commands::*;
 use commands::search_commands::*;
 use commands::scene_commands::*;
 use commands::shell_commands::*;
+use commands::template_commands::*;
 use commands::workspace_commands::*;
 use watch::{start_preview_watch, stop_preview_watch};
 
@@ -75,6 +76,7 @@ pub fn run() {
             rename_scene,
             delete_scene,
             duplicate_scene,
+            read_template_folders,
             inspect_workspace_folder,
             create_workspace,
             open_workspace,

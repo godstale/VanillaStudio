@@ -10,6 +10,8 @@ import { createScene, listScenes, refreshStatuses, renameScene, writeScene, type
 import type { Scene } from '@/lib/scene/schema';
 import { SlotPortal } from '@/components/layout/AppShell';
 import { SceneInspector } from '@/components/inspector/SceneInspector';
+import { TemplatesProvider } from '@/components/guides/TemplatesContext';
+import { useTemplates } from '@/components/guides/templatesContextValue';
 import { groupChanges } from '@/lib/scene/status';
 import { readSequence, writeSequence } from '@/lib/sequence/file';
 import { addNode, moveNodes, reconcile, type Sequence } from '@/lib/sequence/schema';
@@ -63,6 +65,7 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
   const workspace = useMemo(() => ({ id: workspaceProp.id, name: workspaceProp.name }), [workspaceProp.id, workspaceProp.name]);
   const { t } = useLanguage();
   const rf = useReactFlow();
+  const { catalog, resolve } = useTemplates();
   const [nodes, setNodes] = useState<SceneFlowNode[]>([]);
   const [entries, setEntries] = useState<SceneEntry[]>([]);
   const [dialog, setDialog] = useState<{ x: number; y: number } | null>(null);
@@ -79,7 +82,7 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
   const fetchAll = useCallback(async (): Promise<Loaded> => {
     let entries = await listScenes(root);
     // 파일 상태(엔트리 유무·GUIDE.md 일치)로 신 상태를 맞춘다. 바뀐 신이 있으면 목록을 다시 읽는다.
-    if (await refreshStatuses(root, workspace, entries)) entries = await listScenes(root);
+    if (await refreshStatuses(root, workspace, entries, resolve)) entries = await listScenes(root);
     const current = await readSequence(root, workspace.id);
     const next = reconcile(
       current,
@@ -87,7 +90,7 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
     );
     if (next !== current) await writeSequence(root, next);
     return { entries, sequence: next };
-  }, [root, workspace]);
+  }, [root, workspace, resolve]);
 
   const apply = useCallback(
     (loaded: Loaded) => {
@@ -162,18 +165,18 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
   const saveScene = useCallback(
     async (scene: Scene) => {
       const slug = entries.find((e) => e.scene?.id === scene.id)?.slug;
-      if (slug) await writeScene(root, slug, workspace, scene);
+      if (slug) await writeScene(root, slug, workspace, scene, resolve);
     },
-    [entries, root, workspace],
+    [entries, root, workspace, resolve],
   );
 
   const renameSelected = useCallback(
     async (name: string) => {
       if (!selectedEntry) return;
-      await renameScene(root, workspace, selectedEntry.slug, name);
+      await renameScene(root, workspace, selectedEntry.slug, name, resolve);
       apply(await fetchAll());
     },
-    [selectedEntry, root, workspace, apply, fetchAll],
+    [selectedEntry, root, workspace, resolve, apply, fetchAll],
   );
 
   const centerPos = () => rf.screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
@@ -213,6 +216,8 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
             root={root}
             slug={selectedEntry.slug}
             scene={selectedEntry.scene}
+            template={resolve(selectedEntry.scene)}
+            templateError={catalog.get(selectedEntry.scene.template)?.error}
             onSave={saveScene}
             onRename={renameSelected}
           />
@@ -226,7 +231,9 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
 export function SceneWorkspace(props: SceneWorkspaceProps) {
   return (
     <ReactFlowProvider>
-      <Inner {...props} />
+      <TemplatesProvider root={props.root}>
+        <Inner {...props} />
+      </TemplatesProvider>
     </ReactFlowProvider>
   );
 }
