@@ -210,6 +210,8 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
           <SceneInspector
             key={selectedEntry.scene.id}
             workspace={workspace}
+            root={root}
+            slug={selectedEntry.slug}
             scene={selectedEntry.scene}
             onSave={saveScene}
             onRename={renameSelected}

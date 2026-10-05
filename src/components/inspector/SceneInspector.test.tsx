@@ -11,7 +11,7 @@ function setup(over: { onSave?: (s: Scene) => Promise<void>; onRename?: (n: stri
   const onRename = over.onRename ?? vi.fn(async () => undefined);
   const view = render(
     <LanguageProvider>
-      <SceneInspector workspace={{ id: 'ws_1', name: 'W' }} scene={scene} onSave={onSave} onRename={onRename} />
+      <SceneInspector workspace={{ id: 'ws_1', name: 'W' }} root="/w" slug="intro" scene={scene} onSave={onSave} onRename={onRename} />
     </LanguageProvider>,
   );
   return { onSave: onSave as ReturnType<typeof vi.fn>, onRename: onRename as ReturnType<typeof vi.fn>, ...view };

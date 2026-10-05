@@ -3,6 +3,7 @@ import { Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { SceneForm } from '@/components/guides/SceneForm';
+import { DesignSection } from './DesignSection';
 import type { GuideContext } from '@/lib/guides/agentsMd';
 import { assemblePrompt } from '@/lib/guides/prompts';
 import { defaultTemplateFor, getBuiltinTemplate } from '@/lib/guides/template';
@@ -13,10 +14,13 @@ import { cn } from '@/lib/utils';
 const AUTOSAVE_MS = 600;
 const TABS = ['overview', 'guide', 'design', 'references', 'prompt', 'history'] as const;
 type Tab = (typeof TABS)[number];
-const LATER: Tab[] = ['design', 'references', 'history'];
+const LATER: Tab[] = ['references', 'history'];
 
 export interface SceneInspectorProps {
   workspace: { id: string; name: string };
+  /** 워크스페이스 폴더와 이 신의 폴더 이름(DESIGN 섹션이 파일을 읽고 쓴다). */
+  root: string;
+  slug: string;
   scene: Scene;
   /** scene.json 저장 + 가이드 재렌더. 실패하면 던진다. */
   onSave: (scene: Scene) => Promise<void>;
@@ -94,7 +98,7 @@ function useAutosave(onSave: (s: Scene) => Promise<void>) {
 }
 
 /** 노드를 고르면 우측에 열리는 신 편집 패널. 선택이 바뀌면 `key`로 새로 마운트해 쓴다. */
-export function SceneInspector({ workspace, scene, onSave, onRename }: SceneInspectorProps) {
+export function SceneInspector({ workspace, root, slug, scene, onSave, onRename }: SceneInspectorProps) {
   const { t } = useLanguage();
   const [tab, setTab] = useState<Tab>('overview');
   const [draft, setDraft] = useState<Scene>(scene);
@@ -205,6 +209,8 @@ export function SceneInspector({ workspace, scene, onSave, onRename }: SceneInsp
             <SceneForm scene={draft} template={ctx.template} onChange={(next) => edit(() => next)} />
           </>
         )}
+
+        {tab === 'design' && <DesignSection root={root} slug={slug} />}
 
         {tab === 'prompt' && (
           <>
