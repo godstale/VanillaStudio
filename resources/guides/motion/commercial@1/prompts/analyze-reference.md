@@ -1,2 +1,3 @@
-Analyze the references listed in `scene.json.references` for style only; never copy them into the output.
-Write one analysis per reference to `references/analysis/<id>.md` and report only style findings.
+Analyze the references listed in `scene.json.references` for visual style only. Never copy a reference into the output and never show it as a thumbnail, screenshot or card.
+For each reference write `references/analysis/<id>.md` with findings on: composition, color palette, motion and its rhythm, timing, transitions, typography, mood. For products or characters, list identifying traits (silhouette, proportions, materials, logo placement) that must be preserved.
+Do not download URLs; use only the files already in `references/` (and extracted keyframes if present). Report only the style findings.
