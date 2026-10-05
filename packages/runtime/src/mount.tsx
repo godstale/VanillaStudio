@@ -9,6 +9,8 @@ import { App, type DesignProviderComponent } from './AppView';
 import { createAppState } from './appState';
 import { sceneStart, type Composition, type ParamsBySceneId } from './composition';
 import { applyAndSettle, readiness } from './ready';
+import { frameFromSearch, parseFrame, setFrame } from './frame';
+import { hostedSteps } from './steps';
 
 export interface MountOptions {
   /** File-backed provider (`DesignProvider` from `@vanilla/runtime/design`). */
@@ -54,6 +56,9 @@ export function mountVanilla(composition: Composition, options: MountOptions): (
   const clock = createClock({ mode, duration: composition.clockDuration, autoplay });
   if (carriedTime !== null && mode !== 'render' && initialTime === null) clock.seek(carriedTime);
   carriedTime = null;
+  // 화면 규격: 직접 열 때는 ?w=&h=&fps=, 호스트가 있으면 Bridge init의 canvas가 덮는다(D-030).
+  const searchFrame = frameFromSearch(search);
+  if (searchFrame) setFrame(searchFrame);
   const state = createAppState(options.paramsFiles ?? {});
   const sceneIdAt = () => (composition.layout === 'timeline' ? (sceneAt(composition.segments, clock.getTime())?.segment.id ?? null) : null);
 
@@ -70,7 +75,13 @@ export function mountVanilla(composition: Composition, options: MountOptions): (
   } else if (hostOrigin) {
     const target: BridgeTarget = {
       ...clockTarget(clock),
-      init: (payload) => state.mergeAll(payload.paramsValues),
+      init: (payload) => {
+        state.mergeAll(payload.paramsValues);
+        const frame = payload.canvas && parseFrame(payload.canvas);
+        if (frame) setFrame(frame);
+      },
+      next: () => hostedSteps()?.next(),
+      prev: () => hostedSteps()?.prev(),
       setParams: (id, values) => state.mergeParams(id, values),
       goto(sceneId) {
         const start = sceneStart(composition, sceneId);

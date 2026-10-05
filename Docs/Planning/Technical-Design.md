@@ -273,11 +273,11 @@ Bridge setDesign { colors } ─────────── 미리보기 전�
 
 ## 5. Vanilla Bridge (호스트 ↔ 신 iframe) — 보존·확장
 
-`window.postMessage` 기반, 모든 메시지에 `{ v: 1, type, payload }`. origin 검사 필수.
+`window.postMessage` 기반, 모든 메시지에 `{ v: 2, type, payload }`(**v2**: 정적 페이지 step 진행과 캔버스 주입 추가, v가 다른 메시지는 무시). origin 검사 필수.
 
 | 방향 | type | payload |
 | --- | --- | --- |
-| host→scene | `init` | `{ mode: 'preview', paramsValues }` |
+| host→scene | `init` | `{ mode: 'preview', paramsValues, canvas?: { width, height, fps } }` — `canvas`는 `workspace.json.canvas`(D-030), 신은 `useFrame()`으로 읽는다. 직접 열 때는 `?w=&h=&fps=` |
 | host→scene | `play` / `pause` | – |
 | host→scene | `seek` | `{ t }` (전체 시간) |
 | host→scene | `setParams` | `{ sceneId, values }` |
@@ -290,8 +290,8 @@ Bridge setDesign { colors } ─────────── 미리보기 전�
 | scene→host | `hmr` | `{ modules: string[], at }` — 런타임 Vite 플러그인이 `vite:afterUpdate`에서 보고(HMR 누락 감지용, S4) |
 | host→scene | `reload` | – 전체 새로고침. 이후 `ready` → host가 `init`으로 파라미터·시각 복원 |
 | host→scene | `next` / `prev` | – 사용자 입력 위임(플레이그라운드 키·클릭 → `static` 신 step 이동, D-032) |
-| scene→host | `step` | `{ index, total, last }` 현재 step 보고. `last`에서 추가 입력이 오면 호스트가 시퀀스 엣지 `trigger`를 평가 |
-| scene→host | `done` | `{ }` motion·3d 신이 끝 시각에 도달(`trigger: end` 평가용) |
+| scene→host | `step` | `{ index, total }` 현재 step 보고(스크롤형은 total 1) |
+| scene→host | `done` | `{ }` 마지막 step에 입력이 들어옴(static) 또는 끝 시각 도달(motion·3d) → 호스트가 시퀀스 엣지 `trigger`를 평가 |
 | scene→host | `choice` | `{ label }` 신 내부 UI가 분기 선택을 보고(`trigger: choice:<label>`) |
 
 - 미리보기 iframe은 `sandbox="allow-scripts allow-same-origin"`(Vite HMR 필요) + **별도 origin(`127.0.0.1:port`)**. CSP에 `frame-src http://127.0.0.1:*`를 추가한다.

@@ -1,5 +1,5 @@
 // Vanilla Bridge, scene side (Technical-Design §5). The host page embeds the preview in an iframe and
-// talks to it with window.postMessage. Every message is `{ v: 1, type, payload }`.
+// talks to it with window.postMessage. Every message is `{ v: 2, type, payload }` (v2: static-page steps and canvas injection).
 // Security: the host origin is fixed when the bridge is created, never taken from a message; messages
 // from any other origin or window are dropped; payloads are validated before they reach the runtime.
 import { z } from 'zod';
@@ -7,7 +7,7 @@ import type { Clock, ClockMode } from './clock';
 import type { SceneMeta } from './scene';
 import type { Colors } from './design/types';
 
-export const BRIDGE_VERSION = 1;
+export const BRIDGE_VERSION = 2;
 
 // ---- host -> scene ----------------------------------------------------------------------------
 
@@ -19,10 +19,18 @@ const HostMessage = z.discriminatedUnion('type', [
   z.object({
     v: z.literal(BRIDGE_VERSION),
     type: z.literal('init'),
-    payload: z.object({ mode: z.literal('preview'), paramsValues: z.record(z.string(), z.record(z.string(), z.unknown())).default({}) }),
+    payload: z.object({
+      mode: z.literal('preview'),
+      paramsValues: z.record(z.string(), z.record(z.string(), z.unknown())).default({}),
+      /** workspace.json.canvas (D-030). Absent: keep the current frame. */
+      canvas: z.object({ width: z.number().int().min(16).max(7680), height: z.number().int().min(16).max(7680), fps: z.number().int().min(1).max(120) }).optional(),
+    }),
   }),
   z.object({ v: z.literal(BRIDGE_VERSION), type: z.literal('play') }),
   z.object({ v: z.literal(BRIDGE_VERSION), type: z.literal('pause') }),
+  // v2: the playground host delegates user input to a static page (D-032).
+  z.object({ v: z.literal(BRIDGE_VERSION), type: z.literal('next') }),
+  z.object({ v: z.literal(BRIDGE_VERSION), type: z.literal('prev') }),
   z.object({ v: z.literal(BRIDGE_VERSION), type: z.literal('seek'), payload: z.object({ t: z.number().finite().min(0) }) }),
   z.object({ v: z.literal(BRIDGE_VERSION), type: z.literal('setParams'), payload: z.object({ sceneId: z.string().min(1), values: z.record(z.string(), z.unknown()) }) }),
   z.object({ v: z.literal(BRIDGE_VERSION), type: z.literal('goto'), payload: z.object({ sceneId: z.string().min(1) }) }),
@@ -59,6 +67,14 @@ export interface ErrorPayload {
   stack: string;
   sceneId: string | null;
 }
+/** Static pages: the current step (0-based) and how many there are (scroll pages count as one). */
+export interface StepPayload {
+  index: number;
+  total: number;
+}
+export interface ChoicePayload {
+  label: string;
+}
 export interface CapturedPayload {
   dataUrl: string;
   scale: number;
@@ -68,7 +84,10 @@ export interface CapturedPayload {
 // ---- runtime side -----------------------------------------------------------------------------
 
 export interface BridgeTarget {
-  init(payload: { mode: 'preview'; paramsValues: Record<string, Record<string, unknown>> }): void;
+  init(payload: { mode: 'preview'; paramsValues: Record<string, Record<string, unknown>>; canvas?: { width: number; height: number; fps: number } }): void;
+  /** v2: step forward / back on behalf of the host (static pages). */
+  next(): void;
+  prev(): void;
   play(): void;
   pause(): void;
   seek(t: number): void;
@@ -116,6 +135,12 @@ export interface Bridge {
   flushTime(): void;
   error(error: unknown, sceneId?: string | null): void;
   hmr(modules: readonly string[]): void;
+  /** v2 (static pages): the page moved to step `index` of `total`. */
+  step(index: number, total: number): void;
+  /** v2: the last step received its input, so the sequence edge trigger can be evaluated. */
+  done(): void;
+  /** v2: the user picked a `choice:<label>` branch. */
+  choice(label: string): void;
   dispose(): void;
 }
 
@@ -150,7 +175,7 @@ export function createBridge(options: BridgeOptions): Bridge {
 
   if (mode === 'render') {
     const noop = () => {};
-    return { ready: noop, time: noop, flushTime: noop, error: noop, hmr: noop, dispose: noop };
+    return { ready: noop, time: noop, flushTime: noop, error: noop, hmr: noop, step: noop, done: noop, choice: noop, dispose: noop };
   }
   if (parseHostOrigin(hostOrigin) !== hostOrigin) throw new Error(`createBridge: invalid hostOrigin "${hostOrigin}"`);
 
@@ -194,6 +219,10 @@ export function createBridge(options: BridgeOptions): Bridge {
         return guard(() => target.play());
       case 'pause':
         return guard(() => target.pause());
+      case 'next':
+        return guard(() => target.next());
+      case 'prev':
+        return guard(() => target.prev());
       case 'seek':
         return guard(() => target.seek(msg.payload.t));
       case 'setParams':
@@ -234,6 +263,9 @@ export function createBridge(options: BridgeOptions): Bridge {
     flushTime: sendPending,
     error,
     hmr: (modules) => post('hmr', { modules: [...modules], at: Date.now() }),
+    step: (index, total) => post('step', { index, total } satisfies StepPayload),
+    done: () => post('done', {}),
+    choice: (label) => post('choice', { label } satisfies ChoicePayload),
     dispose() {
       if (timer !== null) clearTimer(timer);
       timer = null;

@@ -1,11 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  BRIDGE_VERSION,
-  isTrustedSource,
-  parseSceneMessage,
-  previewFrameUrl,
-  previewOriginOf,
-} from './bridgeProtocol';
+import { BRIDGE_VERSION, isTrustedSource, parseSceneMessage, previewFrameUrl, previewOriginOf, withVersion } from './bridgeProtocol';
 
 const readyPayload = {
   scenes: [{ id: 's1', duration: 5, params: {} }],
@@ -22,25 +16,52 @@ describe('parseSceneMessage', () => {
   });
 
   it('accepts time, error, hmr and captured messages', () => {
-    expect(parseSceneMessage({ v: 1, type: 'time', payload: { t: 1.5, sceneId: 's1' } })?.type).toBe('time');
+    expect(parseSceneMessage({ v: 2, type: 'time', payload: { t: 1.5, sceneId: 's1' } })?.type).toBe('time');
     expect(
-      parseSceneMessage({ v: 1, type: 'error', payload: { message: 'boom', stack: '', sceneId: null } })?.type,
+      parseSceneMessage({ v: 2, type: 'error', payload: { message: 'boom', stack: '', sceneId: null } })?.type,
     ).toBe('error');
-    expect(parseSceneMessage({ v: 1, type: 'hmr', payload: { modules: ['a.tsx'], at: 3 } })?.type).toBe('hmr');
+    expect(parseSceneMessage({ v: 2, type: 'hmr', payload: { modules: ['a.tsx'], at: 3 } })?.type).toBe('hmr');
     expect(
       parseSceneMessage({
-        v: 1,
+        v: 2,
         type: 'captured',
         payload: { dataUrl: 'data:image/png;base64,AAA', scale: 1, id: 'cap-1' },
       })?.type,
     ).toBe('captured');
   });
 
+  it('speaks protocol version 2 and drops version 1 messages', () => {
+    expect(BRIDGE_VERSION).toBe(2);
+    expect(parseSceneMessage({ v: 1, type: 'time', payload: { t: 0, sceneId: null } })).toBeNull();
+  });
+
+  it('accepts step, done and choice from static pages and validates them', () => {
+    expect(parseSceneMessage({ v: 2, type: 'step', payload: { index: 1, total: 3 } })?.type).toBe('step');
+    expect(parseSceneMessage({ v: 2, type: 'done', payload: {} })?.type).toBe('done');
+    expect(parseSceneMessage({ v: 2, type: 'choice', payload: { label: 'Yes' } })?.type).toBe('choice');
+    for (const bad of [
+      { type: 'step', payload: { index: -1, total: 3 } },
+      { type: 'step', payload: { index: 0, total: 0 } },
+      { type: 'step', payload: { index: 0.5, total: 3 } },
+      { type: 'choice', payload: { label: '' } },
+      { type: 'choice', payload: { label: 'x'.repeat(201) } },
+    ]) {
+      expect(parseSceneMessage({ v: 2, ...bad })).toBeNull();
+    }
+  });
+
+  it('host messages carry the version, including next/prev and the canvas on init', () => {
+    expect(withVersion({ type: 'next' })).toEqual({ v: 2, type: 'next' });
+    expect(withVersion({ type: 'prev' })).toEqual({ v: 2, type: 'prev' });
+    const init = withVersion({ type: 'init', payload: { mode: 'preview', paramsValues: {}, canvas: { width: 1080, height: 1920, fps: 30 } } });
+    expect(init.v).toBe(2);
+  });
+
   it('rejects wrong versions, unknown types and bad payloads', () => {
     expect(parseSceneMessage({ v: 999, type: 'time', payload: { t: 0, sceneId: null } })).toBeNull();
-    expect(parseSceneMessage({ v: 1, type: 'nope', payload: {} })).toBeNull();
-    expect(parseSceneMessage({ v: 1, type: 'time', payload: { t: 'now', sceneId: null } })).toBeNull();
-    expect(parseSceneMessage({ v: 1, type: 'captured', payload: { dataUrl: 'http://x/y.png', scale: 1 } })).toBeNull();
+    expect(parseSceneMessage({ v: 2, type: 'nope', payload: {} })).toBeNull();
+    expect(parseSceneMessage({ v: 2, type: 'time', payload: { t: 'now', sceneId: null } })).toBeNull();
+    expect(parseSceneMessage({ v: 2, type: 'captured', payload: { dataUrl: 'http://x/y.png', scale: 1 } })).toBeNull();
     expect(parseSceneMessage(null)).toBeNull();
     expect(parseSceneMessage('ready')).toBeNull();
   });

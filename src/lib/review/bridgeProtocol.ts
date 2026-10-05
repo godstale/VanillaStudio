@@ -2,7 +2,7 @@
 // messages; the host treats every field as untrusted input and validates it before use.
 import { z } from 'zod';
 
-export const BRIDGE_VERSION = 1;
+export const BRIDGE_VERSION = 2;
 
 const paramBase = { label: z.string().optional() };
 export const paramDefSchema = z.discriminatedUnion('kind', [
@@ -53,6 +53,13 @@ const capturedSchema = z.object({
 });
 export type CapturedInfo = z.infer<typeof capturedSchema>;
 
+// v2 (static pages, D-032): step progress, finish and branch choices reported by the page.
+const stepSchema = z.object({ index: z.number().int().min(0), total: z.number().int().min(1) });
+export type StepInfo = z.infer<typeof stepSchema>;
+const doneSchema = z.object({}).passthrough();
+const choiceSchema = z.object({ label: z.string().min(1).max(200) });
+export type ChoiceInfo = z.infer<typeof choiceSchema>;
+
 const envelope = <T extends string, P extends z.ZodType>(type: T, payload: P) =>
   z.object({ v: z.literal(BRIDGE_VERSION), type: z.literal(type), payload });
 
@@ -62,6 +69,9 @@ const sceneMessageSchema = z.discriminatedUnion('type', [
   envelope('error', errorSchema),
   envelope('hmr', hmrSchema),
   envelope('captured', capturedSchema),
+  envelope('step', stepSchema),
+  envelope('done', doneSchema),
+  envelope('choice', choiceSchema),
 ]);
 export type SceneMessage = z.infer<typeof sceneMessageSchema>;
 
@@ -72,9 +82,14 @@ export function parseSceneMessage(data: unknown): SceneMessage | null {
 }
 
 export type HostMessage =
-  | { type: 'init'; payload: { mode: 'preview'; paramsValues: Record<string, Record<string, unknown>> } }
+  | {
+      type: 'init';
+      payload: { mode: 'preview'; paramsValues: Record<string, Record<string, unknown>>; canvas?: { width: number; height: number; fps: number } };
+    }
   | { type: 'play' }
   | { type: 'pause' }
+  | { type: 'next' }
+  | { type: 'prev' }
   | { type: 'seek'; payload: { t: number } }
   | { type: 'setParams'; payload: { sceneId: string; values: Record<string, unknown> } }
   | { type: 'goto'; payload: { sceneId: string } }

@@ -69,13 +69,13 @@ describe('mountVanilla', () => {
   it('applies host setParams, goto and setDesign', async () => {
     unmount = mountVanilla(composition(), { DesignProvider, root, search: `?host=${encodeURIComponent(HOST)}` });
     expect(root.textContent).toBe('hi');
-    await send({ v: 1, type: 'setParams', payload: { sceneId: 'a', values: { label: 'changed' } } });
+    await send({ v: 2, type: 'setParams', payload: { sceneId: 'a', values: { label: 'changed' } } });
     expect(root.textContent).toBe('changed');
-    await send({ v: 1, type: 'goto', payload: { sceneId: 'b' } });
+    await send({ v: 2, type: 'goto', payload: { sceneId: 'b' } });
     expect(root.querySelector('[data-scene]')?.getAttribute('data-scene')).toBe('b');
-    await send({ v: 1, type: 'setDesign', payload: { colors: { accent: '#00FF00' } } });
+    await send({ v: 2, type: 'setDesign', payload: { colors: { accent: '#00FF00' } } });
     expect(document.documentElement.style.getPropertyValue('--color-accent')).toBe('#00FF00');
-    await send({ v: 1, type: 'setDesign', payload: { colors: null } });
+    await send({ v: 2, type: 'setDesign', payload: { colors: null } });
     expect(document.documentElement.style.getPropertyValue('--color-accent')).toBe('#FF5500');
   });
 
@@ -83,7 +83,7 @@ describe('mountVanilla', () => {
     unmount = mountVanilla(composition(), { DesignProvider, root, search: `?host=${encodeURIComponent(HOST)}` });
     await act(async () => {
       window.dispatchEvent(
-        new MessageEvent('message', { data: { v: 1, type: 'setParams', payload: { sceneId: 'a', values: { label: 'evil' } } }, origin: 'http://evil.test', source: window }),
+        new MessageEvent('message', { data: { v: 2, type: 'setParams', payload: { sceneId: 'a', values: { label: 'evil' } } }, origin: 'http://evil.test', source: window }),
       );
     });
     expect(root.textContent).toBe('hi');

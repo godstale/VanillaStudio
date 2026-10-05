@@ -11,6 +11,8 @@ function setup(overrides: Partial<Parameters<typeof createBridge>[0]> = {}) {
     init: vi.fn(),
     play: vi.fn(),
     pause: vi.fn(),
+    next: vi.fn(),
+    prev: vi.fn(),
     seek: vi.fn(),
     setParams: vi.fn(),
     goto: vi.fn(),
@@ -38,6 +40,8 @@ describe('host -> scene', () => {
     send(msg('goto', { sceneId: 's2' }));
     send(msg('setDesign', { colors: { primary: '#FF0000', 'on-primary': 'rgb(0 0 0)' } }));
     send(msg('setDesign', { colors: null }));
+    send(msg('next'));
+    send(msg('prev'));
     send(msg('reload'));
     expect(target.init).toHaveBeenCalledWith({ mode: 'preview', paramsValues: { s1: { speed: 2 } } });
     expect(target.play).toHaveBeenCalledOnce();
@@ -47,13 +51,35 @@ describe('host -> scene', () => {
     expect(target.goto).toHaveBeenCalledWith('s2');
     expect(target.setDesign.mock.calls).toEqual([[{ primary: '#FF0000', 'on-primary': 'rgb(0 0 0)' }], [null]]);
     expect(target.reload).toHaveBeenCalledOnce();
+    expect(target.next).toHaveBeenCalledOnce();
+    expect(target.prev).toHaveBeenCalledOnce();
+  });
+
+  it('speaks protocol version 2', () => {
+    expect(BRIDGE_VERSION).toBe(2);
+  });
+
+  it('init may carry the workspace canvas, validated', () => {
+    const { send, msg, target } = setup();
+    send(msg('init', { mode: 'preview', paramsValues: {}, canvas: { width: 1080, height: 1920, fps: 30 } }));
+    expect(target.init).toHaveBeenCalledWith({ mode: 'preview', paramsValues: {}, canvas: { width: 1080, height: 1920, fps: 30 } });
+    for (const bad of [
+      { width: 0, height: 10, fps: 30 },
+      { width: 1920, height: 1080, fps: 0 },
+      { width: 1920.5, height: 1080, fps: 30 },
+      { width: 99999, height: 1080, fps: 30 },
+    ]) {
+      send(msg('init', { mode: 'preview', paramsValues: {}, canvas: bad }));
+    }
+    expect(target.init).toHaveBeenCalledOnce();
   });
 
   it('drops messages from another origin or window, and malformed ones', () => {
     const { send, msg, target, posted } = setup();
     send(msg('play'), 'http://evil.example');
     send(msg('play'), ORIGIN, { other: 'window' });
-    send({ v: 2, type: 'play' });
+    send({ v: 1, type: 'play' }); // older protocol version
+    send({ v: 3, type: 'play' }); // newer protocol version
     send({ type: 'play' });
     send('play');
     send(null);
@@ -89,8 +115,8 @@ describe('scene -> host', () => {
     bridge.ready({ scenes: [], duration: 4, format: 'video', design: { hash: 'h', roles: { canvas: '#000000' } } });
     bridge.hmr(['/src/scenes/a.tsx']);
     expect(host.postMessage.mock.calls.every((c) => c[1] === ORIGIN)).toBe(true);
-    expect(posted()[0]).toEqual({ v: 1, type: 'ready', payload: { scenes: [], duration: 4, format: 'video', design: { hash: 'h', roles: { canvas: '#000000' } } } });
-    expect(posted()[1]).toMatchObject({ v: 1, type: 'hmr', payload: { modules: ['/src/scenes/a.tsx'] } });
+    expect(posted()[0]).toEqual({ v: 2, type: 'ready', payload: { scenes: [], duration: 4, format: 'video', design: { hash: 'h', roles: { canvas: '#000000' } } } });
+    expect(posted()[1]).toMatchObject({ v: 2, type: 'hmr', payload: { modules: ['/src/scenes/a.tsx'] } });
   });
 
   it('capture replies with `captured` (echoing the request id) or reports the failure', async () => {
@@ -101,8 +127,8 @@ describe('scene -> host', () => {
     await Promise.resolve();
     expect(target.capture.mock.calls).toEqual([[2], [1]]);
     expect(posted()).toEqual([
-      { v: 1, type: 'captured', payload: { dataUrl: 'data:image/png;base64,AAAA', scale: 2, id: 'r1' } },
-      { v: 1, type: 'captured', payload: { dataUrl: 'data:image/png;base64,AAAA', scale: 1, id: undefined } },
+      { v: 2, type: 'captured', payload: { dataUrl: 'data:image/png;base64,AAAA', scale: 2, id: 'r1' } },
+      { v: 2, type: 'captured', payload: { dataUrl: 'data:image/png;base64,AAAA', scale: 1, id: undefined } },
     ]);
     target.capture.mockRejectedValueOnce(new Error('tainted canvas'));
     send(msg('capture', { scale: 1 }));
@@ -232,5 +258,27 @@ describe('setup edge cases', () => {
     cb!({ updates: [{ path: '/src/a.tsx' }, { path: '/src/b.tsx' }] });
     expect(posted()[0]).toMatchObject({ type: 'hmr', payload: { modules: ['/src/a.tsx', '/src/b.tsx'] } });
     expect(() => reportHmr(bridge, undefined)).not.toThrow();
+  });
+});
+
+describe('scene -> host (v2 static pages)', () => {
+  it('posts step, done and choice with the protocol version', () => {
+    const { bridge, posted } = setup();
+    bridge.step(1, 3);
+    bridge.choice('Yes');
+    bridge.done();
+    expect(posted()).toEqual([
+      { v: 2, type: 'step', payload: { index: 1, total: 3 } },
+      { v: 2, type: 'choice', payload: { label: 'Yes' } },
+      { v: 2, type: 'done', payload: {} },
+    ]);
+  });
+
+  it('is inert in render mode', () => {
+    const { bridge, posted } = setup({ mode: 'render' });
+    bridge.step(0, 1);
+    bridge.done();
+    bridge.choice('x');
+    expect(posted()).toEqual([]);
   });
 });
