@@ -1,35 +1,27 @@
 # 확장 가이드 (Extension Guide)
 
-> 탭·패널·뷰어·설정·명령·문구를 추가하는 정석 절차입니다.
+> 화면·슬롯·뷰어·설정·명령·문구를 추가하는 정석 절차입니다.
 > 예제 도메인(`collections`, `extensions`)을 복사해 시작하는 것을 권장합니다.
 
-## 1. 새 탭 종류 추가하기
+## 1. 새 화면 추가하기 (v2 셸)
 
-탭은 `id` 규칙 + 타입 등록 + 콘텐츠 분기, 세 군데를 함께 건드립니다.
+v2 앱 셸(`src/components/layout/AppShell.tsx`)은 왼쪽 사이드바 + 메인 영역 + 우측 인스펙터 슬롯 + 하단 도크 슬롯이다. 탭 시스템은 없다.
 
-1. `src/lib/types/workspaceTab.ts`의 `WorkspaceTabType`에 `'my-tab'` 추가.
-2. `src/components/workspace/CenterWorkspace.tsx`:
-   - `TAB_ICONS`에 아이콘 매핑 추가.
-   - `renderTabContent`에 `case 'my-tab': return <MyTab tab={tab} />;` 추가.
-3. 여는 쪽에서는 **멱등 id**를 씁니다: `openTab({ id: 'my-tab:<entityId>', type: 'my-tab', title, meta: { entityId } })`.
-4. 탭 상태는 DB에 JSON으로 저장되므로, `meta`에는 **문자열·숫자 같은 직렬화 가능한 값만** 넣습니다.
-5. 등록을 빠뜨리면 `TabPlaceholder`가 표시됩니다(안전 폴백).
+1. `src/pages/MyScreen.tsx`에 화면 컴포넌트를 만든다.
+2. `src/App.tsx`의 `AppShell` 아래에 `<Route path="/my-screen" element={<MyScreen />} />` 추가.
+3. `AppShell.tsx`의 `NAV_ITEMS`에 `{ to, icon, labelKey }` 추가.
+4. `ko.ts`·`en.ts`에 `shell.nav.myScreen` 문구 추가.
 
-## 2. 새 사이드 패널 추가하기
+## 2. 인스펙터·도크 내용 채우기
 
-1. `SidePanelView`에 `'my-panel'` 추가 (`workspaceTab.ts`).
-2. `ActivityBar.tsx`의 `ITEMS`에 `{ view: 'my-panel', icon, labelKey }` 추가.
-3. `SidePanel.tsx`에 `case 'my-panel': return <MyPanel />;` 추가.
-4. `ko.ts`·`en.ts`에 `activityBar.myPanel` 문구 추가.
-5. 폴더가 필요 없는 패널이면 `ActivityBar`의 비활성화 조건을 확인하세요
-   (기본: 폴더 없이 `explorer`만 활성).
+`AppShell`의 `Slot`(`data-slot="inspector" | "dock"`)이 자리다. 내용 주입 방식(컨텍스트)은 첫 소비자인 V2 인스펙터(T2.11)에서
+정하고 이 절을 갱신한다. 패널 크기는 `react-resizable-panels`가 `autoSaveId`(`vs-shell-h`·`vs-shell-v`)로 저장한다.
 
 ## 3. 새 뷰어 추가하기 (파일 종류별)
 
-1. `FileTree.tsx`의 `handleNodeClick` 분기(현재: 이미지→`image-viewer`, 그 외→`editor`)에 확장자 조건을 추가합니다.
-2. `WorkspaceTabType` + `CenterWorkspace`에 타입·아이콘·분기 등록 (§1과 동일).
-3. 읽기 전용이면 `CodeViewer`를 재사용하고, 편집이면 `EditorTab`의 자동 저장 패턴
-   (`read_text_file` → 편집 → 500ms 디바운스 `write_text_file`)을 복사하세요.
+v1의 탭 뷰어(`EditorTab`·`ImageViewerTab`·`CodeViewer`)는 탭 타입(`WorkspaceTab`)을 props로 받는 상태로 남아 있다.
+v2에서 재사용할 때는 화면·인스펙터 안의 일반 컴포넌트로 바꾼다. 편집은 `EditorTab`의 자동 저장 패턴
+(`read_text_file` → 편집 → 500ms 디바운스 `write_text_file`)을 따른다.
 
 ## 4. 새 설정 페이지 추가하기
 
@@ -71,6 +63,5 @@
 `collections`·`extensions` 예제는 Vanilla Studio M1(T1.4)에서 이미 제거했다. 같은 방식으로 다른 예제를
 걷어낼 때의 순서는 다음과 같다.
 
-- 컴포넌트·lib·타입 삭제, `CenterWorkspace`·`SidePanel`·`ActivityBar`의 분기 제거,
-  `workspaceTab.ts` 타입 제거, 사전 키 제거, 테이블 제거(§6 역순).
+- 컴포넌트·lib·타입 삭제, `App.tsx` 라우트와 `AppShell`의 `NAV_ITEMS` 항목 제거, 사전 키 제거, 테이블 제거(§6 역순).
 - `grep`으로 참조 0건을 확인한다.
