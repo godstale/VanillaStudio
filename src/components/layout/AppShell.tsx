@@ -4,6 +4,7 @@ import { Boxes, FlaskConical, Folder, Settings, type LucideIcon } from 'lucide-r
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { Switcher } from '@/components/workspace/Switcher';
 
 interface NavItem {
   to: string;
@@ -48,6 +49,7 @@ export function AppShell() {
         aria-label={t('shell.nav.label')}
         className="flex w-14 shrink-0 flex-col items-center gap-1 border-r border-border bg-sidebar py-2"
       >
+        <Switcher />
         {NAV_ITEMS.map(({ to, icon: Icon, labelKey }) => (
           <NavLink
             key={to}

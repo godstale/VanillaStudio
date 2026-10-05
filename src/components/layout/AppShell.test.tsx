@@ -1,7 +1,15 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
+vi.mock('@/lib/context/WorkspaceContext', () => ({
+  useWorkspace: () => ({ workspaceRoot: null, setWorkspaceRoot: vi.fn() }),
+}));
+vi.mock('@/lib/db/repositories/workspacesRepo', () => ({
+  listRecentWorkspaces: async () => [],
+  removeWorkspace: async () => undefined,
+}));
+
 import { AppShell } from './AppShell';
 import { EmptyScreen } from './EmptyScreen';
 
