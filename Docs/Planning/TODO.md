@@ -9,7 +9,7 @@
 ## ▶ 진입점 (2026-10-05)
 
 - **기획·설계·지침 문서 개정 완료**(`docs/v2-refactor-spec` 브랜치, main 병합·push는 사용자 승인 대기).
-- **다음 작업**: V1 진행 중(브랜치 `feat/v2-foundation`). T1.0·T1.5 완료. 다음: T1.6(workspace 스키마)·T1.1(R-5 스파이크)·T1.2(레거시 제거 계획서, 사용자 확인 필요).
+- **다음 작업**: V1 진행 중(브랜치 `feat/v2-foundation`). T1.0·T1.5·T1.6 완료. 다음: T1.1(R-5 스파이크)·T1.2(레거시 제거 계획서, 사용자 확인 필요).
 - 이월 항목(v1): T7.2 클린 VM 재실행·T7.5 코드 서명은 V7.7에서 이어받는다.
 
 ---
@@ -22,7 +22,7 @@
 - [ ] T1.3 [레인 B · W2] 레거시 제거 실행(ACP `agent_host`·`mcp_server`·`agent_commands`, `src/lib/{agents(ACP),pipeline,review}`·해당 components, 프로젝트 마법사, 탭·파이프라인 레이아웃) — 대상: T1.2 목록 · 완료 판정: 모듈 단위 커밋마다 lint·typecheck·test·`cargo test` 통과, 참조 0건(grep) · 선행: T1.2 · (D-022)
 - [ ] T1.4 [레인 B · W2] `vanilla.json` 읽기 스키마를 `src/lib/migrate/legacy-schema.ts`로 이관, 나머지 삭제 — 대상: `src/lib/project/*` · 완료 판정: 마이그레이션 입력 테스트 통과 · 선행: T1.3
 - [x] T1.5 [레인 C · W1] canonical 직렬화(`src/lib/json/canonical.ts`: 키 순서·2-space·LF·시간 소수 3자리) + 왕복 테스트 — 대상: `src/lib/json/*` · 완료 판정: 같은 입력 → 같은 바이트 테스트 · 선행: T1.0 · (D-023)
-- [ ] T1.6 [레인 C · W1] `workspace.json` zod 스키마·타입(`workspaceId`·`name`·`canvas`·`defaultAgent`·`view`) + 캔버스 프리셋(16:9·9:16·1:1·사용자 지정) — 대상: `src/lib/workspace/schema.ts`, `src/lib/types/workspace.ts` · 완료 판정: 유효·무효 예제 단위 테스트 · 선행: T1.5 · (D-029, D-030)
+- [x] T1.6 [레인 C · W1] `workspace.json` zod 스키마·타입(`workspaceId`·`name`·`canvas`·`defaultAgent`·`view`) + 캔버스 프리셋(16:9·9:16·1:1·사용자 지정) — 대상: `src/lib/workspace/schema.ts`, `src/lib/types/workspace.ts` · 완료 판정: 유효·무효 예제 단위 테스트 · 선행: T1.5 · (D-029, D-030)
 - [ ] T1.7 [레인 C · W2] DB 마이그레이션 0004(제거 테이블 drop, `workspaces`·`terminal_sessions` 추가, `app_settings`에 `templatesDir`) — 대상: `src/lib/db/migrations/0004*.sql`, `client.ts` · 완료 판정: 마이그레이션 테스트(기존 DB → 신 스키마) · 선행: T1.3
 - [ ] T1.8 [레인 C · W2] Rust 워크스페이스 명령: 생성·열기·스코프 검사·신뢰 확인 저장·`workspaceId` 발급 — 대상: `src-tauri/src/commands/workspace_commands.rs` · 완료 판정: `cargo test`(스코프 밖 거부, 심링크, 빈 폴더 vs 기존 워크스페이스 판별) · 선행: T1.6 · (AGENTS.md §7)
 - [ ] T1.9 [레인 C · W2] 워크스페이스 스캐폴딩 원본(`resources/workspace-template/`: `workspace.json`·`AGENTS.md`(식별 헤더 `workspaceId`·시퀀스 1개 규칙)·`CLAUDE.md`(`@AGENTS.md`)·`DESIGN.md`·`package.json`·`vite.config.ts`·`.gitignore`·`CREDITS.md`) + 렌더/복사 명령 — 대상: `resources/workspace-template/**`, `workspace_commands.rs` · 완료 판정: 복사한 폴더에서 `pnpm install && pnpm dev` 동작, 루트 `AGENTS.md`에 이름·ID 헤더 · 선행: T1.8 · (D-029)
