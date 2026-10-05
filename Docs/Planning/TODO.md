@@ -35,7 +35,7 @@
 ## V2 Scene CRUD·지침 생성 (branch: `feat/v2-scenes`)
 
 - [x] T2.1 [레인 A · W1] `scene.json` zod 스키마: 공통 필드(+`type`·`template`·`brief`·`references`·`userPrompt`·`runtime`·`status`) + 타입별 확장 골격(`static`: `mode`·`steps`, `motion`: `beats`·`copy`·`endCard`…, `3d`: 씬 필드) — 대상: `src/lib/scene/schema.ts`, `src/lib/types/scene.ts` · 완료 판정: 타입별 유효·무효 테스트, `beats` 시간 합·`endCard.holdSeconds ≥ 0.7` 검증 · 선행: T1.5 · (D-023, D-024, D-030)
-- [ ] T2.2 [레인 B · W1] Rust 신 명령: slug/`sceneId` 발급·폴더 스캐폴딩(`scenes/<slug>/{src,params,prompts,references/analysis,.vanilla}`)·이름 변경·삭제(휴지통)·복제 — 대상: `src-tauri/src/commands/scene_commands.rs` · 완료 판정: `cargo test`(트리 검증, slug 충돌, 스코프 밖 거부) · 선행: T1.8
+- [x] T2.2 [레인 B · W1] Rust 신 명령: slug/`sceneId` 발급·폴더 스캐폴딩(`scenes/<slug>/{src,params,prompts,references/analysis,.vanilla}`)·이름 변경·삭제(휴지통)·복제 — 대상: `src-tauri/src/commands/scene_commands.rs` · 완료 판정: `cargo test`(트리 검증, slug 충돌, 스코프 밖 거부) · 선행: T1.8
 - [ ] T2.3 [레인 A · W2] 신 생성 다이얼로그(이름·타입·템플릿 선택) + 캔버스 우클릭/`+`로 노드 추가, 노드 위치 저장(`sequence.json` 노드 pos — 시퀀스 파일은 V6 전까지 최소 골격) — 대상: `src/components/scene/NewSceneDialog.tsx`, 캔버스 · 완료 판정: 3타입 신 생성 → 폴더·`scene.json` 생성, 노드 표시 · 선행: T2.1, T2.2, T1.13 · (F-SCN-01)
 - [ ] T2.4 [레인 A · W2] Scene 노드 컴포넌트(타입 아이콘·이름·상태 배지·썸네일 자리·길이·레퍼런스 수·`에이전트 실행`/`재생`/`폴더 열기` 버튼 자리, 입출력 핸들) — 대상: `src/components/canvas/SceneNode.tsx` · 완료 판정: 컴포넌트 테스트(상태별 배지) · 선행: T2.3
 - [ ] T2.5 [레인 C · W1] 가이드 엔진 코어: 템플릿 로더(내장), 마커 렌더(`<!-- vanilla:begin/end -->` 안만 쓰기, 밖 보존), 순수 함수 `renderGuide`, 해시 헤더 — 대상: `src/lib/guides/*` · 완료 판정: 마커 보존·결정성·스냅샷 테스트 · 선행: T1.5 · (D-023, D-028)

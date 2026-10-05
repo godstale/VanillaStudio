@@ -7,3 +7,4 @@ pub mod process_commands;
 pub mod pty_commands;
 pub mod export_commands;
 pub mod workspace_commands;
+pub mod scene_commands;
