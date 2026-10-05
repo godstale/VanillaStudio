@@ -6,6 +6,8 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { Switcher } from '@/components/workspace/Switcher';
+import { TerminalDock } from '@/components/terminal/TerminalDock';
+import { useSafeTerminals } from '@/components/terminal/terminalContextValue';
 
 interface NavItem {
   to: string;
@@ -37,7 +39,7 @@ export function SlotPortal({ name, children }: { name: SlotName; children: React
   return el ? createPortal(children, el) : null;
 }
 
-function Slot({ name, onTarget }: { name: SlotName; onTarget: (el: HTMLElement | null) => void }) {
+function Slot({ name, onTarget, children }: { name: SlotName; onTarget: (el: HTMLElement | null) => void; children?: ReactNode }) {
   const { t } = useLanguage();
   return (
     <section
@@ -50,7 +52,7 @@ function Slot({ name, onTarget }: { name: SlotName; onTarget: (el: HTMLElement |
       </h2>
       <div className="min-h-0 flex-1 overflow-auto">
         <div ref={onTarget} className="peer" />
-        <p className="p-3 text-xs text-muted-foreground peer-[:not(:empty)]:hidden">{t('shell.slotEmpty')}</p>
+        {children ?? <p className="p-3 text-xs text-muted-foreground peer-[:not(:empty)]:hidden">{t('shell.slotEmpty')}</p>}
       </div>
     </section>
   );
@@ -58,6 +60,7 @@ function Slot({ name, onTarget }: { name: SlotName; onTarget: (el: HTMLElement |
 
 export function AppShell() {
   const { t } = useLanguage();
+  const terminals = useSafeTerminals();
   const [slots, setSlots] = useState<SlotElements>({ inspector: null, dock: null });
   // ref 콜백은 렌더마다 새로 만들면 null↔요소를 반복 호출해 무한 갱신이 되므로 고정한다.
   const inspectorRef = useCallback((el: HTMLElement | null) => setSlots((s) => (s.inspector === el ? s : { ...s, inspector: el })), []);
@@ -99,7 +102,7 @@ export function AppShell() {
             </Panel>
             <PanelResizeHandle className={cn('h-1', handleClass)} />
             <Panel id="vs-dock" order={2} defaultSize={22} minSize={8} collapsible collapsedSize={0}>
-              <Slot name="dock" onTarget={dockRef} />
+              <Slot name="dock" onTarget={dockRef}>{terminals ? <TerminalDock /> : undefined}</Slot>
             </Panel>
           </PanelGroup>
         </Panel>

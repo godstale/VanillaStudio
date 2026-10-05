@@ -4,7 +4,6 @@
 //! launched with fixed argv in the active workspace (D-012). No command string ever comes from
 //! the frontend. Shell permissions inside the agent follow that CLI's own permission system.
 
-use crate::commands::fs_commands::verify_path_in_workspace;
 use crate::process::{self, resolve_command};
 use base64::Engine;
 use portable_pty::{native_pty_system, Child, CommandBuilder, MasterPty, PtySize};
@@ -145,27 +144,104 @@ fn executable_for(agent_id: &str, path_env: &str) -> Result<PathBuf, String> {
     resolve_command(name, path_env).ok_or_else(|| format!("agent executable not found: {name}"))
 }
 
-/// Start an agent CLI in a PTY. `cwd` must be inside the active workspace (defaults to its root).
+/// Everything `pty_start` decided before spawning: the executable, the fixed argv tail and the working folder.
+#[derive(Debug, PartialEq)]
+pub struct Launch {
+    pub exe: PathBuf,
+    pub args: Vec<String>,
+    pub cwd: PathBuf,
+}
+
+const MAX_EXTRA_ARGS: usize = 20;
+const MAX_ARG_LEN: usize = 500;
+
+/// Extra arguments come from the agent registry (edited behind a confirm dialog). No shell is involved, but
+/// control characters and absurd sizes are still refused.
+pub fn validate_args(args: &[String]) -> Result<(), String> {
+    if args.len() > MAX_EXTRA_ARGS {
+        return Err(format!("too many arguments (max {MAX_EXTRA_ARGS})"));
+    }
+    for a in args {
+        if a.is_empty() || a.len() > MAX_ARG_LEN || a.chars().any(|c| c.is_control()) {
+            return Err("invalid agent argument".into());
+        }
+    }
+    Ok(())
+}
+
+/// Scene folder name as created by `scene_commands` (lowercase letters, digits, dashes).
+fn valid_scene_slug(slug: &str) -> bool {
+    !slug.is_empty()
+        && slug.len() <= 80
+        && slug.chars().next().is_some_and(|c| c.is_ascii_alphanumeric())
+        && slug.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-')
+}
+
+/// Working folder: the scene folder `scenes/<slug>` (must exist) or the workspace root. Always inside the workspace.
+pub fn resolve_cwd(workspace: &Path, scene_slug: Option<&str>) -> Result<PathBuf, String> {
+    let root = workspace.canonicalize().map_err(|e| format!("workspace: {e}"))?;
+    let target = match scene_slug {
+        None => root.clone(),
+        Some(slug) => {
+            if !valid_scene_slug(slug) {
+                return Err(format!("invalid scene: {slug}"));
+            }
+            let dir = root.join("scenes").join(slug);
+            if !dir.is_dir() {
+                return Err(format!("scene folder not found: {slug}"));
+            }
+            dir.canonicalize().map_err(|e| e.to_string())?
+        }
+    };
+    if !target.starts_with(&root) {
+        return Err("Access denied: scene folder is outside the workspace".into());
+    }
+    Ok(target)
+}
+
+/// The security checks of an agent launch, without spawning anything: trusted workspace, known agent id,
+/// executable found on PATH, validated extra args, cwd inside the workspace (D-012, AGENTS.md section 7).
+pub fn prepare_launch(
+    workspace: &str,
+    trusted: bool,
+    agent_id: &str,
+    scene_slug: Option<&str>,
+    args: Vec<String>,
+    path_env: &str,
+) -> Result<Launch, String> {
+    if !trusted {
+        return Err("untrusted-workspace".into());
+    }
+    validate_args(&args)?;
+    let exe = executable_for(agent_id, path_env)?;
+    let cwd = resolve_cwd(Path::new(workspace), scene_slug)?;
+    Ok(Launch { exe, args, cwd })
+}
+
+/// Start an agent CLI in a PTY inside the scene folder (or the workspace root). The executable is chosen by the
+/// backend from the agent id; the frontend only supplies the registry's extra arguments. The workspace must be trusted.
 /// Returns the terminal id used by the other commands.
 #[tauri::command]
 pub fn pty_start(
     agent_id: String,
-    cwd: Option<String>,
+    scene_slug: Option<String>,
+    args: Option<Vec<String>>,
     cols: u16,
     rows: u16,
     on_event: tauri::ipc::Channel<PtyEvent>,
 ) -> Result<u32, String> {
-    let exe = executable_for(&agent_id, &process::fresh_path())?;
-    let cwd = match cwd {
-        Some(c) => verify_path_in_workspace(Path::new(&c), None)?,
-        None => {
-            let ws = crate::commands::fs_commands::get_active_workspace_internal()
-                .ok_or_else(|| "no active workspace".to_string())?;
-            verify_path_in_workspace(Path::new(&ws), None)?
-        }
-    };
+    let ws = crate::commands::fs_commands::get_active_workspace_internal().ok_or_else(|| "no active workspace".to_string())?;
+    let launch = prepare_launch(
+        &ws,
+        crate::commands::trust_commands::is_trusted(&ws),
+        &agent_id,
+        scene_slug.as_deref(),
+        args.unwrap_or_default(),
+        &process::fresh_path(),
+    )?;
     let id = NEXT_ID.fetch_add(1, Ordering::SeqCst);
-    let session = PtySession::spawn(&exe, &[], &cwd, cols, rows, move |ev| {
+    let arg_refs: Vec<&str> = launch.args.iter().map(String::as_str).collect();
+    let session = PtySession::spawn(&launch.exe, &arg_refs, &launch.cwd, cols, rows, move |ev| {
         let exited = matches!(ev, PtyEvent::Exit { .. });
         let _ = on_event.send(ev);
         if exited {
@@ -198,6 +274,7 @@ pub fn pty_kill(id: u32) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::fs;
     use std::sync::mpsc;
     use std::time::{Duration, Instant};
 
@@ -271,6 +348,91 @@ mod tests {
     fn only_known_agent_ids_resolve() {
         assert!(executable_for("rm -rf /", "").is_err());
         assert!(executable_for("claude-code", "").unwrap_err().contains("not found"));
+    }
+
+    #[test]
+    fn untrusted_workspaces_never_launch() {
+        let d = tempfile::tempdir().unwrap();
+        let ws = d.path().to_string_lossy().to_string();
+        let err = prepare_launch(&ws, false, "claude-code", None, vec![], "").unwrap_err();
+        assert_eq!(err, "untrusted-workspace");
+    }
+
+    #[test]
+    fn unknown_agents_and_arbitrary_commands_are_refused() {
+        let d = tempfile::tempdir().unwrap();
+        let ws = d.path().to_string_lossy().to_string();
+        for bad in ["rm -rf /", "bash", "calc.exe", "claude-code; calc", ""] {
+            let err = prepare_launch(&ws, true, bad, None, vec![], "").unwrap_err();
+            assert!(err.contains("unknown agent"), "{bad}: {err}");
+        }
+    }
+
+    #[test]
+    fn a_missing_executable_is_reported() {
+        let d = tempfile::tempdir().unwrap();
+        let ws = d.path().to_string_lossy().to_string();
+        let err = prepare_launch(&ws, true, "claude-code", None, vec![], "").unwrap_err();
+        assert!(err.contains("not found"), "{err}");
+    }
+
+    #[test]
+    fn extra_args_are_validated() {
+        assert!(validate_args(&["--model".into(), "opus".into()]).is_ok());
+        assert!(validate_args(&["a\nb".into()]).is_err());
+        assert!(validate_args(&["a\u{0}b".into()]).is_err());
+        assert!(validate_args(&["".into()]).is_err());
+        assert!(validate_args(&["x".repeat(MAX_ARG_LEN + 1)]).is_err());
+        assert!(validate_args(&vec!["x".to_string(); MAX_EXTRA_ARGS + 1]).is_err());
+    }
+
+    #[test]
+    fn cwd_is_the_scene_folder_inside_the_workspace() {
+        let d = tempfile::tempdir().unwrap();
+        fs::create_dir_all(d.path().join("scenes/intro")).unwrap();
+        let root = d.path().canonicalize().unwrap();
+        assert_eq!(resolve_cwd(d.path(), None).unwrap(), root);
+        assert_eq!(resolve_cwd(d.path(), Some("intro")).unwrap(), root.join("scenes").join("intro"));
+    }
+
+    #[test]
+    fn cwd_rejects_bad_slugs_missing_scenes_and_escapes() {
+        let d = tempfile::tempdir().unwrap();
+        fs::create_dir_all(d.path().join("scenes/intro")).unwrap();
+        for bad in ["../intro", "intro/../..", "a/b", "..", "Intro", "in tro", "", "C:\\x", "/etc"] {
+            assert!(resolve_cwd(d.path(), Some(bad)).is_err(), "{bad}");
+        }
+        assert!(resolve_cwd(d.path(), Some("missing")).unwrap_err().contains("not found"));
+    }
+
+    #[test]
+    fn a_scene_symlink_pointing_outside_is_rejected() {
+        let d = tempfile::tempdir().unwrap();
+        let outside = tempfile::tempdir().unwrap();
+        fs::create_dir_all(d.path().join("scenes")).unwrap();
+        let link = d.path().join("scenes/evil");
+        #[cfg(windows)]
+        let made = std::os::windows::fs::symlink_dir(outside.path(), &link).is_ok();
+        #[cfg(unix)]
+        let made = std::os::unix::fs::symlink(outside.path(), &link).is_ok();
+        if !made {
+            return; // no symlink privilege
+        }
+        assert!(resolve_cwd(d.path(), Some("evil")).unwrap_err().contains("outside"));
+    }
+
+    #[test]
+    fn launch_succeeds_for_a_trusted_workspace_with_a_found_executable() {
+        let d = tempfile::tempdir().unwrap();
+        fs::create_dir_all(d.path().join("scenes/intro")).unwrap();
+        let bin = tempfile::tempdir().unwrap();
+        let exe_name = if cfg!(windows) { "claude.exe" } else { "claude" };
+        fs::write(bin.path().join(exe_name), "").unwrap();
+        let ws = d.path().to_string_lossy().to_string();
+        let l = prepare_launch(&ws, true, "claude-code", Some("intro"), vec!["--x".into()], &bin.path().to_string_lossy()).unwrap();
+        assert!(l.exe.ends_with(exe_name));
+        assert_eq!(l.args, vec!["--x".to_string()]);
+        assert!(l.cwd.ends_with("intro"));
     }
 
     #[test]

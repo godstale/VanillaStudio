@@ -236,6 +236,12 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     })();
   }, [workspaceRoot]);
 
+  // 백엔드는 신뢰된 워크스페이스에서만 에이전트·프리뷰를 시작한다(AGENTS.md §7). 화면의 신뢰 결정을 그대로 알려 준다.
+  useEffect(() => {
+    if (!workspaceRoot) return;
+    void invoke('set_workspace_trusted', { path: workspaceRoot, trusted: isTrusted }).catch(() => undefined);
+  }, [workspaceRoot, isTrusted]);
+
   const clearRecentWorkspaces = useCallback(() => {
     setRecentWorkspaces([]);
     saveRecentWorkspaces([]);

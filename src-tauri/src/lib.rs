@@ -11,6 +11,7 @@ use commands::search_commands::*;
 use commands::scene_commands::*;
 use commands::shell_commands::*;
 use commands::template_commands::*;
+use commands::trust_commands::*;
 use commands::workspace_commands::*;
 use watch::{start_preview_watch, stop_preview_watch};
 
@@ -77,6 +78,8 @@ pub fn run() {
             delete_scene,
             duplicate_scene,
             read_template_folders,
+            set_workspace_trusted,
+            is_workspace_trusted,
             inspect_workspace_folder,
             create_workspace,
             open_workspace,

@@ -68,6 +68,7 @@ export function Workspace() {
       root={workspaceRoot}
       workspace={{ id: result.ws.workspaceId, name: result.ws.name }}
       initialView={result.ws.view}
+      defaultAgent={result.ws.defaultAgent}
       onViewChange={onViewChange}
     />
   );

@@ -69,8 +69,8 @@
 ## V4 터미널 실행·재생 (branch: `feat/v2-run`)
 
 - [x] T4.1 [레인 A · W1] 에이전트 레지스트리 축소(`id·label·argv·instructionFile·detect·pasteMode`)·기본값 5종·DB `agents` 편집, 설정 UI(편집 시 확인 다이얼로그) — 대상: `src/lib/agents/registry.ts`, `src/pages/Settings/*` · 완료 판정: 스키마 테스트, argv 외 필드 주입 거부 · 선행: V2 · (D-012, D-022)
-- [ ] T4.2 [레인 B · W1] Rust `run_agent`(PTY, cwd=신 폴더 canonicalize 검사, 레지스트리 키로만 argv, 신뢰 확인 필수, 세션 메타 DB) — 대상: `src-tauri/src/commands/pty_commands.rs` · 완료 판정: `cargo test`(스코프 밖 cwd 거부, 임의 argv 거부, 미신뢰 폴더 거부) · 선행: T4.1 · (AGENTS.md §7)
-- [ ] T4.3 [레인 A · W2] 터미널 도크(신별 탭, 세션 재연결, 종료 확인, 에이전트 미설치 안내) — 대상: `src/components/terminal/*` · 완료 판정: 노드의 [에이전트 실행] → 도크 탭 열림 · 선행: T4.2, T2.4 · (F-AGT-04)
+- [x] T4.2 [레인 B · W1] Rust `run_agent`(PTY, cwd=신 폴더 canonicalize 검사, 레지스트리 키로만 argv, 신뢰 확인 필수, 세션 메타 DB) — 대상: `src-tauri/src/commands/pty_commands.rs` · 완료 판정: `cargo test`(스코프 밖 cwd 거부, 임의 argv 거부, 미신뢰 폴더 거부) · 선행: T4.1 · (AGENTS.md §7)
+- [x] T4.3 [레인 A · W2] 터미널 도크(신별 탭, 세션 재연결, 종료 확인, 에이전트 미설치 안내) — 대상: `src/components/terminal/*` · 완료 판정: 노드의 [에이전트 실행] → 도크 탭 열림 · 선행: T4.2, T2.4 · (F-AGT-04)
 - [ ] T4.4 [레인 A · W2] 클립보드 복사+토스트, auto-paste 옵션(bracketed paste, 에이전트 준비 감지 실패 시 안내) — 대상: `src/lib/agents/clipboard.ts` · 완료 판정: 복사 내용 = 프롬프트 미리보기와 동일(테스트) · 선행: T4.3, T2.9 · (R-3)
 - [ ] T4.5 [레인 C · W2] 완료 판정·검증·되쓰기 관리: `scene.json` zod 재검증, 엔트리 존재 확인, 화이트리스트 밖 변경 경고, `.vanilla/history/` 스냅샷, diff 뷰·승인·되돌림 — 대상: `src/lib/scene/writeback.ts`, `src/components/scene/DiffDialog.tsx` · 완료 판정: 목 에이전트가 허용/비허용 필드 수정 → 경고·되돌림 테스트 · 선행: T2.10, T4.3 · (R-2)
 - [ ] T4.6 [레인 D(runtime) · W1] 런타임 Bridge v2(`v: 2`: `step`·`done`·`choice`·`next`·`prev`·`ready` payload, zod)·워크스페이스 설치 경로·`canvas` 주입(해상도·fps)·static `steps` 입력 처리 — 대상: `packages/runtime/src/bridge.ts` · 완료 판정: 메시지 단위 테스트, v 불일치 무시 · 선행: V2 · (D-032, D-030, R-8)

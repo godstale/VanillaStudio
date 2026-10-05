@@ -12,6 +12,7 @@ import { SlotPortal } from '@/components/layout/AppShell';
 import { SceneInspector } from '@/components/inspector/SceneInspector';
 import { TemplatesProvider } from '@/components/guides/TemplatesContext';
 import { useTemplates } from '@/components/guides/templatesContextValue';
+import { useSafeTerminals } from '@/components/terminal/terminalContextValue';
 import { groupChanges } from '@/lib/scene/status';
 import { readSequence, writeSequence } from '@/lib/sequence/file';
 import { addNode, moveNodes, reconcile, type Sequence } from '@/lib/sequence/schema';
@@ -26,6 +27,8 @@ export interface SceneWorkspaceProps {
   workspace: WorkspaceRef;
   initialView?: Viewport;
   onViewChange?: (view: Viewport) => void;
+  /** workspace.json의 기본 에이전트 id. */
+  defaultAgent?: string;
 }
 
 interface Loaded {
@@ -33,7 +36,7 @@ interface Loaded {
   sequence: Sequence;
 }
 
-function buildNodes(loaded: Loaded, onOpenFolder: (slug: string) => void): SceneFlowNode[] {
+function buildNodes(loaded: Loaded, onOpenFolder: (slug: string) => void, onRunAgent?: (slug: string) => void): SceneFlowNode[] {
   const pos = new Map(loaded.sequence.nodes.map((n) => [n.sceneId, n.pos]));
   let broken = 0;
   return loaded.entries.map((e): SceneFlowNode => {
@@ -41,7 +44,7 @@ function buildNodes(loaded: Loaded, onOpenFolder: (slug: string) => void): Scene
     if (!s) {
       // scene.json을 읽지 못한 폴더: id가 없어 시퀀스에 넣지 못하므로 아래 줄에 임시 배치한다.
       const position = { x: (broken++ % 4) * 300, y: 600 + Math.floor(broken / 4) * 300 };
-      return { id: `slug:${e.slug}`, type: 'scene', position, draggable: false, data: { slug: e.slug, name: e.slug, type: 'static', status: 'draft', referenceCount: 0, error: e.error ?? 'invalid', onOpenFolder } };
+      return { id: `slug:${e.slug}`, type: 'scene', position, draggable: false, data: { slug: e.slug, name: e.slug, type: 'static', status: 'draft', referenceCount: 0, error: e.error ?? 'invalid', onOpenFolder, onRunAgent } };
     }
     return {
       id: s.id,
@@ -55,12 +58,13 @@ function buildNodes(loaded: Loaded, onOpenFolder: (slug: string) => void): Scene
         duration: s.type === 'static' ? undefined : s.duration.seconds,
         referenceCount: s.references.length,
         onOpenFolder,
+        onRunAgent,
       },
     };
   });
 }
 
-function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: SceneWorkspaceProps) {
+function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defaultAgent }: SceneWorkspaceProps) {
   // 부모가 매 렌더 새 객체를 넘겨도 콜백·효과가 다시 만들어지지 않게 값으로 고정한다.
   const workspace = useMemo(() => ({ id: workspaceProp.id, name: workspaceProp.name }), [workspaceProp.id, workspaceProp.name]);
   const { t } = useLanguage();
@@ -71,6 +75,13 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
   const [dialog, setDialog] = useState<{ x: number; y: number } | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const sequence = useRef<Sequence | null>(null);
+  const entriesRef = useRef<SceneEntry[]>([]);
+  const [runError, setRunError] = useState<string | null>(null);
+  const terminals = useSafeTerminals();
+  const hasTerminals = terminals !== null;
+  const runRef = useRef<(slug: string) => void>(() => undefined);
+  // 노드에 넘기는 콜백은 참조가 바뀌지 않게 고정하고, 최신 동작은 ref로 읽는다(터미널 상태가 바뀔 때마다 노드를 다시 만들지 않기 위해).
+  const onRunAgent = useCallback((slug: string) => runRef.current(slug), []);
 
   const openFolder = useCallback(
     (slug: string) => {
@@ -95,15 +106,16 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
   const apply = useCallback(
     (loaded: Loaded) => {
       sequence.current = loaded.sequence;
+      entriesRef.current = loaded.entries;
       setEntries(loaded.entries);
       // 선택 상태는 다시 읽어도 유지한다.
       setNodes((prev) => {
         const selected = new Set(prev.filter((n) => n.selected).map((n) => n.id));
-        return buildNodes(loaded, openFolder).map((n) => (selected.has(n.id) ? { ...n, selected: true } : n));
+        return buildNodes(loaded, openFolder, hasTerminals ? onRunAgent : undefined).map((n) => (selected.has(n.id) ? { ...n, selected: true } : n));
       });
       setLoadError(null);
     },
-    [openFolder],
+    [openFolder, hasTerminals, onRunAgent],
   );
 
   const fail = useCallback((e: unknown) => setLoadError(e instanceof Error ? e.message : String(e)), []);
@@ -158,6 +170,20 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
     apply(await fetchAll());
   }
 
+  useEffect(() => {
+      runRef.current = (slug: string) => {
+      const scene = entriesRef.current.find((e) => e.slug === slug)?.scene;
+      if (!terminals || !scene) return;
+      setRunError(null);
+      terminals
+        .runAgent({ workspaceId: workspace.id, sceneId: scene.id, sceneSlug: slug, sceneName: scene.name, preferredAgentId: defaultAgent })
+        .catch((e: unknown) => {
+          const message = e instanceof Error ? e.message : String(e);
+          setRunError(message === 'no-enabled-agent' ? t('scene.noAgent') : t('scene.runFailed', { error: message }));
+        });
+    };
+  }, [terminals, workspace.id, defaultAgent, t]);
+
   const selected = nodes.find((n) => n.selected && !n.data.error);
   const selectedEntry = selected ? entries.find((e) => e.scene?.id === selected.id) : undefined;
 
@@ -202,6 +228,11 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
             {t('scene.add')}
           </Button>
         </Panel>
+        {runError && (
+          <Panel position="bottom-center">
+            <p role="alert" className="rounded bg-destructive/10 px-3 py-1 text-xs text-destructive">{runError}</p>
+          </Panel>
+        )}
         {loadError && (
           <Panel position="top-center">
             <p role="alert" className="rounded bg-destructive/10 px-3 py-1 text-xs text-destructive">{`${t('scene.loadFailed')} (${loadError})`}</p>

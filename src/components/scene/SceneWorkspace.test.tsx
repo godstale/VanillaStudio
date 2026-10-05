@@ -42,6 +42,7 @@ vi.mock('@/lib/sequence/file', () => ({
   },
 }));
 
+import { TerminalContext, type TerminalContextValue } from '@/components/terminal/terminalContextValue';
 import { SceneWorkspace } from './SceneWorkspace';
 
 const sceneA: Scene = newScene({ id: 'scn_AAA', name: 'Alpha', type: 'motion', template: 'commercial@1' });
@@ -96,5 +97,36 @@ describe('SceneWorkspace', () => {
     await waitFor(() => expect(state.created).toEqual([expect.objectContaining({ name: 'Gamma', type: '3d' })]));
     await waitFor(() => expect((state.seq as Sequence).nodes.some((n) => n.sceneId === 'scn_NEW000000001')).toBe(true));
     expect(await screen.findByText('Gamma')).toBeTruthy();
+  });
+
+  it('Run agent starts the terminal for that scene with the workspace default agent; failures are shown', async () => {
+    const runAgent = vi.fn(async () => ({}) as never);
+    const value = { runAgent, sessions: [], activeId: null, setActiveId: vi.fn(), manager: {} as never, pickAgent: vi.fn() } as unknown as TerminalContextValue;
+    render(
+      <ThemeProvider>
+        <LanguageProvider>
+          <TerminalContext.Provider value={value}>
+            <div style={{ width: 1000, height: 700 }}>
+              <SceneWorkspace root="/w" workspace={{ id: 'ws_1', name: 'W' }} defaultAgent="codex" />
+            </div>
+          </TerminalContext.Provider>
+        </LanguageProvider>
+      </ThemeProvider>,
+    );
+    await screen.findByText('Alpha');
+    const alphaButton = screen.getAllByText(/에이전트 실행|Run agent/)[0].closest('button')!;
+    fireEvent.click(alphaButton);
+    await waitFor(() => expect(runAgent).toHaveBeenCalledOnce());
+    expect(runAgent).toHaveBeenCalledWith({ workspaceId: 'ws_1', sceneId: 'scn_AAA', sceneSlug: 'alpha', sceneName: 'Alpha', preferredAgentId: 'codex' });
+
+    runAgent.mockRejectedValueOnce(new Error('no-enabled-agent'));
+    fireEvent.click(alphaButton);
+    expect((await screen.findByText(/사용할 수 있는 에이전트가 없습니다|No agent is enabled/))).toBeTruthy();
+  });
+
+  it('the run button is disabled without a terminal provider and for unreadable scenes', async () => {
+    renderWs();
+    await screen.findByText('Alpha');
+    for (const b of screen.getAllByText(/에이전트 실행|Run agent/)) expect((b.closest('button') as HTMLButtonElement).disabled).toBe(true);
   });
 });

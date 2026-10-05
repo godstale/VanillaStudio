@@ -15,6 +15,7 @@ import { TrustWorkspaceDialog } from '@/components/workspace/TrustWorkspaceDialo
 import { ThemeProvider } from '@/lib/context/ThemeContext';
 import { SettingsProvider } from '@/lib/context/SettingsContext';
 import { WorkspaceProvider } from '@/lib/context/WorkspaceContext';
+import { TerminalProvider } from '@/components/terminal/TerminalProvider';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { LanguageSelectDialog } from '@/components/language/LanguageSelectDialog';
 
@@ -25,6 +26,7 @@ export default function App() {
         <SettingsProvider>
           <HashRouter>
             <WorkspaceProvider>
+              <TerminalProvider>
               <Routes>
                 <Route path="/" element={<Navigate to="/workspace" replace />} />
                 <Route element={<AppShell />}>
@@ -44,6 +46,7 @@ export default function App() {
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
               <TrustWorkspaceDialog />
+              </TerminalProvider>
             </WorkspaceProvider>
             <LanguageSelectDialog />
           </HashRouter>

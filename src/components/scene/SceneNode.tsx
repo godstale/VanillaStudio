@@ -16,6 +16,8 @@ export interface SceneNodeData extends Record<string, unknown> {
   /** scene.json이 없거나 검증에 실패했을 때의 이유. */
   error?: string;
   onOpenFolder?: (slug: string) => void;
+  /** 에이전트 실행(터미널 도크). 없으면 버튼이 꺼진다. */
+  onRunAgent?: (slug: string) => void;
 }
 
 export type SceneFlowNode = Node<SceneNodeData, 'scene'>;
@@ -61,7 +63,12 @@ function SceneNodeView({ data, selected }: NodeProps<SceneFlowNode>) {
         <span>{t('scene.references', { count: data.referenceCount })}</span>
       </div>
       <div className="flex gap-1">
-        <button type="button" disabled title={t('scene.comingSoon')} className="nodrag flex flex-1 items-center justify-center gap-1 rounded border border-border px-1 py-1 opacity-50">
+        <button
+          type="button"
+          disabled={!data.onRunAgent || Boolean(data.error)}
+          onClick={() => data.onRunAgent?.(data.slug)}
+          className="nodrag flex flex-1 items-center justify-center gap-1 rounded border border-border px-1 py-1 hover:bg-accent disabled:opacity-50"
+        >
           <Terminal className="h-3 w-3" />
           {t('scene.runAgent')}
         </button>
