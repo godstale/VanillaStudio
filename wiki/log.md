@@ -1,7 +1,3 @@
-## [2026-10-05] lint | Wiki health check
-
-Ran lint. See lint-report.md for details.
-
 # Wiki Log (append-only)
 
 > 형식: `## [YYYY-MM-DD] <type> | <title>` + 한두 줄. type: ingest · decision · phase · research · poc · milestone · lint · update
@@ -249,63 +245,30 @@ Ran lint. See lint-report.md for details.
 ## [2026-10-05] plan | v2 refactor spec drafted
 - Wrote `Docs/Planning/Refactor-Spec-v2.md` v0.1 + D-022~D-028 (Proposed) after interview. Awaiting user review. See: [[refactor-spec-v2]]
 
-## [2026-10-05] lint | Wiki health check
-
-Ran lint. See lint-report.md for details.
-
-## [2026-10-05] lint | Wiki health check
-
-Ran lint. See lint-report.md for details.
-
-## [2026-10-05] lint | Wiki health check
-
-Ran lint. See lint-report.md for details.
-
 ## [2026-10-05] decision | v2 spec v0.2: D-029~D-033 (Proposed)
 - Interview round 2 applied to [[refactor-spec-v2]]: one sequence per workspace, global canvas, custom templates in v2.0, static-page input-driven steps, conditional v1 migration.
-
-## [2026-10-05] lint | Wiki health check
-
-Ran lint. See lint-report.md for details.
 
 ## [2026-10-05] decision | v2 spec v0.3: interview round 3
 - [[refactor-spec-v2]]: canvas presets, static.mode scroll/steps, configurable global templatesDir. No open questions left; awaiting approval.
 
-## [2026-10-05] lint | Wiki health check
-
-Ran lint. See lint-report.md for details.
-
 ## [2026-10-05] update | v2 docs revised: Technical-Design v1.0, AGENTS.md v2, Implementation-Plan v2.0, TODO v2.0
 - D-022~D-033 Accepted (D-010/D-018 Superseded). v1 plan/TODO/parallel guide moved to `Docs/Planning/legacy/`. Next: V1 foundation (T1.0). See: [[implementation-plan]], [[technical-design]], [[parallel-execution]]
-
-## [2026-10-05] lint | Wiki health check
-
-Ran lint. See lint-report.md for details.
 
 ## [2026-10-05] update | Legacy removal plan (T1.2)
 - Added issue-v2-legacy-removal (units U1-U6, keep list, 3 open confirmations). See: [[issue-v2-legacy-removal]]
 
-## [2026-10-05] lint | Wiki health check
-
-Ran lint. See lint-report.md for details.
-
 ## [2026-10-05] poc | R-5 canvas spike
 - @xyflow/react adopted: 100 nodes 60fps, 300 nodes 59.7fps. See: [[poc-r5]]
-
-## [2026-10-05] lint | Wiki health check
-
-Ran lint. See lint-report.md for details.
 
 ## [2026-10-05] milestone | V1 foundation
 - T1.0-T1.13 done; GUI demos pending human check. See: [[milestone-v1]]
 
-## [2026-10-05] lint | Wiki health check
-
-Ran lint. See lint-report.md for details.
-
 ## [2026-10-05] milestone | V2 scenes and guides
 - T2.1-T2.12 done. See: [[milestone-v2]]
 
-## [2026-10-05] lint | Wiki health check
+## [2026-10-06] milestone | V3 guides and inspector
+- T3.1-T3.14 done. See: [[milestone-v3]]
+
+## [2026-10-06] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.

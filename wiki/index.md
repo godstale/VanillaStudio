@@ -22,6 +22,7 @@
 - [[golden-samples]] — 골든 샘플 브리프 5종 초안(P5 품질 기준)
 - [[parallel-execution]] — 병렬 실행 가이드: 웨이브·레인·워크트리·세션 프롬프트 (P4 진입점)
 - [[refactor-spec-v2]] — v2 리팩토링 기획서 초안(Scene 워크스페이스, D-022~D-033 Proposed)
+- [[milestone-v3]] — V3 가이드·인스펙터 마일스톤 로그(용어집·템플릿 콘텐츠·폼·사용자 템플릿)
 - [[milestone-v2]] — V2 Scene CRUD·지침 생성 마일스톤 로그
 - [[milestone-v1]] — V1 기반 정리 마일스톤 로그(레거시 제거·워크스페이스·셸·캔버스)
 - [[poc-r5]] — PoC R-5: @xyflow/react 캔버스 스파이크(100노드 60fps, 채택)

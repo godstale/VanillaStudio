@@ -9,7 +9,7 @@
 ## ▶ 진입점 (2026-10-05)
 
 - **기획·설계·지침 문서 개정 완료**(`docs/v2-refactor-spec` 브랜치, main 병합·push는 사용자 승인 대기).
-- **다음 작업**: V2 완료(GUI 확인 필요, `wiki/sources/milestone-v2.md`). 다음: V3 가이드·인스펙터(브랜치 `feat/v2-guides`, T3.1부터). main 병합·push는 사용자 승인 대기.
+- **다음 작업**: V3 완료(GUI 확인 필요, `wiki/sources/milestone-v3.md`). 다음: V4 터미널 실행·재생(브랜치 `feat/v2-run`, T4.1부터). main 병합·push는 사용자 승인 대기.
 - 이월 항목(v1): T7.2 클린 VM 재실행·T7.5 코드 서명은 V7.7에서 이어받는다.
 
 ---
@@ -64,7 +64,7 @@
 - [x] T3.12 [레인 B · W3] 사용자 정의 템플릿: 복제·편집·`extends` 저장 UI, 우선순위 해석(워크스페이스 > `templatesDir` > 내장), 검증 실패 시 사용 거부 — 대상: `src/lib/guides/resolve.ts`, `src/components/guides/TemplateEditor.tsx` · 완료 판정: 복제 → 필드 추가 → 신에 적용 → 렌더 반영 E2E · 선행: T3.3, T3.6 · (D-031)
 - [x] T3.13 [레인 A · W4] 사용자 프롬프트 편집(CodeMirror)·프롬프트 미리보기(클립보드 내용)·가이드 재렌더 트리거 — 대상: `src/components/inspector/PromptSection.tsx` · 완료 판정: 편집 → `prompts/user-prompt.md` 저장·미리보기 갱신 · 선행: T2.9, T2.11
 - [x] T3.14 [레인 B · W4] 템플릿 갤러리·v1 `resources/templates/*` 제거, 팔레트 라이브러리는 유지 연결 — 대상: `src/components/templates/*`, `resources/templates/*` · 완료 판정: 참조 0건, lint·typecheck·test 통과 · 선행: T3.11
-- [ ] T3.15 [단독 · 마무리] V3 마무리: 데모 ①~④, `milestone-v3.md`, Playbook 프롬프트 갱신 · 선행: T3.1~T3.14
+- [x] T3.15 [단독 · 마무리] V3 마무리: 데모 ①~④, `milestone-v3.md`, Playbook 프롬프트 갱신 · 선행: T3.1~T3.14
 
 ## V4 터미널 실행·재생 (branch: `feat/v2-run`)
 

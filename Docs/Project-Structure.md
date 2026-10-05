@@ -114,7 +114,6 @@
 | `resources/project-template/`, `resources/design/` | 새 프로젝트 스캐폴딩 원본, 기본 DESIGN.md. `tauri.conf.json`의 `bundle.resources`로 번들 |
 | `src-tauri/src/process/` | 프로세스 실행 공통(PATHEXT·fresh PATH·Job Object·타임아웃), FFmpeg 다운로드 |
 | `src-tauri/src/commands/` | 추가: `doctor_commands`, `project_commands`, `process_commands`(앱 소유 프로세스, 고정 argv) |
-| `src/lib/templates/` | `template.json`·`palette.json` zod 스키마·파서·설치 계획(T6.2). `palette.json` 정본은 `src/lib/design/palettes.ts`, `templates/palette.ts`는 별칭 re-export |
 | `src/lib/design/extract.ts`, `harmony.ts` | 팔레트 추출·조화 생성·비교 스냅샷 순수 함수(T6.9) |
 | `resources/skills/` | `vanilla-core` 스킬(T6.1). `tauri.conf.json`의 `bundle.resources`로 번들 |
 | `resources/palettes/` | 내장 팔레트 24종(T6.3). 추가 시 `palettes.ts` 명시 import 1줄 |
@@ -137,3 +136,16 @@ v1 파이프라인·검수·ACP 에이전트·프로젝트 마법사·탭 셸은
 | `src-tauri/src/commands/workspace_commands.rs` | 폴더 판별·워크스페이스 생성/열기·스코프 검사 |
 | `resources/workspace-template/` | 새 워크스페이스 스캐폴딩 원본(`AGENTS.md`·`CLAUDE.md`·`DESIGN.md`·`package.json`·`vite.config.ts`…) |
 | `spikes/r5-canvas/` | PoC R-5 캔버스 스파이크 |
+
+### v2 V2·V3 반영분
+
+| 위치 | 내용 |
+| --- | --- |
+| `src/lib/scene/` | `schema.ts`(scene.json zod, static·motion·3d), `files.ts`(신 폴더 입출력·상태 갱신), `status.ts`(상태 파생) |
+| `src/lib/sequence/` | `sequence.json` 스키마·노드 위치·파일 입출력 |
+| `src/lib/guides/` | 가이드 엔진: `markers.ts`(마커 렌더), `template.ts`(템플릿 형식·내장 로더), `merge.ts`(extends 병합 규칙), `resolve.ts`·`catalog.ts`(우선순위 해석), `forms.ts`(인스펙터 폼 정의), `agentsMd.ts`·`guideMd.ts`·`prompts.ts`(생성물), `writeback.ts`(되쓰기 화이트리스트), `templateEditor.ts` |
+| `resources/guides/<type>/<id>@<ver>/` | 내장 가이드 템플릿 3종(`template.json`·`schema.json`·`glossary.json`·`rules.md`·`checklist.md`·`prompts/*`) |
+| `src/components/scene/`·`inspector/`·`guides/` | 신 노드·생성 다이얼로그·캔버스, 인스펙터(개요·가이드·DESIGN·프롬프트), 용어 콤보박스·beats/steps 편집기·템플릿 편집기 |
+| `src-tauri/src/commands/{scene,template}_commands.rs` | 신 폴더 명령, 템플릿 폴더 읽기(읽기 전용·크기 상한·심링크 거부) |
+| 워크스페이스 `guide-templates/` | 사용자 정의 템플릿 저장 위치(우선순위 최상위) |
+
