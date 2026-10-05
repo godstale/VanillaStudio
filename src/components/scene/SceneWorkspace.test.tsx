@@ -23,8 +23,10 @@ vi.stubGlobal(
 const state = vi.hoisted(() => ({ entries: [] as unknown[], seq: null as unknown, created: [] as unknown[] }));
 
 vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn(async () => undefined) }));
+vi.mock('@/lib/review/watchClient', () => ({ usePreviewWatch: () => undefined }));
 vi.mock('@/lib/scene/files', () => ({
   listScenes: async () => state.entries,
+  refreshStatuses: async () => false,
   createScene: async (_r: string, _w: unknown, input: { name: string; type: 'static' | 'motion' | '3d' }) => {
     const { newScene: mk } = await import('@/lib/scene/schema');
     const scene = mk({ id: 'scn_NEW000000001', name: input.name, type: input.type, template: 'commercial@1' });

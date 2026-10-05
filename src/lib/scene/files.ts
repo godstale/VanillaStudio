@@ -3,7 +3,9 @@ import { renderAgentsMd, SCENE_CLAUDE_MD, type GuideContext } from '@/lib/guides
 import { renderGuideMd } from '@/lib/guides/guideMd';
 import { renderPromptFiles } from '@/lib/guides/prompts';
 import { defaultTemplateFor, getBuiltinTemplate, type GuideTemplate } from '@/lib/guides/template';
-import { projectPath, readOptionalFile } from '@/lib/workspace/files';
+import { checkGuide } from '@/lib/guides/guideMd';
+import { fileExists, projectPath, readOptionalFile } from '@/lib/workspace/files';
+import { evaluateStatus } from './status';
 import { newScene, parseScene, serializeScene, type Scene, type SceneType } from './schema';
 
 // 신 폴더 입출력: scene.json(정규화 직렬화)을 쓰고 생성물(GUIDE.md·AGENTS.md·CLAUDE.md·prompts/*)을 다시 렌더한다.
@@ -132,4 +134,24 @@ export async function duplicateScene(root: string, workspace: WorkspaceRef, slug
 /** 휴지통(.vanilla/trash)으로 옮긴다. 돌려주는 값은 옮긴 위치. */
 export function deleteScene(root: string, slug: string): Promise<string> {
   return invoke<string>('delete_scene', { workspaceRoot: root, slug });
+}
+
+/**
+ * 파일 상태(엔트리 유무·GUIDE.md 일치)에서 본 상태가 저장된 상태와 다른 신만 scene.json에 반영한다.
+ * 바뀐 신이 있으면 true. 스스로의 쓰기가 만든 변경 알림에는 더 바뀔 것이 없어 멈춘다.
+ */
+export async function refreshStatuses(root: string, workspace: WorkspaceRef, entries: SceneEntry[]): Promise<boolean> {
+  let changed = false;
+  for (const { slug, scene } of entries) {
+    if (!scene) continue;
+    const [entryExists, guideText] = await Promise.all([
+      fileExists(root, scenePath(slug, scene.runtime.entry)),
+      readOptionalFile(root, scenePath(slug, 'GUIDE.md')),
+    ]);
+    const status = evaluateStatus({ scene, entryExists, guide: checkGuide(guideText, scene) });
+    if (status === scene.status) continue;
+    await writeScene(root, slug, workspace, { ...scene, status } as Scene);
+    changed = true;
+  }
+  return changed;
 }

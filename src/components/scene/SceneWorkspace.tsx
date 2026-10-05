@@ -5,7 +5,9 @@ import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { WorkspaceCanvas } from '@/components/canvas/WorkspaceCanvas';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
-import { createScene, listScenes, type SceneEntry, type WorkspaceRef } from '@/lib/scene/files';
+import { usePreviewWatch } from '@/lib/review/watchClient';
+import { createScene, listScenes, refreshStatuses, type SceneEntry, type WorkspaceRef } from '@/lib/scene/files';
+import { groupChanges } from '@/lib/scene/status';
 import { readSequence, writeSequence } from '@/lib/sequence/file';
 import { addNode, moveNodes, reconcile, type Sequence } from '@/lib/sequence/schema';
 import { projectPath } from '@/lib/workspace/files';
@@ -53,7 +55,9 @@ function buildNodes(loaded: Loaded, onOpenFolder: (slug: string) => void): Scene
   });
 }
 
-function Inner({ root, workspace, initialView, onViewChange }: SceneWorkspaceProps) {
+function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: SceneWorkspaceProps) {
+  // 부모가 매 렌더 새 객체를 넘겨도 콜백·효과가 다시 만들어지지 않게 값으로 고정한다.
+  const workspace = useMemo(() => ({ id: workspaceProp.id, name: workspaceProp.name }), [workspaceProp.id, workspaceProp.name]);
   const { t } = useLanguage();
   const rf = useReactFlow();
   const [nodes, setNodes] = useState<SceneFlowNode[]>([]);
@@ -69,7 +73,9 @@ function Inner({ root, workspace, initialView, onViewChange }: SceneWorkspacePro
   );
 
   const fetchAll = useCallback(async (): Promise<Loaded> => {
-    const entries = await listScenes(root);
+    let entries = await listScenes(root);
+    // 파일 상태(엔트리 유무·GUIDE.md 일치)로 신 상태를 맞춘다. 바뀐 신이 있으면 목록을 다시 읽는다.
+    if (await refreshStatuses(root, workspace, entries)) entries = await listScenes(root);
     const current = await readSequence(root, workspace.id);
     const next = reconcile(
       current,
@@ -77,7 +83,7 @@ function Inner({ root, workspace, initialView, onViewChange }: SceneWorkspacePro
     );
     if (next !== current) await writeSequence(root, next);
     return { entries, sequence: next };
-  }, [root, workspace.id]);
+  }, [root, workspace]);
 
   const apply = useCallback(
     (loaded: Loaded) => {
@@ -99,6 +105,24 @@ function Inner({ root, workspace, initialView, onViewChange }: SceneWorkspacePro
       cancelled = true;
     };
   }, [fetchAll, apply, fail]);
+
+  // 신 폴더 안의 파일이 바뀌면(에이전트·사용자 편집) 짧게 모아서 다시 읽는다.
+  const refreshTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  usePreviewWatch(root, {
+    onBatch: (paths) => {
+      if (groupChanges(paths).bySlug.size === 0) return;
+      if (refreshTimer.current) clearTimeout(refreshTimer.current);
+      refreshTimer.current = setTimeout(() => {
+        fetchAll().then(apply).catch(fail);
+      }, 300);
+    },
+  });
+  useEffect(
+    () => () => {
+      if (refreshTimer.current) clearTimeout(refreshTimer.current);
+    },
+    [],
+  );
 
   const onNodesChange = useCallback((changes: NodeChange[]) => setNodes((ns) => applyNodeChanges(changes, ns) as SceneFlowNode[]), []);
 

@@ -43,7 +43,7 @@
 - [x] T2.7 [레인 C · W2] 신 `AGENTS.md` 렌더러(Spec §7 구조: 식별 헤더 `workspaceId`+`sceneId`, 산출물 계약, 디자인 규칙, 되쓰기 화이트리스트, 타입별 규칙, 레퍼런스 절차, 검수, 범위 제한) + 신 `CLAUDE.md` — 대상: `src/lib/guides/agentsMd.ts` · 완료 판정: 스냅샷 테스트, 식별 헤더·화이트리스트 포함 검증 · 선행: T2.6, T2.1 · (D-029)
 - [x] T2.8 [레인 C · W2] `GUIDE.md` 렌더러(필드별 섹션, 읽기 전용 헤더, `scene.json` 해시) + 해시 불일치 시 "수동 편집 감지" 경고 — 대상: `src/lib/guides/guideMd.ts` · 완료 판정: 스냅샷·해시 테스트 · 선행: T2.6
 - [x] T2.9 [레인 C · W3] 프롬프트 렌더·클립보드 조립(`[workspace/scene]` 헤더 + 한 줄 지시 + 사용자 프롬프트 + 되쓰기 필드 요약, `generate`·`revise`) — 대상: `src/lib/guides/prompts.ts`, `src/lib/agents/assemble.ts` · 완료 판정: 헤더·언어 지시 포함 스냅샷 · 선행: T2.7, T2.8 · (D-022, F-AGT 개정)
-- [ ] T2.10 [레인 B · W2] 파일 감시 → 신 상태 갱신(`draft`·`prompt-ready`·`generated`·`needs-revision`), `scene.json` 검증 실패 배지, 신 폴더 밖 쓰기 감지 경고 — 대상: `src-tauri/src/watch.rs`, `src/lib/scene/status.ts` · 완료 판정: 파일 변경 모의 → 배지 갱신 테스트 · 선행: T2.2, T2.1 · (R-10)
+- [x] T2.10 [레인 B · W2] 파일 감시 → 신 상태 갱신(`draft`·`prompt-ready`·`generated`·`needs-revision`), `scene.json` 검증 실패 배지, 신 폴더 밖 쓰기 감지 경고 — 대상: `src-tauri/src/watch.rs`, `src/lib/scene/status.ts` · 완료 판정: 파일 변경 모의 → 배지 갱신 테스트 · 선행: T2.2, T2.1 · (R-10) — 신 폴더 밖 쓰기 경고는 `outsideWrites` 헬퍼까지(활성 신 개념이 생기는 V4 터미널 실행에서 UI 연결)
 - [ ] T2.11 [레인 A · W3] Scene 인스펙터 틀(우측 패널, 섹션 탭, 개요 폼: 이름·타입 읽기·brief·언어, 저장 → `scene.json` 정규화 쓰기 → 가이드 파일 재렌더) — 대상: `src/components/inspector/*` · 완료 판정: 노드 선택 → 편집 → 파일 3종 갱신 · 선행: T2.4, T2.7, T2.8 · (F-SCN-02)
 - [ ] T2.12 [레인 A · W3] 워크스페이스 설정 화면(캔버스 프리셋·사용자 지정, 기본 에이전트, `templatesDir`) — 대상: `src/pages/Settings/*` · 완료 판정: 변경이 `workspace.json`/설정 DB에 반영, 신 가이드 재렌더 트리거 · 선행: T1.12, T2.5 · (D-030, D-031)
 - [ ] T2.13 [단독 · 마무리] V2 마무리: 데모, `wiki/sources/milestone-v2.md`, 설계서 §3·§8 갱신 · 선행: T2.1~T2.12

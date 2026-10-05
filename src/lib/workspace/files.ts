@@ -12,6 +12,20 @@ export function projectPath(root: string, rel: string): string {
   return `${root.replace(/[/\\]+$/, '')}/${rel}`;
 }
 
+/** 파일이 있는가(내용은 읽지 않는다). 상위 폴더가 없으면 false. */
+export async function fileExists(root: string, rel: string): Promise<boolean> {
+  const slash = rel.lastIndexOf('/');
+  try {
+    const entries = await invoke<DirEntryItem[]>('list_dir', {
+      path: projectPath(root, slash === -1 ? '' : rel.slice(0, slash)),
+      workspaceRoot: root,
+    });
+    return entries.some((e) => !e.is_dir && e.name === rel.slice(slash + 1));
+  } catch {
+    return false;
+  }
+}
+
 /** 존재하는 파일이면 내용, 없으면 null. 읽기 오류는 그대로 던진다(빈 값으로 오해해 덮어쓰지 않도록). */
 export async function readOptionalFile(root: string, rel: string): Promise<string | null> {
   const slash = rel.lastIndexOf('/');

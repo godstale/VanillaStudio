@@ -64,7 +64,7 @@ vi.mock('@tauri-apps/api/core', () => ({
   },
 }));
 
-import { createScene, deleteScene, duplicateScene, listScenes, readScene, renameScene, writeScene } from './files';
+import { createScene, deleteScene, duplicateScene, listScenes, readScene, refreshStatuses, renameScene, writeScene } from './files';
 import { sceneSchema } from './schema';
 import { checkGuide } from '@/lib/guides/guideMd';
 import { outsideMarkers } from '@/lib/guides/markers';
@@ -149,5 +149,40 @@ describe('scene files', () => {
     const { slug } = await createScene(ROOT, WS, { name: 'Gone', type: 'static' });
     expect(await deleteScene(ROOT, slug)).toContain('trash');
     expect(await listScenes(ROOT)).toEqual([]);
+  });
+
+  describe('refreshStatuses', () => {
+    it('walks a scene through its life from file changes alone', async () => {
+      const { slug } = await createScene(ROOT, WS, { name: 'Life', type: 'motion' });
+      const status = async () => (await readScene(ROOT, slug)).status;
+      const run = async () => refreshStatuses(ROOT, WS, await listScenes(ROOT));
+
+      expect(await run()).toBe(false);
+      expect(await status()).toBe('draft');
+
+      const scene = await readScene(ROOT, slug);
+      await writeScene(ROOT, slug, WS, { ...scene, userPrompt: 'make it punchy' });
+      expect(await run()).toBe(true);
+      expect(await status()).toBe('prompt-ready');
+
+      fs.set(`scenes/${slug}/src/index.html`, '<html></html>');
+      expect(await run()).toBe(true);
+      expect(await status()).toBe('generated');
+      expect(await run()).toBe(false); // 안정: 다시 돌려도 바뀌지 않는다
+
+      // scene.json을 앱 밖에서 고침(GUIDE.md는 그대로) → 수정 필요
+      const edited = JSON.parse(fs.get(`scenes/${slug}/scene.json`)!);
+      edited.structure = 'continuous';
+      fs.set(`scenes/${slug}/scene.json`, JSON.stringify(edited));
+      expect(await run()).toBe(true);
+      expect(await status()).toBe('needs-revision');
+      expect(await run()).toBe(false);
+    });
+
+    it('skips scenes whose scene.json is unreadable', async () => {
+      await createScene(ROOT, WS, { name: 'Bad', type: 'static' });
+      fs.set('scenes/bad/scene.json', '{');
+      expect(await refreshStatuses(ROOT, WS, await listScenes(ROOT))).toBe(false);
+    });
   });
 });
