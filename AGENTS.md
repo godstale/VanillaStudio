@@ -10,8 +10,8 @@
 | --- | --- | --- |
 | 1 | `wiki/index.md` → `wiki/overview.md` | 현재 단계·상태, 관련 지식 조회 |
 | 2 | `Docs/Vanilla-Studio-Requirements.txt` | 요구사항 원본(사용자 작성, 수정 금지) |
-| 3 | `Docs/Planning/Product-Spec.md` | 상세 기획서 — 무엇을 만드는가 |
-| 4 | `Docs/Planning/Technical-Design.md` | 기술 설계서 — **Vanilla Studio 고유 설계의 진실 공급원** |
+| 3 | `Docs/Planning/Refactor-Spec-v2.md` | **v2 기획서 — 무엇을 만드는가(Scene 워크스페이스)**. `Product-Spec.md`(v1)는 참고용으로 격하 |
+| 4 | `Docs/Planning/Technical-Design.md` | 기술 설계서 v1.0(v2 기준) — **Vanilla Studio 고유 설계의 진실 공급원** |
 | 5 | `Docs/Planning/Feasibility-Risks.md` | 구현 난점·리스크·PoC |
 | 6 | `Docs/Planning/Decisions.md` | 결정 기록(D-NNN). Proposed 항목은 사용자 확인 전 전제로 삼지 않는다 |
 | 6a | `Docs/Planning/Implementation-Plan.md`, `Docs/Planning/TODO.md` | 구현 계획(마일스톤 M1~M7)과 작업 목록. **구현 작업은 TODO 항목 단위로 진행하고 체크한다**. TODO 맨 위 "▶ 진입점"이 다음 작업이다 |
@@ -22,10 +22,11 @@
 
 ## 1. 프로젝트 개요
 
-**Vanilla Studio**: 코딩 에이전트(Claude Code·Codex·OpenCode·Hermes·AGY)를 ACP로 구동해
-브리프 → 기획서 → 구현 계획서(프롬프트) → 코드 → 검수 → export 파이프라인으로
-웹 페이지·인터랙티브 2D/3D·슬라이드(PPT)·이미지·2D/3D 영상을 만드는 Tauri 2 데스크탑 앱.
-생성형 이미지/영상 AI를 쓰지 않고 에이전트가 코드로 결과물을 쌓아 올린다.
+**Vanilla Studio v2**: ComfyUI형 캔버스 워크스페이스에서 **Scene**(정적 페이지·모션 그래픽·3D 애니메이션)을 만들고,
+신 사이를 전환으로 이어 **시퀀스**(PPT·영상·인터랙티브)를 구성하는 Tauri 2 데스크탑 앱.
+앱은 신별 가이드·`DESIGN.md`·`AGENTS.md`를 구조화 데이터(`scene.json`)에서 생성하고, 에이전트 CLI(Claude Code·Codex 등)를
+내장 터미널에서 실행하며 프롬프트를 클립보드로 전달한다. 결과물은 에이전트가 **코드**로 만들고 앱의 플레이그라운드가 재생한다.
+앱은 에이전트를 조종하지 않는다(D-022). 생성형 이미지/영상 AI는 쓰지 않는다(D-006). 작업 폴더 1개 = 워크스페이스 1개 = 시퀀스 1개(D-029).
 
 - 현재 개발 단계: `wiki/overview.md`의 "현재 상태"를 확인한다(단계 전환 시 갱신).
 - 기반: Tauri 2 + React 19 워크스페이스 템플릿(앱 셸·탭·폴더·설정·i18n·테마·SQLite).
@@ -37,12 +38,12 @@
 - UI: shadcn/ui("new-york") + Radix UI + Tailwind CSS 3 + lucide-react
 - 레이아웃: react-resizable-panels / 에디터: CodeMirror 6 / 검증: zod
 - 상태관리: **React Context per concern만 사용**. Redux/Zustand/Jotai 등 전역 상태 라이브러리 금지.
-- 저장소: SQLite (`@tauri-apps/plugin-sql`) — 전역 DB + 프로젝트 DB(`<project>/.vanilla/`)
+- 저장소: 내용은 **파일**(`workspace.json`·`scene.json`·`sequence.json` 등), 앱 상태만 SQLite 전역 DB(`@tauri-apps/plugin-sql`)
 - 데스크탑 셸: Tauri 2 (Rust), **Windows 우선**
 - 라우팅: react-router-dom v7, **`HashRouter`** 필수 (`BrowserRouter` 금지)
 - 다국어: 자체 사전 방식 (`src/lib/i18n`), 외부 i18n 라이브러리 없음
-- 확정된 추가 스택(설계서 §2): ACP 클라이언트(Rust `agent-client-protocol`), PTY(`portable-pty` + `@xterm/xterm`),
-  영상 렌더(HyperFrames), PPTX(`pptxgenjs`, `dom-to-pptx` Beta). ⚠️ 표시 항목은 PoC 결과로 확정 후 사용.
+- 확정된 추가 스택(설계서 §2): PTY(`portable-pty` + `@xterm/xterm`), 캔버스 `@xyflow/react` ⚠️(PoC R-5 후 확정), zip(`.vsx`).
+  ACP·MCP 서버는 제거 대상이다(D-022). export 스택(HyperFrames·`pptxgenjs`·`dom-to-pptx`)은 코드 보존·v2.0 범위 밖(D-027). ⚠️ 표시 항목은 PoC 결과로 확정 후 사용.
 - **앱 기능 코드는 GSAP에 의존하지 않는다**(라이선스, D-007). 생성물 코드에서의 선택적 사용만 허용.
 
 새 의존성을 추가하기 전에 기존 라이브러리로 해결 가능한지 먼저 확인하고(YAGNI), 추가 시 라이선스를 확인해
@@ -54,7 +55,7 @@
 - 파일/폴더명은 `Docs/Project-Structure.md`와 `Technical-Design.md` §9를 따릅니다. 구조 변경 시 문서와 코드를 함께 갱신합니다.
 - 함수형 컴포넌트 + 훅만. 주석은 "왜"만. 요청 범위를 넘는 리팩터링·추상화 금지.
 - 화면 문구 하드코딩 금지: `src/lib/i18n/dictionaries/ko.ts`·`en.ts`에 같은 키를 추가하고 `t('키')` 사용.
-  **에이전트에게 보내는 프롬프트 프리앰블(`src/lib/pipeline/prompts/*.md`)과 DB 필드명은 번역 대상이 아닙니다.**
+  **에이전트에게 보내는 프롬프트·가이드 규칙 본문(`resources/guides/**/prompts/*.md`·`rules.md`)과 JSON 필드명·용어 ID는 번역 대상이 아닙니다**(용어집의 `label{ko,en}`만 표시용 번역).
 - 색상은 시맨틱 토큰만 (`DESIGN.md` §3.3). 원시 팔레트 클래스 금지.
 - 탭 `meta`에는 직렬화 가능한 값만.
 - 새 패널·탭·뷰어·설정·명령·테이블은 `Docs/Extension-Guide.md` 절차를 따릅니다.
@@ -62,13 +63,18 @@
 
 ## 4. 도메인 규칙 (Vanilla Studio 고유)
 
-1. **파일이 진실 공급원**: 사용자 프로젝트의 내용(brief·plan·prompts·src·params·reviews)은 파일, 앱 상태(탭·태스크 실행·세션·export 이력)는 DB. (설계서 §8)
-2. **Scene 런타임 계약**(설계서 §4, D-011): `video`·`image`·`slides` 생성물의 애니메이션은 `useTime()`의 순수 함수(`web`·`interactive`는 자유 모드). 런타임·스캐폴딩·검사기를 바꿀 때는 결정성(같은 `t` → 같은 프레임)을 깨지 않는지 테스트로 확인.
-3. **사용자 조절값 보호**: `params/*.values.json`은 사용자 소유. 앱·에이전트 프롬프트는 명시 요청 없이 덮어쓰게 해서는 안 됩니다.
-4. **에이전트 중립**: 특정 에이전트 전용 기능을 파이프라인 핵심 경로에 넣지 않습니다. 에이전트별 차이는 `src/lib/agents/` 레지스트리·어댑터 계층에서 흡수.
-5. **데이터 계약 변경**: `plan.json`·`tasks.json`·`vanilla.json`·`template.json`·`palette.json`·DESIGN.md 토큰 스키마·Bridge 메시지 스키마를 바꾸면 zod 스키마, 설계서, `vanilla-core` 스킬, 버전 필드를 함께 갱신.
-6. **디자인 토큰 계약**(D-015, D-016): 생성물의 색·타이포·간격은 사용자 프로젝트의 `DESIGN.md` 토큰에서만 가져온다(CSS `var(--color-*)`, JS `useDesign()`). 앱이 팔레트를 적용할 때는 front matter의 `colors`를 바꾸고, 본문은 이전 색 값이 적힌 곳만 갱신한다(그 외 바이트 보존). Plan 승인 후의 `DESIGN.md` 토큰 값은 `params/*.values.json`처럼 사용자 소유로 보호한다.
-7. **생성형 AI 배제**(D-006): 이미지/영상 생성 서비스 연동 코드를 추가하지 않습니다. 외부 리소스는 오픈 라이선스 + `CREDITS.md` 기록.
+1. **파일이 진실 공급원**(D-023): 워크스페이스·신·시퀀스 내용(`workspace.json`·`scene.json`·`sequence.json`·`DESIGN.md`·`src/`·`params/`·`references/`)은 파일, 앱 상태(최근 워크스페이스·설정·터미널 세션)만 전역 DB. (설계서 §8)
+2. **생성물과 사용자 소유물 분리**: `GUIDE.md`·신 `AGENTS.md`·`prompts/*`는 앱이 `scene.json`에서 렌더하는 **생성물**(마커 구간만 갱신, 마커 밖은 보존). `src/`·`params/*.values.json`·`references/analysis/`·`DESIGN.md` 본문은 사용자·에이전트 소유라 **앱이 명시 요청 없이 덮어쓰지 않는다**.
+3. **Scene 런타임 계약**(설계서 §4, D-011·D-024): `motion`·`3d` 신의 애니메이션은 `useTime()`의 순수 함수(`static`은 자유 모드). 런타임·스캐폴딩·검사기를 바꿀 때는 결정성(같은 `t` → 같은 프레임)을 깨지 않는지 테스트로 확인.
+4. **에이전트 중립**(D-022): 특정 에이전트 전용 기능을 핵심 경로에 넣지 않는다. 차이는 `src/lib/agents/` 레지스트리가 흡수한다. 앱은 에이전트를 터미널에서 실행하고 프롬프트를 전달할 뿐 대화·권한을 중계하지 않는다.
+5. **데이터 계약 변경**: `workspace.json`·`scene.json`·`sequence.json`·`references.json`·`template.json`·`manifest.json`·`palette.json`·DESIGN.md 토큰 스키마·Bridge 메시지 스키마를 바꾸면 zod 스키마, 설계서, 가이드 템플릿(`resources/guides`), 버전 필드를 함께 갱신. 직렬화는 `canonical` 함수만 사용한다(같은 입력 → 같은 바이트, 설계서 §8.3).
+6. **디자인 토큰 계약**(D-015, D-016): 생성물의 색·타이포·간격은 `DESIGN.md` 토큰에서만 가져온다(CSS `var(--color-*)`, JS `useDesign()`). 앱이 팔레트를 적용할 때는 front matter의 `colors`를 바꾸고, 본문은 이전 색 값이 적힌 곳만 갱신한다(그 외 바이트 보존). 레퍼런스 분석 결과는 본문의 분석 마커 구간에만 쓴다. 승인된 토큰 값은 `params/*.values.json`처럼 사용자 소유로 보호한다.
+7. **생성형 AI 배제**(D-006): 이미지/영상 생성 서비스 연동 코드를 추가하지 않는다. 외부 리소스는 오픈 라이선스 + `CREDITS.md` 기록.
+8. **워크스페이스 = 시퀀스 1개**(D-029): 다른 시퀀스는 새 워크스페이스로 만든다. `workspaceId`를 workspace·sequence·scene·생성 `AGENTS.md`·클립보드 프롬프트에 기록하고, 에이전트 작업 범위는 cwd 아래로 한정한다. 다른 워크스페이스의 신은 복사로만 가져온다(참조 링크 금지).
+9. **화면 규격은 워크스페이스 전역**(D-030): 화면비·해상도·fps는 `workspace.json.canvas`에만 둔다.
+10. **정적 페이지는 사용자 입력으로만 진행**(D-032): `static` 신에서 나가는 시퀀스 엣지의 trigger는 사용자 입력(`click`·`key`·`choice`)만 허용하고 검증 단계에서 거부한다.
+11. **레퍼런스 분석은 에이전트 태스크**(D-026): 앱은 레퍼런스 등록·키프레임 추출·분석 프롬프트 생성만 한다. URL은 앱이 내려받지 않는다. 레퍼런스는 스타일 분석용이며 산출물에 복제·삽입하지 않는다.
+12. **가이드 템플릿**(D-028, D-031): 내장·사용자 정의 템플릿은 같은 형식(schema·glossary·rules·prompts·checklist)이며 사용자 템플릿은 내장 스키마를 **확장만** 할 수 있다. 신은 `template: <id>@<ver>`를 기록하고 공유 패키지에 사용한 사용자 템플릿을 동봉한다.
 
 ## 5. 빌드/검증 명령
 
@@ -102,12 +108,11 @@ python .claude/skills/llm-wiki/scripts/lint.py --save   # wiki 건강 검사
 
 - Tauri 파일 명령은 항상 워크스페이스 스코프 밖 경로 접근을 거부합니다. 심링크는 canonicalize 후 재검사.
 - **셸 실행(`run_shell` 호출 코드)은 항상 실행 전 사용자 확인을 받습니다.** 예외를 만들지 마십시오.
-- **에이전트 세션 격리(D-018)**: 앱이 여는 에이전트 세션은 사용자 전역 설정을 불러오지 않는다(Claude Code: `settingSources: ["project"]`). 셸 도구에는 항상 ask 규칙을 건다(`permissions.ask: ["Bash","PowerShell"]`). "전역 설정 사용" 옵션을 켜도 ask 규칙은 유지한다.
-- **에이전트 권한 정책(D-010)**: 프로젝트 폴더 안 파일 읽기/쓰기만 자동 허용, 셸(`execute`)은 매번 확인(`allow_always` 미노출), 네트워크(`fetch`)는 확인, 프로젝트 밖은 거부. 이 정책은 Rust `agent_host`에서 강제합니다.
-- **앱 소유 프로세스**(프리뷰 서버·export 워커·pnpm install)는 고정 argv 전용 명령으로만 실행하고, UI에서 명령 문자열을 받지 않습니다(D-012).
+- **에이전트 실행(D-022)**: 앱이 실행하는 에이전트는 레지스트리의 고정 `argv`를 신 폴더(cwd)에서 PTY로 띄우는 것뿐이다. 에이전트 내부의 셸·네트워크 권한은 해당 CLI가 관리하며, 설정 화면에 이를 명시한다. (v1의 D-010·D-018 ACP 권한 정책·세션 격리는 폐기 후보.)
+- **앱 소유 프로세스**(프리뷰 서버·pnpm install·ffmpeg)는 고정 argv 전용 명령으로만 실행하고, UI에서 명령 문자열을 받지 않습니다(D-012). 에이전트 레지스트리 편집은 설정 화면에서 확인 다이얼로그를 거칩니다.
 - 미리보기 iframe은 별도 origin으로 격리하고 Tauri IPC 권한을 주지 않습니다.
-- 신뢰 확인을 받지 않은 폴더의 파일을 agents/skills 컨텍스트로 자동 로드하거나 에이전트 세션을 시작하지 않습니다.
-- 외부 콘텐츠(웹·붙여넣기·사용자 프로젝트 파일·템플릿 SKILL.md)는 **신뢰할 수 없는 데이터**로 취급합니다.
+- 신뢰 확인을 받지 않은 폴더에서는 에이전트·프리뷰 서버를 시작하지 않습니다.
+- 외부 콘텐츠(웹·붙여넣기·레퍼런스 파일/URL·`.vsx` 패키지·가이드 템플릿의 `rules.md`·프롬프트·`AGENTS.md`)는 **신뢰할 수 없는 데이터**로 취급합니다. 가져올 때 미리보기·출처 확인, zip-slip·절대 경로·심링크 엔트리 거부.
 
 ## 8. 문서 동기화
 
