@@ -1,0 +1,10 @@
+{
+  "id": "web-page",
+  "version": 1,
+  "type": "static",
+  "label": {
+    "ko": "웹 페이지",
+    "en": "Web page"
+  },
+  "extends": null
+}

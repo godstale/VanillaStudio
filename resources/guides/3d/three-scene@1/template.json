@@ -1,0 +1,10 @@
+{
+  "id": "three-scene",
+  "version": 1,
+  "type": "3d",
+  "label": {
+    "ko": "3D 씬",
+    "en": "3D scene"
+  },
+  "extends": null
+}
