@@ -277,3 +277,10 @@ Ran lint. See lint-report.md for details.
 ## [2026-10-05] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
+
+## [2026-10-05] update | Legacy removal plan (T1.2)
+- Added issue-v2-legacy-removal (units U1-U6, keep list, 3 open confirmations). See: [[issue-v2-legacy-removal]]
+
+## [2026-10-05] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.

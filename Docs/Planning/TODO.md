@@ -9,7 +9,7 @@
 ## ▶ 진입점 (2026-10-05)
 
 - **기획·설계·지침 문서 개정 완료**(`docs/v2-refactor-spec` 브랜치, main 병합·push는 사용자 승인 대기).
-- **다음 작업**: V1 진행 중(브랜치 `feat/v2-foundation`). T1.0·T1.5·T1.6·T1.8·T1.9 완료. 다음: T1.1(R-5 스파이크)·T1.2(레거시 제거 계획서, 사용자 확인 필요).
+- **다음 작업**: V1 진행 중(브랜치 `feat/v2-foundation`). T1.0·T1.5·T1.6·T1.8·T1.9 완료. T1.2 계획서 작성 완료 — **사용자 확인 대기**(wiki/sources/issue-v2-legacy-removal.md §사용자 확인 필요). 다음: T1.1(R-5 스파이크)·T1.2(레거시 제거 계획서, 사용자 확인 필요).
 - 이월 항목(v1): T7.2 클린 VM 재실행·T7.5 코드 서명은 V7.7에서 이어받는다.
 
 ---
@@ -18,7 +18,7 @@
 
 - [x] T1.0 [단독 · W0] 문서 브랜치 병합(사용자 승인 후)·`v1-final` 태그(현 main 기준) — 대상: git · 완료 판정: 태그 존재, `Docs/Planning/*` v2 문서가 main에 있음 · 선행: 사용자 승인
 - [ ] T1.1 [레인 A · W1] **PoC R-5**: `@xyflow/react` 스파이크(100노드 팬/줌 성능, ComfyUI형 커스텀 노드·엣지·미니맵·다크 스타일) — 대상: `spikes/r5-canvas/`, `wiki/sources/poc-r5.md` · 완료 판정: 채택/기각 결론과 수치 기록, 라이선스 `Feasibility-Risks.md` §2.9 · 선행: T1.0
-- [ ] T1.2 [레인 B · W1] 레거시 제거 계획서(모듈별 삭제 목록·`vanilla.json` 읽기 스키마 이관 대상·의존 그래프) — 대상: `wiki/sources/issue-v2-legacy-removal.md` · 완료 판정: 삭제 단위별 lint·typecheck·test 영향 표, 사용자 확인 획득 · 선행: T1.0
+- [x] T1.2 [레인 B · W1] 레거시 제거 계획서(모듈별 삭제 목록·`vanilla.json` 읽기 스키마 이관 대상·의존 그래프) — 대상: `wiki/sources/issue-v2-legacy-removal.md` · 완료 판정: 삭제 단위별 lint·typecheck·test 영향 표, 사용자 확인 획득 · 선행: T1.0
 - [ ] T1.3 [레인 B · W2] 레거시 제거 실행(ACP `agent_host`·`mcp_server`·`agent_commands`, `src/lib/{agents(ACP),pipeline,review}`·해당 components, 프로젝트 마법사, 탭·파이프라인 레이아웃) — 대상: T1.2 목록 · 완료 판정: 모듈 단위 커밋마다 lint·typecheck·test·`cargo test` 통과, 참조 0건(grep) · 선행: T1.2 · (D-022)
 - [ ] T1.4 [레인 B · W2] `vanilla.json` 읽기 스키마를 `src/lib/migrate/legacy-schema.ts`로 이관, 나머지 삭제 — 대상: `src/lib/project/*` · 완료 판정: 마이그레이션 입력 테스트 통과 · 선행: T1.3
 - [x] T1.5 [레인 C · W1] canonical 직렬화(`src/lib/json/canonical.ts`: 키 순서·2-space·LF·시간 소수 3자리) + 왕복 테스트 — 대상: `src/lib/json/*` · 완료 판정: 같은 입력 → 같은 바이트 테스트 · 선행: T1.0 · (D-023)
