@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Viewport } from '@xyflow/react';
-import { EmptyScreen } from '@/components/layout/EmptyScreen';
+import { Onboarding } from '@/components/workspace/Onboarding';
 import { WorkspaceCanvas } from '@/components/canvas/WorkspaceCanvas';
 import { useWorkspace } from '@/lib/context/WorkspaceContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -49,12 +49,18 @@ export function Workspace() {
   );
 
   if (!workspaceRoot) {
-    return <EmptyScreen title={t('shell.nav.workspace')}>{t('shell.workspace.none')}</EmptyScreen>;
+    return <Onboarding />;
   }
   // 다른 워크스페이스의 결과이거나 아직 읽는 중이면 아무것도 그리지 않는다.
   if (!result || result.root !== workspaceRoot) return null;
   if (!result.ws) {
-    return <EmptyScreen title={t('shell.nav.workspace')}>{`${t('shell.workspace.invalid')} (${result.error})`}</EmptyScreen>;
+    // 복원한 폴더가 유효한 워크스페이스가 아니면(예: v1 프로젝트) 다른 폴더를 고르게 한다.
+    return (
+      <div className="h-full">
+        <p role="alert" className="px-8 pt-6 text-sm text-destructive">{`${t('shell.workspace.invalid')} (${result.error})`}</p>
+        <Onboarding />
+      </div>
+    );
   }
   return <WorkspaceCanvas key={result.ws.workspaceId} initialView={result.ws.view} onViewChange={onViewChange} />;
 }
