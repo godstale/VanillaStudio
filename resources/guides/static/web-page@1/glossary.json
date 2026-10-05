@@ -1,4 +1,481 @@
 {
   "version": 1,
-  "terms": []
+  "terms": [
+    {
+      "category": "sections",
+      "id": "hero",
+      "label": {
+        "ko": "히어로",
+        "en": "Hero"
+      },
+      "definition": {
+        "ko": "핵심 메시지를 담은 첫 섹션.",
+        "en": "The opening section with the main message."
+      },
+      "implementationHint": "Full-width block with display heading, one supporting line and one primary action.",
+      "tags": []
+    },
+    {
+      "category": "sections",
+      "id": "feature-grid",
+      "label": {
+        "ko": "기능 그리드",
+        "en": "Feature grid"
+      },
+      "definition": {
+        "ko": "여러 특징을 나란히 보여 줍니다.",
+        "en": "Several features shown side by side."
+      },
+      "implementationHint": "CSS grid of equal cards; 2-4 columns, collapsing to one on mobile.",
+      "tags": []
+    },
+    {
+      "category": "sections",
+      "id": "testimonial",
+      "label": {
+        "ko": "추천사",
+        "en": "Testimonial"
+      },
+      "definition": {
+        "ko": "사람의 인용문.",
+        "en": "A quote from a person."
+      },
+      "implementationHint": "Blockquote with name and role; only text the user provided.",
+      "tags": []
+    },
+    {
+      "category": "sections",
+      "id": "pricing",
+      "label": {
+        "ko": "요금",
+        "en": "Pricing"
+      },
+      "definition": {
+        "ko": "플랜과 가격.",
+        "en": "Plans and prices."
+      },
+      "implementationHint": "Cards with price, list of included items and one action each; exact figures only.",
+      "tags": []
+    },
+    {
+      "category": "sections",
+      "id": "faq",
+      "label": {
+        "ko": "자주 묻는 질문",
+        "en": "FAQ"
+      },
+      "definition": {
+        "ko": "질문과 답변 목록.",
+        "en": "Questions and answers."
+      },
+      "implementationHint": "Disclosure widgets (details/summary), keyboard operable.",
+      "tags": []
+    },
+    {
+      "category": "sections",
+      "id": "cta",
+      "label": {
+        "ko": "행동 유도",
+        "en": "Call to action"
+      },
+      "definition": {
+        "ko": "마지막으로 행동을 유도합니다.",
+        "en": "A closing push to act."
+      },
+      "implementationHint": "Single prominent button with a short sentence.",
+      "tags": []
+    },
+    {
+      "category": "sections",
+      "id": "footer",
+      "label": {
+        "ko": "푸터",
+        "en": "Footer"
+      },
+      "definition": {
+        "ko": "마무리 링크와 법적 문구.",
+        "en": "Closing links and legal text."
+      },
+      "implementationHint": "Quiet, low-emphasis block; semantic footer landmark.",
+      "tags": []
+    },
+    {
+      "category": "sections",
+      "id": "gallery",
+      "label": {
+        "ko": "갤러리",
+        "en": "Gallery"
+      },
+      "definition": {
+        "ko": "이미지 모음.",
+        "en": "A set of images."
+      },
+      "implementationHint": "Responsive grid with consistent aspect ratio and alt text.",
+      "tags": []
+    },
+    {
+      "category": "sections",
+      "id": "timeline",
+      "label": {
+        "ko": "타임라인",
+        "en": "Timeline"
+      },
+      "definition": {
+        "ko": "시간 순서의 사건들.",
+        "en": "Events in order."
+      },
+      "implementationHint": "Ordered list with a connecting line; works as a vertical stack on mobile.",
+      "tags": []
+    },
+    {
+      "category": "sections",
+      "id": "stats",
+      "label": {
+        "ko": "수치",
+        "en": "Stats"
+      },
+      "definition": {
+        "ko": "핵심 수치.",
+        "en": "Key figures."
+      },
+      "implementationHint": "Large numerals with short captions; exact figures only.",
+      "tags": []
+    },
+    {
+      "category": "layout",
+      "id": "single-column",
+      "label": {
+        "ko": "단일 컬럼",
+        "en": "Single column"
+      },
+      "definition": {
+        "ko": "가운데 정렬된 한 컬럼.",
+        "en": "One centered column."
+      },
+      "implementationHint": "max-width container, generous vertical rhythm.",
+      "tags": []
+    },
+    {
+      "category": "layout",
+      "id": "split",
+      "label": {
+        "ko": "분할",
+        "en": "Split"
+      },
+      "definition": {
+        "ko": "두 영역을 나란히 배치.",
+        "en": "Two halves side by side."
+      },
+      "implementationHint": "Two-column grid, stacks on mobile.",
+      "tags": []
+    },
+    {
+      "category": "layout",
+      "id": "grid",
+      "label": {
+        "ko": "그리드",
+        "en": "Grid"
+      },
+      "definition": {
+        "ko": "모듈형 그리드.",
+        "en": "Modular grid of blocks."
+      },
+      "implementationHint": "12-column grid with consistent gutters.",
+      "tags": []
+    },
+    {
+      "category": "layout",
+      "id": "bento",
+      "label": {
+        "ko": "벤토",
+        "en": "Bento"
+      },
+      "definition": {
+        "ko": "크기가 다른 타일의 조밀한 그리드.",
+        "en": "Mixed-size tiles in a compact grid."
+      },
+      "implementationHint": "CSS grid with spanning tiles; keep alignment to the grid.",
+      "tags": []
+    },
+    {
+      "category": "layout",
+      "id": "sidebar",
+      "label": {
+        "ko": "사이드바",
+        "en": "Sidebar"
+      },
+      "definition": {
+        "ko": "본문과 옆 컬럼.",
+        "en": "Main content with a side column."
+      },
+      "implementationHint": "Two-column layout with fixed-width side; collapses on mobile.",
+      "tags": []
+    },
+    {
+      "category": "layout",
+      "id": "stacked-cards",
+      "label": {
+        "ko": "스택 카드",
+        "en": "Stacked cards"
+      },
+      "definition": {
+        "ko": "깊이감 있게 쌓인 카드.",
+        "en": "Cards stacked in depth."
+      },
+      "implementationHint": "Layered cards with offset; reveal by input.",
+      "tags": []
+    },
+    {
+      "category": "breakpoints",
+      "id": "mobile-360",
+      "label": {
+        "ko": "모바일 360",
+        "en": "Mobile 360"
+      },
+      "definition": {
+        "ko": "너비 360px 폰.",
+        "en": "360 px wide phones."
+      },
+      "implementationHint": "Single column, 16 px side padding.",
+      "tags": []
+    },
+    {
+      "category": "breakpoints",
+      "id": "mobile-390",
+      "label": {
+        "ko": "모바일 390",
+        "en": "Mobile 390"
+      },
+      "definition": {
+        "ko": "너비 390px 폰.",
+        "en": "390 px wide phones."
+      },
+      "implementationHint": "Single column, 16 px side padding.",
+      "tags": []
+    },
+    {
+      "category": "breakpoints",
+      "id": "tablet-768",
+      "label": {
+        "ko": "태블릿 768",
+        "en": "Tablet 768"
+      },
+      "definition": {
+        "ko": "너비 768px 태블릿.",
+        "en": "768 px wide tablets."
+      },
+      "implementationHint": "Two columns where it helps.",
+      "tags": []
+    },
+    {
+      "category": "breakpoints",
+      "id": "laptop-1280",
+      "label": {
+        "ko": "노트북 1280",
+        "en": "Laptop 1280"
+      },
+      "definition": {
+        "ko": "너비 1280px 노트북.",
+        "en": "1280 px wide laptops."
+      },
+      "implementationHint": "Full layout.",
+      "tags": []
+    },
+    {
+      "category": "breakpoints",
+      "id": "desktop-1920",
+      "label": {
+        "ko": "데스크톱 1920",
+        "en": "Desktop 1920"
+      },
+      "definition": {
+        "ko": "너비 1920px 화면.",
+        "en": "1920 px wide screens."
+      },
+      "implementationHint": "Full layout with max-width container.",
+      "tags": []
+    },
+    {
+      "category": "accessibility",
+      "id": "contrast-aa",
+      "label": {
+        "ko": "AA 대비",
+        "en": "AA contrast"
+      },
+      "definition": {
+        "ko": "텍스트가 WCAG AA 대비를 충족합니다.",
+        "en": "Text meets WCAG AA contrast."
+      },
+      "implementationHint": "4.5:1 for text, 3:1 for large text and UI parts.",
+      "tags": []
+    },
+    {
+      "category": "accessibility",
+      "id": "keyboard-nav",
+      "label": {
+        "ko": "키보드 탐색",
+        "en": "Keyboard navigation"
+      },
+      "definition": {
+        "ko": "마우스 없이 모두 조작할 수 있습니다.",
+        "en": "Everything works without a mouse."
+      },
+      "implementationHint": "Logical tab order, no keyboard traps.",
+      "tags": []
+    },
+    {
+      "category": "accessibility",
+      "id": "focus-visible",
+      "label": {
+        "ko": "포커스 표시",
+        "en": "Visible focus"
+      },
+      "definition": {
+        "ko": "명확한 포커스 표시.",
+        "en": "Clear focus indicator."
+      },
+      "implementationHint": "Use :focus-visible with a high-contrast outline.",
+      "tags": []
+    },
+    {
+      "category": "accessibility",
+      "id": "reduced-motion",
+      "label": {
+        "ko": "모션 줄이기",
+        "en": "Reduced motion"
+      },
+      "definition": {
+        "ko": "모션 줄이기 설정을 따릅니다.",
+        "en": "Respects the reduced-motion preference."
+      },
+      "implementationHint": "@media (prefers-reduced-motion: reduce) removes movement.",
+      "tags": []
+    },
+    {
+      "category": "accessibility",
+      "id": "alt-text",
+      "label": {
+        "ko": "대체 텍스트",
+        "en": "Alt text"
+      },
+      "definition": {
+        "ko": "의미 있는 이미지에 대체 텍스트.",
+        "en": "Meaningful images have text alternatives."
+      },
+      "implementationHint": "alt on every img; empty alt for decorative ones.",
+      "tags": []
+    },
+    {
+      "category": "accessibility",
+      "id": "semantic-landmarks",
+      "label": {
+        "ko": "시맨틱 랜드마크",
+        "en": "Semantic landmarks"
+      },
+      "definition": {
+        "ko": "header·main·nav·footer를 올바르게 사용.",
+        "en": "Header, main, nav, footer used properly."
+      },
+      "implementationHint": "One main; ordered headings.",
+      "tags": []
+    },
+    {
+      "category": "accessibility",
+      "id": "aria-live",
+      "label": {
+        "ko": "라이브 안내",
+        "en": "Live announcements"
+      },
+      "definition": {
+        "ko": "변경 사항을 보조기기에 알립니다.",
+        "en": "Changes are announced to assistive tech."
+      },
+      "implementationHint": "aria-live=polite on the step title.",
+      "tags": []
+    },
+    {
+      "category": "enter",
+      "id": "cut",
+      "label": {
+        "ko": "컷",
+        "en": "Cut"
+      },
+      "definition": {
+        "ko": "즉시 전환.",
+        "en": "Immediate change."
+      },
+      "implementationHint": "Swap the step with no animation.",
+      "tags": []
+    },
+    {
+      "category": "enter",
+      "id": "fade",
+      "label": {
+        "ko": "페이드",
+        "en": "Fade"
+      },
+      "definition": {
+        "ko": "단계 사이를 페이드.",
+        "en": "Fade between steps."
+      },
+      "implementationHint": "Opacity ease-in-out, 250-400 ms.",
+      "tags": []
+    },
+    {
+      "category": "enter",
+      "id": "slide-left",
+      "label": {
+        "ko": "슬라이드(왼쪽)",
+        "en": "Slide left"
+      },
+      "definition": {
+        "ko": "단계가 오른쪽에서 밀려 들어옵니다.",
+        "en": "The step slides in from the right."
+      },
+      "implementationHint": "translateX with ease-out, 300-500 ms.",
+      "tags": []
+    },
+    {
+      "category": "enter",
+      "id": "slide-up",
+      "label": {
+        "ko": "슬라이드(위)",
+        "en": "Slide up"
+      },
+      "definition": {
+        "ko": "단계가 아래에서 올라옵니다.",
+        "en": "The step slides up from below."
+      },
+      "implementationHint": "translateY with ease-out, 300-500 ms.",
+      "tags": []
+    },
+    {
+      "category": "enter",
+      "id": "zoom",
+      "label": {
+        "ko": "줌",
+        "en": "Zoom"
+      },
+      "definition": {
+        "ko": "단계가 커지며 나타납니다.",
+        "en": "The step scales in."
+      },
+      "implementationHint": "scale 0.96 to 1 with fade.",
+      "tags": []
+    },
+    {
+      "category": "enter",
+      "id": "mask-wipe",
+      "label": {
+        "ko": "마스크 와이프",
+        "en": "Mask wipe"
+      },
+      "definition": {
+        "ko": "마스크로 단계가 드러납니다.",
+        "en": "A mask reveals the step."
+      },
+      "implementationHint": "clip-path inset animation.",
+      "tags": []
+    }
+  ]
 }

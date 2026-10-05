@@ -7,7 +7,7 @@ const rules = defaultTemplateFor('motion').rules;
 describe('motion rules.md', () => {
   it('has a numbered section for each of the 29 source sections plus the runtime contract', () => {
     for (let n = 0; n <= 29; n++) {
-      expect(rules, `section ${n}`).toMatch(new RegExp(`^## ${n}\. `, 'm'));
+      expect(rules, `section ${n}`).toMatch(new RegExp(`^## ${n}\\. `, 'm'));
     }
   });
 
