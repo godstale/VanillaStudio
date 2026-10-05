@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Sliders, AppWindow, Stethoscope, FolderCog, FileText } from 'lucide-react';
+import { ArrowLeft, Sliders, AppWindow, Stethoscope, FolderCog, FileText, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { APP_NAME, APP_VERSION } from '@/lib/brand';
@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { path: '/settings', labelKey: 'settings.general', icon: Sliders, end: true },
   { path: '/settings/workspace', labelKey: 'settings.workspace', icon: FolderCog, end: false },
   { path: '/settings/templates', labelKey: 'settings.templates', icon: FileText, end: false },
+  { path: '/settings/agents', labelKey: 'settings.agents', icon: Bot, end: false },
   {
     path: '/settings/app',
     labelKey: 'settings.app',

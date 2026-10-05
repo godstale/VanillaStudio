@@ -139,7 +139,7 @@ export function SettingsWorkspace() {
           <option value="">{t('settingsWorkspace.agentNone')}</option>
           {BUILTIN_AGENTS.map((a) => (
             <option key={a.id} value={a.id}>
-              {a.name}
+              {a.label}
             </option>
           ))}
         </select>
