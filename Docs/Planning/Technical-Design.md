@@ -369,7 +369,7 @@ render 모드와 HyperFrames seek의 연결, 준비 대기 신호는 S1에서 �
 | --- | --- | --- |
 | `workspace.json` | `src/lib/workspace/schema.ts` | `version`·`workspaceId`·`name`·`canvas{aspect,width,height,fps}`·`defaultAgent`·`view`(캔버스 뷰포트) |
 | `sequence.json` | `src/lib/sequence/schema.ts` | `version`·`workspaceId`·`id`·`mode`·`nodes[]`·`edges[]`·`start`. 검증: static 신 발신 엣지는 사용자 입력 trigger만, `workspaceId` 일치, 노드의 `sceneId`는 `scenes/*/scene.json`에 존재, start 도달성 |
-| `scenes/<slug>/scene.json` | `src/lib/scene/schema.ts` (공통 + 타입별 확장 `static`·`motion`·`3d`) | 신 ID(`sceneId`) 불변, 용어는 glossary ID로 저장, 정규화 직렬화(§8.3) |
+| `scenes/<slug>/scene.json` | `src/lib/scene/schema.ts` (공통 + 타입별 확장 `static`·`motion`·`3d`) | 신 ID(`id`, `scn_<alnum>`) 불변, 용어는 glossary ID로 저장, 정규화 직렬화(§8.3, 시간 키 `start`·`end`·`seconds`·`holdSeconds`). 타입 확장은 평면 필드: `static`=`mode`·`steps`·`sections`·`layout`·`breakpoints`·`accessibility`, `3d`=motion 공통 + `composition`·`materials`·`lighting`·`cameraPath`·`performanceBudget`. 검증: `beats`는 0에서 시작·연속·합=`duration.seconds`, `endCard.holdSeconds ≥ 0.7`, static `steps[].advance`는 `click`·`key:`·`choice:`만, 알 수 없는 필드 거부 |
 | `scenes/<slug>/references/references.json` | `src/lib/scene/references.ts` | `{id, kind: video|image|url, path|url, note, analysis}` |
 | `guide-templates/*/template.json` | `src/lib/guides/templateSchema.ts` | `{id, version, type, extends, label}` |
 | `manifest.json`(.vsx 내부) | `src/lib/package/manifest.ts` | 파일별 SHA-256, 앱·스키마 버전, 사용 템플릿 목록 |
