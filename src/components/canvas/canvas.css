@@ -1,0 +1,18 @@
+/* ComfyUI형 캔버스 스타일: 앱 시맨틱 토큰(DESIGN.md §3.3)을 xyflow 변수에 연결한다. */
+.vs-canvas.react-flow {
+  --xy-background-color: hsl(var(--background));
+  --xy-background-pattern-dots-color-default: hsl(var(--border));
+  --xy-edge-stroke-default: hsl(var(--muted-foreground));
+  --xy-edge-stroke-selected-default: hsl(var(--primary));
+  --xy-connectionline-stroke-default: hsl(var(--primary));
+  --xy-minimap-background-color-default: hsl(var(--card));
+  --xy-minimap-mask-background-color-default: hsl(var(--background) / 0.7);
+  --xy-minimap-node-background-color-default: hsl(var(--muted-foreground));
+  --xy-controls-button-background-color-default: hsl(var(--card));
+  --xy-controls-button-background-color-hover-default: hsl(var(--accent));
+  --xy-controls-button-color-default: hsl(var(--foreground));
+  --xy-controls-button-border-color-default: hsl(var(--border));
+  --xy-handle-background-color-default: hsl(var(--muted-foreground));
+  --xy-handle-border-color-default: hsl(var(--card));
+  --xy-attribution-background-color-default: transparent;
+}

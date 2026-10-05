@@ -182,6 +182,7 @@ const en: Dict = {
   'shell.dock': 'Dock',
   'shell.slotEmpty': 'Nothing here yet.',
   'shell.workspace.none': 'No workspace is open.',
+  'shell.workspace.invalid': 'Cannot read workspace.json.',
   'shell.scenes.empty': 'The scene list arrives in a later step.',
   'shell.playground.empty': 'The playground arrives in a later step.',
   'shell.view.pipeline': 'Pipeline',

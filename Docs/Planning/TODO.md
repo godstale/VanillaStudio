@@ -9,7 +9,7 @@
 ## ▶ 진입점 (2026-10-05)
 
 - **기획·설계·지침 문서 개정 완료**(`docs/v2-refactor-spec` 브랜치, main 병합·push는 사용자 승인 대기).
-- **다음 작업**: V1 진행 중(브랜치 `feat/v2-foundation`). T1.0·T1.5·T1.6·T1.3·T1.4·T1.7·T1.8·T1.9·T1.10 완료. T1.2 계획서 작성 완료 — 사용자 확인 완료. 다음: T1.3(U1부터). 다음: T1.1(R-5 스파이크)·T1.2(레거시 제거 계획서, 사용자 확인 필요).
+- **다음 작업**: V1 진행 중(브랜치 `feat/v2-foundation`). T1.0·T1.5·T1.6·T1.3·T1.4·T1.7·T1.8·T1.9·T1.10·T1.13 완료. T1.2 계획서 작성 완료 — 사용자 확인 완료. 다음: T1.3(U1부터). 다음: T1.1(R-5 스파이크)·T1.2(레거시 제거 계획서, 사용자 확인 필요).
 - 이월 항목(v1): T7.2 클린 VM 재실행·T7.5 코드 서명은 V7.7에서 이어받는다.
 
 ---
@@ -29,7 +29,7 @@
 - [x] T1.10 [레인 D · W2] 앱 셸: 사이드바(Workspace·Scenes·Playground·Settings)·메인 영역·우측 인스펙터 슬롯·하단 도크 슬롯, 라우팅(`HashRouter`) — 대상: `src/components/layout/*`, `src/App.tsx`, i18n · 완료 판정: 4개 화면 빈 상태로 이동, 탭 시스템 제거 · 선행: T1.3 · (`Docs/Extension-Guide.md` 갱신)
 - [ ] T1.11 [레인 D · W3] 온보딩 화면(작업 폴더 선택 → 새 워크스페이스 생성 또는 기존 열기, 신뢰 확인, 이름·캔버스 프리셋 입력, pnpm install 동의) — 대상: `src/components/workspace/Onboarding.tsx`, `WorkspaceContext` · 완료 판정: 첫 실행 → 폴더 선택 → 워크스페이스 생성 → 셸 진입 · 선행: T1.9, T1.10, T1.7 · (F-PRJ-01 개정)
 - [ ] T1.12 [레인 D · W3] 워크스페이스 스위처(사이드바 상단: 최근 목록·열기·새로 만들기) + 전환 시 프로세스·터미널 정리 확인 — 대상: `src/components/workspace/Switcher.tsx` · 완료 판정: 두 워크스페이스 전환·재실행 후 복원 · 선행: T1.11 · (D-029)
-- [ ] T1.13 [레인 A · W2] 빈 캔버스: `@xyflow/react`(T1.1 채택 시) 팬/줌/미니맵/그리드, ComfyUI형 스타일 토큰(`DESIGN.md`·`BRANDING.md` 반영), 뷰포트 저장(`workspace.json.view`) — 대상: `src/components/canvas/*` · 완료 판정: 재실행 후 뷰포트 복원, 100노드 더미 성능 기록 · 선행: T1.1, T1.10
+- [x] T1.13 [레인 A · W2] 빈 캔버스: `@xyflow/react`(T1.1 채택 시) 팬/줌/미니맵/그리드, ComfyUI형 스타일 토큰(`DESIGN.md`·`BRANDING.md` 반영), 뷰포트 저장(`workspace.json.view`) — 대상: `src/components/canvas/*` · 완료 판정: 재실행 후 뷰포트 복원, 100노드 더미 성능 기록 · 선행: T1.1, T1.10
 - [ ] T1.14 [단독 · 마무리] V1 마무리: 데모 ①~④, `Docs/Project-Structure.md`·`Extension-Guide.md` 갱신, `wiki/sources/milestone-v1.md` · 완료 판정: 계획서 §2 V1 데모 · 선행: T1.0~T1.13
 
 ## V2 Scene CRUD·지침 생성 (branch: `feat/v2-scenes`)

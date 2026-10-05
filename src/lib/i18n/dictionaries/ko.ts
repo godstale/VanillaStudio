@@ -180,6 +180,7 @@ const ko = {
   'shell.dock': '도크',
   'shell.slotEmpty': '내용이 없습니다.',
   'shell.workspace.none': '열린 워크스페이스가 없습니다.',
+  'shell.workspace.invalid': '워크스페이스 파일(workspace.json)을 읽을 수 없습니다.',
   'shell.scenes.empty': '신 목록은 이후 단계에서 구현됩니다.',
   'shell.playground.empty': '플레이그라운드는 이후 단계에서 구현됩니다.',
   'shell.view.pipeline': '파이프라인',
