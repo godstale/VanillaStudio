@@ -13,14 +13,6 @@ colors:
 ---
 # Brand
 `;
-const MANIFEST = JSON.stringify({
-  version: 1,
-  id: 'my-slides',
-  name: 'My Slides',
-  description: 'A minimal slide template.',
-  outputTypes: ['slides'],
-  license: 'CC-BY-4.0',
-});
 const PALETTE = JSON.stringify({
   version: 1,
   id: 'my-warm',
@@ -66,25 +58,6 @@ describe('PlaygroundExtras', () => {
   beforeEach(() => {
     mocks.files.clear();
     mocks.files.set(`${ROOT}/DESIGN.md`, DESIGN);
-    mocks.files.set('C:/tpls/my-slides/SKILL.md', '# Skill');
-    mocks.files.set('C:/tpls/my-slides/template.json', MANIFEST);
-    mocks.files.set('C:/tpls/my-slides/DESIGN.md', DESIGN);
-  });
-
-  it('validates a template folder', async () => {
-    renderWithProviders(<PlaygroundExtras />);
-    fireEvent.change(screen.getByPlaceholderText(/templates\/my-slides/), { target: { value: 'C:/tpls/my-slides' } });
-    // The template section renders first; the second "검사" belongs to DESIGN.md import.
-    fireEvent.click(screen.getAllByRole('button', { name: '검사' })[0]);
-    expect(await screen.findByText('올바른 템플릿입니다: My Slides')).toBeTruthy();
-  });
-
-  it('rejects a template folder missing DESIGN.md', async () => {
-    mocks.files.delete('C:/tpls/my-slides/DESIGN.md');
-    renderWithProviders(<PlaygroundExtras />);
-    fireEvent.change(screen.getByPlaceholderText(/templates\/my-slides/), { target: { value: 'C:/tpls/my-slides' } });
-    fireEvent.click(screen.getAllByRole('button', { name: '검사' })[0]);
-    expect(await screen.findByText(/템플릿이 올바르지 않습니다/)).toBeTruthy();
   });
 
   it('edits and saves frame.md with a starter', async () => {
@@ -100,8 +73,7 @@ describe('PlaygroundExtras', () => {
     renderWithProviders(<PlaygroundExtras />);
     expect(await screen.findByRole('button', { name: 'Tailwind 변수 저장' })).toBeTruthy();
     fireEvent.change(screen.getByPlaceholderText(/DESIGN.md 원문을 붙여넣으세요/), { target: { value: DESIGN } });
-    const validators = screen.getAllByRole('button', { name: '검사' });
-    fireEvent.click(validators[validators.length - 1]);
+    fireEvent.click(screen.getByRole('button', { name: '검사' }));
     expect(await screen.findByText('가져올 수 있는 DESIGN.md입니다.')).toBeTruthy();
   });
 

@@ -46,7 +46,6 @@
       "../resources/runtime": "resources/runtime",
       "../resources/workers": "resources/workers",
       "../resources/palettes": "resources/palettes",
-      "../resources/templates": "resources/templates",
       "../resources/skills": "resources/skills"
     },
     "shortDescription": "Brief to product pipeline studio",

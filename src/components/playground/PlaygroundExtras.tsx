@@ -1,5 +1,4 @@
-// Import/export extras (T6.10, S): template folder validation (F-TPL-03),
-// frame.md editing (F-DSN-06), DESIGN.md import/export (F-DSN-07), and user
+// Import/export extras (T6.10, S): frame.md editing (F-DSN-06), DESIGN.md import/export (F-DSN-07), and user
 // palette save/import/export (F-PAL-08). Rendered inside the playground side
 // panel; every section degrades to a "no project" hint without a folder.
 import { useEffect, useState } from 'react';
@@ -12,7 +11,6 @@ import { projectPath } from '@/lib/workspace/files';
 import { listProjectPalettes, saveProjectPalette, type PaletteFile } from '@/lib/design/palettes';
 import { parseDesign } from '@/lib/design/parse';
 import { designToDtcgJson, designToTailwindCss, downloadTextFile, validateDesignImport } from '@/lib/playground/designIo';
-import { isImportableFolder, validateTemplateFolder } from '@/lib/playground/templateImport';
 import { loadFrameMd, saveFrameMd, starterFrameMd, validateFrameMd } from '@/lib/playground/frameMd';
 import { designTextToColors, exportPaletteFile, importPaletteText, paletteFromDesignColors, slugifyPaletteName } from '@/lib/playground/paletteIo';
 
@@ -25,70 +23,6 @@ function Section({ title, desc, children }: { title: string; desc: string; child
       <p className="mt-0.5 text-[11px] text-muted-foreground">{desc}</p>
       <div className="mt-2 space-y-2">{children}</div>
     </section>
-  );
-}
-
-function TemplateImportSection() {
-  const { t } = useLanguage();
-  const [folder, setFolder] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<string | null>(null);
-  const [failed, setFailed] = useState<string | null>(null);
-
-  const onValidate = () => {
-    const dir = folder.trim();
-    if (!dir) return;
-    setBusy(true);
-    setResult(null);
-    setFailed(null);
-    invoke<{ name: string; is_dir: boolean }[]>('list_dir', { path: dir, workspaceRoot: dir }).then(
-      (entries) => {
-        const names = entries.filter((e) => !e.is_dir).map((e) => e.name);
-        const readManifest = names.includes('template.json')
-          ? invoke<string>('read_text_file', { path: `${dir.replace(/[\\/]+$/, '')}/template.json`, workspaceRoot: dir }).catch(() => null)
-          : Promise.resolve(null);
-        readManifest.then(
-          (text) => {
-            setBusy(false);
-            const report = validateTemplateFolder(names, text);
-            if (isImportableFolder(report)) {
-              setResult(t('playground.template.valid', { name: report.manifest?.name ?? report.manifest?.id ?? dir }));
-            } else {
-              const reason = report.manifestError ?? `missing: ${report.missing.join(', ')}`;
-              setFailed(t('playground.template.invalid', { error: reason }));
-            }
-          },
-          (e: unknown) => {
-            setBusy(false);
-            setFailed(t('playground.template.invalid', { error: errorMessage(e) }));
-          },
-        );
-      },
-      (e: unknown) => {
-        setBusy(false);
-        setFailed(t('playground.template.invalid', { error: errorMessage(e) }));
-      },
-    );
-  };
-
-  return (
-    <Section title={t('playground.template.title')} desc={t('playground.template.desc')}>
-      <label className="block text-[11px] text-muted-foreground">
-        {t('playground.template.folderLabel')}
-        <input
-          value={folder}
-          onChange={(e) => setFolder(e.target.value)}
-          placeholder={t('playground.template.folderPlaceholder')}
-          className="mt-1 h-7 w-full rounded-md border border-input bg-background px-2 text-xs text-foreground placeholder:text-muted-foreground"
-        />
-      </label>
-      <Button size="sm" variant="outline" disabled={busy || !folder.trim()} onClick={onValidate}>
-        {busy && <Loader2 className="h-3 w-3 animate-spin" aria-hidden />}
-        {t('playground.template.validate')}
-      </Button>
-      {result && <p role="status" className="text-[11px] text-foreground">{result}</p>}
-      {failed && <p role="alert" className="text-[11px] text-destructive">{failed}</p>}
-    </Section>
   );
 }
 
@@ -387,7 +321,6 @@ export function PlaygroundExtras() {
   const root = useSafeWorkspace()?.workspaceRoot ?? null;
   return (
     <div data-testid="playground-extras" className="flex flex-col">
-      <TemplateImportSection />
       <FrameMdSection root={root} />
       <DesignIoSection root={root} />
       <PaletteIoSection root={root} />
