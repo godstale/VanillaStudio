@@ -114,7 +114,11 @@ const head = {
   brief: briefSchema,
 };
 
+// 사용자 정의 템플릿이 추가하는 필드의 값(D-031). 키는 템플릿 schema.json의 fields[].id.
+const customValue = z.union([z.string(), z.number(), z.boolean(), z.array(z.string())]);
+
 const tail = {
+  custom: z.record(z.string(), customValue).default({}),
   references: z.array(referenceSchema),
   userPrompt: text,
   runtime: runtimeSchema,
@@ -240,6 +244,7 @@ export function newScene({ id, name, type, template, language = 'ko' }: NewScene
     brief: { subject: '', goal: '', audience: '', message: '', language },
   };
   const rest = {
+    custom: {},
     references: [],
     userPrompt: '',
     runtime: { contract: 'scene-runtime@1' as const, entry: 'src/index.html' },
