@@ -11,6 +11,8 @@ import initSql from './migrations/0001_init.sql?raw';
 import globalSql from './migrations/0002_global.sql?raw';
 import projectSql from './migrations/0003_project.sql?raw';
 import playgroundSql from './migrations/0004_playground.sql?raw';
+import v2GlobalSql from './migrations/0005_v2_global.sql?raw';
+import v2ProjectCleanupSql from './migrations/0006_v2_project_cleanup.sql?raw';
 
 // Project data folder inside a user project (Technical-Design §8.2).
 export const PROJECT_DATA_DIR = '.vanilla';
@@ -20,9 +22,9 @@ export type MigrationScope = 'global' | 'project' | 'all';
 // All statements are idempotent (IF NOT EXISTS), so they run on every open.
 // 0001 is shared; 0002 is global-only; 0003 is project-only.
 const MIGRATION_SQL: Record<MigrationScope, string[]> = {
-  global: [initSql, globalSql, playgroundSql],
-  project: [initSql, projectSql],
-  all: [initSql, globalSql, playgroundSql, projectSql],
+  global: [initSql, globalSql, playgroundSql, v2GlobalSql],
+  project: [initSql, projectSql, v2ProjectCleanupSql],
+  all: [initSql, globalSql, playgroundSql, v2GlobalSql, projectSql, v2ProjectCleanupSql],
 };
 
 export function splitSqlStatements(sql: string): string[] {
@@ -65,6 +67,7 @@ export class MemorySqlFallback implements SqlDatabase {
       q.startsWith('CREATE TABLE') ||
       q.startsWith('CREATE UNIQUE INDEX') ||
       q.startsWith('CREATE INDEX') ||
+      q.startsWith('ALTER TABLE') ||
       q.startsWith('DROP TABLE')
     ) {
       return { rowsAffected: 0 };
@@ -81,6 +84,7 @@ export class MemorySqlFallback implements SqlDatabase {
         language,
         trusted_workspaces,
         last_workspace_root,
+        templates_dir,
       ] = bindValues;
       if (
         q.startsWith('INSERT OR IGNORE') &&
@@ -96,6 +100,7 @@ export class MemorySqlFallback implements SqlDatabase {
         language,
         trusted_workspaces,
         last_workspace_root,
+        templates_dir,
       });
       return { rowsAffected: 1 };
     }
@@ -106,6 +111,7 @@ export class MemorySqlFallback implements SqlDatabase {
         language,
         trusted_workspaces,
         last_workspace_root,
+        templates_dir,
       ] = bindValues;
       const row = this.tables.get('app_settings')?.get('singleton');
       if (row) {
@@ -116,6 +122,7 @@ export class MemorySqlFallback implements SqlDatabase {
           language,
           trusted_workspaces,
           last_workspace_root,
+          templates_dir,
         });
       }
       return { rowsAffected: 1 };
@@ -196,6 +203,20 @@ export async function runMigrations(
 ): Promise<void> {
   for (const stmt of getMigrationStatements(scope)) {
     await db.execute(stmt);
+  }
+  await ensureColumns(db);
+}
+
+// ALTER TABLE ADD COLUMN has no IF NOT EXISTS, so a repeat run reports a duplicate column; that is the idempotent case.
+const ADDED_COLUMNS = ['ALTER TABLE app_settings ADD COLUMN templates_dir TEXT'];
+
+async function ensureColumns(db: SqlDatabase): Promise<void> {
+  for (const ddl of ADDED_COLUMNS) {
+    try {
+      await db.execute(ddl);
+    } catch (err) {
+      if (!/duplicate column/i.test(String(err instanceof Error ? err.message : err))) throw err;
+    }
   }
 }
 

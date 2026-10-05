@@ -361,7 +361,7 @@ render 모드와 HyperFrames seek의 연결, 준비 대기 신호는 S1에서 �
 | `palettes`·`templates` | v1 인덱스(보존, 사용처는 V3에서 가이드 템플릿 목록으로 대체) |
 | `doctor_cache` | 의존성 점검 결과 캐시 |
 
-프로젝트 DB(`<project>/.vanilla/app.db`)와 `pipeline_state`·`task_runs`·`agent_sessions`·`reviews`·`export_jobs`는 제거 대상이다. 신별 앱 상태(썸네일·실행 이력·self-check·history)는 DB가 아니라 `scenes/<slug>/.vanilla/` 파일에 둔다. 마이그레이션은 `src/lib/db/migrations/*.sql`(새 0004: v2 정리 — 제거 테이블 drop, `workspaces`·`terminal_sessions` 추가)로 한다.
+프로젝트 DB(`<project>/.vanilla/app.db`)와 `pipeline_state`·`task_runs`·`agent_sessions`·`reviews`·`export_jobs`는 제거 대상이다. 신별 앱 상태(썸네일·실행 이력·self-check·history)는 DB가 아니라 `scenes/<slug>/.vanilla/` 파일에 둔다. 마이그레이션은 `src/lib/db/migrations/*.sql`(0004는 v1 플레이그라운드가 사용 중이라 v2는 0005_v2_global — `workspaces`·`terminal_sessions`·`app_settings.templates_dir` — 과 0006_v2_project_cleanup — 제거 테이블 drop)로 한다.
 
 ### 8.2 워크스페이스 파일 (`Refactor-Spec-v2.md` §4·§5의 구현 계약)
 

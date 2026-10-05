@@ -15,6 +15,7 @@ interface SettingsRow {
   language: string;
   trusted_workspaces: string;
   last_workspace_root: string | null;
+  templates_dir: string | null;
 }
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
@@ -25,6 +26,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   language: 'ko',
   trustedWorkspaces: [],
   lastWorkspaceRoot: null,
+  templatesDir: null,
 };
 
 function parseSettingsRow(row: SettingsRow): AppSettings {
@@ -36,6 +38,7 @@ function parseSettingsRow(row: SettingsRow): AppSettings {
     language: row.language === 'en' ? 'en' : 'ko',
     trustedWorkspaces: JSON.parse(row.trusted_workspaces || '[]') as string[],
     lastWorkspaceRoot: row.last_workspace_root,
+    templatesDir: row.templates_dir ?? null,
   };
 }
 
@@ -49,8 +52,8 @@ async function fetchOrInitRow(db: SqlDatabase): Promise<SettingsRow> {
   await db.execute(
     `INSERT OR IGNORE INTO app_settings (
       id, open_tabs, active_tab_id, theme, language,
-      trusted_workspaces, last_workspace_root
-    ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      trusted_workspaces, last_workspace_root, templates_dir
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       DEFAULT_APP_SETTINGS.id,
       JSON.stringify(DEFAULT_APP_SETTINGS.openTabs),
@@ -59,6 +62,7 @@ async function fetchOrInitRow(db: SqlDatabase): Promise<SettingsRow> {
       DEFAULT_APP_SETTINGS.language,
       JSON.stringify(DEFAULT_APP_SETTINGS.trustedWorkspaces),
       DEFAULT_APP_SETTINGS.lastWorkspaceRoot,
+      DEFAULT_APP_SETTINGS.templatesDir,
     ],
   );
   return {
@@ -69,6 +73,7 @@ async function fetchOrInitRow(db: SqlDatabase): Promise<SettingsRow> {
     language: DEFAULT_APP_SETTINGS.language,
     trusted_workspaces: JSON.stringify(DEFAULT_APP_SETTINGS.trustedWorkspaces),
     last_workspace_root: DEFAULT_APP_SETTINGS.lastWorkspaceRoot,
+    templates_dir: DEFAULT_APP_SETTINGS.templatesDir,
   };
 }
 
@@ -115,7 +120,7 @@ export async function updateSettings(
     await db.execute(
       `UPDATE app_settings SET
         open_tabs = ?, active_tab_id = ?, theme = ?, language = ?,
-        trusted_workspaces = ?, last_workspace_root = ?
+        trusted_workspaces = ?, last_workspace_root = ?, templates_dir = ?
       WHERE id = 'singleton'`,
       [
         JSON.stringify(merged.openTabs),
@@ -124,6 +129,7 @@ export async function updateSettings(
         merged.language,
         JSON.stringify(merged.trustedWorkspaces),
         merged.lastWorkspaceRoot,
+        merged.templatesDir,
       ],
     );
     return merged;
@@ -168,7 +174,7 @@ export async function updateSettings(
       await projectDb.execute(
         `UPDATE app_settings SET
           open_tabs = ?, active_tab_id = ?, theme = ?, language = ?,
-          trusted_workspaces = ?, last_workspace_root = ?
+          trusted_workspaces = ?, last_workspace_root = ?, templates_dir = ?
         WHERE id = 'singleton'`,
         [
           JSON.stringify(merged.openTabs),
@@ -177,6 +183,7 @@ export async function updateSettings(
           merged.language,
           JSON.stringify(merged.trustedWorkspaces),
           merged.lastWorkspaceRoot,
+          merged.templatesDir,
         ],
       );
       return {
