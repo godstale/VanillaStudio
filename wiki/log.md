@@ -238,3 +238,6 @@
 
 ## [2026-10-02] lint | Wiki health check
 - orphans 0, broken links 0. See lint-report.md for details.
+
+## [2026-10-05] sample | Gangdong forest library promo motion graphic
+- Saved the video-model prompt (`Docs/Prompts/Gangdong-Forest-Library-Promo-Video-Prompt.txt`, 6.8k chars, per `Docs/Commercial-Motion-Graphic-Prompt-Guide.txt`) and a hand-coded 10s Canvas version (`resources/samples/gangdong-forest-library-promo/index.html`, deterministic render(t), no deps). Registered in the playground (global DB row + files under `%APPDATA%/dev.vanilla.studio/playground/<id>/`, kind video, played by the web player). Sample only: no app code changed. See: [[overview]]
