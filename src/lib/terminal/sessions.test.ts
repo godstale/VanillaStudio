@@ -215,4 +215,59 @@ describe('TerminalSessions', () => {
     h.sessions.resize(s.id, 120, 40);
     expect(h.api.resize).toHaveBeenCalledWith(7, 120, 40);
   });
+
+  describe('whenReady', () => {
+    it('is ready once output has been quiet for the quiet period', async () => {
+      vi.useFakeTimers();
+      try {
+        const h = setup();
+        const s = h.sessions.start({ agent: agent('codex'), sceneSlug: 'a', sceneName: 'A' });
+        await vi.advanceTimersByTimeAsync(0);
+        const ready = h.sessions.whenReady(s.id, { quietMs: 1000, timeoutMs: 5000, pollMs: 100 });
+        await vi.advanceTimersByTimeAsync(400);
+        h.emit({ event: 'output', data: btoa('banner') });
+        await vi.advanceTimersByTimeAsync(600);
+        h.emit({ event: 'output', data: btoa('more') }); // output keeps coming: not ready yet
+        await vi.advanceTimersByTimeAsync(900);
+        let settled = false;
+        void ready.then(() => (settled = true));
+        await vi.advanceTimersByTimeAsync(0);
+        expect(settled).toBe(false);
+        await vi.advanceTimersByTimeAsync(300);
+        expect(await ready).toBe(true);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('gives up after the timeout when no output ever arrives', async () => {
+      vi.useFakeTimers();
+      try {
+        const h = setup();
+        const s = h.sessions.start({ agent: agent('codex'), sceneSlug: 'a', sceneName: 'A' });
+        await vi.advanceTimersByTimeAsync(0);
+        const ready = h.sessions.whenReady(s.id, { quietMs: 500, timeoutMs: 2000, pollMs: 100 });
+        await vi.advanceTimersByTimeAsync(2500);
+        expect(await ready).toBe(false);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('resolves false when the session exits meanwhile or does not exist', async () => {
+      vi.useFakeTimers();
+      try {
+        const h = setup();
+        const s = h.sessions.start({ agent: agent('codex'), sceneSlug: 'a', sceneName: 'A' });
+        await vi.advanceTimersByTimeAsync(0);
+        const ready = h.sessions.whenReady(s.id, { quietMs: 500, timeoutMs: 5000, pollMs: 100 });
+        h.emit({ event: 'exit', code: 1 });
+        await vi.advanceTimersByTimeAsync(200);
+        expect(await ready).toBe(false);
+        expect(await h.sessions.whenReady('nope')).toBe(false);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+  });
 });

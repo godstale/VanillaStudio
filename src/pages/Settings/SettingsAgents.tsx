@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { formatArgs, parseArgs } from '@/lib/agents/args';
 import { loadAgents, saveAgent, setDefaultAgent, type AgentEntry } from '@/lib/agents/registry';
 import { getGlobalDatabase } from '@/lib/db/client';
+import * as settingsRepo from '@/lib/db/repositories/settingsRepo';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 interface Pending {
@@ -20,6 +21,7 @@ export function SettingsAgents() {
   const [agents, setAgents] = useState<AgentEntry[]>([]);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [pending, setPending] = useState<Pending | null>(null);
+  const [autoPaste, setAutoPaste] = useState(false);
   const [message, setMessage] = useState<{ kind: 'ok' | 'error'; text: string } | null>(null);
 
   async function reload() {
@@ -37,6 +39,10 @@ export function SettingsAgents() {
         setAgents(list);
         setDrafts(Object.fromEntries(list.map((a) => [a.id, formatArgs(a.argv.slice(1))])));
       })
+      .catch(() => undefined);
+    settingsRepo
+      .getSettings()
+      .then((s) => !cancelled && setAutoPaste(s.terminalAutoPaste))
       .catch(() => undefined);
     return () => {
       cancelled = true;
@@ -73,6 +79,23 @@ export function SettingsAgents() {
         <p className="mt-1 text-xs text-muted-foreground">{t('settingsAgents.desc')}</p>
         <p className="mt-2 rounded-md border border-border bg-muted p-2 text-xs">{t('settingsAgents.permissions')}</p>
       </div>
+
+      <label className="flex items-start gap-2 rounded-md border border-border p-3 text-xs">
+        <input
+          type="checkbox"
+          className="mt-0.5"
+          checked={autoPaste}
+          onChange={(e) => {
+            const next = e.target.checked;
+            setAutoPaste(next);
+            void settingsRepo.updateSettings({ terminalAutoPaste: next }).catch(() => setAutoPaste(!next));
+          }}
+        />
+        <span>
+          <b className="block text-sm">{t('settingsAgents.autoPaste')}</b>
+          <span className="text-muted-foreground">{t('settingsAgents.autoPasteDesc')}</span>
+        </span>
+      </label>
 
       <ul className="space-y-3" data-testid="agent-list">
         {agents.map((a) => {

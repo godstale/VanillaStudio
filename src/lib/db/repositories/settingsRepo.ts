@@ -16,6 +16,7 @@ interface SettingsRow {
   trusted_workspaces: string;
   last_workspace_root: string | null;
   templates_dir: string | null;
+  terminal_auto_paste: number | null;
 }
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
@@ -27,6 +28,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   trustedWorkspaces: [],
   lastWorkspaceRoot: null,
   templatesDir: null,
+  terminalAutoPaste: false,
 };
 
 function parseSettingsRow(row: SettingsRow): AppSettings {
@@ -39,6 +41,7 @@ function parseSettingsRow(row: SettingsRow): AppSettings {
     trustedWorkspaces: JSON.parse(row.trusted_workspaces || '[]') as string[],
     lastWorkspaceRoot: row.last_workspace_root,
     templatesDir: row.templates_dir ?? null,
+    terminalAutoPaste: row.terminal_auto_paste === 1,
   };
 }
 
@@ -52,8 +55,8 @@ async function fetchOrInitRow(db: SqlDatabase): Promise<SettingsRow> {
   await db.execute(
     `INSERT OR IGNORE INTO app_settings (
       id, open_tabs, active_tab_id, theme, language,
-      trusted_workspaces, last_workspace_root, templates_dir
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      trusted_workspaces, last_workspace_root, templates_dir, terminal_auto_paste
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       DEFAULT_APP_SETTINGS.id,
       JSON.stringify(DEFAULT_APP_SETTINGS.openTabs),
@@ -63,6 +66,7 @@ async function fetchOrInitRow(db: SqlDatabase): Promise<SettingsRow> {
       JSON.stringify(DEFAULT_APP_SETTINGS.trustedWorkspaces),
       DEFAULT_APP_SETTINGS.lastWorkspaceRoot,
       DEFAULT_APP_SETTINGS.templatesDir,
+      DEFAULT_APP_SETTINGS.terminalAutoPaste ? 1 : 0,
     ],
   );
   return {
@@ -74,6 +78,7 @@ async function fetchOrInitRow(db: SqlDatabase): Promise<SettingsRow> {
     trusted_workspaces: JSON.stringify(DEFAULT_APP_SETTINGS.trustedWorkspaces),
     last_workspace_root: DEFAULT_APP_SETTINGS.lastWorkspaceRoot,
     templates_dir: DEFAULT_APP_SETTINGS.templatesDir,
+    terminal_auto_paste: 0,
   };
 }
 
@@ -120,7 +125,7 @@ export async function updateSettings(
     await db.execute(
       `UPDATE app_settings SET
         open_tabs = ?, active_tab_id = ?, theme = ?, language = ?,
-        trusted_workspaces = ?, last_workspace_root = ?, templates_dir = ?
+        trusted_workspaces = ?, last_workspace_root = ?, templates_dir = ?, terminal_auto_paste = ?
       WHERE id = 'singleton'`,
       [
         JSON.stringify(merged.openTabs),
@@ -130,6 +135,7 @@ export async function updateSettings(
         JSON.stringify(merged.trustedWorkspaces),
         merged.lastWorkspaceRoot,
         merged.templatesDir,
+        merged.terminalAutoPaste ? 1 : 0,
       ],
     );
     return merged;
@@ -174,7 +180,7 @@ export async function updateSettings(
       await projectDb.execute(
         `UPDATE app_settings SET
           open_tabs = ?, active_tab_id = ?, theme = ?, language = ?,
-          trusted_workspaces = ?, last_workspace_root = ?, templates_dir = ?
+          trusted_workspaces = ?, last_workspace_root = ?, templates_dir = ?, terminal_auto_paste = ?
         WHERE id = 'singleton'`,
         [
           JSON.stringify(merged.openTabs),
@@ -184,6 +190,7 @@ export async function updateSettings(
           JSON.stringify(merged.trustedWorkspaces),
           merged.lastWorkspaceRoot,
           merged.templatesDir,
+          merged.terminalAutoPaste ? 1 : 0,
         ],
       );
       return {

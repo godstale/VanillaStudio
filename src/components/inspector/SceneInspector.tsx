@@ -6,7 +6,7 @@ import { SceneForm } from '@/components/guides/SceneForm';
 import { MarkdownEditor } from '@/components/guides/MarkdownEditor';
 import { DesignSection } from './DesignSection';
 import type { GuideContext } from '@/lib/guides/agentsMd';
-import { assemblePrompt } from '@/lib/guides/prompts';
+import { promptForScene } from '@/lib/agents/clipboard';
 import type { GuideTemplate } from '@/lib/guides/template';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { sceneSchema, type Scene } from '@/lib/scene/schema';
@@ -127,7 +127,7 @@ export function SceneInspector({ workspace, root, slug, scene, template, templat
     await onRename(trimmed).catch(() => setName(scene.name));
   }
 
-  const prompt = tab === 'prompt' && template ? assemblePrompt('generate', { workspace, scene: draft, template } satisfies GuideContext) : '';
+  const prompt = tab === 'prompt' && template ? promptForScene({ workspace, scene: draft, template } satisfies GuideContext).text : '';
   const unusable = template === null ? (
     <p role="alert" className="rounded bg-destructive/10 p-2 text-xs text-destructive">
       {t('inspector.templateUnusable', { ref: draft.template, reason: templateError ?? t('inspector.templateMissing') })}

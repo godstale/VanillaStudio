@@ -3,6 +3,8 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { ThemeProvider } from '@/lib/context/ThemeContext';
 import { newScene, type Scene } from '@/lib/scene/schema';
+import { promptForScene } from '@/lib/agents/clipboard';
+import { defaultTemplateFor } from '@/lib/guides/template';
 import { newSequence, type Sequence } from '@/lib/sequence/schema';
 
 vi.stubGlobal(
@@ -117,7 +119,15 @@ describe('SceneWorkspace', () => {
     const alphaButton = screen.getAllByText(/에이전트 실행|Run agent/)[0].closest('button')!;
     fireEvent.click(alphaButton);
     await waitFor(() => expect(runAgent).toHaveBeenCalledOnce());
-    expect(runAgent).toHaveBeenCalledWith({ workspaceId: 'ws_1', sceneId: 'scn_AAA', sceneSlug: 'alpha', sceneName: 'Alpha', preferredAgentId: 'codex' });
+    expect(runAgent).toHaveBeenCalledWith({
+      workspaceId: 'ws_1',
+      sceneId: 'scn_AAA',
+      sceneSlug: 'alpha',
+      sceneName: 'Alpha',
+      preferredAgentId: 'codex',
+      // 클립보드로 가는 프롬프트는 인스펙터 미리보기와 같은 함수가 만든다.
+      prompt: promptForScene({ workspace: { id: 'ws_1', name: 'W' }, scene: sceneA, template: defaultTemplateFor('motion') }).text,
+    });
 
     runAgent.mockRejectedValueOnce(new Error('no-enabled-agent'));
     fireEvent.click(alphaButton);

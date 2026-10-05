@@ -85,6 +85,7 @@ export class MemorySqlFallback implements SqlDatabase {
         trusted_workspaces,
         last_workspace_root,
         templates_dir,
+        terminal_auto_paste,
       ] = bindValues;
       if (
         q.startsWith('INSERT OR IGNORE') &&
@@ -101,6 +102,7 @@ export class MemorySqlFallback implements SqlDatabase {
         trusted_workspaces,
         last_workspace_root,
         templates_dir,
+        terminal_auto_paste,
       });
       return { rowsAffected: 1 };
     }
@@ -112,6 +114,7 @@ export class MemorySqlFallback implements SqlDatabase {
         trusted_workspaces,
         last_workspace_root,
         templates_dir,
+        terminal_auto_paste,
       ] = bindValues;
       const row = this.tables.get('app_settings')?.get('singleton');
       if (row) {
@@ -123,6 +126,7 @@ export class MemorySqlFallback implements SqlDatabase {
           trusted_workspaces,
           last_workspace_root,
           templates_dir,
+          terminal_auto_paste,
         });
       }
       return { rowsAffected: 1 };
@@ -208,7 +212,7 @@ export async function runMigrations(
 }
 
 // ALTER TABLE ADD COLUMN has no IF NOT EXISTS, so a repeat run reports a duplicate column; that is the idempotent case.
-const ADDED_COLUMNS = ['ALTER TABLE app_settings ADD COLUMN templates_dir TEXT'];
+const ADDED_COLUMNS = ['ALTER TABLE app_settings ADD COLUMN templates_dir TEXT', 'ALTER TABLE app_settings ADD COLUMN terminal_auto_paste INTEGER NOT NULL DEFAULT 0'];
 
 async function ensureColumns(db: SqlDatabase): Promise<void> {
   for (const ddl of ADDED_COLUMNS) {

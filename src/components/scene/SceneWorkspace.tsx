@@ -13,6 +13,7 @@ import { SceneInspector } from '@/components/inspector/SceneInspector';
 import { TemplatesProvider } from '@/components/guides/TemplatesContext';
 import { useTemplates } from '@/components/guides/templatesContextValue';
 import { useSafeTerminals } from '@/components/terminal/terminalContextValue';
+import { promptForScene } from '@/lib/agents/clipboard';
 import { groupChanges } from '@/lib/scene/status';
 import { readSequence, writeSequence } from '@/lib/sequence/file';
 import { addNode, moveNodes, reconcile, type Sequence } from '@/lib/sequence/schema';
@@ -175,14 +176,17 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
       const scene = entriesRef.current.find((e) => e.slug === slug)?.scene;
       if (!terminals || !scene) return;
       setRunError(null);
+      const template = resolve(scene);
+      // 템플릿을 쓸 수 없으면 프롬프트를 만들 수 없다(사용 거부). 클립보드 전달 없이 터미널만 연다.
+      const prompt = template ? promptForScene({ workspace, scene, template }).text : undefined;
       terminals
-        .runAgent({ workspaceId: workspace.id, sceneId: scene.id, sceneSlug: slug, sceneName: scene.name, preferredAgentId: defaultAgent })
+        .runAgent({ workspaceId: workspace.id, sceneId: scene.id, sceneSlug: slug, sceneName: scene.name, preferredAgentId: defaultAgent, prompt })
         .catch((e: unknown) => {
           const message = e instanceof Error ? e.message : String(e);
           setRunError(message === 'no-enabled-agent' ? t('scene.noAgent') : t('scene.runFailed', { error: message }));
         });
     };
-  }, [terminals, workspace.id, defaultAgent, t]);
+  }, [terminals, workspace, resolve, defaultAgent, t]);
 
   const selected = nodes.find((n) => n.selected && !n.data.error);
   const selectedEntry = selected ? entries.find((e) => e.scene?.id === selected.id) : undefined;

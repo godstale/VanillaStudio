@@ -51,6 +51,9 @@ export interface TerminalSession {
   error?: string;
   failure?: FailureKind;
   startedAt: number;
+  /** 마지막 출력 시각(ms)과 받은 출력 덩어리 수. 에이전트가 준비됐는지(출력이 잠잠해졌는지) 가늠하는 데 쓴다. */
+  lastOutputAt: number | null;
+  outputChunks: number;
   term: TermLike;
   ptyId: number | null;
 }
@@ -128,6 +131,8 @@ export class TerminalSessions {
       status: 'starting',
       exitCode: null,
       startedAt: (this.deps.now ?? Date.now)(),
+      lastOutputAt: null,
+      outputChunks: 0,
       term,
       ptyId: null,
     };
@@ -144,6 +149,8 @@ export class TerminalSessions {
     this.deps.api
       .start({ agentId: agent.id, sceneSlug, args: agent.argv.slice(1), cols: term.cols, rows: term.rows }, (e) => {
         if (e.event === 'output') {
+          session.lastOutputAt = (this.deps.now ?? Date.now)();
+          session.outputChunks += 1;
           term.write(this.deps.api.decode(e.data));
         } else {
           this.finish(session, { status: 'exited', exitCode: e.code });
@@ -177,6 +184,25 @@ export class TerminalSessions {
     this.releases.delete(s.id);
     this.update(s, patch);
     if (wasRunning) void Promise.resolve(this.deps.onEnded?.(s)).catch(() => undefined);
+  }
+
+  /**
+   * 에이전트가 입력을 받을 준비가 됐는지 기다린다: 첫 출력이 나온 뒤 `quietMs` 동안 출력이 없으면 준비된 것으로 본다.
+   * 세션이 끝나거나 `timeoutMs` 안에 그런 순간이 오지 않으면 false(호출한 쪽이 클립보드 붙여넣기 안내로 넘어간다).
+   */
+  whenReady(id: string, { quietMs = 1500, timeoutMs = 15000, pollMs = 100 }: { quietMs?: number; timeoutMs?: number; pollMs?: number } = {}): Promise<boolean> {
+    const now = this.deps.now ?? Date.now;
+    const begin = now();
+    return new Promise((resolve) => {
+      const tick = () => {
+        const s = this.get(id);
+        if (!s || s.status === 'exited' || s.status === 'error') return resolve(false);
+        if (s.status === 'running' && s.lastOutputAt !== null && now() - s.lastOutputAt >= quietMs) return resolve(true);
+        if (now() - begin >= timeoutMs) return resolve(false);
+        setTimeout(tick, pollMs);
+      };
+      tick();
+    });
   }
 
   /** 프롬프트를 에이전트에 넣는다. 반환값: 실제로 입력했는가(clipboard 모드·세션 없음이면 false). */

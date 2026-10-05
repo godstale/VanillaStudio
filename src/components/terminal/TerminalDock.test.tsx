@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
+import { MemorySqlFallback, setDatabase } from '@/lib/db/client';
+import * as settingsRepo from '@/lib/db/repositories/settingsRepo';
 import { BUILTIN_AGENTS } from '@/lib/agents/registry';
 import { stopAllBusy } from '@/lib/workspace/switchGuard';
 import type { PtyEventLike, SessionDeps, TermLike } from '@/lib/terminal/sessions';
@@ -72,11 +74,11 @@ function Grab() {
   return null;
 }
 
-function renderDock() {
+function renderDock(readiness?: { quietMs?: number; timeoutMs?: number; pollMs?: number }) {
   return render(
     <LanguageProvider>
       <MemoryRouter>
-        <TerminalProvider deps={deps} loadRegistry={async () => [...BUILTIN_AGENTS]}>
+        <TerminalProvider deps={deps} loadRegistry={async () => [...BUILTIN_AGENTS]} readiness={readiness}>
           <Grab />
           <div style={{ height: 300 }}>
             <TerminalDock />
@@ -87,15 +89,17 @@ function renderDock() {
   );
 }
 
-const run = (slug: string, name: string, preferredAgentId?: string) =>
+const run = (slug: string, name: string, preferredAgentId?: string, prompt?: string) =>
   act(async () => {
-    await ctx.runAgent({ workspaceId: 'ws_1', sceneId: `scn_${slug}`, sceneSlug: slug, sceneName: name, preferredAgentId });
+    await ctx.runAgent({ workspaceId: 'ws_1', sceneId: `scn_${slug}`, sceneSlug: slug, sceneName: name, preferredAgentId, prompt });
   });
 
 const running = () => screen.getByRole('tab', { name: /실행 중|running/ });
 
 beforeEach(async () => {
+  setDatabase(new MemorySqlFallback());
   await stopAllBusy();
+  vi.stubGlobal('navigator', { clipboard: { writeText: vi.fn(async () => undefined) } });
   terms.length = 0;
   api.start.mockReset().mockImplementation((_o: unknown, cb: (e: PtyEventLike) => void) => {
     handler = cb;
@@ -202,5 +206,69 @@ describe('TerminalDock', () => {
     );
     await expect(ctx.runAgent({ workspaceId: 'w', sceneId: 's', sceneSlug: 'a', sceneName: 'A' })).rejects.toThrow('no-enabled-agent');
     expect(api.start).not.toHaveBeenCalled();
+  });
+
+  describe('prompt delivery', () => {
+    const clipboard = () => (navigator.clipboard.writeText as ReturnType<typeof vi.fn>);
+
+    it('copies the prompt to the clipboard and tells the user to paste it (auto-paste off)', async () => {
+      renderDock();
+      await run('a', 'Alpha', 'codex', 'THE PROMPT');
+      expect(clipboard()).toHaveBeenCalledWith('THE PROMPT');
+      expect((await screen.findByTestId('terminal-notice')).textContent).toMatch(/클립보드에 복사했습니다|copied to the clipboard/);
+    });
+
+    it('auto-paste: waits until the agent output goes quiet, then pastes and says so', async () => {
+      await settingsRepo.updateSettings({ terminalAutoPaste: true });
+      renderDock({ quietMs: 80, timeoutMs: 3000, pollMs: 20 });
+      await run('a', 'Alpha', 'claude-code', 'THE PROMPT'); // bracketed
+      await waitFor(() => expect(running()).toBeTruthy());
+      act(() => handler({ event: 'output', data: btoa('Welcome') }));
+      await waitFor(() => expect(screen.getByTestId('terminal-notice').textContent).toMatch(/붙여넣었습니다|pasted into/), { timeout: 2000 });
+      expect(clipboard()).toHaveBeenCalledWith('THE PROMPT');
+    });
+
+    it('auto-paste: tells the user to paste manually when readiness is never detected', async () => {
+      await settingsRepo.updateSettings({ terminalAutoPaste: true });
+      renderDock({ quietMs: 50, timeoutMs: 200, pollMs: 20 });
+      await run('a', 'Alpha', 'claude-code', 'THE PROMPT');
+      await waitFor(() => expect(screen.getByTestId('terminal-notice').textContent).toMatch(/자동으로 붙여넣지 않았습니다|nothing was pasted/), { timeout: 2000 });
+    });
+
+    it('clipboard-only agents never auto-paste, even when the setting is on', async () => {
+      await settingsRepo.updateSettings({ terminalAutoPaste: true });
+      render(
+        <LanguageProvider>
+          <MemoryRouter>
+            <TerminalProvider deps={deps} loadRegistry={async () => BUILTIN_AGENTS.map((a) => ({ ...a, pasteMode: 'clipboard' as const }))} readiness={{ quietMs: 20, timeoutMs: 300, pollMs: 10 }}>
+              <Grab />
+              <TerminalDock />
+            </TerminalProvider>
+          </MemoryRouter>
+        </LanguageProvider>,
+      );
+      await run('a', 'Alpha', 'codex', 'THE PROMPT');
+      await waitFor(() => expect(running()).toBeTruthy());
+      act(() => handler({ event: 'output', data: btoa('ready') }));
+      await new Promise((r) => setTimeout(r, 150));
+      expect(screen.getByTestId('terminal-notice').textContent).toMatch(/클립보드에 복사했습니다|copied to the clipboard/);
+      expect(api.write).not.toHaveBeenCalledWith(5, 'THE PROMPT');
+    });
+
+    it('reports a clipboard failure and still starts the terminal', async () => {
+      vi.stubGlobal('navigator', { clipboard: { writeText: vi.fn(async () => Promise.reject(new Error('denied'))) } });
+      Object.defineProperty(document, 'execCommand', { value: () => false, configurable: true });
+      renderDock();
+      await run('a', 'Alpha', 'codex', 'THE PROMPT');
+      expect((await screen.findByTestId('terminal-notice')).textContent).toMatch(/복사하지 못했습니다|Could not copy/);
+      expect(screen.getByRole('tab', { name: /Alpha · Codex/ })).toBeTruthy();
+    });
+
+    it('the notice can be dismissed', async () => {
+      renderDock();
+      await run('a', 'Alpha', 'codex', 'P');
+      fireEvent.click(await screen.findByRole('button', { name: /안내 닫기|Dismiss/ }));
+      expect(screen.queryByTestId('terminal-notice')).toBeNull();
+    });
   });
 });

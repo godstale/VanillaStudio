@@ -26,6 +26,7 @@ describe('settingsRepo (MemorySqlFallback)', () => {
       trustedWorkspaces: [],
       lastWorkspaceRoot: null,
       templatesDir: null,
+      terminalAutoPaste: false,
     });
   });
 

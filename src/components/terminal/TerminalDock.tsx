@@ -35,7 +35,7 @@ function SessionView({ session }: { session: TerminalSession }) {
 /** 하단 도크의 터미널: 신별 탭, 세션 재연결, 종료 확인, 에이전트 미설치·미신뢰 안내. */
 export function TerminalDock() {
   const { t } = useLanguage();
-  const { manager, sessions, activeId, setActiveId } = useTerminals();
+  const { manager, sessions, activeId, setActiveId, notice, clearNotice } = useTerminals();
   const [closing, setClosing] = useState<TerminalSession | null>(null);
 
   if (sessions.length === 0) return <p className="p-3 text-xs text-muted-foreground">{t('terminal.dock.empty')}</p>;
@@ -85,8 +85,21 @@ export function TerminalDock() {
         )}
       </div>
 
-      {active.status === 'exited' && (
-        <p role="status" className="border-t border-border px-3 py-1 text-[11px] text-muted-foreground">
+      {notice && (
+        <p role="status" data-testid="terminal-notice" className="flex items-center gap-2 border-t border-border bg-muted px-3 py-1 text-[11px]">
+          <span className="flex-1">
+            {notice.kind === 'copied' && t('terminal.notice.copied', { agent: notice.agent })}
+            {notice.kind === 'pasted' && t('terminal.notice.pasted', { agent: notice.agent })}
+            {notice.kind === 'paste-failed' && t('terminal.notice.pasteFailed', { agent: notice.agent })}
+            {notice.kind === 'copy-failed' && t('terminal.notice.copyFailed')}
+          </span>
+          <button type="button" aria-label={t('terminal.notice.dismiss')} onClick={clearNotice}>
+            <X className="h-3 w-3" />
+          </button>
+        </p>
+      )}
+
+      {active.status === 'exited' && (        <p role="status" className="border-t border-border px-3 py-1 text-[11px] text-muted-foreground">
           {active.exitCode === null ? t('terminal.exited') : t('terminal.exitedCode', { code: active.exitCode })}
         </p>
       )}
