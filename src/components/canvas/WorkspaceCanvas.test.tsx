@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { render } from '@testing-library/react';
-import type { Node } from '@xyflow/react';
+import { ReactFlowProvider, type Node } from '@xyflow/react';
 import { ThemeProvider } from '@/lib/context/ThemeContext';
 import { WorkspaceCanvas } from './WorkspaceCanvas';
 
@@ -25,7 +25,9 @@ function renderCanvas(nodes?: Node[]) {
   return render(
     <ThemeProvider>
       <div style={{ width: 800, height: 600 }}>
-        <WorkspaceCanvas nodes={nodes} initialView={{ x: 5, y: 6, zoom: 1 }} />
+        <ReactFlowProvider>
+          <WorkspaceCanvas nodes={nodes} initialView={{ x: 5, y: 6, zoom: 1 }} />
+        </ReactFlowProvider>
       </div>
     </ThemeProvider>,
   );

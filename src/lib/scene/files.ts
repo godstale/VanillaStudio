@@ -93,12 +93,16 @@ export interface CreateSceneInput {
   name: string;
   type: SceneType;
   language?: 'ko' | 'en';
+  /** `<id>@<ver>`. 생략하면 그 타입의 기본 내장 템플릿. */
+  template?: string;
 }
 
 export async function createScene(root: string, workspace: WorkspaceRef, input: CreateSceneInput): Promise<{ slug: string; scene: Scene }> {
+  const template = input.template ? getBuiltinTemplate(input.template) : defaultTemplateFor(input.type);
+  if (!template || template.meta.type !== input.type) throw new Error(`Unknown ${input.type} template: ${input.template}`);
   const info = await invoke<SceneInfo>('create_scene', { workspaceRoot: root, name: input.name });
   try {
-    const scene = newScene({ id: info.sceneId, name: input.name.trim(), type: input.type, template: defaultTemplateFor(input.type).ref, language: input.language });
+    const scene = newScene({ id: info.sceneId, name: input.name.trim(), type: input.type, template: template.ref, language: input.language });
     await writeScene(root, info.slug, workspace, scene);
     return { slug: info.slug, scene };
   } catch (e) {

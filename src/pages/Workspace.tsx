@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Viewport } from '@xyflow/react';
 import { Onboarding } from '@/components/workspace/Onboarding';
-import { WorkspaceCanvas } from '@/components/canvas/WorkspaceCanvas';
+import { SceneWorkspace } from '@/components/scene/SceneWorkspace';
 import { useWorkspace } from '@/lib/context/WorkspaceContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { readWorkspace, saveWorkspaceView } from '@/lib/workspace/file';
@@ -62,7 +62,15 @@ export function Workspace() {
       </div>
     );
   }
-  return <WorkspaceCanvas key={result.ws.workspaceId} initialView={result.ws.view} onViewChange={onViewChange} />;
+  return (
+    <SceneWorkspace
+      key={result.ws.workspaceId}
+      root={workspaceRoot}
+      workspace={{ id: result.ws.workspaceId, name: result.ws.name }}
+      initialView={result.ws.view}
+      onViewChange={onViewChange}
+    />
+  );
 }
 
 export default Workspace;
