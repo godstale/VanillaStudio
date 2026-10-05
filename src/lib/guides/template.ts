@@ -20,23 +20,34 @@ export const templateSchemaFileSchema = z
   .object({ version: z.literal(1), hide: z.array(z.string()), defaults: z.record(z.string(), z.unknown()) })
   .strict();
 
-export const glossarySchema = z
+const localized = z.object({ ko: z.string().min(1), en: z.string().min(1) }).strict();
+
+// 용어집(Refactor-Spec-v2 §6.3): 드롭다운 데이터. scene.json에는 `id`만 저장하고 표시는 label·definition을 쓴다.
+export const termSchema = z
   .object({
-    version: z.literal(1),
-    terms: z.record(
-      z.string(),
-      z.array(
-        z
-          .object({
-            id: z.string().min(1),
-            label: z.object({ ko: z.string(), en: z.string() }).strict(),
-            hint: z.string().optional(),
-          })
-          .strict(),
-      ),
-    ),
+    category: z.string().regex(/^[a-zA-Z][a-zA-Z0-9]*$/),
+    id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
+    label: localized,
+    definition: localized,
+    /** 에이전트용 구현 힌트(영문 고정, 번역 대상 아님). */
+    implementationHint: z.string(),
+    tags: z.array(z.string()),
   })
   .strict();
+export type Term = z.infer<typeof termSchema>;
+
+export const glossarySchema = z
+  .object({ version: z.literal(1), terms: z.array(termSchema) })
+  .strict()
+  .superRefine((g, ctx) => {
+    const seen = new Set<string>();
+    g.terms.forEach((t, i) => {
+      const key = `${t.category}/${t.id}`;
+      if (seen.has(key)) ctx.addIssue({ code: 'custom', path: ['terms', i, 'id'], message: `duplicate term ${key}` });
+      seen.add(key);
+    });
+  });
+export type Glossary = z.infer<typeof glossarySchema>;
 
 export const PROMPT_NAMES = ['generate', 'analyze-reference', 'revise'] as const;
 export type PromptName = (typeof PROMPT_NAMES)[number];

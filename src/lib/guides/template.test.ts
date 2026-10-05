@@ -25,7 +25,7 @@ describe('buildTemplate', () => {
   const ok = {
     'template.json': JSON.stringify({ id: 'x', version: 1, type: 'motion', label: { ko: 'ㅋ', en: 'x' }, extends: null }),
     'schema.json': JSON.stringify({ version: 1, hide: [], defaults: {} }),
-    'glossary.json': JSON.stringify({ version: 1, terms: {} }),
+    'glossary.json': JSON.stringify({ version: 1, terms: [] }),
     'rules.md': 'r',
     'checklist.md': 'c',
     'prompts/generate.md': 'g',

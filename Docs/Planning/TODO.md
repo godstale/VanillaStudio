@@ -50,7 +50,7 @@
 
 ## V3 가이드·인스펙터 (branch: `feat/v2-guides`)
 
-- [ ] T3.1 [레인 A · W1] 용어집 스키마·로더(`glossary/<type>.json`: `category·id·label{ko,en}·definition·implementationHint·tags`)와 모션 용어집(원문 §10 + 구현 힌트 + 전환 목록) — 대상: `src/lib/guides/glossary.ts`, `resources/glossary/motion.json` · 완료 판정: 스키마 테스트, ID 중복·누락 검사 · 선행: T2.5 · (D-028)
+- [x] T3.1 [레인 A · W1] 용어집 스키마·로더(`glossary/<type>.json`: `category·id·label{ko,en}·definition·implementationHint·tags`)와 모션 용어집(원문 §10 + 구현 힌트 + 전환 목록) — 대상: `src/lib/guides/glossary.ts`, `resources/glossary/motion.json` · 완료 판정: 스키마 테스트, ID 중복·누락 검사 · 선행: T2.5 · (D-028)
 - [ ] T3.2 [레인 A · W1] 용어 콤보박스(검색·다중·자유 입력·툴팁 정의, ID 저장) — 대상: `src/components/guides/TermCombobox.tsx` · 완료 판정: 컴포넌트 테스트(선택·자유 입력·키보드) · 선행: T3.1
 - [ ] T3.3 [레인 B · W1] 템플릿 포맷 스키마(`template.json`·`schema.json`·`extends` 병합: 필드 추가·숨김·기본값만) + 위반 거부 — 대상: `src/lib/guides/templateSchema.ts`, `merge.ts` · 완료 판정: 허용/거부 케이스 테스트 · 선행: T2.5 · (D-031)
 - [ ] T3.4 [레인 A · W2] motion 신 스키마 완성(`creativeMode`·`structure`·`adStructure`·`brandVoice`·`visualStyle`·`motionVocabulary`·`beats`·`copy`·`identity`·`endCard`·`audio`·`constraints`) + 폼 정의 — 대상: `resources/guides/motion/commercial-v1@1/schema.json`, `src/lib/scene/schema.ts` · 완료 판정: 원문 29개 섹션 매핑 표(Spec §6.2) 전 항목에 필드 존재 · 선행: T3.3, T3.1
