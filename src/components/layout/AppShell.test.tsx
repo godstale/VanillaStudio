@@ -10,7 +10,7 @@ vi.mock('@/lib/db/repositories/workspacesRepo', () => ({
   removeWorkspace: async () => undefined,
 }));
 
-import { AppShell } from './AppShell';
+import { AppShell, SlotPortal } from './AppShell';
 import { EmptyScreen } from './EmptyScreen';
 
 function renderShell(initial: string) {
@@ -21,6 +21,7 @@ function renderShell(initial: string) {
           <Route element={<AppShell />}>
             <Route path="/workspace" element={<EmptyScreen title="WS-SCREEN" />} />
             <Route path="/scenes" element={<EmptyScreen title="SCENES-SCREEN" />} />
+            <Route path="/slot" element={<SlotPortal name="inspector"><p>IN-SLOT</p></SlotPortal>} />
             <Route path="/playground" element={<EmptyScreen title="PLAY-SCREEN" />} />
           </Route>
           <Route path="/settings" element={<div>SETTINGS-SCREEN</div>} />
@@ -48,5 +49,11 @@ describe('AppShell', () => {
     expect(screen.getByText('PLAY-SCREEN')).toBeTruthy();
     fireEvent.click(links[3]);
     expect(screen.getByText('SETTINGS-SCREEN')).toBeTruthy();
+  });
+
+  it('lets a screen put content into the inspector slot', async () => {
+    const { container } = renderShell('/slot');
+    expect(await screen.findByText('IN-SLOT')).toBeTruthy();
+    expect(container.querySelector('[data-slot="inspector"]')?.textContent).toContain('IN-SLOT');
   });
 });

@@ -6,7 +6,10 @@ import { Button } from '@/components/ui/button';
 import { WorkspaceCanvas } from '@/components/canvas/WorkspaceCanvas';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { usePreviewWatch } from '@/lib/review/watchClient';
-import { createScene, listScenes, refreshStatuses, type SceneEntry, type WorkspaceRef } from '@/lib/scene/files';
+import { createScene, listScenes, refreshStatuses, renameScene, writeScene, type SceneEntry, type WorkspaceRef } from '@/lib/scene/files';
+import type { Scene } from '@/lib/scene/schema';
+import { SlotPortal } from '@/components/layout/AppShell';
+import { SceneInspector } from '@/components/inspector/SceneInspector';
 import { groupChanges } from '@/lib/scene/status';
 import { readSequence, writeSequence } from '@/lib/sequence/file';
 import { addNode, moveNodes, reconcile, type Sequence } from '@/lib/sequence/schema';
@@ -61,6 +64,7 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
   const { t } = useLanguage();
   const rf = useReactFlow();
   const [nodes, setNodes] = useState<SceneFlowNode[]>([]);
+  const [entries, setEntries] = useState<SceneEntry[]>([]);
   const [dialog, setDialog] = useState<{ x: number; y: number } | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const sequence = useRef<Sequence | null>(null);
@@ -88,7 +92,12 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
   const apply = useCallback(
     (loaded: Loaded) => {
       sequence.current = loaded.sequence;
-      setNodes(buildNodes(loaded, openFolder));
+      setEntries(loaded.entries);
+      // 선택 상태는 다시 읽어도 유지한다.
+      setNodes((prev) => {
+        const selected = new Set(prev.filter((n) => n.selected).map((n) => n.id));
+        return buildNodes(loaded, openFolder).map((n) => (selected.has(n.id) ? { ...n, selected: true } : n));
+      });
       setLoadError(null);
     },
     [openFolder],
@@ -146,6 +155,27 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
     apply(await fetchAll());
   }
 
+  const selected = nodes.find((n) => n.selected && !n.data.error);
+  const selectedEntry = selected ? entries.find((e) => e.scene?.id === selected.id) : undefined;
+
+  // 저장하면 파일 감시가 다시 읽어 노드·인스펙터에 반영한다. 여기서는 파일만 쓴다.
+  const saveScene = useCallback(
+    async (scene: Scene) => {
+      const slug = entries.find((e) => e.scene?.id === scene.id)?.slug;
+      if (slug) await writeScene(root, slug, workspace, scene);
+    },
+    [entries, root, workspace],
+  );
+
+  const renameSelected = useCallback(
+    async (name: string) => {
+      if (!selectedEntry) return;
+      await renameScene(root, workspace, selectedEntry.slug, name);
+      apply(await fetchAll());
+    },
+    [selectedEntry, root, workspace, apply, fetchAll],
+  );
+
   const centerPos = () => rf.screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
   const view = useMemo(() => initialView, [initialView]);
 
@@ -175,6 +205,17 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
           </Panel>
         )}
       </WorkspaceCanvas>
+      {selectedEntry?.scene && (
+        <SlotPortal name="inspector">
+          <SceneInspector
+            key={selectedEntry.scene.id}
+            workspace={workspace}
+            scene={selectedEntry.scene}
+            onSave={saveScene}
+            onRename={renameSelected}
+          />
+        </SlotPortal>
+      )}
       <NewSceneDialog open={dialog !== null} onOpenChange={(o) => !o && setDialog(null)} onCreate={onCreate} />
     </>
   );

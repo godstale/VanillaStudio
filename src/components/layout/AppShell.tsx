@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react';
+import { createContext, useCallback, useContext, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { NavLink, Outlet } from 'react-router-dom';
 import { Boxes, FlaskConical, Folder, Settings, type LucideIcon } from 'lucide-react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
@@ -23,7 +24,20 @@ const NAV_ITEMS: NavItem[] = [
 const handleClass =
   'z-10 bg-border/40 transition-colors hover:bg-primary/80 data-[resize-handle-active]:bg-primary';
 
-function Slot({ name, children }: { name: 'inspector' | 'dock'; children?: ReactNode }) {
+type SlotName = 'inspector' | 'dock';
+type SlotElements = Record<SlotName, HTMLElement | null>;
+const SlotContext = createContext<SlotElements>({ inspector: null, dock: null });
+
+/**
+ * 화면이 인스펙터·도크 자리에 내용을 넣는 방법: `<SlotPortal name="inspector">…</SlotPortal>`.
+ * 자리(AppShell)가 마운트되기 전이거나 AppShell 밖이면 아무것도 그리지 않는다. 내용이 있으면 "비어 있음" 문구는 숨겨진다.
+ */
+export function SlotPortal({ name, children }: { name: SlotName; children: ReactNode }) {
+  const el = useContext(SlotContext)[name];
+  return el ? createPortal(children, el) : null;
+}
+
+function Slot({ name, onTarget }: { name: SlotName; onTarget: (el: HTMLElement | null) => void }) {
   const { t } = useLanguage();
   return (
     <section
@@ -34,8 +48,9 @@ function Slot({ name, children }: { name: 'inspector' | 'dock'; children?: React
       <h2 className="border-b border-border px-3 py-2 text-xs font-semibold text-muted-foreground">
         {t(`shell.${name}`)}
       </h2>
-      <div className="min-h-0 flex-1 overflow-auto p-3 text-xs text-muted-foreground">
-        {children ?? t('shell.slotEmpty')}
+      <div className="min-h-0 flex-1 overflow-auto">
+        <div ref={onTarget} className="peer" />
+        <p className="p-3 text-xs text-muted-foreground peer-[:not(:empty)]:hidden">{t('shell.slotEmpty')}</p>
       </div>
     </section>
   );
@@ -43,7 +58,12 @@ function Slot({ name, children }: { name: 'inspector' | 'dock'; children?: React
 
 export function AppShell() {
   const { t } = useLanguage();
+  const [slots, setSlots] = useState<SlotElements>({ inspector: null, dock: null });
+  // ref 콜백은 렌더마다 새로 만들면 null↔요소를 반복 호출해 무한 갱신이 되므로 고정한다.
+  const inspectorRef = useCallback((el: HTMLElement | null) => setSlots((s) => (s.inspector === el ? s : { ...s, inspector: el })), []);
+  const dockRef = useCallback((el: HTMLElement | null) => setSlots((s) => (s.dock === el ? s : { ...s, dock: el })), []);
   return (
+    <SlotContext.Provider value={slots}>
     <div className="flex h-screen w-screen overflow-hidden bg-background text-foreground">
       <nav
         aria-label={t('shell.nav.label')}
@@ -79,15 +99,16 @@ export function AppShell() {
             </Panel>
             <PanelResizeHandle className={cn('h-1', handleClass)} />
             <Panel id="vs-dock" order={2} defaultSize={22} minSize={8} collapsible collapsedSize={0}>
-              <Slot name="dock" />
+              <Slot name="dock" onTarget={dockRef} />
             </Panel>
           </PanelGroup>
         </Panel>
         <PanelResizeHandle className={cn('w-1', handleClass)} />
         <Panel id="vs-inspector" order={2} defaultSize={24} minSize={16} collapsible collapsedSize={0}>
-          <Slot name="inspector" />
+          <Slot name="inspector" onTarget={inspectorRef} />
         </Panel>
       </PanelGroup>
     </div>
+    </SlotContext.Provider>
   );
 }

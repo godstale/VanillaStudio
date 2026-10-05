@@ -9,7 +9,7 @@
 ## ▶ 진입점 (2026-10-05)
 
 - **기획·설계·지침 문서 개정 완료**(`docs/v2-refactor-spec` 브랜치, main 병합·push는 사용자 승인 대기).
-- **다음 작업**: V1 완료(GUI 데모 3건은 사람이 `pnpm tauri dev`로 확인 필요, `wiki/sources/milestone-v1.md`). 다음: V2 Scene CRUD·지침 생성(브랜치 `feat/v2-scenes`, T2.1부터). main 병합·push는 사용자 승인 대기.
+- **다음 작업**: V2 진행 중(브랜치 `feat/v2-scenes`). T2.1~T2.11 완료. 남은 것: T2.12(워크스페이스 설정 화면), T2.13(V2 마무리). main 병합·push는 사용자 승인 대기.
 - 이월 항목(v1): T7.2 클린 VM 재실행·T7.5 코드 서명은 V7.7에서 이어받는다.
 
 ---
@@ -44,7 +44,7 @@
 - [x] T2.8 [레인 C · W2] `GUIDE.md` 렌더러(필드별 섹션, 읽기 전용 헤더, `scene.json` 해시) + 해시 불일치 시 "수동 편집 감지" 경고 — 대상: `src/lib/guides/guideMd.ts` · 완료 판정: 스냅샷·해시 테스트 · 선행: T2.6
 - [x] T2.9 [레인 C · W3] 프롬프트 렌더·클립보드 조립(`[workspace/scene]` 헤더 + 한 줄 지시 + 사용자 프롬프트 + 되쓰기 필드 요약, `generate`·`revise`) — 대상: `src/lib/guides/prompts.ts`, `src/lib/agents/assemble.ts` · 완료 판정: 헤더·언어 지시 포함 스냅샷 · 선행: T2.7, T2.8 · (D-022, F-AGT 개정)
 - [x] T2.10 [레인 B · W2] 파일 감시 → 신 상태 갱신(`draft`·`prompt-ready`·`generated`·`needs-revision`), `scene.json` 검증 실패 배지, 신 폴더 밖 쓰기 감지 경고 — 대상: `src-tauri/src/watch.rs`, `src/lib/scene/status.ts` · 완료 판정: 파일 변경 모의 → 배지 갱신 테스트 · 선행: T2.2, T2.1 · (R-10) — 신 폴더 밖 쓰기 경고는 `outsideWrites` 헬퍼까지(활성 신 개념이 생기는 V4 터미널 실행에서 UI 연결)
-- [ ] T2.11 [레인 A · W3] Scene 인스펙터 틀(우측 패널, 섹션 탭, 개요 폼: 이름·타입 읽기·brief·언어, 저장 → `scene.json` 정규화 쓰기 → 가이드 파일 재렌더) — 대상: `src/components/inspector/*` · 완료 판정: 노드 선택 → 편집 → 파일 3종 갱신 · 선행: T2.4, T2.7, T2.8 · (F-SCN-02)
+- [x] T2.11 [레인 A · W3] Scene 인스펙터 틀(우측 패널, 섹션 탭, 개요 폼: 이름·타입 읽기·brief·언어, 저장 → `scene.json` 정규화 쓰기 → 가이드 파일 재렌더) — 대상: `src/components/inspector/*` · 완료 판정: 노드 선택 → 편집 → 파일 3종 갱신 · 선행: T2.4, T2.7, T2.8 · (F-SCN-02)
 - [ ] T2.12 [레인 A · W3] 워크스페이스 설정 화면(캔버스 프리셋·사용자 지정, 기본 에이전트, `templatesDir`) — 대상: `src/pages/Settings/*` · 완료 판정: 변경이 `workspace.json`/설정 DB에 반영, 신 가이드 재렌더 트리거 · 선행: T1.12, T2.5 · (D-030, D-031)
 - [ ] T2.13 [단독 · 마무리] V2 마무리: 데모, `wiki/sources/milestone-v2.md`, 설계서 §3·§8 갱신 · 선행: T2.1~T2.12
 
