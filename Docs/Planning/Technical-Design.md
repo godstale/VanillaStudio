@@ -13,7 +13,7 @@
 ```
 ┌────────────────────────── Vanilla Studio v2 (Tauri 2 앱) ──────────────────────────┐
 │  WebView (React 19 UI)                                                              │
-│   ├ 사이드바 · Workspace 캔버스(@xyflow/react ⚠️) · Scene 인스펙터 · 터미널 도크      │
+│   ├ 사이드바 · Workspace 캔버스(@xyflow/react) · Scene 인스펙터 · 터미널 도크      │
 │   ├ Playground (시퀀스 재생기, 신 iframe 호스트)                                     │
 │   └ <iframe sandbox src="http://127.0.0.1:<port>/<sceneId>/">  ← 신 미리보기         │
 │            ▲ postMessage (Vanilla Bridge §5)                                        │
@@ -52,7 +52,7 @@
 | --- | --- | --- |
 | 셸 | Tauri 2 (Rust), Windows 우선 | 템플릿 |
 | UI | React 19, TS strict, Vite 7, shadcn/ui, Tailwind 3, lucide-react, react-resizable-panels | 템플릿 |
-| 캔버스 | `@xyflow/react`(MIT) ⚠️ | ComfyUI형 노드 그래프. PoC R-5(100노드 성능·스타일링). 대안: 자체 구현 |
+| 캔버스 | `@xyflow/react`(MIT) | ComfyUI형 노드 그래프. PoC R-5 통과(`wiki/sources/poc-r5.md`: 100노드 60fps) |
 | 편집기 | CodeMirror 6 | 프롬프트·마크다운 보기/편집 |
 | 상태 | React Context per concern | 전역 스토어 금지 |
 | 저장소 | SQLite (`tauri-plugin-sql`) | 앱 상태 전용 |

@@ -42,7 +42,7 @@
 - 데스크탑 셸: Tauri 2 (Rust), **Windows 우선**
 - 라우팅: react-router-dom v7, **`HashRouter`** 필수 (`BrowserRouter` 금지)
 - 다국어: 자체 사전 방식 (`src/lib/i18n`), 외부 i18n 라이브러리 없음
-- 확정된 추가 스택(설계서 §2): PTY(`portable-pty` + `@xterm/xterm`), 캔버스 `@xyflow/react` ⚠️(PoC R-5 후 확정), zip(`.vsx`).
+- 확정된 추가 스택(설계서 §2): PTY(`portable-pty` + `@xterm/xterm`), 캔버스 `@xyflow/react`(PoC R-5 통과로 확정), zip(`.vsx`).
   ACP·MCP 서버는 제거 대상이다(D-022). export 스택(HyperFrames·`pptxgenjs`·`dom-to-pptx`)은 코드 보존·v2.0 범위 밖(D-027). ⚠️ 표시 항목은 PoC 결과로 확정 후 사용.
 - **앱 기능 코드는 GSAP에 의존하지 않는다**(라이선스, D-007). 생성물 코드에서의 선택적 사용만 허용.
 

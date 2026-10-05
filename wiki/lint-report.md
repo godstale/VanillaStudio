@@ -1,6 +1,6 @@
 # Wiki Lint Report — 2026-10-05
 
-Scanned 55 pages.
+Scanned 56 pages.
 
 ## Structural Issues
 
