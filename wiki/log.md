@@ -241,3 +241,32 @@
 
 ## [2026-10-05] sample | Gangdong forest library promo motion graphic
 - Saved the video-model prompt (`Docs/Prompts/Gangdong-Forest-Library-Promo-Video-Prompt.txt`, 6.8k chars, per `Docs/Commercial-Motion-Graphic-Prompt-Guide.txt`) and a hand-coded 10s Canvas version (`resources/samples/gangdong-forest-library-promo/index.html`, deterministic render(t), no deps). Registered in the playground (global DB row + files under `%APPDATA%/dev.vanilla.studio/playground/<id>/`, kind video, played by the web player). Sample only: no app code changed. See: [[overview]]
+
+## [2026-10-05] plan | v2 refactor spec drafted
+- Wrote `Docs/Planning/Refactor-Spec-v2.md` v0.1 + D-022~D-028 (Proposed) after interview. Awaiting user review. See: [[refactor-spec-v2]]
+
+## [2026-10-05] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-10-05] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-10-05] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-10-05] decision | v2 spec v0.2: D-029~D-033 (Proposed)
+- Interview round 2 applied to [[refactor-spec-v2]]: one sequence per workspace, global canvas, custom templates in v2.0, static-page input-driven steps, conditional v1 migration.
+
+## [2026-10-05] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-10-05] decision | v2 spec v0.3: interview round 3
+- [[refactor-spec-v2]]: canvas presets, static.mode scroll/steps, configurable global templatesDir. No open questions left; awaiting approval.
+
+## [2026-10-05] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.

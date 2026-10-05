@@ -8,6 +8,8 @@ last_updated: 2026-10-01
 
 ## 현재 상태 (2026-10-01)
 
+- **2026-10-05 v2 리팩토링 기획 진행 중**: Scene 워크스페이스 방향 기획서 초안 [[refactor-spec-v2]] (D-022~D-033 Proposed, 사용자 검토 대기). 기존 P4 상태는 아래 유지
+
 - 개발 단계: **P4 구현 — 자동화 항목 전부 완료 + T7.2 개발-PC 검증 완료(아래)**. 잔여: clean VM 재실행(T7.2 §4)·T7.5(인증서)·main push 승인 대기. 마일스톤 로그: [[milestone-m1]]·[[milestone-m2]]·[[milestone-m3]]·[[milestone-m4]]·[[milestone-m5]]·[[milestone-m6]], 병렬 배치: [[parallel-execution]] (`Docs/Planning/Parallel-Execution.md`)
 - T7.2 개발-PC 실행(2026-10-02, `Docs/Verification/Clean-Install-Checklist.md`): 인스톨러 빌드(MSI+NSIS, 미서명) ✓, 5종 export(출하 번들) ✓ — 실행 중 결함 4건 수정(번들 optional-peer throw·번들 CDP 소켓→pipe 전환·편집PPTX notes 병합) + PowerPoint 실편집 검증 ✓. video MP4(h264·3.0초) ✓
 

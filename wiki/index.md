@@ -21,6 +21,7 @@
 - [[implementation-plan]] — 구현 계획서 v1.0 + TODO (P3)
 - [[golden-samples]] — 골든 샘플 브리프 5종 초안(P5 품질 기준)
 - [[parallel-execution]] — 병렬 실행 가이드: 웨이브·레인·워크트리·세션 프롬프트 (P4 진입점)
+- [[refactor-spec-v2]] — v2 리팩토링 기획서 초안(Scene 워크스페이스, D-022~D-033 Proposed)
 
 ## Planning / Decisions
 
