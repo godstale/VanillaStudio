@@ -1,7 +1,8 @@
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
+use tauri::{AppHandle, Manager, Runtime};
 
 use super::fs_commands::{resolve_and_verify_workspace_path, set_active_workspace_internal};
 
@@ -71,7 +72,61 @@ fn inspect(dir: &Path) -> Result<FolderKind, String> {
     Ok(if is_empty_folder(dir)? { FolderKind::Empty } else { FolderKind::Other })
 }
 
-fn create(dir: &Path, name: &str, canvas: Canvas) -> Result<String, String> {
+fn resolve_resource_dir<R: Runtime>(app: &AppHandle<R>, name: &str) -> Result<PathBuf, String> {
+    if let Ok(res) = app.path().resource_dir() {
+        let p = res.join("resources").join(name);
+        if p.is_dir() {
+            return Ok(p);
+        }
+    }
+    // dev fallback: repo checkout
+    let dev = Path::new(env!("CARGO_MANIFEST_DIR")).join("..").join("resources").join(name);
+    dev.canonicalize().map_err(|_| format!("Resources not found: {name}"))
+}
+
+fn slug(name: &str) -> String {
+    let mut s = String::new();
+    for c in name.chars().flat_map(|c| c.to_lowercase()) {
+        if c.is_ascii_alphanumeric() {
+            s.push(c);
+        } else if !s.ends_with('-') && !s.is_empty() {
+            s.push('-');
+        }
+    }
+    let s = s.trim_end_matches('-').to_string();
+    if s.is_empty() { "vanilla-workspace".into() } else { s }
+}
+
+/// 템플릿을 `{{키}}` 치환하며 복사한다. 심링크 엔트리는 거부한다.
+fn copy_template(src: &Path, dst: &Path, vars: &[(&str, &str)]) -> Result<(), String> {
+    fs::create_dir_all(dst).map_err(|e| e.to_string())?;
+    for entry in fs::read_dir(src).map_err(|e| format!("read '{}': {}", src.display(), e))? {
+        let entry = entry.map_err(|e| e.to_string())?;
+        let ft = entry.file_type().map_err(|e| e.to_string())?;
+        if ft.is_symlink() {
+            return Err(format!("Template contains a symlink: {}", entry.path().display()));
+        }
+        let target = dst.join(entry.file_name());
+        if ft.is_dir() {
+            copy_template(&entry.path(), &target, vars)?;
+            continue;
+        }
+        let bytes = fs::read(entry.path()).map_err(|e| e.to_string())?;
+        let out = match String::from_utf8(bytes) {
+            Ok(mut text) => {
+                for (k, v) in vars {
+                    text = text.replace(&format!("{{{{{k}}}}}"), v);
+                }
+                text.into_bytes()
+            }
+            Err(e) => e.into_bytes(),
+        };
+        fs::write(&target, out).map_err(|e| e.to_string())?;
+    }
+    Ok(())
+}
+
+fn create(dir: &Path, name: &str, canvas: Canvas, template: &Path) -> Result<String, String> {
     if name.trim().is_empty() {
         return Err("Workspace name must not be empty".into());
     }
@@ -79,7 +134,9 @@ fn create(dir: &Path, name: &str, canvas: Canvas) -> Result<String, String> {
         return Err("Folder is not empty; refusing to create a workspace here".into());
     }
     let id = new_workspace_id();
-    let file = WorkspaceFile { version: 1, workspace_id: id.clone(), name: name.trim().to_string(), canvas };
+    let name = name.trim();
+    copy_template(template, dir, &[("workspaceName", name), ("workspaceId", &id), ("workspaceSlug", &slug(name))])?;
+    let file = WorkspaceFile { version: 1, workspace_id: id.clone(), name: name.to_string(), canvas };
     let mut json = serde_json::to_string_pretty(&file).map_err(|e| e.to_string())?;
     json.push('\n');
     fs::write(dir.join(WORKSPACE_FILE), json).map_err(|e| e.to_string())?;
@@ -92,8 +149,9 @@ pub fn inspect_workspace_folder(path: String) -> Result<FolderKind, String> {
 }
 
 #[tauri::command]
-pub fn create_workspace(path: String, name: String, canvas: Canvas) -> Result<String, String> {
-    create(Path::new(&path), &name, canvas)
+pub fn create_workspace<R: Runtime>(app: AppHandle<R>, path: String, name: String, canvas: Canvas) -> Result<String, String> {
+    let template = resolve_resource_dir(&app, "workspace-template")?;
+    create(Path::new(&path), &name, canvas, &template)
 }
 
 /// 유효한 워크스페이스 폴더를 열고 파일 명령의 활성 스코프로 설정한다.
@@ -118,6 +176,10 @@ pub fn verify_workspace_path(path: String, workspace_root: String) -> Result<Str
 mod tests {
     use super::*;
 
+    fn tpl() -> PathBuf {
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("../resources/workspace-template")
+    }
+
     fn canvas() -> Canvas {
         Canvas { aspect: "16:9".into(), width: 1920, height: 1080, fps: 30 }
     }
@@ -133,7 +195,7 @@ mod tests {
     #[test]
     fn create_then_inspect_and_key_order() {
         let d = tempfile::tempdir().unwrap();
-        let id = create(d.path(), " Demo ", canvas()).unwrap();
+        let id = create(d.path(), " Demo ", canvas(), &tpl()).unwrap();
         assert!(id.starts_with("ws_"));
         assert_eq!(
             inspect(d.path()).unwrap(),
@@ -146,15 +208,29 @@ mod tests {
     }
 
     #[test]
+    fn scaffold_renders_identity_header() {
+        let d = tempfile::tempdir().unwrap();
+        let id = create(d.path(), "My Reel", canvas(), &tpl()).unwrap();
+        let agents = fs::read_to_string(d.path().join("AGENTS.md")).unwrap();
+        assert!(agents.contains("My Reel") && agents.contains(&format!("workspaceId: {id}")));
+        assert!(!agents.contains("{{"));
+        let pkg = fs::read_to_string(d.path().join("package.json")).unwrap();
+        assert!(pkg.contains("\"name\": \"my-reel\""));
+        for f in ["CLAUDE.md", "DESIGN.md", "vite.config.ts", ".gitignore", "CREDITS.md", "workspace.json"] {
+            assert!(d.path().join(f).is_file(), "{f}");
+        }
+    }
+
+    #[test]
     fn refuses_nonempty_and_existing_workspace() {
         let d = tempfile::tempdir().unwrap();
         fs::write(d.path().join("a.txt"), "x").unwrap();
         assert_eq!(inspect(d.path()).unwrap(), FolderKind::Other);
-        assert!(create(d.path(), "n", canvas()).is_err());
+        assert!(create(d.path(), "n", canvas(), &tpl()).is_err());
 
         let w = tempfile::tempdir().unwrap();
-        create(w.path(), "n", canvas()).unwrap();
-        assert!(create(w.path(), "n", canvas()).is_err());
+        create(w.path(), "n", canvas(), &tpl()).unwrap();
+        assert!(create(w.path(), "n", canvas(), &tpl()).is_err());
     }
 
     #[test]
