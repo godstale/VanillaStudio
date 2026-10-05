@@ -291,3 +291,7 @@ Ran lint. See lint-report.md for details.
 
 ## [2026-10-05] poc | R-5 canvas spike
 - @xyflow/react adopted: 100 nodes 60fps, 300 nodes 59.7fps. See: [[poc-r5]]
+
+## [2026-10-05] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
