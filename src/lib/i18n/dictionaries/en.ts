@@ -78,6 +78,7 @@ const en: Dict = {
   'workspace.moveToOpposite': 'Move to opposite pane',
   'workspace.moveToPrimary': 'Move to primary pane',
   'workspace.welcomeTitle': 'Getting started',
+  'workspace.shellPending': 'The v2 app shell is under construction.',
 
   'tabPlaceholder.type': 'Unknown tab',
   'tabPlaceholder.desc': 'No viewer is registered for this tab type.',

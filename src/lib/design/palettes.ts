@@ -4,7 +4,7 @@
 // (no glob: the same files are the source of truth for the T6.3 24-palette set).
 import { invoke } from '@tauri-apps/api/core';
 import { z } from 'zod';
-import { projectPath } from '@/lib/pipeline/briefFiles';
+import { projectPath } from '@/lib/workspace/files';
 import { isColor } from './color';
 import { CORE_ROLES, deriveRoles, type Colors } from './roles';
 import blushLedger from '../../../resources/palettes/blush-ledger.json';

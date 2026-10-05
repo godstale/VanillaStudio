@@ -1,4 +1,4 @@
-// vanilla.json 데이터 계약 타입. 스키마의 진실 공급원은 src/lib/project/schema.ts (zod).
+// vanilla.json 데이터 계약 타입. 스키마의 진실 공급원은 src/lib/migrate/legacy-schema.ts (zod).
 export const OUTPUT_TYPES = ['web', 'interactive', 'slides', 'image', 'video'] as const;
 export type OutputType = (typeof OUTPUT_TYPES)[number];
 

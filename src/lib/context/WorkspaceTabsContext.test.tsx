@@ -29,7 +29,6 @@ import {
   WorkspaceTabsProvider,
   useWorkspaceTabs,
 } from './WorkspaceTabsContext';
-import { seedOpenTabs } from '@/lib/project/openProject';
 import * as settingsRepo from '@/lib/db/repositories/settingsRepo';
 
 function wrapper({ children }: { children: ReactNode }) {
@@ -46,6 +45,11 @@ function useBoth() {
 
 const brief: WorkspaceTab = { id: 'brief:main', type: 'brief', title: 'Brief', pane: 'primary' };
 const plan: WorkspaceTab = { id: 'plan:main', type: 'plan', title: 'Plan', pane: 'primary' };
+
+async function seedOpenTabs(root: string, tabs: WorkspaceTab[]) {
+  const db = (await import('@/lib/db/client')).getProjectDatabase(root);
+  await settingsRepo.updateSettings({ openTabs: tabs, activeTabId: tabs[0]?.id ?? null }, await db);
+}
 
 async function tabsOf(root: string) {
   const db = (await import('@/lib/db/client')).getProjectDatabase(root);

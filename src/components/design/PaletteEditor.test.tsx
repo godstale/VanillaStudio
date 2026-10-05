@@ -26,7 +26,6 @@ vi.mock('@tauri-apps/api/core', () => ({
       mocks.files.set(args.path as string, (args as unknown as { contents: string }).contents);
       return null;
     }
-    if (cmd === 'checkpoint_commit') return { id: 'abc123', backend: 'git' };
     throw new Error(`unexpected command ${cmd}`);
   },
 }));

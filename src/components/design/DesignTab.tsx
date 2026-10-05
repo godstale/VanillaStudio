@@ -6,8 +6,8 @@ import { checkDesign } from '@/components/design/designChecks';
 import { Button } from '@/components/ui/button';
 import { useSafeWorkspace } from '@/lib/context/WorkspaceContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
-import { projectPath } from '@/lib/pipeline/briefFiles';
-import { DESIGN_PATH, readOptionalFile } from '@/lib/pipeline/planFiles';
+import { projectPath } from '@/lib/workspace/files';
+import { DESIGN_PATH, readOptionalFile } from '@/lib/workspace/files';
 import { cn } from '@/lib/utils';
 
 const errorMessage = (e: unknown) => (e instanceof Error ? e.message : String(e));

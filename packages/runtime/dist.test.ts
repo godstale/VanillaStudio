@@ -4,7 +4,7 @@ import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { parseProjectManifest } from '../../src/lib/project/schema';
+import { parseProjectManifest } from '../../src/lib/migrate/legacy-schema';
 
 const repo = path.resolve(__dirname, '../..');
 const shipped = path.join(repo, 'resources/runtime');

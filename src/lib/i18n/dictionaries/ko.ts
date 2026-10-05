@@ -76,6 +76,7 @@ const ko = {
   'workspace.moveToOpposite': '반대편으로 이동',
   'workspace.moveToPrimary': '주 화면으로 이동',
   'workspace.welcomeTitle': '시작하기',
+  'workspace.shellPending': 'v2 앱 셸 구성 중입니다.',
 
   'tabPlaceholder.type': '알 수 없는 탭',
   'tabPlaceholder.desc': '이 탭 종류를 표시할 뷰어가 등록되어 있지 않습니다.',

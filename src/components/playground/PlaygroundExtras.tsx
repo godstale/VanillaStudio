@@ -8,7 +8,7 @@ import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useSafeWorkspace } from '@/lib/context/WorkspaceContext';
-import { projectPath } from '@/lib/pipeline/briefFiles';
+import { projectPath } from '@/lib/workspace/files';
 import { listProjectPalettes, saveProjectPalette, type PaletteFile } from '@/lib/design/palettes';
 import { parseDesign } from '@/lib/design/parse';
 import { designToDtcgJson, designToTailwindCss, downloadTextFile, validateDesignImport } from '@/lib/playground/designIo';
