@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import { EditorView } from '@codemirror/view';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { newScene, sceneSchema, type Scene } from '@/lib/scene/schema';
 import { defaultTemplateFor } from '@/lib/guides/template';
@@ -16,6 +17,13 @@ function setup(over: { onSave?: (s: Scene) => Promise<void>; onRename?: (n: stri
     </LanguageProvider>,
   );
   return { onSave: onSave as ReturnType<typeof vi.fn>, onRename: onRename as ReturnType<typeof vi.fn>, ...view };
+}
+
+/** CodeMirror는 input이 아니라 contenteditable이라 EditorView에 직접 입력한다. */
+function typeInPromptEditor(text: string) {
+  const dom = screen.getByTestId('markdown-editor').querySelector('.cm-editor') as HTMLElement;
+  const view = EditorView.findFromDOM(dom)!;
+  act(() => view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: text } }));
 }
 
 const tab = (re: RegExp) => screen.getByRole('tab', { name: re });
@@ -99,7 +107,7 @@ describe('SceneInspector', () => {
     Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
     setup();
     fireEvent.click(tab(/프롬프트|Prompt/));
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Make it punchy' } });
+    typeInPromptEditor('Make it punchy');
     const preview = screen.getByTestId('prompt-preview').textContent ?? '';
     expect(preview.startsWith('[workspace: W / scene: Intro]')).toBe(true);
     expect(preview).toContain('Make it punchy');

@@ -84,7 +84,7 @@ describe('scene files', () => {
     const { slug, scene } = await createScene(ROOT, WS, { name: 'Intro Scene', type });
     expect(slug).toBe('intro-scene');
     expect(sceneSchema.safeParse(JSON.parse(fs.get('scenes/intro-scene/scene.json')!)).success).toBe(true);
-    for (const f of ['GUIDE.md', 'AGENTS.md', 'CLAUDE.md', 'prompts/generate.md', 'prompts/revise.md', 'prompts/analyze-reference.md']) {
+    for (const f of ['GUIDE.md', 'AGENTS.md', 'CLAUDE.md', 'prompts/generate.md', 'prompts/revise.md', 'prompts/analyze-reference.md', 'prompts/user-prompt.md']) {
       expect(fs.has(`scenes/intro-scene/${f}`), f).toBe(true);
     }
     expect(fs.get('scenes/intro-scene/AGENTS.md')).toContain('workspaceId: ws_1');
@@ -124,6 +124,8 @@ describe('scene files', () => {
     expect(outsideMarkers(fs.get(`scenes/${slug}/AGENTS.md`)!)).toBe(outsideMarkers(edited));
     expect(fs.get(`scenes/${slug}/CLAUDE.md`)).toBe('@AGENTS.md\nmy extra\n');
     expect(fs.get(`scenes/${slug}/prompts/generate.md`)).toContain('new prompt');
+    expect(fs.get(`scenes/${slug}/prompts/user-prompt.md`)).toBe('new prompt
+');
   });
 
   it('renames: folder moves, name updates, id stays', async () => {

@@ -99,9 +99,9 @@ describe('prompts', () => {
     expect(p).not.toContain('You may change');
   });
 
-  it('writes the three prompt files', () => {
+  it('writes the three prompt files and the user prompt', () => {
     expect(Object.keys(renderPromptFiles(ctxFor(mk('3d')))).sort()).toEqual([
-      'prompts/analyze-reference.md', 'prompts/generate.md', 'prompts/revise.md',
+      'prompts/analyze-reference.md', 'prompts/generate.md', 'prompts/revise.md', 'prompts/user-prompt.md',
     ]);
   });
 });

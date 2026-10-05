@@ -39,7 +39,14 @@ export const PROMPT_FILES: Record<PromptName, string> = {
   revise: 'prompts/revise.md',
 };
 
+/** 사용자 프롬프트 원문 파일. 인스펙터에서 편집한 내용이 그대로 저장되어 에이전트·사용자가 파일로도 읽을 수 있다. */
+export const USER_PROMPT_FILE = 'prompts/user-prompt.md';
+
 /** prompts/ 아래에 쓸 생성물 전체. */
 export function renderPromptFiles(ctx: GuideContext): Record<string, string> {
-  return Object.fromEntries((Object.keys(PROMPT_FILES) as PromptName[]).map((k) => [PROMPT_FILES[k], assemblePrompt(k, ctx)]));
+  const text = ctx.scene.userPrompt.replace(/\r\n/g, '\n');
+  return {
+    ...Object.fromEntries((Object.keys(PROMPT_FILES) as PromptName[]).map((k) => [PROMPT_FILES[k], assemblePrompt(k, ctx)])),
+    [USER_PROMPT_FILE]: text.trim() ? `${text.trimEnd()}\n` : '',
+  };
 }

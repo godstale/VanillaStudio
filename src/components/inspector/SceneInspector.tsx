@@ -3,6 +3,7 @@ import { Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { SceneForm } from '@/components/guides/SceneForm';
+import { MarkdownEditor } from '@/components/guides/MarkdownEditor';
 import { DesignSection } from './DesignSection';
 import type { GuideContext } from '@/lib/guides/agentsMd';
 import { assemblePrompt } from '@/lib/guides/prompts';
@@ -222,9 +223,10 @@ export function SceneInspector({ workspace, root, slug, scene, template, templat
 
         {tab === 'prompt' && (
           <>
-            <Field label={t('inspector.userPrompt')}>
-              <textarea className={cn(area, 'min-h-28')} value={draft.userPrompt} onChange={(e) => edit((s) => ({ ...s, userPrompt: e.target.value }) as Scene)} />
-            </Field>
+            <div className="flex flex-col gap-1 text-xs">
+              <span className="text-muted-foreground">{t('inspector.userPrompt')}</span>
+              <MarkdownEditor label={t('inspector.userPrompt')} value={draft.userPrompt} onChange={(v) => edit((s) => ({ ...s, userPrompt: v }) as Scene)} />
+            </div>
             <div className="flex items-center justify-between">
               <span className="text-xs text-muted-foreground">{t('inspector.promptPreview')}</span>
               <Button size="sm" variant="outline" disabled={!template} onClick={() => void copyPrompt()}>
