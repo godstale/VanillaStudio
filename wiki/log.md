@@ -295,3 +295,10 @@ Ran lint. See lint-report.md for details.
 ## [2026-10-05] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
+
+## [2026-10-05] milestone | V1 foundation
+- T1.0-T1.13 done; GUI demos pending human check. See: [[milestone-v1]]
+
+## [2026-10-05] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.

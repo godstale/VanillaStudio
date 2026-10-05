@@ -81,8 +81,8 @@
 
 | 목적             | 파일                                                                                       |
 | ---------------- | ------------------------------------------------------------------------------------------ |
-| 화면 구조 파악   | `src/pages/Workspace.tsx`, `src/components/layout/*`                                       |
-| 탭 동작 파악     | `src/components/workspace/CenterWorkspace.tsx`, `src/lib/context/WorkspaceTabsContext.tsx` |
+| 화면 구조 파악   | `src/App.tsx`(라우트), `src/components/layout/AppShell.tsx`(사이드바·슬롯)                  |
+| 워크스페이스 흐름 | `src/components/workspace/Onboarding.tsx`·`Switcher.tsx`, `src/lib/workspace/*`, `src-tauri/src/commands/workspace_commands.rs` |
 | 데이터 흐름 파악 | `src/lib/db/client.ts`, `src/lib/db/repositories/settingsRepo.ts`                          |
 | 문구 추가        | `src/lib/i18n/dictionaries/ko.ts` + `en.ts`                                                |
 | 새 기능 추가     | `Docs/Extension-Guide.md`                                                                  |
@@ -118,3 +118,22 @@
 | `src/lib/design/extract.ts`, `harmony.ts` | 팔레트 추출·조화 생성·비교 스냅샷 순수 함수(T6.9) |
 | `resources/skills/` | `vanilla-core` 스킬(T6.1). `tauri.conf.json`의 `bundle.resources`로 번들 |
 | `resources/palettes/` | 내장 팔레트 24종(T6.3). 추가 시 `palettes.ts` 명시 import 1줄 |
+
+### v2 V1 기반 정리 반영분
+
+v1 파이프라인·검수·ACP 에이전트·프로젝트 마법사·탭 셸은 제거했다(`v1-final` 태그로 복구, 계획: `wiki/sources/issue-v2-legacy-removal.md`). 위 표에서 `src/lib/project/`·`src/components/project/`·`shellRegistry.ts` 항목과 `0003_project`의 파이프라인 테이블은 더 이상 없다.
+
+| 위치 | 내용 |
+| --- | --- |
+| `src/lib/workspace/` | `schema.ts`(workspace.json zod·캔버스 프리셋), `file.ts`(읽기·뷰포트 저장), `files.ts`(경로·파일 헬퍼), `api.ts`(Rust 명령 래퍼), `switchGuard.ts`(전환 시 정리할 작업 등록) |
+| `src/lib/json/canonical.ts` | 정규화 직렬화(같은 입력 → 같은 바이트) |
+| `src/lib/migrate/legacy-schema.ts` | v1 `vanilla.json` 읽기 스키마(마이그레이션 입력, V7) |
+| `src/components/layout/AppShell.tsx` | 사이드바(워크스페이스·신·플레이그라운드·설정) + 메인 + 인스펙터·도크 슬롯 |
+| `src/components/canvas/` | `WorkspaceCanvas`(@xyflow/react 빈 캔버스, 뷰포트 복원) |
+| `src/components/workspace/` | `Onboarding`, `Switcher`, `TrustWorkspaceDialog`(+ v1 탭 뷰어 `EditorTab`·`ImageViewerTab`·`CodeViewer`는 V2 이후 재사용 대기) |
+| `src/pages/` | `Workspace`·`Scenes`·`Playground`(빈 화면)·`Settings/*` |
+| `src/lib/db/repositories/workspacesRepo.ts` | 최근 워크스페이스·신뢰(전역 DB `workspaces`) |
+| `src/lib/db/migrations/0005_v2_global.sql`, `0006_v2_project_cleanup.sql` | `workspaces`·`terminal_sessions`, 프로젝트 DB의 v1 테이블 drop |
+| `src-tauri/src/commands/workspace_commands.rs` | 폴더 판별·워크스페이스 생성/열기·스코프 검사 |
+| `resources/workspace-template/` | 새 워크스페이스 스캐폴딩 원본(`AGENTS.md`·`CLAUDE.md`·`DESIGN.md`·`package.json`·`vite.config.ts`…) |
+| `spikes/r5-canvas/` | PoC R-5 캔버스 스파이크 |
