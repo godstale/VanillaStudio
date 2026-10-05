@@ -45,10 +45,10 @@ U1 → U2 → U3 → U4 → U5(T1.4) → U6(T1.10). U2는 U1 이후(runner·plan
 | Rust | `cargo test` (U1·U4) |
 | 참조 0건 | 삭제 경로명 `grep -rn` |
 
-## 사용자 확인 필요
+## 사용자 확인(2026-10-05 획득)
 
-1. U3에서 Bridge·프리뷰 서버 계열 보존(권장) vs 전부 삭제(TODO 원안).
-2. U4에서 체크포인트(git 자동 커밋) 기능 제거 여부.
-3. `resources/project-template`·`resources/runtime`: V4까지 유지(권장).
+1. U3: Bridge·프리뷰 서버 계열(`bridgeProtocol`·`previewServer`·`hmrGuard`·`watchClient`·`previewLayout`·`timeline`) **보존**, 나머지 검수 UI·로직 삭제.
+2. U4: 체크포인트(git 자동 커밋) **제거**.
+3. `resources/project-template`·`resources/runtime` **V4까지 유지**.
 
 See: [[implementation-plan]], [[decisions]]
