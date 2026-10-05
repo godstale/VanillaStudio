@@ -18,7 +18,9 @@ import { groupChanges } from '@/lib/scene/status';
 import { readSequence, writeSequence } from '@/lib/sequence/file';
 import { addNode, moveNodes, reconcile, type Sequence } from '@/lib/sequence/schema';
 import { projectPath } from '@/lib/workspace/files';
+import { DiffDialog } from './DiffDialog';
 import { NewSceneDialog, type NewSceneValues } from './NewSceneDialog';
+import { useRunReview } from './useRunReview';
 import { SceneNode, type SceneFlowNode } from './SceneNode';
 
 const nodeTypes = { scene: SceneNode };
@@ -80,6 +82,10 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
   const [runError, setRunError] = useState<string | null>(null);
   const terminals = useSafeTerminals();
   const hasTerminals = terminals !== null;
+  const reloadRef = useRef<() => void>(() => undefined);
+  const onApplied = useCallback(() => reloadRef.current(), []);
+  const review = useRunReview({ root, workspace, resolve, terminals, onApplied });
+  const beginReview = review.begin;
   const runRef = useRef<(slug: string) => void>(() => undefined);
   // 노드에 넘기는 콜백은 참조가 바뀌지 않게 고정하고, 최신 동작은 ref로 읽는다(터미널 상태가 바뀔 때마다 노드를 다시 만들지 않기 위해).
   const onRunAgent = useCallback((slug: string) => runRef.current(slug), []);
@@ -120,6 +126,10 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
   );
 
   const fail = useCallback((e: unknown) => setLoadError(e instanceof Error ? e.message : String(e)), []);
+
+  useEffect(() => {
+    reloadRef.current = () => void fetchAll().then(apply).catch(fail);
+  }, [fetchAll, apply, fail]);
 
   useEffect(() => {
     let cancelled = false;
@@ -179,6 +189,7 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
       const template = resolve(scene);
       // 템플릿을 쓸 수 없으면 프롬프트를 만들 수 없다(사용 거부). 클립보드 전달 없이 터미널만 연다.
       const prompt = template ? promptForScene({ workspace, scene, template }).text : undefined;
+      beginReview(slug, scene);
       terminals
         .runAgent({ workspaceId: workspace.id, sceneId: scene.id, sceneSlug: slug, sceneName: scene.name, preferredAgentId: defaultAgent, prompt })
         .catch((e: unknown) => {
@@ -186,7 +197,7 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
           setRunError(message === 'no-enabled-agent' ? t('scene.noAgent') : t('scene.runFailed', { error: message }));
         });
     };
-  }, [terminals, workspace, resolve, defaultAgent, t]);
+  }, [terminals, workspace, resolve, defaultAgent, t, beginReview]);
 
   const selected = nodes.find((n) => n.selected && !n.data.error);
   const selectedEntry = selected ? entries.find((e) => e.scene?.id === selected.id) : undefined;
@@ -258,6 +269,15 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
           />
         </SlotPortal>
       )}
+      <DiffDialog
+        open={review.current !== null}
+        sceneName={review.current?.sceneName ?? ''}
+        review={review.current?.review ?? null}
+        onApprove={() => void review.approve()}
+        onRevertDisallowed={() => void review.revertDisallowed()}
+        onRevertAll={() => void review.revertAll()}
+        onClose={review.dismiss}
+      />
       <NewSceneDialog open={dialog !== null} onOpenChange={(o) => !o && setDialog(null)} onCreate={onCreate} />
     </>
   );
