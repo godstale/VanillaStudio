@@ -124,8 +124,7 @@ describe('scene files', () => {
     expect(outsideMarkers(fs.get(`scenes/${slug}/AGENTS.md`)!)).toBe(outsideMarkers(edited));
     expect(fs.get(`scenes/${slug}/CLAUDE.md`)).toBe('@AGENTS.md\nmy extra\n');
     expect(fs.get(`scenes/${slug}/prompts/generate.md`)).toContain('new prompt');
-    expect(fs.get(`scenes/${slug}/prompts/user-prompt.md`)).toBe('new prompt
-');
+    expect(fs.get(`scenes/${slug}/prompts/user-prompt.md`)).toBe('new prompt\n');
   });
 
   it('renames: folder moves, name updates, id stays', async () => {
