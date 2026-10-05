@@ -302,3 +302,10 @@ Ran lint. See lint-report.md for details.
 ## [2026-10-05] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
+
+## [2026-10-05] milestone | V2 scenes and guides
+- T2.1-T2.12 done. See: [[milestone-v2]]
+
+## [2026-10-05] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.

@@ -5,6 +5,7 @@ import Playground from '@/pages/Playground';
 import SettingsLayout from '@/pages/Settings/SettingsLayout';
 import SettingsGeneral from '@/pages/Settings/SettingsGeneral';
 import SettingsApp from '@/pages/Settings/SettingsApp';
+import SettingsWorkspace from '@/pages/Settings/SettingsWorkspace';
 import SettingsDoctor from '@/pages/Settings/SettingsDoctor';
 import { AppShell } from '@/components/layout/AppShell';
 import { TrustWorkspaceDialog } from '@/components/workspace/TrustWorkspaceDialog';
@@ -32,6 +33,7 @@ export default function App() {
                 <Route path="/settings" element={<SettingsLayout />}>
                   <Route index element={<SettingsGeneral />} />
                   <Route path="general" element={<SettingsGeneral />} />
+                  <Route path="workspace" element={<SettingsWorkspace />} />
                   <Route path="app" element={<SettingsApp />} />
                   <Route path="doctor" element={<SettingsDoctor />} />
                 </Route>

@@ -16,7 +16,7 @@ vi.mock('@tauri-apps/api/core', () => ({
   },
 }));
 
-import { parseWorkspaceFile, readWorkspace, roundView, saveWorkspaceView, serializeWorkspace } from './file';
+import { parseWorkspaceFile, readWorkspace, roundView, saveWorkspaceView, serializeWorkspace, updateWorkspace } from './file';
 import { canvasFromPreset } from './schema';
 
 const PATH = '/w/workspace.json';
@@ -60,5 +60,21 @@ describe('workspace file', () => {
   it('rejects an invalid file', async () => {
     files.set(PATH, '{"version":2}');
     await expect(readWorkspace('/w')).rejects.toThrow();
+  });
+
+  it('updateWorkspace changes only the given fields and keeps the view', async () => {
+    await saveWorkspaceView('/w', { x: 1, y: 2, zoom: 1 });
+    const next = await updateWorkspace('/w', { canvas: canvasFromPreset('9:16', 24), defaultAgent: 'codex' });
+    expect(next).toMatchObject({ name: 'Demo', view: { x: 1, y: 2, zoom: 1 }, canvas: { aspect: '9:16', fps: 24 }, defaultAgent: 'codex' });
+    expect((await readWorkspace('/w')).defaultAgent).toBe('codex');
+  });
+
+  it('updateWorkspace can clear the default agent and rejects invalid canvases before writing', async () => {
+    await updateWorkspace('/w', { defaultAgent: 'codex' });
+    await updateWorkspace('/w', { defaultAgent: undefined });
+    expect((await readWorkspace('/w')).defaultAgent).toBeUndefined();
+    const before = files.get(PATH);
+    await expect(updateWorkspace('/w', { canvas: { ...base.canvas, fps: 0 } })).rejects.toThrow();
+    expect(files.get(PATH)).toBe(before);
   });
 });

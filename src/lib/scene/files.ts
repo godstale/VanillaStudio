@@ -155,3 +155,15 @@ export async function refreshStatuses(root: string, workspace: WorkspaceRef, ent
   }
   return changed;
 }
+
+/** 설정(캔버스·템플릿 위치)이 바뀌었을 때 모든 신의 생성물을 다시 렌더한다. 다시 쓴 신 수를 돌려준다. */
+export async function rerenderAllScenes(root: string, workspace: WorkspaceRef): Promise<number> {
+  const entries = await listScenes(root);
+  let n = 0;
+  for (const { slug, scene } of entries) {
+    if (!scene) continue;
+    await writeScene(root, slug, workspace, scene);
+    n += 1;
+  }
+  return n;
+}

@@ -42,3 +42,17 @@ export async function saveWorkspaceView(root: string, view: WorkspaceView): Prom
     workspaceRoot: root,
   });
 }
+
+export type WorkspacePatch = Partial<Pick<Workspace, 'name' | 'canvas' | 'defaultAgent'>>;
+
+/** 파일을 다시 읽어 일부 필드만 바꿔 쓴다(다른 필드·view를 덮어쓰지 않도록). 바뀐 워크스페이스를 돌려준다. */
+export async function updateWorkspace(root: string, patch: WorkspacePatch): Promise<Workspace> {
+  const current = await readWorkspace(root);
+  const next: Workspace = { ...current, ...patch };
+  if (patch.defaultAgent === undefined && 'defaultAgent' in patch) delete next.defaultAgent;
+  const text = serializeWorkspace(next); // 검증 실패면 쓰기 전에 던진다.
+  if (text !== serializeWorkspace(current)) {
+    await invoke('write_text_file', { path: projectPath(root, WORKSPACE_FILE), contents: text, workspaceRoot: root });
+  }
+  return next;
+}
