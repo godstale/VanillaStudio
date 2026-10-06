@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "outputType": "web",
+  "format": {
+    "width": 1920,
+    "height": 1080
+  },
+  "concept": {
+    "title": "web-landing",
+    "goal": "Show the product",
+    "audience": "Everyone",
+    "tone": [
+      "warm"
+    ]
+  },
+  "design": {
+    "file": "DESIGN.md",
+    "palette": "vanilla-default"
+  },
+  "scenes": [
+    {
+      "id": "hero",
+      "title": "Hero",
+      "purpose": "Introduce",
+      "layout": "Centered title"
+    },
+    {
+      "id": "features",
+      "title": "Features",
+      "purpose": "Explain",
+      "layout": "Three columns"
+    }
+  ],
+  "assets": [],
+  "animations": [],
+  "params": [
+    {
+      "id": "title",
+      "scope": "hero",
+      "type": "text",
+      "default": "Welcome",
+      "label": "Title"
+    }
+  ],
+  "customizationNotes": "Edit the title."
+}

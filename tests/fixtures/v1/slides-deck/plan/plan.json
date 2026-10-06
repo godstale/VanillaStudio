@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "outputType": "slides",
+  "format": {
+    "width": 1920,
+    "height": 1080,
+    "slideCount": 3
+  },
+  "concept": {
+    "title": "slides-deck",
+    "goal": "Show the product",
+    "audience": "Everyone",
+    "tone": [
+      "warm"
+    ]
+  },
+  "design": {
+    "file": "DESIGN.md",
+    "palette": "vanilla-default"
+  },
+  "scenes": [
+    {
+      "id": "s1",
+      "title": "Opening",
+      "purpose": "Open"
+    },
+    {
+      "id": "s2",
+      "title": "Plan",
+      "purpose": "Plan"
+    },
+    {
+      "id": "s3",
+      "title": "Close",
+      "purpose": "Close"
+    }
+  ],
+  "assets": [],
+  "animations": [],
+  "params": [
+    {
+      "id": "title",
+      "scope": "s1",
+      "type": "text",
+      "default": "Opening",
+      "label": "Title"
+    }
+  ],
+  "customizationNotes": "Edit the title."
+}

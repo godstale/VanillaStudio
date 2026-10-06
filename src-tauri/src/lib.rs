@@ -6,6 +6,7 @@ use commands::doctor_commands::*;
 use commands::export_commands::*;
 use commands::fs_commands::*;
 use commands::process_commands::*;
+use commands::migrate_commands::*;
 use commands::package_commands::*;
 use commands::pty_commands::*;
 use commands::reference_commands::*;
@@ -72,6 +73,7 @@ pub fn run() {
             extract_vsx_workspace,
             extract_vsx_templates,
             read_vsx_text,
+            read_v1_project,
             ffmpeg_download,
             ffmpeg_download_cancel,
             install_project_deps,

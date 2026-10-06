@@ -279,6 +279,15 @@
       "pages": [
         "sources/milestone-v6.md"
       ]
+    },
+    "issue-v1-migration": {
+      "source_file": "tests/e2e/v1-migration.mjs",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-10-06",
+      "pages": [
+        "sources/issue-v1-migration.md"
+      ]
     }
   }
 }

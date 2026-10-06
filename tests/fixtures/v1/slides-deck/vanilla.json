@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "name": "slides-deck",
+  "outputType": "slides",
+  "format": {
+    "width": 1920,
+    "height": 1080,
+    "slideCount": 3
+  },
+  "template": null,
+  "palette": {
+    "id": "vanilla-default",
+    "source": "builtin"
+  },
+  "agents": {
+    "default": "claude-code",
+    "enabled": [
+      "claude-code"
+    ]
+  },
+  "runtime": {
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-05-01T09:00:00.000Z"
+}

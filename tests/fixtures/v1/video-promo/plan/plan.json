@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "outputType": "video",
+  "format": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 7
+  },
+  "concept": {
+    "title": "video-promo",
+    "goal": "Show the product",
+    "audience": "Everyone",
+    "tone": [
+      "warm"
+    ]
+  },
+  "design": {
+    "file": "DESIGN.md",
+    "palette": "vanilla-default"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "title": "Intro",
+      "purpose": "Hook",
+      "start": 0,
+      "end": 3,
+      "layout": "Title"
+    },
+    {
+      "id": "main",
+      "title": "Main",
+      "purpose": "Demo",
+      "start": 3,
+      "end": 7,
+      "layout": "Product"
+    }
+  ],
+  "assets": [],
+  "animations": [],
+  "params": [
+    {
+      "id": "title",
+      "scope": "intro",
+      "type": "text",
+      "default": "Intro",
+      "label": "Title"
+    }
+  ],
+  "customizationNotes": "Edit the title."
+}

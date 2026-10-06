@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { FolderOpen } from 'lucide-react';
+import { FolderOpen, History } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useWorkspace } from '@/lib/context/WorkspaceContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { touchWorkspace } from '@/lib/db/repositories/workspacesRepo';
 import { tauriWorkspaceApi, type WorkspaceApi } from '@/lib/workspace/api';
+import { MigrateV1Dialog } from './MigrateV1Dialog';
 import { canvasFromPreset, type CanvasPreset } from '@/lib/workspace/schema';
 
 type Step =
@@ -29,6 +30,7 @@ export function Onboarding({ api = tauriWorkspaceApi }: { api?: WorkspaceApi }) 
   const [fps, setFps] = useState(30);
   const [install, setInstall] = useState(true);
   const [busy, setBusy] = useState(false);
+  const [migrateOpen, setMigrateOpen] = useState(false);
 
   const fail = (e: unknown) => setStep({ name: 'error', message: e instanceof Error ? e.message : String(e) });
 
@@ -99,6 +101,10 @@ export function Onboarding({ api = tauriWorkspaceApi }: { api?: WorkspaceApi }) 
             <FolderOpen className="mr-2 h-4 w-4" />
             {t('onboarding.pick')}
           </Button>
+          <Button variant="outline" onClick={() => setMigrateOpen(true)} disabled={busy} className="self-start">
+            <History className="mr-2 h-4 w-4" />
+            {t('migrate.open')}
+          </Button>
         </>
       ) : step.name === 'create' ? (
         <form
@@ -165,6 +171,16 @@ export function Onboarding({ api = tauriWorkspaceApi }: { api?: WorkspaceApi }) 
           {t('onboarding.installing')} {step.line}
         </p>
       )}
+      <MigrateV1Dialog
+        open={migrateOpen}
+        onOpenChange={setMigrateOpen}
+        api={api}
+        onMigrated={async (dest) => {
+          trustWorkspace(dest); // 사용자가 방금 만든 폴더이므로 신뢰한다
+          if (install) await api.installDeps(dest, () => undefined).catch(() => null);
+          await enter(dest);
+        }}
+      />
     </div>
   );
 }

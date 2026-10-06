@@ -1,0 +1,3 @@
+# Credits
+
+No external assets.

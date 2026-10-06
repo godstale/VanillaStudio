@@ -15,6 +15,7 @@ last_updated: 2026-10-01
 - V1 기반 정리 완료(GUI 데모 확인 대기): [[milestone-v1]]
 - V2 Scene CRUD·지침 생성 완료(GUI 확인 대기): [[milestone-v2]]
 - V3 가이드·인스펙터 완료(GUI 확인 대기): [[milestone-v3]]
+- v1 마이그레이션 출하 게이트 통과: [[issue-v1-migration]]
 - V6 시퀀스·플레이그라운드 완료(GUI 확인 대기): [[milestone-v6]]
 - V5 레퍼런스 분석 완료(GUI·실제 에이전트 데모 확인 대기): [[milestone-v5]]
 - V4 터미널 실행·재생 완료(GUI·실제 에이전트 데모 확인 대기): [[milestone-v4]], [[poc-agent-terminal]]
