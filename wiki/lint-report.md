@@ -4,8 +4,7 @@ Scanned 63 pages.
 
 ## Structural Issues
 
-### Orphan Pages (no inbound links)
-- `wiki\sources\poc-r1.md`
+No structural issues found.
 
 ## Graph-Aware Issues
 

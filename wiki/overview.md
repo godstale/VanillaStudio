@@ -11,6 +11,7 @@ last_updated: 2026-10-01
 - **2026-10-05 v2 리팩토링(Scene 워크스페이스)**: 기획 [[refactor-spec-v2]] v0.3·설계 [[technical-design]] v1.0·계획 [[implementation-plan]] v2.0(V1~V7)·`AGENTS.md` v2 개정 완료, D-022~D-033 Accepted(D-010·D-018 Superseded). **다음: V1 기반 정리(TODO T1.0)**. 브랜치 `docs/v2-refactor-spec`(main 병합·push는 사용자 승인 대기). 아래 P4(v1) 상태는 이력
 - 레거시 제거 계획(T1.2): [[issue-v2-legacy-removal]]
 - PoC R-5(캔버스) 통과: [[poc-r5]]
+- PoC R-1(신 간 전환 합성) 완료: [[poc-r1]]
 - V1 기반 정리 완료(GUI 데모 확인 대기): [[milestone-v1]]
 - V2 Scene CRUD·지침 생성 완료(GUI 확인 대기): [[milestone-v2]]
 - V3 가이드·인스펙터 완료(GUI 확인 대기): [[milestone-v3]]
