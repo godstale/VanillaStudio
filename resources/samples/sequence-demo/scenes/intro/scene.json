@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "id": "scn_demoIntro01",
+  "name": "Intro",
+  "template": "commercial@1",
+  "brief": {
+    "subject": "",
+    "goal": "",
+    "audience": "",
+    "message": "",
+    "language": "ko"
+  },
+  "type": "motion",
+  "duration": {
+    "seconds": 4.000
+  },
+  "creativeMode": [],
+  "structure": "multi-shot",
+  "adStructure": "",
+  "brandVoice": [],
+  "visualStyle": {
+    "medium": "",
+    "lighting": "",
+    "typography": "",
+    "density": "",
+    "cameraFeeling": "",
+    "mood": ""
+  },
+  "motionVocabulary": {
+    "typography": [],
+    "object": [],
+    "camera": [],
+    "material": [],
+    "transition": []
+  },
+  "beats": [
+    {
+      "id": "title",
+      "start": 0.000,
+      "end": 2.000,
+      "role": "hook",
+      "copy": "",
+      "visual": "",
+      "motion": [],
+      "camera": "",
+      "transitionOut": "",
+      "notes": ""
+    },
+    {
+      "id": "tagline",
+      "start": 2.000,
+      "end": 4.000,
+      "role": "brand",
+      "copy": "",
+      "visual": "",
+      "motion": [],
+      "camera": "",
+      "transitionOut": "",
+      "notes": ""
+    }
+  ],
+  "copy": {
+    "textFidelity": "exact",
+    "items": [
+      "Vanilla Studio",
+      "Scenes in motion"
+    ]
+  },
+  "identity": {
+    "product": "",
+    "character": "",
+    "mustKeep": []
+  },
+  "endCard": {
+    "holdSeconds": 1.000,
+    "elements": []
+  },
+  "audio": {
+    "voiceOver": null,
+    "soundDesign": null,
+    "music": null
+  },
+  "constraints": {
+    "avoid": [],
+    "noUnspecifiedElements": true
+  },
+  "custom": {},
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

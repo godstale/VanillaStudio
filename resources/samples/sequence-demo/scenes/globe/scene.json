@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "id": "scn_demoGlobe01",
+  "name": "Globe",
+  "template": "three-scene@1",
+  "brief": {
+    "subject": "",
+    "goal": "",
+    "audience": "",
+    "message": "",
+    "language": "ko"
+  },
+  "type": "3d",
+  "duration": {
+    "seconds": 3.000
+  },
+  "creativeMode": [],
+  "structure": "multi-shot",
+  "adStructure": "",
+  "brandVoice": [],
+  "visualStyle": {
+    "medium": "",
+    "lighting": "",
+    "typography": "",
+    "density": "",
+    "cameraFeeling": "",
+    "mood": ""
+  },
+  "motionVocabulary": {
+    "typography": [],
+    "object": [],
+    "camera": [],
+    "material": [],
+    "transition": []
+  },
+  "beats": [
+    {
+      "id": "spin",
+      "start": 0.000,
+      "end": 3.000,
+      "role": "showcase",
+      "copy": "",
+      "visual": "",
+      "motion": [],
+      "camera": "",
+      "transitionOut": "",
+      "notes": ""
+    }
+  ],
+  "copy": {
+    "textFidelity": "exact",
+    "items": []
+  },
+  "identity": {
+    "product": "",
+    "character": "",
+    "mustKeep": []
+  },
+  "endCard": {
+    "holdSeconds": 1.000,
+    "elements": []
+  },
+  "audio": {
+    "voiceOver": null,
+    "soundDesign": null,
+    "music": null
+  },
+  "constraints": {
+    "avoid": [],
+    "noUnspecifiedElements": true
+  },
+  "composition": "",
+  "materials": [],
+  "lighting": "",
+  "cameraPath": "",
+  "performanceBudget": "",
+  "custom": {},
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

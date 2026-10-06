@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "workspaceId": "ws_sampleseq0001",
+  "name": "Sequence Demo",
+  "canvas": {
+    "aspect": "16:9",
+    "width": 1280,
+    "height": 720,
+    "fps": 30
+  }
+}
