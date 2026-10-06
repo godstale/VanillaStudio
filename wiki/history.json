@@ -270,6 +270,15 @@
       "pages": [
         "sources/poc-r1.md"
       ]
+    },
+    "milestone-v6": {
+      "source_file": "Docs/Planning/TODO.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-10-06",
+      "pages": [
+        "sources/milestone-v6.md"
+      ]
     }
   }
 }

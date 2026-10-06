@@ -173,7 +173,7 @@ Vanilla Studio v2는 **"에이전트가 일하기 좋은 작업 폴더를 만들
 }
 ```
 
-- 전환 종류(내장): `cut`, `crossfade`, `slide-*`, `mask-wipe`, `circular-reveal`, `zoom-through`, `match-cut`(요소 ID 지정), `custom`(에이전트가 `transitions/<name>.ts` 구현). 목록은 용어집(§6)과 동일 소스.
+- 전환 종류(내장): `cut`, `crossfade`, `slide-left|right|up|down`, `mask-wipe`, `circular-reveal`, `zoom-through`, `custom:<name>`(에이전트가 선언형 `transitions/<name>.json`을 작성 — 코드 실행 없음). `match-cut`(요소 ID 지정)은 두 iframe 오버레이 방식으로 불가능해 v2.0에서 제외(PoC R-1, `wiki/sources/poc-r1.md`). 목록은 용어집(§6)과 같은 소스(`transition` 카테고리).
 - `trigger`로 PPT형(`click`/`key`), 영상형(`end`), 인터랙티브(`choice`) 구성.
 - **검증 규칙**: `from`이 `static` 신이면 trigger는 사용자 입력(`click`·`key:*`·`choice:*`)만 허용한다(`end`·`timeout` 금지). `sequence.json`의 `workspaceId`가 `workspace.json`과 다르면 로드를 거부한다.
 
@@ -344,7 +344,7 @@ Vanilla Studio v2는 **"에이전트가 일하기 좋은 작업 폴더를 만들
 
 | ID | 리스크 | 대응 |
 | --- | --- | --- |
-| R-1 | 신 간 전환(crossfade/mask-wipe 등)을 서로 다른 iframe 신 사이에서 구현 | PoC: 두 iframe 합성 vs 종료/시작 프레임 캡처 오버레이. 미해결 시 v1 전환은 cut/crossfade/slide로 한정 |
+| R-1 | 신 간 전환(crossfade/mask-wipe 등)을 서로 다른 iframe 신 사이에서 구현 | **해결(PoC R-1)**: 두 iframe 오버레이 채택, 5종 전환 60fps. `match-cut`은 v2.0 제외, `custom`은 선언형 JSON |
 | R-2 | 에이전트가 되쓰기 규칙·스키마를 어김 | 되쓰기 후 zod 검증·diff 승인·스냅샷 되돌림 |
 | R-3 | 클립보드→에이전트 붙여넣기 UX 마찰 | 자동 붙여넣기 옵션·프롬프트 짧게·실패 시 파일 경로 안내 |
 | R-4 | 코드 기반으로 상업 모션 품질 확보 | 가이드의 구현 힌트·골든 샘플(`resources/samples/`)·검수 체크리스트로 규칙화 |

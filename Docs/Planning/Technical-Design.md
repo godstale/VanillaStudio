@@ -63,7 +63,7 @@
 | 색 계산 | `culori` | v1 자산 재사용 |
 | 다운로드 | `reqwest` | FFmpeg(키프레임 추출용) |
 
-**제거 대상**: Rust `agent-client-protocol`, `rmcp`·`axum`(MCP 서버), ACP 어댑터 설치. 로컬 HTTP는 프리뷰 서버(Vite)와 플레이그라운드 정적 서빙에 필요하면 `tiny_http` 등을 쓴다(⚠️ V6에서 확정).
+**제거 대상**: Rust `agent-client-protocol`, `rmcp`·`axum`(MCP 서버), ACP 어댑터 설치. 로컬 HTTP는 프리뷰 서버(Vite, `vite-runner`) 하나다. 플레이그라운드도 같은 서버를 쓰므로 별도 정적 서버(`tiny_http` 등)는 두지 않는다(V6 확정, T6.7). 빌드 산출물을 정적으로 서빙하는 일은 공유 패키지(.vsx) 재생(V7)에서 다시 판단한다.
 
 ### 2.2 신(생성물) 런타임 — 앱이 워크스페이스에 설치
 
@@ -225,6 +225,15 @@ function IntroScene() {
 
 - **신 내부**: `scenes/<slug>/src/index.html`이 엔트리이고, `scene.json.beats[]`가 시간 구조(motion·3d), `steps[]`가 사용자 입력 장면 전환(`static.mode=steps`, §5.1)이다. 화면비·해상도·fps는 `workspace.json.canvas`에서 주입한다(D-030).
 - **신 사이**: 신은 다른 신을 알지 못한다. 전환·분기는 `sequence.json`을 해석하는 **시퀀스 매니저**(Playground 호스트, §5.2)가 맡는다.
+
+#### 4.2.1 시퀀스 재생 (V6)
+
+- **구조**: `src/lib/sequence/manager.ts`(상태 머신)는 신을 `SceneHandle`로, 전환 재생을 `TransitionRunner`로 주입받는다. 브라우저 구현은 `src/lib/playground/iframeScene.ts`(신 iframe + Bridge v2)와 `sceneTransitions.ts`다. 검증(`validate.ts`)이 통과해야 재생한다.
+- **trigger**: `end`(motion·3d가 끝 시각 도달 — 런타임은 끝에서 멈출 뿐 `done`을 보내지 않으므로 호스트가 `time`과 `ready.duration`을 비교해 판단), `timeout:Ns`(일시정지하면 타이머도 멈춤), `click`·`key:K`(static 신은 마지막 step 전까지 입력을 `next`로 위임), `choice:<label>`(신 UI의 `choice` 또는 호스트 선택지).
+- **검증 규칙**(`validate.ts`): static 신에서 나가는 `end`·`timeout` 금지, 같은 신에서 같은 trigger 두 개 금지, 자동 엣지만으로 된 순환 금지(입력 엣지가 낀 순환은 허용), linear는 신당 나가는 엣지 1개·`choice` 금지, 시작 신 필수·도달 불가 신은 경고, 알 수 없는 전환 금지.
+- **전환 합성(PoC R-1, `wiki/sources/poc-r1.md`)**: 두 신을 별도 origin iframe으로 겹쳐 두고 나가는 신 iframe 요소에 Web Animations를 건다(`cut`·`crossfade`·`slide-left/right/up/down`·`mask-wipe`·`circular-reveal`·`zoom-through`). 다음 신은 이웃 프리로드로 미리 로드하며, **숨긴 신은 `visibility:hidden`이 아니라 맨 아래 투명 층(opacity 0)** 에 둔다(보이지 않는 cross-origin iframe은 Chrome이 렌더를 멈춰 `ready`가 오지 않는다). `match-cut`은 v2.0에서 제외, `custom`은 코드가 아니라 선언형 `transitions/<name>.json`(속성·값 화이트리스트)이다.
+- **입력**: 투명한 입력 레이어가 iframe 위를 덮어 클릭을 받고 키는 창 전체에서 받는다(신 안의 버튼은 재생 중 누를 수 없고 분기는 호스트 선택지로 고른다).
+- **측정**(헤드리스 Chrome, 샘플 시퀀스, `pnpm test:e2e:sequence`): 시작 신 콜드 로드 1.23s, 비이웃 신 점프 0.13s, 프리로드 이웃 전환은 설정값 + 10~120ms.
 
 ### 4.3 계약 검사 (`check_scene`)
 

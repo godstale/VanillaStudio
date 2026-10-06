@@ -102,7 +102,7 @@
 - [x] T6.6 [레인 B · W3] Playground UI(재생/일시정지/시크·신 점프·진행률, 입력 힌트(클릭/방향키), `choice` 오버레이, 오류 배너) — 대상: `src/components/playground/*` · 완료 판정: 샘플 시퀀스 재생 CDP E2E · 선행: T6.5, T6.3 — 구현: `Playground` 페이지·`SequencePlayer`(재생·일시정지·시크·신 점프·입력 힌트·choice 오버레이·오류 배너), `IframeScene`/`IframeSceneHost`(Bridge v2), 브라우저 전환 러너. CDP E2E `pnpm test:e2e:sequence`. 프리로드 신은 `visibility:hidden`이면 Chrome이 렌더를 멈춰 `ready`가 오지 않으므로 맨 아래 투명 층으로 둔다
 - [x] T6.7 [레인 C · W3] 로컬 서빙 방식 확정·프리로드 최적화(신 전환 지연 측정) — 대상: `src-tauri/src/*`, `workers/` · 완료 판정: 전환 지연 수치 기록 · 선행: T6.5 — 결정: 별도 정적 서버 없이 워크스페이스 프리뷰 서버(vite-runner)를 그대로 쓴다(v2.0). 수치(헤드리스 Chrome, 샘플 시퀀스): 시작 신 콜드 로드 1.23s, 비이웃 신 점프 0.13s, 프리로드 이웃 전환은 설정값+10~120ms(crossfade 600→612ms, slide-left 500→550, circular-reveal 700→708, zoom-through 600→718)
 - [x] T6.8 [단독 · W4] 샘플 시퀀스 제작·검증(motion→static(steps)→3d + choice 분기 1개) — 대상: `resources/samples/sequence-demo/` · 완료 판정: 데모 ①~③ · 선행: T6.2~T6.7 — 구현: `resources/samples/sequence-demo/`(intro motion → page static steps → globe 3d, choice Finish/Again 분기). JSON은 `sampleSequence.test.ts`가 생성·드리프트 검사, 재생은 E2E로 확인
-- [ ] T6.9 [단독 · 마무리] V6 마무리: `milestone-v6.md`, 설계서 §4.2·§5 갱신 · 선행: T6.8
+- [x] T6.9 [단독 · 마무리] V6 마무리: `milestone-v6.md`, 설계서 §4.2·§5 갱신 · 선행: T6.8 — `wiki/sources/milestone-v6.md`, 설계서 §4.2.1·기획서 §5.2 갱신
 
 ## V7 패키지·마이그레이션·릴리스 (branch: `feat/v2-release`)
 
