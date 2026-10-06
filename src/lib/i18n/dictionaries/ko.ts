@@ -213,6 +213,7 @@ const ko = {
   'scene.status.needs-revision': '수정 필요',
   'scene.invalid': 'scene.json을 읽을 수 없습니다.',
   'scene.noThumbnail': '썸네일 없음',
+  'scene.thumbnailAlt': '{name} 썸네일',
   'scene.references': '레퍼런스 {count}',
   'scene.comingSoon': '이후 단계에서 지원됩니다.',
   'scene.runAgent': '에이전트 실행',

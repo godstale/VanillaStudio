@@ -16,6 +16,7 @@ import { useTemplates } from '@/components/guides/templatesContextValue';
 import { useSafeTerminals } from '@/components/terminal/terminalContextValue';
 import { promptForScene } from '@/lib/agents/clipboard';
 import { groupChanges } from '@/lib/scene/status';
+import { loadThumbnail } from '@/lib/scene/thumbnail';
 import { readSequence, writeSequence } from '@/lib/sequence/file';
 import { addNode, moveNodes, reconcile, type Sequence } from '@/lib/sequence/schema';
 import { projectPath } from '@/lib/workspace/files';
@@ -84,6 +85,8 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
   const sequence = useRef<Sequence | null>(null);
   const entriesRef = useRef<SceneEntry[]>([]);
   const [runError, setRunError] = useState<string | null>(null);
+  const [thumbs, setThumbs] = useState<Record<string, string>>({});
+  const onThumbnail = useCallback((slug: string, dataUrl: string) => setThumbs((m) => ({ ...m, [slug]: dataUrl })), []);
   const terminals = useSafeTerminals();
   const hasTerminals = terminals !== null;
   const reloadRef = useRef<() => void>(() => undefined);
@@ -147,6 +150,22 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
       cancelled = true;
     };
   }, [fetchAll, apply, fail]);
+
+  // 저장된 썸네일은 신이 목록에 들어올 때 한 번 읽는다(이후 갱신은 미리보기가 onThumbnail로 알린다).
+  useEffect(() => {
+    let cancelled = false;
+    for (const e of entries) {
+      if (thumbs[e.slug] || !e.scene) continue;
+      loadThumbnail(root, e.slug)
+        .then((url) => url && !cancelled && setThumbs((m) => (m[e.slug] ? m : { ...m, [e.slug]: url })))
+        .catch(() => undefined);
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, [entries, root, thumbs]);
+
+  const viewNodes = useMemo(() => nodes.map((n) => (thumbs[n.data.slug] ? { ...n, data: { ...n.data, thumbnail: thumbs[n.data.slug] } } : n)), [nodes, thumbs]);
 
   // 신 폴더 안의 파일이 바뀌면(에이전트·사용자 편집) 짧게 모아서 다시 읽는다.
   const refreshTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -243,7 +262,7 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
   return (
     <>
       <WorkspaceCanvas
-        nodes={nodes}
+        nodes={viewNodes}
         nodeTypes={nodeTypes}
         initialView={view}
         onViewChange={onViewChange}
@@ -286,6 +305,7 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
             onTabChange={setInspectorTab}
             onSave={saveScene}
             onRename={renameSelected}
+            onThumbnail={onThumbnail}
           />
         </SlotPortal>
       )}

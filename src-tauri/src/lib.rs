@@ -49,6 +49,8 @@ pub fn run() {
             read_project_folder_tree,
             read_text_file,
             write_text_file,
+            write_binary_base64,
+            read_binary_base64,
             create_file,
             create_folder,
             rename_path,

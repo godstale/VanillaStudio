@@ -215,6 +215,7 @@ const en: Dict = {
   'scene.status.needs-revision': 'Needs revision',
   'scene.invalid': 'Cannot read scene.json.',
   'scene.noThumbnail': 'No thumbnail',
+  'scene.thumbnailAlt': '{name} thumbnail',
   'scene.references': 'References {count}',
   'scene.comingSoon': 'Supported in a later step.',
   'scene.runAgent': 'Run agent',

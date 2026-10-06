@@ -13,6 +13,8 @@ export interface SceneNodeData extends Record<string, unknown> {
   /** motion·3d 길이(초). static은 없다. */
   duration?: number;
   referenceCount: number;
+  /** `.vanilla/thumb.png`의 data URL. 아직 없으면 자리 표시. */
+  thumbnail?: string;
   /** scene.json이 없거나 검증에 실패했을 때의 이유. */
   error?: string;
   onOpenFolder?: (slug: string) => void;
@@ -58,7 +60,9 @@ function SceneNodeView({ data, selected }: NodeProps<SceneFlowNode>) {
           <span className="break-words">{t('scene.invalid')}</span>
         </div>
       ) : (
-        <div className="mb-2 flex h-24 items-center justify-center rounded bg-muted text-muted-foreground">{t('scene.noThumbnail')}</div>
+        <div className="mb-2 flex h-24 items-center justify-center overflow-hidden rounded bg-muted text-muted-foreground">
+          {data.thumbnail ? <img src={data.thumbnail} alt={t('scene.thumbnailAlt', { name: data.name })} className="h-full w-full object-contain" /> : t('scene.noThumbnail')}
+        </div>
       )}
       <div className="mb-2 flex justify-between text-muted-foreground">
         <span>{data.duration !== undefined ? `${data.duration}s` : t('scene.type.static')}</span>

@@ -38,6 +38,8 @@ export interface SceneInspectorProps {
   onSave: (scene: Scene) => Promise<void>;
   /** 이름 변경(폴더 이름도 바뀐다). */
   onRename: (name: string) => Promise<void>;
+  /** 미리보기가 새 썸네일을 저장했을 때(노드 갱신용). */
+  onThumbnail?: (slug: string, dataUrl: string) => void;
 }
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error' | 'invalid';
@@ -110,7 +112,7 @@ function useAutosave(onSave: (s: Scene) => Promise<void>) {
 }
 
 /** 노드를 고르면 우측에 열리는 신 편집 패널. 선택이 바뀌면 `key`로 새로 마운트해 쓴다. */
-export function SceneInspector({ workspace, root, slug, scene, template, templateError, canvas, tab: tabProp, onTabChange, onSave, onRename }: SceneInspectorProps) {
+export function SceneInspector({ workspace, root, slug, scene, template, templateError, canvas, tab: tabProp, onTabChange, onSave, onRename, onThumbnail }: SceneInspectorProps) {
   const { t } = useLanguage();
   const [ownTab, setOwnTab] = useState<Tab>('overview');
   const tab = tabProp ?? ownTab;
@@ -235,7 +237,7 @@ export function SceneInspector({ workspace, root, slug, scene, template, templat
 
         {tab === 'preview' &&
           (canvas ? (
-            <PreviewPanel root={root} slug={slug} sceneType={draft.type} canvas={canvas} entry={draft.runtime.entry} />
+            <PreviewPanel root={root} slug={slug} sceneType={draft.type} canvas={canvas} entry={draft.runtime.entry} onThumbnail={onThumbnail} />
           ) : (
             <p className="text-xs text-muted-foreground">{t('inspector.later')}</p>
           ))}
