@@ -64,6 +64,15 @@ export function applyMarkers(existing: string | null, sections: MarkerSection[])
   return text;
 }
 
+/**
+ * `applyMarkers`와 같지만 사용자 소유 파일용: 원본이 CRLF면 결과도 CRLF로 돌려 마커 밖 바이트를 그대로 보존한다(D-016).
+ * (`applyMarkers`는 줄바꿈을 LF로 정규화한다. 앱이 통째로 쓰는 생성물에는 그쪽이 맞다.)
+ */
+export function applyMarkersKeepEol(existing: string, sections: MarkerSection[]): string {
+  const next = applyMarkers(existing, sections);
+  return existing.includes('\r\n') ? next.replace(/\n/g, '\r\n') : next;
+}
+
 /** 마커 구간 안의 현재 본문. 구간이 없으면 null. */
 export function readSection(text: string, id: string): string | null {
   const src = normalizeEol(text);

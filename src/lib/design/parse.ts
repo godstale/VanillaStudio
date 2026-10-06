@@ -10,6 +10,8 @@ const TokensSchema = z
     version: z.string().optional(),
     name: z.string().optional(),
     colors: z.record(z.string(), z.string()).default({}),
+    /** 분위기 키워드(용어 ID, 선택). 가이드 `visualStyle.mood`와 같은 ID를 쓴다(Technical-Design §4.5). */
+    mood: z.array(z.string()).optional(),
     typography: z.record(z.string(), z.record(z.string(), z.union([z.string(), z.number()]))).default({}),
     spacing: z.record(z.string(), z.union([z.string(), z.number()])).default({}),
     rounded: z.record(z.string(), z.string()).default({}),
@@ -48,13 +50,15 @@ export function resolveRefs<T>(value: T, root: Record<string, unknown>, issues: 
     }
     return resolveRefs(target as T, root, issues, [...seen, m[1]]);
   }
+  if (Array.isArray(value)) return value.map((v) => resolveRefs(v, root, issues, seen)) as T;
   if (value && typeof value === 'object') {
     return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, resolveRefs(v, root, issues, seen)])) as T;
   }
   return value;
 }
 
-export function parseDesign(text: string): ParsedDesign {
+/** 토큰 문서를 읽기만 한다(참조 해석 전). 상속 병합이 참조 해석보다 먼저 일어나야 해서 나눠 둔다. */
+export function parseDesignTokens(text: string): { tokens: DesignTokens; issues: string[] } {
   const split = splitFrontMatter(text);
   const issues: string[] = [];
   if (!split.hasFrontMatter) issues.push('no YAML front matter: tokens unavailable (prose-only DESIGN.md)');
@@ -63,7 +67,11 @@ export function parseDesign(text: string): ParsedDesign {
   if (!parsed.success) {
     issues.push(...parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`));
   }
-  const tokens = parsed.success ? parsed.data : TokensSchema.parse({});
+  return { tokens: parsed.success ? parsed.data : TokensSchema.parse({}), issues };
+}
+
+/** 참조 해석 → 색 검증 → 파생 역할. */
+export function resolveDesign(tokens: DesignTokens, issues: string[] = []): ParsedDesign {
   const resolved = resolveRefs(tokens, tokens as Record<string, unknown>, issues);
   for (const [k, v] of Object.entries(resolved.colors)) if (!isColor(v)) issues.push(`colors.${k}: invalid color ${v}`);
   let colors: Colors = resolved.colors;
@@ -73,4 +81,9 @@ export function parseDesign(text: string): ParsedDesign {
     issues.push((e as Error).message);
   }
   return { tokens: resolved, colors, issues };
+}
+
+export function parseDesign(text: string): ParsedDesign {
+  const { tokens, issues } = parseDesignTokens(text);
+  return resolveDesign(tokens, issues);
 }

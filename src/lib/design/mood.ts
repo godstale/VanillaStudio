@@ -1,4 +1,4 @@
-import { applyMarkers, readSection } from '@/lib/guides/markers';
+import { applyMarkersKeepEol, readSection } from '@/lib/guides/markers';
 
 // DESIGN.md 본문의 "분위기(mood)" 규약 구간(Refactor-Spec-v2 §5.3): `<!-- vanilla:begin:mood -->` 안의 `- 키워드` 목록.
 // 앱은 이 구간만 쓰고 본문의 나머지 바이트는 보존한다(AGENTS.md §4-6).
@@ -18,5 +18,5 @@ export function readMood(designText: string): string[] {
 export function writeMood(designText: string, keywords: readonly string[]): string {
   const list = keywords.map((k) => k.trim()).filter(Boolean);
   const body = `## Mood\n\n${list.length ? list.map((k) => `- ${k}`).join('\n') : '_(none)_'}`;
-  return applyMarkers(designText, [{ id: ID, body }]);
+  return applyMarkersKeepEol(designText, [{ id: ID, body }]);
 }

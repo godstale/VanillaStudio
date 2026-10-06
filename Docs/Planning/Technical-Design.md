@@ -265,7 +265,7 @@ Bridge setDesign { colors } ─────────── 미리보기 전�
 ### 4.5 DESIGN.md 확장 (v2)
 
 - **상속**: 신 `DESIGN.md` front matter의 `extends: ../../DESIGN.md`가 있으면 워크스페이스 토큰을 기본으로 하고 신에 적힌 토큰만 오버라이드한다. 파서(`src/lib/design`)가 상속 해석을 담당하며 쓰기 대상은 항상 해당 파일 자신이다.
-- **분석 마커 구간**: 본문의 `<!-- vanilla:analysis:start -->…<!-- vanilla:analysis:end -->`는 레퍼런스 분석 결과(분위기 키워드·팔레트 메모)용으로 에이전트가 갱신할 수 있는 유일한 본문 구간이다. 그 밖은 사용자 소유이며 바이트를 보존한다(D-016).
+- **분석 마커 구간**: 본문의 `<!-- vanilla:begin:analysis -->…<!-- vanilla:end:analysis -->`(저장소 공통 마커 형식, `src/lib/design/analysis.ts`)는 레퍼런스 분석 결과(분위기 키워드·팔레트 메모)용으로 에이전트가 갱신할 수 있는 유일한 본문 구간이다. 그 밖은 사용자 소유이며 바이트를 보존한다(D-016).
 - **mood**: front matter `mood: [..]` 배열은 선택 필드이며 가이드 `visualStyle.mood`와 같은 용어 ID를 쓴다.
 
 
