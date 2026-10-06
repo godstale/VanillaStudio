@@ -7,6 +7,7 @@ import { MarkdownEditor } from '@/components/guides/MarkdownEditor';
 import { DesignSection } from './DesignSection';
 import { INSPECTOR_TABS, type InspectorTab } from './inspectorTabs';
 import { PreviewPanel } from '@/components/scene/PreviewPanel';
+import { CheckPanel } from '@/components/scene/CheckPanel';
 import type { GuideContext } from '@/lib/guides/agentsMd';
 import { promptForScene } from '@/lib/agents/clipboard';
 import type { GuideTemplate } from '@/lib/guides/template';
@@ -241,6 +242,8 @@ export function SceneInspector({ workspace, root, slug, scene, template, templat
           ) : (
             <p className="text-xs text-muted-foreground">{t('inspector.later')}</p>
           ))}
+
+        {tab === 'preview' && <CheckPanel root={root} slug={slug} scene={draft} />}
 
         {tab === 'prompt' && (
           <>
