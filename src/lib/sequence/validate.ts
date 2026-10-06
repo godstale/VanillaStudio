@@ -1,3 +1,4 @@
+import { isKnownTransition } from '@/lib/playground/transitions';
 import type { SceneType } from '@/lib/scene/schema';
 import type { Sequence } from './schema';
 
@@ -13,6 +14,7 @@ export type IssueCode =
   | 'auto-cycle'
   | 'linear-branch'
   | 'linear-choice'
+  | 'unknown-transition'
   | 'no-start'
   | 'unreachable';
 
@@ -36,6 +38,8 @@ export interface ValidateContext {
   workspaceId: string;
   /** 디스크에 있는 신(sceneId → 정보). */
   scenes: ReadonlyMap<string, SceneRef>;
+  /** 워크스페이스에 정의된 선언형 사용자 전환 이름(`transitions/<name>.json`). */
+  customTransitions?: ReadonlySet<string>;
 }
 
 /** 시간이 흐르면 저절로 일어나는 trigger. 나머지는 사용자 입력(click·key·choice)이다. */
@@ -97,6 +101,9 @@ export function validateSequence(seq: Sequence, ctx: ValidateContext): SequenceI
     const from = ctx.scenes.get(e.from);
     if (from && requiresUserInput(from.type) && isAutoTrigger(e.trigger)) {
       add({ code: 'static-auto-trigger', severity: 'error', edge: i, scene: e.from, message: `${label(e.from)} is a static page: it can only move on by user input (click, key or choice), not "${e.trigger}"` });
+    }
+    if (!isKnownTransition(e.transition.type, ctx.customTransitions)) {
+      add({ code: 'unknown-transition', severity: 'error', edge: i, scene: e.from, message: `unknown transition "${e.transition.type}" (${label(e.from)} → ${label(e.to)})` });
     }
     if (seq.mode === 'linear' && e.trigger.startsWith('choice:')) {
       add({ code: 'linear-choice', severity: 'error', edge: i, scene: e.from, message: `choice triggers need the interactive mode (${label(e.from)} → ${label(e.to)})` });

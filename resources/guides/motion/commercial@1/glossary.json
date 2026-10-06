@@ -1307,6 +1307,48 @@
     },
     {
       "category": "transition",
+      "id": "slide-right",
+      "label": {
+        "ko": "슬라이드(오른쪽)",
+        "en": "Slide right"
+      },
+      "definition": {
+        "ko": "다음 장면이 왼쪽에서 밀려 들어옵니다.",
+        "en": "Next scene slides in from the left."
+      },
+      "implementationHint": "translateX with ease-in-out, mirrored.",
+      "tags": []
+    },
+    {
+      "category": "transition",
+      "id": "slide-up",
+      "label": {
+        "ko": "슬라이드(위)",
+        "en": "Slide up"
+      },
+      "definition": {
+        "ko": "다음 장면이 아래에서 밀려 올라옵니다.",
+        "en": "Next scene slides in from the bottom."
+      },
+      "implementationHint": "translateY with ease-in-out.",
+      "tags": []
+    },
+    {
+      "category": "transition",
+      "id": "slide-down",
+      "label": {
+        "ko": "슬라이드(아래)",
+        "en": "Slide down"
+      },
+      "definition": {
+        "ko": "다음 장면이 위에서 밀려 내려옵니다.",
+        "en": "Next scene slides in from the top."
+      },
+      "implementationHint": "translateY with ease-in-out, mirrored.",
+      "tags": []
+    },
+    {
+      "category": "transition",
       "id": "zoom-through",
       "label": {
         "ko": "줌 스루",

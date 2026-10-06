@@ -81,6 +81,14 @@ describe('validateSequence', () => {
     expect(hasErrors(issues)).toBe(false);
   });
 
+  it('transitions must be builtin or a declared custom one', () => {
+    const withType = (type: string) => seq([{ ...edge('scn_m', 'scn_s', 'end'), transition: { ...TR, type } }]);
+    expect(validateSequence(withType('mask-wipe'), ctx).some((i) => i.code === 'unknown-transition')).toBe(false);
+    expect(validateSequence(withType('match-cut'), ctx).some((i) => i.code === 'unknown-transition' && i.edge === 0)).toBe(true);
+    expect(validateSequence(withType('custom:swirl'), ctx).some((i) => i.code === 'unknown-transition')).toBe(true);
+    expect(validateSequence(withType('custom:swirl'), { ...ctx, customTransitions: new Set(['swirl']) }).some((i) => i.code === 'unknown-transition')).toBe(false);
+  });
+
   it('classifies triggers', () => {
     expect(['end', 'timeout:3s', 'timeout:0.5s'].every(isAutoTrigger)).toBe(true);
     expect(['click', 'key:Enter', 'choice:Yes'].some(isAutoTrigger)).toBe(false);
