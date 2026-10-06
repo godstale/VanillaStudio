@@ -24,6 +24,7 @@ Do not use generative image/video AI services. Record every external resource in
 | `scenes/<slug>/src/` | you | The scene implementation. |
 | `scenes/<slug>/params/*.values.json` | user | Never overwrite without an explicit request. |
 | `scenes/<slug>/references/` | user | Style references. Analyze only; never copy into deliverables. |
+| `transitions/<name>.json` | you (on request) | Custom scene transition, declarative JSON only (see below). |
 | `.vanilla/` | app | Do not touch. |
 
 Canvas size and fps come from `workspace.json`; do not hard-code them.
@@ -54,3 +55,26 @@ if (import.meta.hot) {
   });
 }
 ```
+
+## Custom transitions
+
+Transitions between scenes are played by the app. Built in: `cut`, `crossfade`, `slide-left|right|up|down`, `mask-wipe`, `circular-reveal`, `zoom-through`.
+Only when the user asks for a different one, write `transitions/<name>.json` (name: lowercase letters, digits, `-`; the file name must match). It is data, never code:
+
+```json
+{
+  "version": 1,
+  "name": "iris-blur",
+  "description": "Outgoing scene closes toward the center while blurring.",
+  "from": [{ "clipPath": "inset(0 0 0 0)", "filter": "blur(0px)" }, { "clipPath": "inset(50% 50% 50% 50%)", "filter": "blur(12px)" }],
+  "to": [{ "opacity": 0.6 }, { "opacity": 1 }],
+  "durationMs": 700,
+  "easing": "ease-in-out"
+}
+```
+
+- `from` animates the outgoing scene, `to` (optional) the incoming one. 2 to 12 keyframes each.
+- Allowed properties: `opacity`, `transform`, `clipPath`, `filter`, `offset`. Values are short CSS expressions: no `url()`, `;`, `{}`, backslashes or comments.
+- `durationMs` 1..5000. `easing`: `linear`, `ease`, `ease-in`, `ease-out`, `ease-in-out` or `cubic-bezier(a, b, c, d)`.
+- Never write scripts for transitions and never edit `sequence.json`; the user picks `custom:<name>` on an edge in the app.
+- `match-cut` (aligning an element across scenes) is not supported.
