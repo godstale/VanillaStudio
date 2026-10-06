@@ -15,6 +15,8 @@ export interface SceneNodeData extends Record<string, unknown> {
   referenceCount: number;
   /** `.vanilla/thumb.png`의 data URL. 아직 없으면 자리 표시. */
   thumbnail?: string;
+  /** 시퀀스의 시작 신. */
+  isStart?: boolean;
   /** scene.json이 없거나 검증에 실패했을 때의 이유. */
   error?: string;
   onOpenFolder?: (slug: string) => void;
@@ -52,6 +54,7 @@ function SceneNodeView({ data, selected }: NodeProps<SceneFlowNode>) {
       <div className="mb-2 flex items-center gap-2">
         <Icon className="h-4 w-4 shrink-0 text-muted-foreground" aria-label={t(`scene.type.${data.type}`)} />
         <b className="min-w-0 flex-1 truncate text-sm">{data.name}</b>
+        {data.isStart && <span className="rounded bg-primary px-1.5 py-0.5 text-[10px] text-primary-foreground">{t('sequence.start')}</span>}
         <span className={cn('rounded px-1.5 py-0.5 text-[10px]', STATUS_CLASS[data.status])}>{t(`scene.status.${data.status}`)}</span>
       </div>
       {data.error ? (

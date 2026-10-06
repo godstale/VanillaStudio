@@ -21,6 +21,11 @@ import { changedSinceSettled } from '@/lib/scene/revision';
 import { createSceneOverride } from '@/lib/design/workspaceDesign';
 import { readSequence, writeSequence } from '@/lib/sequence/file';
 import { addNode, moveNodes, reconcile, type Sequence } from '@/lib/sequence/schema';
+import { checkSavable, setMode, setStart } from '@/lib/sequence/edit';
+import { loadCustomTransitions } from '@/lib/playground/transitions/custom';
+import { EdgeSection } from '@/components/inspector/EdgeSection';
+import { SequenceIssues } from './SequenceIssues';
+import { useSequenceEdges, type SceneInfo } from './useSequenceEdges';
 import { projectPath } from '@/lib/workspace/files';
 import { DiffDialog } from './DiffDialog';
 import { NewSceneDialog, type NewSceneValues } from './NewSceneDialog';
@@ -85,6 +90,9 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
   const [dialog, setDialog] = useState<{ x: number; y: number } | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const sequence = useRef<Sequence | null>(null);
+  const [seq, setSeq] = useState<Sequence | null>(null);
+  const [seqError, setSeqError] = useState<string | null>(null);
+  const [customNames, setCustomNames] = useState<ReadonlySet<string>>(new Set());
   const entriesRef = useRef<SceneEntry[]>([]);
   const [runError, setRunError] = useState<string | null>(null);
   const [outside, setOutside] = useState<string[]>([]);
@@ -131,6 +139,7 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
   const apply = useCallback(
     (loaded: Loaded) => {
       sequence.current = loaded.sequence;
+      setSeq(loaded.sequence);
       entriesRef.current = loaded.entries;
       setEntries(loaded.entries);
       // 선택 상태는 다시 읽어도 유지한다.
@@ -173,12 +182,14 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
     };
   }, [entries, root, thumbs]);
 
-  const viewNodes = useMemo(() => nodes.map((n) => (thumbs[n.data.slug] ? { ...n, data: { ...n.data, thumbnail: thumbs[n.data.slug] } } : n)), [nodes, thumbs]);
+  const startId = seq?.start ?? null;
+  const viewNodes = useMemo(() => nodes.map((n) => ({ ...n, data: { ...n.data, thumbnail: thumbs[n.data.slug] ?? n.data.thumbnail, isStart: n.id === startId } })), [nodes, thumbs, startId]);
 
   // 신 폴더 안의 파일이 바뀌면(에이전트·사용자 편집) 짧게 모아서 다시 읽는다.
   const refreshTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   usePreviewWatch(root, {
     onBatch: (paths) => {
+      if (paths.some((p) => p.replace(/\\/g, '/').startsWith('transitions/'))) loadCustomRef.current();
       // 에이전트가 도는 동안 그 신 폴더 밖에서 일어난 쓰기는 경고한다(R-10, AGENTS.md §4-8). 실행 중인 신이 여럿이면 어느 신에도 속하지 않는 경로만.
       const active = [...new Set((sessionsRef.current ?? []).filter((s) => s.status === 'running' || s.status === 'starting').map((s) => s.sceneSlug))];
       if (active.length > 0) {
@@ -203,10 +214,11 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
 
   const onNodeDragStop = useCallback(
     (_: unknown, __: unknown, dragged: { id: string; position: { x: number; y: number } }[]) => {
-      const seq = sequence.current;
-      if (!seq) return;
-      const next = moveNodes(seq, Object.fromEntries(dragged.map((n) => [n.id, n.position])));
+      const current = sequence.current;
+      if (!current) return;
+      const next = moveNodes(current, Object.fromEntries(dragged.map((n) => [n.id, n.position])));
       sequence.current = next;
+      setSeq(next);
       void writeSequence(root, next).catch(() => undefined);
     },
     [root],
@@ -215,9 +227,10 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
   async function onCreate(values: NewSceneValues) {
     const pos = dialog ?? { x: 0, y: 0 };
     const { scene } = await createScene(root, workspace, values);
-    const seq = addNode(sequence.current ?? (await readSequence(root, workspace.id)), scene.id, pos);
-    sequence.current = seq;
-    await writeSequence(root, seq);
+    const added = addNode(sequence.current ?? (await readSequence(root, workspace.id)), scene.id, pos);
+    sequence.current = added;
+    setSeq(added);
+    await writeSequence(root, added);
     apply(await fetchAll());
   }
 
@@ -277,6 +290,35 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
   const selected = nodes.find((n) => n.selected && !n.data.error);
   const selectedEntry = selected ? entries.find((e) => e.scene?.id === selected.id) : undefined;
 
+  // 시퀀스 편집(T6.2): 저장할 수 없는 값은 파일에 쓰지 않고 이유를 보여 준다.
+  const commitSequence = useCallback(
+    (next: Sequence): boolean => {
+      const why = checkSavable(next);
+      setSeqError(why);
+      if (why) return false;
+      sequence.current = next;
+      setSeq(next);
+      void writeSequence(root, next).catch((e: unknown) => setSeqError(e instanceof Error ? e.message : String(e)));
+      return true;
+    },
+    [root],
+  );
+  const sceneInfos = useMemo(() => new Map<string, SceneInfo>(entries.flatMap((e) => (e.scene ? [[e.scene.id, { type: e.scene.type, name: e.scene.name }] as const] : []))), [entries]);
+  const deselectNodes = useCallback(() => setNodes((ns) => ns.map((n) => (n.selected ? { ...n, selected: false } : n))), []);
+  const seqEdges = useSequenceEdges({ sequence: seq, workspaceId: workspace.id, scenes: sceneInfos, customTransitions: customNames, commit: commitSequence, onEdgeSelected: deselectNodes });
+  const edgeSelected = seqEdges.selectedEdge !== null && seq?.edges[seqEdges.selectedEdge] ? seq.edges[seqEdges.selectedEdge] : null;
+  const edgeIssues = useMemo(() => seqEdges.issues.filter((i) => i.edge === seqEdges.selectedEdge), [seqEdges.issues, seqEdges.selectedEdge]);
+
+  // 선언형 사용자 전환(`transitions/*.json`)은 처음과 그 폴더가 바뀔 때 다시 읽는다.
+  const loadCustom = useCallback(() => {
+    void loadCustomTransitions(root).then((r) => setCustomNames(new Set(r.defs.keys())), () => undefined);
+  }, [root]);
+  useEffect(loadCustom, [loadCustom]);
+  const loadCustomRef = useRef(loadCustom);
+  useEffect(() => {
+    loadCustomRef.current = loadCustom;
+  }, [loadCustom]);
+
   // 저장하면 파일 감시가 다시 읽어 노드·인스펙터에 반영한다. 여기서는 파일만 쓴다.
   const saveScene = useCallback(
     async (scene: Scene) => {
@@ -302,6 +344,11 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
     <>
       <WorkspaceCanvas
         nodes={viewNodes}
+        edges={seqEdges.edges}
+        onConnect={seqEdges.onConnect}
+        onEdgesChange={seqEdges.onEdgesChange}
+        onReconnect={seqEdges.onReconnect}
+        onPaneClick={seqEdges.clearEdge}
         nodeTypes={nodeTypes}
         initialView={view}
         onViewChange={onViewChange}
@@ -312,12 +359,28 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
           setDialog(rf.screenToFlowPosition({ x: e.clientX, y: e.clientY }));
         }}
       >
-        <Panel position="top-left">
+        <Panel position="top-left" className="flex items-center gap-2">
           <Button size="sm" onClick={() => setDialog(centerPos())} aria-label={t('scene.add')}>
             <Plus className="mr-1 h-4 w-4" />
             {t('scene.add')}
           </Button>
+          {seq && (
+            <select
+              aria-label={t('sequence.mode')}
+              className="h-8 rounded-md border border-input bg-background px-2 text-xs"
+              value={seq.mode}
+              onChange={(e) => commitSequence(setMode(seq, e.target.value as Sequence['mode']))}
+            >
+              <option value="linear">{t('sequence.mode.linear')}</option>
+              <option value="interactive">{t('sequence.mode.interactive')}</option>
+            </select>
+          )}
         </Panel>
+        {(seqEdges.issues.length > 0 || seqError) && (
+          <Panel position="bottom-right">
+            <SequenceIssues issues={seqEdges.issues} saveError={seqError} />
+          </Panel>
+        )}
         {outside.length > 0 && (
           <Panel position="bottom-left">
             <div role="alert" data-testid="outside-writes" className="max-w-sm rounded bg-warning/15 px-3 py-2 text-xs text-warning">
@@ -344,7 +407,22 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
           </Panel>
         )}
       </WorkspaceCanvas>
-      {selectedEntry?.scene && (
+      {edgeSelected && seq && (
+        <SlotPortal name="inspector">
+          <EdgeSection
+            key={seqEdges.selectedEdge}
+            edge={edgeSelected}
+            fromName={sceneInfos.get(edgeSelected.from)?.name ?? edgeSelected.from}
+            toName={sceneInfos.get(edgeSelected.to)?.name ?? edgeSelected.to}
+            fromType={sceneInfos.get(edgeSelected.from)?.type ?? 'motion'}
+            customTransitions={[...customNames]}
+            issues={edgeIssues}
+            onChange={seqEdges.updateSelected}
+            onDelete={seqEdges.deleteSelected}
+          />
+        </SlotPortal>
+      )}
+      {!edgeSelected && selectedEntry?.scene && (
         <SlotPortal name="inspector">
           <SceneInspector
             key={selectedEntry.scene.id}
@@ -361,6 +439,8 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
             onRename={renameSelected}
             onThumbnail={onThumbnail}
             onAnalyze={hasTerminals ? onAnalyze : undefined}
+            isStart={seq?.start === selectedEntry.scene.id}
+            onSetStart={seq ? () => commitSequence(setStart(seq, selectedEntry.scene!.id)) : undefined}
           />
         </SlotPortal>
       )}

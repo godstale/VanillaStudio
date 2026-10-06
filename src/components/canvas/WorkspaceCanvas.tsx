@@ -8,7 +8,10 @@ import {
   type Edge,
   type Node,
   type NodeTypes,
+  type OnConnect,
+  type OnEdgesChange,
   type OnNodesChange,
+  type OnReconnect,
   type ReactFlowProps,
   type Viewport,
 } from '@xyflow/react';
@@ -24,6 +27,13 @@ export interface WorkspaceCanvasProps {
   initialView?: Viewport;
   onViewChange?: (view: Viewport) => void;
   onNodesChange?: OnNodesChange;
+  /** 엣지 편집: 핸들을 끌어 잇기·삭제(Delete 키)·끝점 옮기기·선택. */
+  onConnect?: OnConnect;
+  onEdgesChange?: OnEdgesChange;
+  onReconnect?: OnReconnect;
+  onEdgeClick?: ReactFlowProps['onEdgeClick'];
+  onNodeClick?: ReactFlowProps['onNodeClick'];
+  onPaneClick?: ReactFlowProps['onPaneClick'];
   onNodeDragStop?: ReactFlowProps['onNodeDragStop'];
   onPaneContextMenu?: ReactFlowProps['onPaneContextMenu'];
   children?: ReactNode;

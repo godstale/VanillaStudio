@@ -45,6 +45,9 @@ export interface SceneInspectorProps {
   onThumbnail?: (slug: string, dataUrl: string) => void;
   /** 레퍼런스 분석 실행(터미널의 에이전트). 없으면 버튼이 꺼진다. */
   onAnalyze?: (slug: string) => void;
+  /** 이 신이 시퀀스의 시작 신인가, 그리고 시작 신으로 지정하는 동작. */
+  isStart?: boolean;
+  onSetStart?: () => void;
 }
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error' | 'invalid';
@@ -117,7 +120,7 @@ function useAutosave(onSave: (s: Scene) => Promise<void>) {
 }
 
 /** 노드를 고르면 우측에 열리는 신 편집 패널. 선택이 바뀌면 `key`로 새로 마운트해 쓴다. */
-export function SceneInspector({ workspace, root, slug, scene, template, templateError, canvas, tab: tabProp, onTabChange, onSave, onRename, onThumbnail, onAnalyze }: SceneInspectorProps) {
+export function SceneInspector({ workspace, root, slug, scene, template, templateError, canvas, tab: tabProp, onTabChange, onSave, onRename, onThumbnail, onAnalyze, isStart, onSetStart }: SceneInspectorProps) {
   const { t } = useLanguage();
   const [ownTab, setOwnTab] = useState<Tab>('overview');
   const tab = tabProp ?? ownTab;
@@ -206,6 +209,13 @@ export function SceneInspector({ workspace, root, slug, scene, template, templat
                 onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
               />
             </Field>
+            {onSetStart && (
+              <div className="flex items-center gap-2 text-xs">
+                <Button size="sm" variant="outline" disabled={isStart} onClick={onSetStart}>
+                  {isStart ? t('sequence.isStart') : t('sequence.setStart')}
+                </Button>
+              </div>
+            )}
             <div className="grid grid-cols-2 gap-2 text-xs">
               <Field label={t('inspector.type')}>
                 <span className="rounded border border-border bg-muted px-2 py-1.5">{t(`scene.type.${draft.type}`)}</span>

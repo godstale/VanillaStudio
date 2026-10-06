@@ -86,6 +86,7 @@ export async function loadCustomTransitions(root: string): Promise<LoadedCustomT
   } catch {
     return out;
   }
+  if (!Array.isArray(entries)) return out;
   for (const e of entries.filter((x) => !x.is_dir && x.name.endsWith('.json')).sort((a, b) => a.name.localeCompare(b.name))) {
     const file = e.name.slice(0, -'.json'.length);
     try {
