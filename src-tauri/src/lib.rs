@@ -6,6 +6,7 @@ use commands::doctor_commands::*;
 use commands::export_commands::*;
 use commands::fs_commands::*;
 use commands::process_commands::*;
+use commands::package_commands::*;
 use commands::pty_commands::*;
 use commands::reference_commands::*;
 use commands::search_commands::*;
@@ -65,6 +66,10 @@ pub fn run() {
             run_shell,
             doctor_check,
             extract_reference_frames,
+            create_vsx,
+            inspect_vsx,
+            extract_vsx_scene,
+            extract_vsx_workspace,
             ffmpeg_download,
             ffmpeg_download_cancel,
             install_project_deps,

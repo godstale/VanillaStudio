@@ -11,3 +11,4 @@ pub mod scene_commands;
 pub mod template_commands;
 pub mod trust_commands;
 pub mod reference_commands;
+pub mod package_commands;

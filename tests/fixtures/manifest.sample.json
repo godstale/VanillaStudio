@@ -1,0 +1,33 @@
+{
+  "formatVersion": 1,
+  "kind": "scene",
+  "app": {
+    "name": "vanilla-studio",
+    "version": "0.1.0"
+  },
+  "schemas": {
+    "workspace": 1,
+    "scene": 1,
+    "sequence": 1
+  },
+  "workspace": {
+    "id": "ws_0123456789abcdef",
+    "name": "Demo"
+  },
+  "scene": "intro",
+  "templates": [
+    "guide-templates/mine@1"
+  ],
+  "files": [
+    {
+      "path": "scenes/intro/GUIDE.md",
+      "size": 12,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "path": "scenes/intro/scene.json",
+      "size": 345,
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  ]
+}

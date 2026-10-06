@@ -106,7 +106,7 @@
 
 ## V7 패키지·마이그레이션·릴리스 (branch: `feat/v2-release`)
 
-- [ ] T7.1 [레인 A · W1] `manifest.json` zod(파일별 SHA-256·앱/스키마 버전·사용 템플릿)·`.vsx` 만들기(포함/제외 규칙·레퍼런스 원본 영상 옵션·템플릿 동봉) — 대상: `src/lib/package/*`, `src-tauri/src/commands/package_commands.rs` · 완료 판정: 패키지 생성·해시 테스트 · 선행: V6 · (D-027, D-031)
+- [x] T7.1 [레인 A · W1] `manifest.json` zod(파일별 SHA-256·앱/스키마 버전·사용 템플릿)·`.vsx` 만들기(포함/제외 규칙·레퍼런스 원본 영상 옵션·템플릿 동봉) — 대상: `src/lib/package/*`, `src-tauri/src/commands/package_commands.rs` · 완료 판정: 패키지 생성·해시 테스트 · 선행: V6 · (D-027, D-031) — 구현: Rust `package_commands.rs`(허용 목록 포함 규칙·결정적 zip(정렬·고정 시각·권한)·manifest·해시), TS `lib/package/{manifest,api}.ts`. Rust/TS 계약은 골든 파일 `tests/fixtures/manifest.sample.json`로 대조. 신 패키지·시퀀스 패키지·레퍼런스 원본 옵션·사용자 템플릿 동봉
 - [ ] T7.2 [레인 A · W2] `.vsx` 열기·가져오기(zip-slip·절대경로·심링크 거부, 해시 검증, 버전 확인·마이그레이션 제안, `rules.md`·`AGENTS.md`·템플릿 출처 확인 다이얼로그, `workspaceId` 재작성) + 신 가져오기 — 대상: `package_commands.rs`, `src/components/package/*` · 완료 판정: 악성 zip 케이스 거부 테스트, 왕복 후 재생 · 선행: T7.1 · (R-9, D-029)
 - [ ] T7.3 [레인 B · W2] 신 템플릿으로 저장(내용 초기화·구조·가이드 유지)·새 신 생성 시 선택 — 대상: `src/lib/scene/saveAsTemplate.ts` · 완료 판정: 저장 → 신 생성 → 구조 일치 · 선행: T7.1
 - [ ] T7.4 [레인 C · W2] 재현성 테스트: 같은 `scene.json` → 같은 가이드 바이트, 패키지 왕복 바이트 동일, 다른 폴더·PC 재현 절차 문서 — 대상: `tests/repro/*`, `Docs/Verification/Reproducibility.md` · 완료 판정: 테스트 통과, 절차 문서 · 선행: T7.1
