@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "id": "scn_landing00001",
+  "name": "Morning Grain landing",
+  "template": "web-page@1",
+  "brief": {
+    "subject": "Morning Grain coffee subscription",
+    "goal": "Start subscriptions",
+    "audience": "Home coffee drinkers, 25-40",
+    "message": "Fresh-roasted beans, every week",
+    "language": "en"
+  },
+  "type": "static",
+  "mode": "scroll",
+  "steps": [],
+  "sections": [
+    "hero",
+    "how-it-works",
+    "beans"
+  ],
+  "layout": "single column, centered hero, three-column cards",
+  "breakpoints": [
+    "1440",
+    "390"
+  ],
+  "accessibility": [
+    "semantic landmarks",
+    "contrast 4.5:1"
+  ],
+  "custom": {},
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

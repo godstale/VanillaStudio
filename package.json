@@ -15,7 +15,8 @@
     "test:e2e:scene": "node tests/e2e/scene-preview.mjs",
     "test:e2e:agent": "node tests/e2e/scene-preview.mjs --agent-scene",
     "test:e2e:sequence": "node tests/e2e/sequence-playback.mjs",
-    "test:e2e:v1": "node tests/e2e/v1-migration.mjs"
+    "test:e2e:v1": "node tests/e2e/v1-migration.mjs",
+    "test:e2e:samples": "node tests/e2e/samples-playback.mjs"
   },
   "dependencies": {
     "@codemirror/commands": "^6.11.1",

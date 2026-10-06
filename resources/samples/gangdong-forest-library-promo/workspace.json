@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "workspaceId": "ws_gangdongforest1",
+  "name": "Gangdong Forest Library Promo",
+  "canvas": {
+    "aspect": "16:9",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30
+  }
+}

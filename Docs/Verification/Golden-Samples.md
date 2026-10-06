@@ -126,3 +126,29 @@
 - 샘플 구성(유형별 1종씩, 가상 브랜드)과 합격선(루브릭 평균 3.5)이 적절한지
 - G3(강의 덱)를 실제 강의 자료로도 쓸지. 쓴다면 내용을 사용자가 보강해야 한다.
 - 샘플을 추가·교체할지(예: 다국어 텍스트, 한글 폰트 슬라이드)
+
+---
+
+## v2 샘플 카탈로그 (T7.6, 2026-10-06)
+
+v2(Scene 워크스페이스)의 회귀 기준으로 `resources/samples/`에 **실행 가능한 샘플 워크스페이스 4종**을 둔다. 각각 `workspace.json`·`sequence.json`·`scenes/<slug>/{scene.json, src/…}`를 갖고, 워크스페이스 템플릿 위에 덮어 쓰면 바로 열린다. 위 G1~G5 브리프(v1 파이프라인 기준)는 에이전트 생성 품질 평가용으로 그대로 유효하며, 아래 샘플은 **앱이 만드는 파일과 재생 경로의 회귀 기준**이다.
+
+| 샘플 | 타입 | 내용 | 확인하는 것 |
+| --- | --- | --- | --- |
+| `gangdong-forest-library-promo` | motion | 강동 숲속 도서관 강좌 홍보 10초(6 beats, 원본 단독 HTML을 신으로 변환, 원본은 `v1-archive/standalone.html`) | 같은 `t` → 같은 프레임(결정성), 다른 `t` → 다른 프레임 |
+| `landing-page` | static(scroll) | 가상 로스터리 랜딩 페이지(히어로·3단계·원두 카드) | 문구·카드 렌더, 토큰 색(CSS 변수) |
+| `torus-showcase` | 3d | 회전하는 토러스 매듭(`useTime`, `useDesign`) | R3F 렌더, 같은 `t` → 같은 프레임 |
+| `sequence-demo` | 시퀀스 | motion → static(steps) → 3d + choice 분기(Finish·Again) | 자동 진행·클릭 단계·분기·전환·순환 |
+
+### 회귀 테스트
+
+```bash
+pnpm vitest run src/lib/sequence/sampleCatalog.test.ts src/lib/sequence/sampleSequence.test.ts   # JSON 드리프트·스키마·가이드 렌더·계약 검사(오류 0)
+pnpm test:e2e:samples    # 실제 Chrome: motion·3d 결정성(렌더 모드로 두 번 열어 픽셀 비교), static 렌더
+pnpm test:e2e:sequence   # 시퀀스 샘플 전 구간 재생 + 전환 지연 수치
+```
+
+- JSON(`workspace.json`·`scene.json`·`sequence.json`)은 테스트 코드가 만든 정규형과 바이트까지 같아야 한다. 다시 만들려면 `GEN_SAMPLE=1 pnpm vitest run <그 테스트>`.
+- 소스(`src/`)는 사람이 쓴 파일이다. 변경하면 위 테스트가 계약 위반(금지 시간 API·`defineScene` 누락 등)을 잡는다.
+- v1 마이그레이션 샘플(`tests/fixtures/v1/*`)은 별도다: `pnpm test:e2e:v1`(`wiki/sources/issue-v1-migration.md`).
+
