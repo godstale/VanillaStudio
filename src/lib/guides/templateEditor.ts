@@ -15,6 +15,8 @@ export interface TemplateDraft {
   extends: string;
   label: { ko: string; en: string };
   hide: string[];
+  /** 새 신에 줄 내장 필드 기본값(신 템플릿으로 저장할 때 채워진다). 편집기는 건드리지 않고 그대로 보존한다. */
+  defaults: Record<string, unknown>;
   fields: CustomField[];
   rules: string;
   checklist: string;
@@ -32,6 +34,7 @@ export function duplicateDraft(parent: GuideTemplate, id: string, label: { ko: s
     extends: parent.ref,
     label,
     hide: [],
+    defaults: {},
     fields: [],
     rules: '',
     checklist: '',
@@ -49,6 +52,7 @@ export function draftFromTemplate(t: GuideTemplate): TemplateDraft {
     extends: t.meta.extends,
     label: t.meta.label,
     hide: t.schema.hide,
+    defaults: t.schema.defaults,
     fields: t.schema.fields,
     rules: t.rules.trim(),
     checklist: t.checklist.trim(),
@@ -63,7 +67,7 @@ export function draftToFiles(d: TemplateDraft): TemplateFiles {
   const json = (v: unknown) => `${JSON.stringify(v, null, 2)}\n`;
   const files: TemplateFiles = {
     'template.json': json({ id: d.id, version: d.version, type: d.type, label: d.label, extends: d.extends }),
-    'schema.json': json({ version: 1, hide: d.hide, defaults: {}, fields: d.fields }),
+    'schema.json': json({ version: 1, hide: d.hide, defaults: d.defaults, fields: d.fields }),
   };
   if (d.rules.trim()) files['rules.md'] = lines(d.rules);
   if (d.checklist.trim()) files['checklist.md'] = lines(d.checklist);

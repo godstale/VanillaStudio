@@ -28,6 +28,7 @@ import { SequenceIssues } from './SequenceIssues';
 import { useSequenceEdges, type SceneInfo } from './useSequenceEdges';
 import { ExportDialog, ImportDialog } from '@/components/package/PackageDialogs';
 import { usedTemplateDirs } from '@/lib/package/manifest';
+import { saveSceneAsTemplate } from '@/lib/scene/saveAsTemplate';
 import { projectPath } from '@/lib/workspace/files';
 import { DiffDialog } from './DiffDialog';
 import { NewSceneDialog, type NewSceneValues } from './NewSceneDialog';
@@ -452,6 +453,13 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
             onAnalyze={hasTerminals ? onAnalyze : undefined}
             isStart={seq?.start === selectedEntry.scene.id}
             onSetStart={seq ? () => commitSequence(setStart(seq, selectedEntry.scene!.id)) : undefined}
+            onSaveAsTemplate={async (name) => {
+              const parent = resolve(selectedEntry.scene!);
+              if (!parent) throw new Error('template-unavailable');
+              const r = await saveSceneAsTemplate(root, selectedEntry.scene!, parent, name, (ref) => catalog.get(ref) !== null);
+              await reloadTemplates();
+              return { ref: r.template.ref };
+            }}
           />
         </SlotPortal>
       )}

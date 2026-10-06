@@ -9,6 +9,7 @@ import { INSPECTOR_TABS, type InspectorTab } from './inspectorTabs';
 import { PreviewPanel } from '@/components/scene/PreviewPanel';
 import { CheckPanel } from '@/components/scene/CheckPanel';
 import { References } from './References';
+import { SaveAsTemplate } from './SaveAsTemplate';
 import type { GuideContext } from '@/lib/guides/agentsMd';
 import { promptForScene } from '@/lib/agents/clipboard';
 import { changedSinceSettled } from '@/lib/scene/revision';
@@ -48,6 +49,8 @@ export interface SceneInspectorProps {
   /** 이 신이 시퀀스의 시작 신인가, 그리고 시작 신으로 지정하는 동작. */
   isStart?: boolean;
   onSetStart?: () => void;
+  /** 이 신의 구조를 신 템플릿으로 저장한다. 없으면(템플릿을 쓸 수 없는 신 등) 섹션을 숨긴다. */
+  onSaveAsTemplate?: (name: string) => Promise<{ ref: string }>;
 }
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error' | 'invalid';
@@ -120,7 +123,7 @@ function useAutosave(onSave: (s: Scene) => Promise<void>) {
 }
 
 /** 노드를 고르면 우측에 열리는 신 편집 패널. 선택이 바뀌면 `key`로 새로 마운트해 쓴다. */
-export function SceneInspector({ workspace, root, slug, scene, template, templateError, canvas, tab: tabProp, onTabChange, onSave, onRename, onThumbnail, onAnalyze, isStart, onSetStart }: SceneInspectorProps) {
+export function SceneInspector({ workspace, root, slug, scene, template, templateError, canvas, tab: tabProp, onTabChange, onSave, onRename, onThumbnail, onAnalyze, isStart, onSetStart, onSaveAsTemplate }: SceneInspectorProps) {
   const { t } = useLanguage();
   const [ownTab, setOwnTab] = useState<Tab>('overview');
   const tab = tabProp ?? ownTab;
@@ -246,6 +249,7 @@ export function SceneInspector({ workspace, root, slug, scene, template, templat
                 <option value="en">English</option>
               </select>
             </Field>
+            {onSaveAsTemplate && template && <SaveAsTemplate onSave={onSaveAsTemplate} />}
           </>
         )}
 
