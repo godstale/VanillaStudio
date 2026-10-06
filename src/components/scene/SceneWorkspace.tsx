@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { applyNodeChanges, Panel, ReactFlowProvider, useReactFlow, type NodeChange, type Viewport } from '@xyflow/react';
-import { Plus } from 'lucide-react';
+import { Plus, Share2, PackageOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { WorkspaceCanvas } from '@/components/canvas/WorkspaceCanvas';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -26,6 +26,8 @@ import { loadCustomTransitions } from '@/lib/playground/transitions/custom';
 import { EdgeSection } from '@/components/inspector/EdgeSection';
 import { SequenceIssues } from './SequenceIssues';
 import { useSequenceEdges, type SceneInfo } from './useSequenceEdges';
+import { ExportDialog, ImportDialog } from '@/components/package/PackageDialogs';
+import { usedTemplateDirs } from '@/lib/package/manifest';
 import { projectPath } from '@/lib/workspace/files';
 import { DiffDialog } from './DiffDialog';
 import { NewSceneDialog, type NewSceneValues } from './NewSceneDialog';
@@ -84,7 +86,8 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
   const workspace = useMemo(() => ({ id: workspaceProp.id, name: workspaceProp.name }), [workspaceProp.id, workspaceProp.name]);
   const { t } = useLanguage();
   const rf = useReactFlow();
-  const { catalog, resolve } = useTemplates();
+  const { catalog, resolve, reload: reloadTemplates } = useTemplates();
+  const [packageDialog, setPackageDialog] = useState<'export' | 'import' | null>(null);
   const [nodes, setNodes] = useState<SceneFlowNode[]>([]);
   const [entries, setEntries] = useState<SceneEntry[]>([]);
   const [dialog, setDialog] = useState<{ x: number; y: number } | null>(null);
@@ -364,6 +367,14 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
             <Plus className="mr-1 h-4 w-4" />
             {t('scene.add')}
           </Button>
+          <Button size="sm" variant="outline" onClick={() => setPackageDialog('export')} aria-label={t('package.menu.export')}>
+            <Share2 className="mr-1 h-4 w-4" />
+            {t('package.menu.export')}
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => setPackageDialog('import')} aria-label={t('package.menu.import')}>
+            <PackageOpen className="mr-1 h-4 w-4" />
+            {t('package.menu.import')}
+          </Button>
           {seq && (
             <select
               aria-label={t('sequence.mode')}
@@ -453,6 +464,25 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
         onRevertDisallowed={() => void review.revertDisallowed()}
         onRevertAll={() => void review.revertAll()}
         onClose={review.dismiss}
+      />
+      <ExportDialog
+        open={packageDialog === 'export'}
+        onOpenChange={(o) => !o && setPackageDialog(null)}
+        root={root}
+        workspaceName={workspace.name}
+        selected={selectedEntry?.scene ? { slug: selectedEntry.slug, name: selectedEntry.scene.name } : null}
+        templates={(scope) => usedTemplateDirs((scope === 'scene' && selectedEntry?.scene ? [selectedEntry.scene] : entries.flatMap((e) => (e.scene ? [e.scene] : []))), (dir) => catalog.get(dir.slice('guide-templates/'.length))?.source === 'workspace')}
+      />
+      <ImportDialog
+        open={packageDialog === 'import'}
+        onOpenChange={(o) => !o && setPackageDialog(null)}
+        root={root}
+        workspace={workspace}
+        resolverAfterTemplates={async () => {
+          const fresh = await reloadTemplates();
+          return (scene) => fresh.get(scene.template)?.template ?? null;
+        }}
+        onImported={() => reloadRef.current()}
       />
       <NewSceneDialog open={dialog !== null} onOpenChange={(o) => !o && setDialog(null)} onCreate={onCreate} />
     </>

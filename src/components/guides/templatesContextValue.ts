@@ -5,8 +5,8 @@ import type { Scene } from '@/lib/scene/schema';
 
 export interface TemplatesValue {
   catalog: Catalog;
-  /** 디스크에서 다시 읽는다(템플릿을 저장한 뒤 호출). */
-  reload: () => Promise<void>;
+  /** 디스크에서 다시 읽는다(템플릿을 저장하거나 가져온 뒤 호출). 새 카탈로그를 돌려준다. */
+  reload: () => Promise<Catalog>;
   /** 신이 쓰는 템플릿. 없거나 사용을 거부하면 null. */
   resolve: (scene: Scene) => GuideTemplate | null;
 }
@@ -21,6 +21,6 @@ export function useTemplates(): TemplatesValue {
   return useMemo(() => {
     if (ctx) return ctx;
     const catalog = builtinOnly();
-    return { catalog, reload: async () => undefined, resolve: (scene: Scene) => catalog.get(scene.template)?.template ?? null };
+    return { catalog, reload: async () => catalog, resolve: (scene: Scene) => catalog.get(scene.template)?.template ?? null };
   }, [ctx]);
 }

@@ -10,7 +10,9 @@ export function TemplatesProvider({ root, children }: { root: string; children: 
 
   const reload = useCallback(async () => {
     const settings = await settingsRepo.getSettings().catch(() => null);
-    setCatalog(await loadCatalog(root, settings?.templatesDir ?? null));
+    const next = await loadCatalog(root, settings?.templatesDir ?? null);
+    setCatalog(next);
+    return next;
   }, [root]);
 
   useEffect(() => {

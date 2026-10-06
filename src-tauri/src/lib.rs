@@ -70,6 +70,8 @@ pub fn run() {
             inspect_vsx,
             extract_vsx_scene,
             extract_vsx_workspace,
+            extract_vsx_templates,
+            read_vsx_text,
             ffmpeg_download,
             ffmpeg_download_cancel,
             install_project_deps,

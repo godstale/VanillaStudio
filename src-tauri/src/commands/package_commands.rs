@@ -452,28 +452,80 @@ pub fn create_vsx(workspace_root: String, out_path: String, options: PackOptions
     create_package(&root, Path::new(&out_path), &options)
 }
 
+/// 검사를 통과한 패키지에서 텍스트 파일 하나를 읽는다(내용을 어디에도 쓰지 않는다). 가져오기 계획(시퀀스·신 이름)을 세울 때 쓴다.
+pub fn read_text_entry(path: &Path, entry: &str) -> Result<String, String> {
+    let name = safe_entry_name(entry)?;
+    let (_m, mut files) = read_all(path)?;
+    let bytes = files.remove(&name).ok_or_else(|| format!("missing-file: {name}"))?;
+    String::from_utf8(bytes).map_err(|_| format!("not-text: {name}"))
+}
+
+#[tauri::command]
+pub fn read_vsx_text(path: String, entry: String) -> Result<String, String> {
+    read_text_entry(Path::new(&path), &entry)
+}
+
 /// 열기 전 검사. 내용을 어디에도 쓰지 않는다.
 #[tauri::command]
 pub fn inspect_vsx(path: String) -> Result<PackageInfo, String> {
     inspect_package(Path::new(&path))
 }
 
-/// 신 패키지의 신 폴더를 현재 워크스페이스의 `scenes/<slug>/`로 푼다(없는 폴더여야 한다).
+/// 패키지의 신 폴더를 현재 워크스페이스의 `scenes/<slug>/`로 푼다. 대상은 없는 폴더이거나 `scene.json`이 아직 없는 폴더(앱이 방금 만든 빈 신 폴더)여야 한다.
+/// 파일은 절대 덮어쓰지 않는다. 실패했을 때 이 명령이 만든 폴더만 지운다(원래 있던 폴더는 호출한 쪽이 정리한다).
 #[tauri::command]
 pub fn extract_vsx_scene(workspace_root: String, path: String, source_slug: String, target_slug: String) -> Result<Vec<String>, String> {
     if !valid_slug(&source_slug) || !valid_slug(&target_slug) {
         return Err("invalid-slug".into());
     }
     let dest = resolve_and_verify_workspace_path(&format!("{workspace_root}/scenes/{target_slug}"), Some(&workspace_root), false)?;
-    if dest.exists() {
+    if dest.join("scene.json").exists() {
         return Err("scene-exists".into());
     }
+    let existed = dest.exists();
     let filter = ExtractFilter { prefix: Some(format!("scenes/{source_slug}/")), strip: Some(format!("scenes/{source_slug}/")) };
     let r = extract_package(Path::new(&path), &dest, &filter);
-    if r.is_err() {
+    if r.is_err() && !existed {
         let _ = fs::remove_dir_all(&dest); // 반쯤 풀린 폴더를 남기지 않는다
     }
     r
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+pub struct TemplateImport {
+    pub imported: Vec<String>,
+    /// 워크스페이스에 같은 이름의 폴더가 이미 있어 건드리지 않은 템플릿.
+    pub skipped: Vec<String>,
+}
+
+/// 패키지가 동봉한 사용자 정의 템플릿을 워크스페이스 `guide-templates/`로 푼다. 이미 있는 템플릿 폴더는 건드리지 않는다(병합·덮어쓰기 없음).
+pub fn import_templates(root: &Path, pkg: &Path) -> Result<TemplateImport, String> {
+    let info = inspect_package(pkg)?;
+    let mut out = TemplateImport { imported: vec![], skipped: vec![] };
+    for dir in &info.manifest.templates {
+        if !valid_template_dir(dir) {
+            return Err(format!("unsafe-entry-name: template dir: {dir}"));
+        }
+        let dest = root.join(dir);
+        if dest.exists() {
+            out.skipped.push(dir.clone());
+            continue;
+        }
+        let filter = ExtractFilter { prefix: Some(format!("{dir}/")), strip: Some(format!("{dir}/")) };
+        if let Err(e) = extract_package(pkg, &dest, &filter) {
+            let _ = fs::remove_dir_all(&dest);
+            return Err(e);
+        }
+        out.imported.push(dir.clone());
+    }
+    Ok(out)
+}
+
+#[tauri::command]
+pub fn extract_vsx_templates(workspace_root: String, path: String) -> Result<TemplateImport, String> {
+    let root = resolve_and_verify_workspace_path(&workspace_root, Some(&workspace_root), true)?;
+    // 대상은 항상 `<root>/guide-templates/<name>`이며 이름은 valid_template_dir로 검사한다.
+    import_templates(&root, Path::new(&path))
 }
 
 /// 시퀀스 패키지를 새(비어 있는) 폴더에 푼다. 폴더는 사용자가 고른 것이며 비어 있어야 한다.
@@ -747,6 +799,64 @@ mod tests {
         fs::write(target.join("scene.json"), "mine").unwrap();
         assert!(extract_package(&vsx, &target, &filter).unwrap_err().starts_with("would-overwrite"));
         assert_eq!(fs::read_to_string(target.join("scene.json")).unwrap(), "mine");
+        let _ = fs::remove_file(vsx);
+    }
+
+    /// 실제 샘플 시퀀스(resources/samples/sequence-demo)를 패키징해 풀면 파일이 그대로 돌아온다(왕복 후 재생의 전제).
+    #[test]
+    fn the_real_sample_sequence_round_trips() {
+        let sample = Path::new(env!("CARGO_MANIFEST_DIR")).join("../resources/samples/sequence-demo");
+        let out_dir = tempfile::tempdir().unwrap();
+        let vsx = out_dir.path().join("sample.vsx");
+        let report = create_package(&sample, &vsx, &opts()).unwrap();
+        let scenes: Vec<&str> = report.manifest.files.iter().filter(|f| f.path.ends_with("/scene.json")).map(|f| f.path.as_str()).collect();
+        assert_eq!(scenes, ["scenes/globe/scene.json", "scenes/intro/scene.json", "scenes/outro/scene.json", "scenes/page/scene.json"]);
+        let dest = out_dir.path().join("restored");
+        let written = extract_package(&vsx, &dest, &ExtractFilter::default()).unwrap();
+        assert_eq!(written.len(), report.files);
+        for rel in &written {
+            assert_eq!(fs::read(dest.join(rel)).unwrap(), fs::read(sample.join(rel)).unwrap(), "{rel}");
+        }
+        assert!(written.contains(&"scenes/globe/src/scene.tsx".to_string()));
+    }
+
+    #[test]
+    fn text_entries_can_be_read_after_validation() {
+        let d = workspace();
+        let vsx = pack(&d, "txt");
+        assert_eq!(read_text_entry(&vsx, "sequence.json").unwrap(), "{}");
+        assert!(read_text_entry(&vsx, "../x").unwrap_err().starts_with("unsafe-entry-name"));
+        assert!(read_text_entry(&vsx, "nope.txt").unwrap_err().starts_with("missing-file"));
+        let _ = fs::remove_file(vsx);
+    }
+
+    #[test]
+    fn templates_are_imported_once_and_never_merged() {
+        let d = workspace();
+        let vsx = d.path().join("../tpl.vsx");
+        create_package(d.path(), &vsx, &PackOptions { template_dirs: vec!["guide-templates/mine@1".into()], ..opts() }).unwrap();
+        let target = tempfile::tempdir().unwrap();
+        let first = import_templates(target.path(), &vsx).unwrap();
+        assert_eq!(first, TemplateImport { imported: vec!["guide-templates/mine@1".into()], skipped: vec![] });
+        assert!(target.path().join("guide-templates/mine@1/template.json").is_file());
+        // the user edits it; a second import must not touch it
+        fs::write(target.path().join("guide-templates/mine@1/template.json"), "edited").unwrap();
+        let second = import_templates(target.path(), &vsx).unwrap();
+        assert_eq!(second, TemplateImport { imported: vec![], skipped: vec!["guide-templates/mine@1".into()] });
+        assert_eq!(fs::read_to_string(target.path().join("guide-templates/mine@1/template.json")).unwrap(), "edited");
+        let _ = fs::remove_file(vsx);
+    }
+
+    #[test]
+    fn scene_extraction_accepts_an_empty_scaffold_but_not_an_existing_scene() {
+        let d = workspace();
+        let vsx = pack(&d, "scaf");
+        let target = tempfile::tempdir().unwrap();
+        let root = target.path().to_string_lossy().into_owned();
+        fs::create_dir_all(target.path().join("scenes/copy/src")).unwrap(); // what create_scene scaffolds
+        let ok = extract_vsx_scene(root.clone(), vsx.to_string_lossy().into_owned(), "intro".into(), "copy".into()).unwrap();
+        assert!(ok.contains(&"scene.json".to_string()));
+        assert_eq!(extract_vsx_scene(root, vsx.to_string_lossy().into_owned(), "intro".into(), "copy".into()).unwrap_err(), "scene-exists");
         let _ = fs::remove_file(vsx);
     }
 
