@@ -60,10 +60,14 @@ export class IframeScene implements SceneHandle {
     this.setLayer('hidden');
   }
 
+  /**
+   * 층 배치. 숨긴 신(프리로드)도 `visibility:hidden`/`display:none`으로 감추지 않는다: Chrome은 보이지 않는 cross-origin iframe의
+   * 렌더링을 멈추므로 신이 `ready`(두 프레임 그림)에 도달하지 못한다. 대신 맨 아래에 투명하게 두어 계속 그려지게 한다.
+   */
   setLayer(layer: Layer): void {
     const s = this.element.style;
-    s.zIndex = layer === 'top' ? '2' : '1';
-    s.visibility = layer === 'hidden' ? 'hidden' : 'visible';
+    s.zIndex = layer === 'top' ? '2' : layer === 'under' ? '1' : '0';
+    s.opacity = layer === 'hidden' ? '0' : '1';
     s.pointerEvents = 'none'; // 입력은 호스트의 입력 레이어가 받는다
   }
 

@@ -38,7 +38,8 @@ describe('IframeScene', () => {
     expect(url.searchParams.get('mode')).toBe('preview');
     expect(url.searchParams.get('host')).toBe(HOST);
     expect(s.element.getAttribute('sandbox')).toBe('allow-scripts allow-same-origin');
-    expect(s.element.style.visibility).toBe('hidden');
+    expect(s.element.style.opacity).toBe('0'); // preloaded scenes stay rendered but invisible
+    expect(s.element.style.visibility).not.toBe('hidden');
     s.dispose();
   });
 
@@ -192,11 +193,12 @@ describe('IframeScene', () => {
   it('layers: top is above, under is below, hidden is not visible, and none take pointer events', () => {
     const s = make();
     s.setLayer('top');
-    expect([s.element.style.zIndex, s.element.style.visibility]).toEqual(['2', 'visible']);
+    expect([s.element.style.zIndex, s.element.style.opacity]).toEqual(['2', '1']);
     s.setLayer('under');
-    expect([s.element.style.zIndex, s.element.style.visibility]).toEqual(['1', 'visible']);
+    expect([s.element.style.zIndex, s.element.style.opacity]).toEqual(['1', '1']);
     s.setLayer('hidden');
-    expect(s.element.style.visibility).toBe('hidden');
+    expect([s.element.style.zIndex, s.element.style.opacity]).toEqual(['0', '0']);
+    expect(s.element.style.visibility).not.toBe('hidden'); // would stop Chrome from rendering a cross-origin frame
     expect(s.element.style.pointerEvents).toBe('none');
   });
 });
@@ -220,12 +222,12 @@ describe('IframeSceneHost', () => {
     void b.load();
     expect(new URL(b.element.src).pathname).toBe('/scenes/page/src/custom.html');
     host.layout({ current: 'scn_a', next: 'scn_b' });
-    expect([a.element.style.zIndex, a.element.style.visibility]).toEqual(['2', 'visible']);
-    expect([b.element.style.zIndex, b.element.style.visibility]).toEqual(['1', 'visible']);
-    expect(c.element.style.visibility).toBe('hidden');
+    expect([a.element.style.zIndex, a.element.style.opacity]).toEqual(['2', '1']);
+    expect([b.element.style.zIndex, b.element.style.opacity]).toEqual(['1', '1']);
+    expect(c.element.style.opacity).toBe('0');
     host.layout({ current: 'scn_b', next: null });
     expect(b.element.style.zIndex).toBe('2');
-    expect(a.element.style.visibility).toBe('hidden');
+    expect(a.element.style.opacity).toBe('0');
     expect(host.get('scn_c')).toBe(c);
   });
 });

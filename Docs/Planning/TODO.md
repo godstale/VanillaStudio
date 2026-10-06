@@ -9,7 +9,7 @@
 ## ▶ 진입점 (2026-10-05)
 
 - **기획·설계·지침 문서 개정 완료**(`docs/v2-refactor-spec` 브랜치, main 병합·push는 사용자 승인 대기).
-- **다음 작업**: V5 완료(GUI·실제 에이전트 데모 확인 필요, `wiki/sources/milestone-v5.md`). 다음: V6 시퀀스·플레이그라운드(브랜치 `feat/v2-sequence`, T6.1부터). main 병합·push는 사용자 승인 대기.
+- **다음 작업**: V6 구현 완료(GUI 확인 필요, `wiki/sources/milestone-v6.md`). 다음: V7 패키지·마이그레이션·릴리스(브랜치 `feat/v2-release`, T7.1부터). main 병합·push는 사용자 승인 대기.
 - 이월 항목(v1): T7.2 클린 VM 재실행·T7.5 코드 서명은 V7.7에서 이어받는다.
 
 ---
@@ -99,9 +99,9 @@
 - [x] T6.3 [레인 C · W2] 전환 라이브러리(T6.0 결과 범위: `cut`·`crossfade`·`slide-*`·`mask-wipe`·`circular-reveal`·`zoom-through`) + 용어집(`transition`) 연결 — 대상: `src/lib/playground/transitions/*`, `resources/glossary/motion.json` · 완료 판정: 전환별 단위·시각 테스트 · 선행: T6.0, T3.1 — 구현: `playground/transitions/{index,run}.ts`(순수 계획 + WAAPI 재생), 9종(`cut`·`crossfade`·`slide-left/right/up/down`·`mask-wipe`·`circular-reveal`·`zoom-through`), 3개 용어집에 slide-right/up/down 추가, 검증에 `unknown-transition` 규칙
 - [x] T6.4 [레인 C · W3] `match-cut`(요소 ID 지정)·`custom` 전환(`transitions/<name>.ts` 계약, 에이전트 구현용 규칙을 AGENTS.md·가이드에 추가) — 대상: `src/lib/playground/transitions/custom.ts`, 가이드 렌더 · 완료 판정: 샘플 custom 전환 로드 테스트 · 선행: T6.3 · (선택: R-1 결과 따라 축소 가능) — 결과: `match-cut` v2.0 제외(PoC R-1), `custom`은 선언형 `transitions/<name>.json`(속성·값 화이트리스트, 코드 실행 없음) — `transitions/custom.ts`, 워크스페이스 AGENTS.md에 작성 규칙
 - [x] T6.5 [레인 A · W2] 시퀀스 매니저 상태 머신(linear·`end`·`click`·`key`·`timeout`·`choice`, static step 위임, 신 로딩·프리로드, 오류 처리) — 대상: `src/lib/sequence/manager.ts` · 완료 판정: trigger 종류별 시나리오 테스트(가짜 Bridge) · 선행: T6.1, T4.6 · (D-032) — 구현: `sequence/manager.ts`(신은 `SceneHandle`, 전환은 `TransitionRunner`로 주입 → 가짜 Bridge 시나리오 테스트 20개). 일시정지 시 timeout 타이머 정지·재개, 이웃 신 프리로드, 로드 실패는 현재 신 유지+오류, retry/jump/choose/back
-- [ ] T6.6 [레인 B · W3] Playground UI(재생/일시정지/시크·신 점프·진행률, 입력 힌트(클릭/방향키), `choice` 오버레이, 오류 배너) — 대상: `src/components/playground/*` · 완료 판정: 샘플 시퀀스 재생 CDP E2E · 선행: T6.5, T6.3
-- [ ] T6.7 [레인 C · W3] 로컬 서빙 방식 확정·프리로드 최적화(신 전환 지연 측정) — 대상: `src-tauri/src/*`, `workers/` · 완료 판정: 전환 지연 수치 기록 · 선행: T6.5
-- [ ] T6.8 [단독 · W4] 샘플 시퀀스 제작·검증(motion→static(steps)→3d + choice 분기 1개) — 대상: `resources/samples/sequence-demo/` · 완료 판정: 데모 ①~③ · 선행: T6.2~T6.7
+- [x] T6.6 [레인 B · W3] Playground UI(재생/일시정지/시크·신 점프·진행률, 입력 힌트(클릭/방향키), `choice` 오버레이, 오류 배너) — 대상: `src/components/playground/*` · 완료 판정: 샘플 시퀀스 재생 CDP E2E · 선행: T6.5, T6.3 — 구현: `Playground` 페이지·`SequencePlayer`(재생·일시정지·시크·신 점프·입력 힌트·choice 오버레이·오류 배너), `IframeScene`/`IframeSceneHost`(Bridge v2), 브라우저 전환 러너. CDP E2E `pnpm test:e2e:sequence`. 프리로드 신은 `visibility:hidden`이면 Chrome이 렌더를 멈춰 `ready`가 오지 않으므로 맨 아래 투명 층으로 둔다
+- [x] T6.7 [레인 C · W3] 로컬 서빙 방식 확정·프리로드 최적화(신 전환 지연 측정) — 대상: `src-tauri/src/*`, `workers/` · 완료 판정: 전환 지연 수치 기록 · 선행: T6.5 — 결정: 별도 정적 서버 없이 워크스페이스 프리뷰 서버(vite-runner)를 그대로 쓴다(v2.0). 수치(헤드리스 Chrome, 샘플 시퀀스): 시작 신 콜드 로드 1.23s, 비이웃 신 점프 0.13s, 프리로드 이웃 전환은 설정값+10~120ms(crossfade 600→612ms, slide-left 500→550, circular-reveal 700→708, zoom-through 600→718)
+- [x] T6.8 [단독 · W4] 샘플 시퀀스 제작·검증(motion→static(steps)→3d + choice 분기 1개) — 대상: `resources/samples/sequence-demo/` · 완료 판정: 데모 ①~③ · 선행: T6.2~T6.7 — 구현: `resources/samples/sequence-demo/`(intro motion → page static steps → globe 3d, choice Finish/Again 분기). JSON은 `sampleSequence.test.ts`가 생성·드리프트 검사, 재생은 E2E로 확인
 - [ ] T6.9 [단독 · 마무리] V6 마무리: `milestone-v6.md`, 설계서 §4.2·§5 갱신 · 선행: T6.8
 
 ## V7 패키지·마이그레이션·릴리스 (branch: `feat/v2-release`)

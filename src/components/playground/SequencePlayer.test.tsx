@@ -61,8 +61,8 @@ describe('SequencePlayer', () => {
     expect(screen.getByRole('status').textContent).toMatch(/불러오는 중|Loading/);
     fromScene('scn_m', 'ready', ready(4));
     await waitFor(() => expect(screen.queryByText(/불러오는 중|Loading/)).toBeNull());
-    expect(frameOf('scn_m').style.visibility).toBe('visible');
-    expect(frameOf('scn_d').style.visibility).toBe('hidden'); // preloaded neighbour
+    expect(frameOf('scn_m').style.opacity).toBe('1');
+    expect(frameOf('scn_d').style.opacity).toBe('0'); // preloaded neighbour (kept rendering, invisible)
     expect(frameOf('scn_s')).toBeUndefined(); // not adjacent
     expect(screen.getByTestId('player-time').textContent).toMatch(/0\.0s \/ 4\.0s/);
   });
@@ -76,7 +76,7 @@ describe('SequencePlayer', () => {
     fromScene('scn_m', 'time', { t: 4, sceneId: null });
     await waitFor(() => expect(screen.getByTestId('player-progress').textContent).toMatch(/3 \/ 3.*Globe/));
     expect(frameOf('scn_m')).toBeUndefined(); // old scene disposed
-    expect(frameOf('scn_d').style.visibility).toBe('visible');
+    expect(frameOf('scn_d').style.opacity).toBe('1');
   });
 
   it('click layer advances: a motion scene waiting for a click, then the end', async () => {
@@ -113,7 +113,7 @@ describe('SequencePlayer', () => {
     fromScene('scn_s', 'ready', ready());
     fireEvent.click(screen.getByRole('button', { name: 'Page' }));
     await waitFor(() => expect(frameOf('scn_m')).toBeUndefined());
-    expect(frameOf('scn_s').style.visibility).toBe('visible');
+    expect(frameOf('scn_s').style.opacity).toBe('1');
   });
 
   it('a static scene shows steps and step buttons delegate to the page', async () => {

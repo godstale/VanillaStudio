@@ -1,0 +1,16 @@
+<!doctype html>
+<!-- 플레이그라운드 E2E 하네스: Tauri 없이 시퀀스 매니저·iframe 신 호스트·전환을 실제 브라우저에서 돌린다. tests/e2e/sequence-playback.mjs가 연다. -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Playground harness</title>
+    <style>
+      html, body { margin: 0; background: #111; }
+      #stage { position: relative; width: 1280px; height: 720px; overflow: hidden; background: #000; }
+    </style>
+  </head>
+  <body>
+    <div id="stage"></div>
+    <script type="module" src="./playground.mjs"></script>
+  </body>
+</html>
