@@ -253,7 +253,7 @@ const en: Dict = {
   'references.addFile': 'Add image or video',
   'references.url': 'Reference URL',
   'references.addUrl': 'Add URL',
-  'references.urlPolicy': 'URLs are only recorded. The app never downloads them; the agent opens them itself.',
+  'references.urlPolicy': 'URLs are only recorded. The app never downloads them; the agent opens them itself. Use references to learn a style, not to copy the work of others.',
   'references.analyze': 'Run analysis',
   'references.analyzeHint': 'Opens the agent terminal with the analysis prompt. You review its changes afterwards.',
   'references.extract': 'Extract keyframes',

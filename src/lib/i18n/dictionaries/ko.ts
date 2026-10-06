@@ -251,7 +251,7 @@ const ko = {
   'references.addFile': '이미지·영상 추가',
   'references.url': '레퍼런스 URL',
   'references.addUrl': 'URL 추가',
-  'references.urlPolicy': 'URL은 기록만 합니다. 앱은 내려받지 않으며 에이전트가 직접 엽니다.',
+  'references.urlPolicy': 'URL은 기록만 합니다. 앱은 내려받지 않으며 에이전트가 직접 엽니다. 레퍼런스는 스타일을 배우는 용도이며, 남의 저작물을 그대로 가져오면 저작권 문제가 됩니다.',
   'references.analyze': '분석 실행',
   'references.analyzeHint': '분석 프롬프트와 함께 에이전트 터미널을 엽니다. 결과는 끝난 뒤 변경 사항으로 확인합니다.',
   'references.extract': '키프레임 추출',
