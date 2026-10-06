@@ -16,12 +16,15 @@ export type SceneEvent =
   | { type: 'done' }
   | { type: 'step'; index: number; total: number }
   | { type: 'choice'; label: string }
+  | { type: 'ready'; duration?: number }
   | { type: 'time'; t: number }
   | { type: 'error'; message: string };
 
 /** 로드된(또는 로드 중인) 신 하나. 구현은 iframe + Bridge다. */
 export interface SceneHandle {
   readonly sceneId: string;
+  /** 로드 뒤에 아는 길이(초). static은 없다. */
+  readonly duration?: number;
   /** 신이 `ready`가 될 때까지. 실패하면 거부한다. 여러 번 불러도 한 번만 로드한다. */
   load(): Promise<void>;
   /** 처음부터 재생(motion·3d) 또는 step 0으로(static). */
@@ -56,6 +59,8 @@ export interface ManagerState {
   step: { index: number; total: number } | null;
   /** 현재 신이 재생 중인 시각(초). */
   t: number;
+  /** 현재 신의 길이(초). static이거나 아직 모르면 null. */
+  duration: number | null;
   error: string | null;
   /** 지금 고를 수 있는 분기 라벨(현재 신에서 나가는 choice 엣지). */
   choices: string[];
@@ -103,7 +108,7 @@ export function createSequenceManager(options: ManagerOptions) {
   const issues = validateSequence(sequence, { workspaceId: options.workspaceId, scenes, customTransitions: options.customTransitions });
   const blocking = hasErrors(issues);
 
-  let state: ManagerState = { status: 'idle', current: null, next: null, step: null, t: 0, error: null, choices: [], history: [] };
+  let state: ManagerState = { status: 'idle', current: null, next: null, step: null, t: 0, duration: null, error: null, choices: [], history: [] };
   const listeners = new Set<() => void>();
   const handles = new Map<string, SceneHandle>();
   let unsubscribeCurrent: (() => void) | null = null;
@@ -162,9 +167,11 @@ export function createSequenceManager(options: ManagerOptions) {
   function bind(id: string) {
     unsubscribeCurrent?.();
     const h = handleFor(id);
+    set({ duration: h.duration ?? null });
     unsubscribeCurrent = h.subscribe((ev) => {
       if (state.current !== id || state.status === 'transitioning') return;
       if (ev.type === 'time') set({ t: ev.t });
+      else if (ev.type === 'ready') set({ duration: ev.duration ?? null });
       else if (ev.type === 'step') set({ step: { index: ev.index, total: ev.total } });
       else if (ev.type === 'error') fail(ev.message);
       else if (ev.type === 'choice') void chooseLabel(ev.label);
@@ -223,7 +230,7 @@ export function createSequenceManager(options: ManagerOptions) {
     unsubscribeCurrent?.();
     disposeHandle(from);
     lastInput = null;
-    set({ status: 'playing', current: edge.to, next: null, step: null, t: 0, choices: choicesOf(edge.to), history: [...state.history, edge.to] });
+    set({ status: 'playing', current: edge.to, next: null, step: null, t: 0, duration: null, choices: choicesOf(edge.to), history: [...state.history, edge.to] });
     bind(edge.to);
     armTimeouts(edge.to);
     preloadNeighbours(edge.to);
@@ -241,7 +248,7 @@ export function createSequenceManager(options: ManagerOptions) {
     clearTimeouts();
     unsubscribeCurrent?.();
     for (const id of [...handles.keys()]) disposeHandle(id);
-    set({ status: 'loading', current: startId, next: null, step: null, t: 0, error: null, choices: choicesOf(startId), history: [startId] });
+    set({ status: 'loading', current: startId, next: null, step: null, t: 0, duration: null, error: null, choices: choicesOf(startId), history: [startId] });
     const h = handleFor(startId);
     try {
       await h.load();

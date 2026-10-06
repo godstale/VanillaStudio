@@ -7,6 +7,7 @@ import type { SceneRef } from './validate';
 
 class FakeScene implements SceneHandle {
   loaded = false;
+  duration: number | undefined = 4;
   disposed = false;
   log: string[] = [];
   private listeners = new Set<(e: SceneEvent) => void>();
@@ -305,6 +306,16 @@ describe('transitions and errors', () => {
 });
 
 describe('controls', () => {
+  it('exposes the current scene duration (null for scenes without one)', async () => {
+    const { manager, host } = build([edge('scn_m', 'scn_d', 'end')]);
+    await manager.start();
+    expect(manager.getState().duration).toBe(4);
+    host.last('scn_m').emit({ type: 'ready', duration: 6 });
+    expect(manager.getState().duration).toBe(6);
+    host.last('scn_m').emit({ type: 'ready' });
+    expect(manager.getState().duration).toBeNull();
+  });
+
   it('seek and time events', async () => {
     const { manager, host } = build([edge('scn_m', 'scn_d', 'end')]);
     await manager.start();
