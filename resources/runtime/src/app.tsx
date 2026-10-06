@@ -3,13 +3,12 @@
 import { DesignProvider } from './designFile';
 import { mountVanilla as mount } from './mount';
 import type { Composition, ParamsBySceneId } from './composition';
+import { paramsForPath } from './paramsFiles';
 
-// `/params/...` is relative to the project root, where the user's values live.
-const files = import.meta.glob<Record<string, unknown>>('/params/*.values.json', { eager: true, import: 'default' });
+// Values live next to their scene (`/scenes/<slug>/params/`); a root `/params/` is still read for v1 projects. Paths are relative to the project root.
+const files = import.meta.glob<Record<string, unknown>>(['/params/*.values.json', '/scenes/*/params/*.values.json'], { eager: true, import: 'default' });
 
-const paramsFiles: ParamsBySceneId = Object.fromEntries(
-  Object.entries(files).map(([path, values]) => [/([^/]+)\.values\.json$/.exec(path)?.[1] ?? path, values]),
-);
+const paramsFiles: ParamsBySceneId = paramsForPath(files, window.location.pathname);
 
 export const mountVanilla = (composition: Composition): (() => void) =>
   mount(composition, { DesignProvider, paramsFiles, hmr: import.meta.hot });
