@@ -12,7 +12,8 @@
     "lint": "eslint . --max-warnings=0",
     "format": "prettier --write .",
     "test": "vitest run",
-    "test:e2e:scene": "node tests/e2e/scene-preview.mjs"
+    "test:e2e:scene": "node tests/e2e/scene-preview.mjs",
+    "test:e2e:agent": "node tests/e2e/scene-preview.mjs --agent-scene"
   },
   "dependencies": {
     "@codemirror/commands": "^6.11.1",

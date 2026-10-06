@@ -18,6 +18,8 @@ const arg = (name) => {
   return i === -1 ? null : (process.argv[i + 1] ?? true);
 };
 
+const agentScene = process.argv.includes('--agent-scene');
+
 const { default: puppeteer } = await import(pathToFileURL(join(REPO, 'packages/export-worker/node_modules/puppeteer-core/lib/puppeteer/puppeteer-core.js')).href);
 
 // ---- 픽스처 -------------------------------------------------------------------------------------
@@ -83,6 +85,16 @@ function buildFixture(dir) {
   copyFiltered(join(REPO, 'resources', 'runtime'), join(dir, 'vanilla', 'runtime'));
   const scene = join(dir, 'scenes', 'demo', 'src');
   mkdirSync(scene, { recursive: true });
+  if (agentScene) {
+    // T4.11: 소스는 목 에이전트가 쓴다. 입력은 앱이 만든 scene.json 한 장뿐이다.
+    writeFileSync(
+      join(dir, 'scenes', 'demo', 'scene.json'),
+      JSON.stringify({ type: 'motion', name: 'Demo', duration: { seconds: 3 }, beats: [], copy: { textFidelity: 'exact', items: ['Vanilla Studio'] }, endCard: { holdSeconds: 1, elements: [] }, status: 'draft' }),
+    );
+    const r = spawnSync(process.execPath, [join(REPO, 'tests', 'e2e', 'mock-agent.mjs')], { cwd: join(dir, 'scenes', 'demo'), stdio: 'inherit' });
+    if (r.status !== 0) throw new Error('mock agent failed');
+    return dir;
+  }
   writeFileSync(join(scene, 'index.html'), SCENE_HTML);
   writeFileSync(join(scene, 'main.tsx'), SCENE_MAIN);
   writeFileSync(join(scene, 'composition.tsx'), COMPOSITION);
@@ -204,6 +216,16 @@ async function scenario(serverPort) {
   if (ready.origin !== `http://127.0.0.1:${serverPort}`) throw new Error(`ready came from ${ready.origin}`);
   if (!ready.data.payload.scenes.some((s) => s.id === 'demo')) throw new Error('ready did not list the demo scene');
   log('ready', { scenes: ready.data.payload.scenes.map((s) => s.id) });
+
+  if (agentScene) {
+    // 목 에이전트가 쓴 신: 소스가 빌드·재생되고 copy 원문이 DOM에 그대로 나온다(Text Fidelity).
+    const f = await (await page.$('#f')).contentFrame();
+    await f.waitForFunction(() => document.getElementById('copy')?.textContent === 'Vanilla Studio', { timeout: 30_000 });
+    log('agent-scene-rendered', { copy: 'Vanilla Studio' });
+    const errs = problems.filter((p) => !/Download the React DevTools/.test(p));
+    if (errs.length) throw new Error(`page errors: ${errs.join(' | ')}`);
+    return;
+  }
 
   // 2) init의 canvas 주입이 신의 useFrame()에 반영된다
   const frameHandle = await page.$('#f');

@@ -1,3 +1,7 @@
+## [2026-10-06] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
 # Wiki Log (append-only)
 
 > 형식: `## [YYYY-MM-DD] <type> | <title>` + 한두 줄. type: ingest · decision · phase · research · poc · milestone · lint · update
@@ -272,3 +276,6 @@
 ## [2026-10-06] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
+
+## [2026-10-06] milestone | V4 run and preview
+- T4.1-T4.11 done; real Claude Code/Codex demo and GUI pending human check. See: [[milestone-v4]], [[poc-agent-terminal]]

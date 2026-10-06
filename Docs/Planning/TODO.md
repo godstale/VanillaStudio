@@ -9,7 +9,7 @@
 ## ▶ 진입점 (2026-10-05)
 
 - **기획·설계·지침 문서 개정 완료**(`docs/v2-refactor-spec` 브랜치, main 병합·push는 사용자 승인 대기).
-- **다음 작업**: V3 완료(GUI 확인 필요, `wiki/sources/milestone-v3.md`). 다음: V4 터미널 실행·재생(브랜치 `feat/v2-run`, T4.1부터). main 병합·push는 사용자 승인 대기.
+- **다음 작업**: V4 완료(GUI·실제 에이전트 데모 확인 필요, `wiki/sources/milestone-v4.md`). 다음: V5 레퍼런스 분석(브랜치 `feat/v2-reference`, T5.1부터). main 병합·push는 사용자 승인 대기.
 - 이월 항목(v1): T7.2 클린 VM 재실행·T7.5 코드 서명은 V7.7에서 이어받는다.
 
 ---
@@ -78,8 +78,8 @@
 - [x] T4.8 [레인 B · W3] 썸네일 캡처(헤드리스 `capture`, `.vanilla/thumb.png`, 노드 표시) — 대상: `src/lib/scene/thumbnail.ts` · 완료 판정: 신 생성 후 노드에 썸네일 · 선행: T4.7 — 구현: 미리보기 Bridge `capture`(앱 내 캡처)로 `.vanilla/thumb.png` 저장(헤드리스 불필요), 미리보기 탭이 열려 `ready`가 될 때 갱신
 - [x] T4.9 [레인 D · W3] 신 폴더용 `pnpm check:scene`(금지 시간 API·하드코딩 색·`defineScene`·Text Fidelity·beats/endCard 검증) + 앱 [검사] 버튼·`.vanilla/self-check.md` 표시 — 대상: `packages/runtime/eslint-plugin/*`, `resources/workspace-template/package.json`, UI · 완료 판정: 규칙별 테스트, 샘플 신 통과 · 선행: T4.6 · (F-DSN-05, D-011) — 구현: `resources/workspace-template/scripts/check-scene{,-core}.mjs`(앱과 CLI가 같은 코어 공유, eslint 플러그인 의존 없음), 인스펙터 미리보기 탭의 [검사]. 정적 검사만(동적 픽셀 비교·DOM Text Fidelity는 후속)
 - [x] T4.10 [레인 A · W4] 신 상태 머신(`draft→prompt-ready→(실행)→generated/needs-revision`) UI 연동·재생성(revise) 흐름 — 대상: `src/lib/scene/status.ts`, 노드/인스펙터 · 완료 판정: 단위·컴포넌트 테스트 · 선행: T4.5, T4.8 — 구현: revise 프롬프트에 마지막 확정본 대비 바뀐 필드 포함(`scene/revision.ts`), 노드 버튼 [재생성], 신 폴더 밖 쓰기 경고 UI 연결
-- [ ] T4.11 [단독 · W5] 통합·E2E: 목 에이전트(스크립트) 통합 테스트 + 실제 Claude Code·Codex로 motion 신 생성·재생 데모, 지원 매트릭스 기록 — 대상: `tests/e2e/*`, `wiki/sources/poc-agent-terminal.md` · 완료 판정: 데모 ①~③ · 선행: T4.1~T4.10
-- [ ] T4.12 [단독 · 마무리] V4 마무리: `milestone-v4.md` · 선행: T4.11
+- [x] T4.11 [단독 · W5] 통합·E2E: 목 에이전트(스크립트) 통합 테스트 + 실제 Claude Code·Codex로 motion 신 생성·재생 데모, 지원 매트릭스 기록 — 대상: `tests/e2e/*`, `wiki/sources/poc-agent-terminal.md` · 완료 판정: 데모 ①~③ · 선행: T4.1~T4.10 — 자동화 완료(목 에이전트 통합 `mockAgentRun.test.ts`·`pnpm test:e2e:agent`), 실제 Claude Code·Codex 데모는 사람 확인 대기(`wiki/sources/poc-agent-terminal.md`)
+- [x] T4.12 [단독 · 마무리] V4 마무리: `milestone-v4.md` · 선행: T4.11
 
 ## V5 레퍼런스 분석 (branch: `feat/v2-reference`)
 

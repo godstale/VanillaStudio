@@ -234,6 +234,24 @@
       "pages": [
         "sources/parallel-execution.md"
       ]
+    },
+    "milestone-v4": {
+      "source_file": "Docs/Planning/TODO.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-10-06",
+      "pages": [
+        "sources/milestone-v4.md"
+      ]
+    },
+    "poc-agent-terminal": {
+      "source_file": "Docs/Planning/TODO.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-10-06",
+      "pages": [
+        "sources/poc-agent-terminal.md"
+      ]
     }
   }
 }
