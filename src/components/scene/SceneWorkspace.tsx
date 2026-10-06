@@ -15,8 +15,9 @@ import { TemplatesProvider } from '@/components/guides/TemplatesContext';
 import { useTemplates } from '@/components/guides/templatesContextValue';
 import { useSafeTerminals } from '@/components/terminal/terminalContextValue';
 import { promptForScene } from '@/lib/agents/clipboard';
-import { groupChanges } from '@/lib/scene/status';
+import { groupChanges, outsideWrites } from '@/lib/scene/status';
 import { loadThumbnail } from '@/lib/scene/thumbnail';
+import { changedSinceSettled } from '@/lib/scene/revision';
 import { readSequence, writeSequence } from '@/lib/sequence/file';
 import { addNode, moveNodes, reconcile, type Sequence } from '@/lib/sequence/schema';
 import { projectPath } from '@/lib/workspace/files';
@@ -85,10 +86,15 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
   const sequence = useRef<Sequence | null>(null);
   const entriesRef = useRef<SceneEntry[]>([]);
   const [runError, setRunError] = useState<string | null>(null);
+  const [outside, setOutside] = useState<string[]>([]);
   const [thumbs, setThumbs] = useState<Record<string, string>>({});
   const onThumbnail = useCallback((slug: string, dataUrl: string) => setThumbs((m) => ({ ...m, [slug]: dataUrl })), []);
   const terminals = useSafeTerminals();
   const hasTerminals = terminals !== null;
+  const sessionsRef = useRef(terminals?.sessions);
+  useEffect(() => {
+    sessionsRef.current = terminals?.sessions;
+  }, [terminals?.sessions]);
   const reloadRef = useRef<() => void>(() => undefined);
   const onApplied = useCallback(() => reloadRef.current(), []);
   const review = useRunReview({ root, workspace, resolve, terminals, onApplied });
@@ -171,6 +177,12 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
   const refreshTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   usePreviewWatch(root, {
     onBatch: (paths) => {
+      // 에이전트가 도는 동안 그 신 폴더 밖에서 일어난 쓰기는 경고한다(R-10, AGENTS.md §4-8). 실행 중인 신이 여럿이면 어느 신에도 속하지 않는 경로만.
+      const active = [...new Set((sessionsRef.current ?? []).filter((s) => s.status === 'running' || s.status === 'starting').map((s) => s.sceneSlug))];
+      if (active.length > 0) {
+        const stray = active.map((slug) => outsideWrites(paths, slug)).reduce((acc, list) => acc.filter((p) => list.includes(p)));
+        if (stray.length > 0) setOutside((prev) => [...new Set([...prev, ...stray])].slice(-20));
+      }
       if (groupChanges(paths).bySlug.size === 0) return;
       if (refreshTimer.current) clearTimeout(refreshTimer.current);
       refreshTimer.current = setTimeout(() => {
@@ -214,16 +226,20 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
       setRunError(null);
       const template = resolve(scene);
       // 템플릿을 쓸 수 없으면 프롬프트를 만들 수 없다(사용 거부). 클립보드 전달 없이 터미널만 연다.
-      const prompt = template ? promptForScene({ workspace, scene, template }).text : undefined;
       beginReview(slug, scene);
-      terminals
-        .runAgent({ workspaceId: workspace.id, sceneId: scene.id, sceneSlug: slug, sceneName: scene.name, preferredAgentId: defaultAgent, prompt })
+      // 수정 필요 상태면 revise 프롬프트에 바뀐 필드를 싣는다(T4.10). 이력을 못 읽어도 실행은 막지 않는다.
+      const changed = scene.status === 'needs-revision' ? changedSinceSettled(root, slug, scene).catch(() => []) : Promise.resolve([]);
+      changed
+        .then((fields) => {
+          const prompt = template ? promptForScene({ workspace, scene, template }, fields).text : undefined;
+          return terminals.runAgent({ workspaceId: workspace.id, sceneId: scene.id, sceneSlug: slug, sceneName: scene.name, preferredAgentId: defaultAgent, prompt });
+        })
         .catch((e: unknown) => {
           const message = e instanceof Error ? e.message : String(e);
           setRunError(message === 'no-enabled-agent' ? t('scene.noAgent') : t('scene.runFailed', { error: message }));
         });
     };
-  }, [terminals, workspace, resolve, defaultAgent, t, beginReview]);
+  }, [terminals, workspace, resolve, defaultAgent, t, beginReview, root]);
 
   // 노드의 재생 버튼: 그 신을 선택하고 인스펙터의 미리보기 탭을 연다.
   useEffect(() => {
@@ -279,6 +295,21 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
             {t('scene.add')}
           </Button>
         </Panel>
+        {outside.length > 0 && (
+          <Panel position="bottom-left">
+            <div role="alert" data-testid="outside-writes" className="max-w-sm rounded bg-warning/15 px-3 py-2 text-xs text-warning">
+              <p className="font-medium">{t('scene.outsideWrites')}</p>
+              <ul className="mt-1 list-disc pl-4 break-all">
+                {outside.slice(-5).map((p) => (
+                  <li key={p}>{p}</li>
+                ))}
+              </ul>
+              <button type="button" className="mt-1 underline" onClick={() => setOutside([])}>
+                {t('scene.outsideWritesDismiss')}
+              </button>
+            </div>
+          </Panel>
+        )}
         {runError && (
           <Panel position="bottom-center">
             <p role="alert" className="rounded bg-destructive/10 px-3 py-1 text-xs text-destructive">{runError}</p>

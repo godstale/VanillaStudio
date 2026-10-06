@@ -10,6 +10,7 @@ import { PreviewPanel } from '@/components/scene/PreviewPanel';
 import { CheckPanel } from '@/components/scene/CheckPanel';
 import type { GuideContext } from '@/lib/guides/agentsMd';
 import { promptForScene } from '@/lib/agents/clipboard';
+import { changedSinceSettled } from '@/lib/scene/revision';
 import type { GuideTemplate } from '@/lib/guides/template';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { sceneSchema, type Scene } from '@/lib/scene/schema';
@@ -142,7 +143,19 @@ export function SceneInspector({ workspace, root, slug, scene, template, templat
     await onRename(trimmed).catch(() => setName(scene.name));
   }
 
-  const prompt = tab === 'prompt' && template ? promptForScene({ workspace, scene: draft, template } satisfies GuideContext).text : '';
+  // 클립보드로 나가는 프롬프트와 같아야 하므로 revise일 때 바뀐 필드도 같은 방식으로 넣는다.
+  const [changed, setChanged] = useState<string[]>([]);
+  useEffect(() => {
+    if (tab !== 'prompt' || draft.status !== 'needs-revision') return;
+    let cancelled = false;
+    changedSinceSettled(root, slug, draft)
+      .then((f) => !cancelled && setChanged(f))
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [tab, draft, root, slug]);
+  const prompt = tab === 'prompt' && template ? promptForScene({ workspace, scene: draft, template } satisfies GuideContext, changed).text : '';
   const unusable = template === null ? (
     <p role="alert" className="rounded bg-destructive/10 p-2 text-xs text-destructive">
       {t('inspector.templateUnusable', { ref: draft.template, reason: templateError ?? t('inspector.templateMissing') })}

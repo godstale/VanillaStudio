@@ -37,6 +37,20 @@ describe('SceneNode', () => {
     expect(screen.getByText(label)).toBeTruthy();
   });
 
+  it('run button becomes "revise" only in needs-revision', () => {
+    const { unmount } = renderNode({ status: 'generated', onRunAgent: () => undefined });
+    expect(screen.getByRole('button', { name: /에이전트 실행|Run agent/ })).toBeTruthy();
+    unmount();
+    renderNode({ status: 'needs-revision', onRunAgent: () => undefined });
+    expect(screen.getByRole('button', { name: /재생성|Revise/ })).toBeTruthy();
+  });
+
+  it('shows the saved thumbnail instead of the placeholder', () => {
+    renderNode({ thumbnail: 'data:image/png;base64,QUJD' });
+    expect(screen.getByRole('img').getAttribute('src')).toBe('data:image/png;base64,QUJD');
+    expect(screen.queryByText(/썸네일 없음|No thumbnail/)).toBeNull();
+  });
+
   it('shows name, duration and reference count', () => {
     renderNode();
     expect(screen.getByText('Intro')).toBeTruthy();

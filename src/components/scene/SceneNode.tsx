@@ -76,7 +76,7 @@ function SceneNodeView({ data, selected }: NodeProps<SceneFlowNode>) {
           className="nodrag flex flex-1 items-center justify-center gap-1 rounded border border-border px-1 py-1 hover:bg-accent disabled:opacity-50"
         >
           <Terminal className="h-3 w-3" />
-          {t('scene.runAgent')}
+          {t(data.status === 'needs-revision' ? 'scene.revise' : 'scene.runAgent')}
         </button>
         <button
           type="button"

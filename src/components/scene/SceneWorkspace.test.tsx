@@ -22,10 +22,14 @@ vi.stubGlobal(
   },
 );
 
-const state = vi.hoisted(() => ({ entries: [] as unknown[], seq: null as unknown, created: [] as unknown[] }));
+const state = vi.hoisted(() => ({ entries: [] as unknown[], seq: null as unknown, created: [] as unknown[], onBatch: undefined as ((paths: string[]) => void) | undefined }));
 
 vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn(async () => undefined) }));
-vi.mock('@/lib/review/watchClient', () => ({ usePreviewWatch: () => undefined }));
+vi.mock('@/lib/review/watchClient', () => ({
+  usePreviewWatch: (_root: string, o: { onBatch?: (paths: string[]) => void }) => {
+    state.onBatch = o.onBatch;
+  },
+}));
 vi.mock('@/lib/scene/files', () => ({
   listScenes: async () => state.entries,
   refreshStatuses: async () => false,
@@ -138,5 +142,41 @@ describe('SceneWorkspace', () => {
     renderWs();
     await screen.findByText('Alpha');
     for (const b of screen.getAllByText(/에이전트 실행|Run agent/)) expect((b.closest('button') as HTMLButtonElement).disabled).toBe(true);
+  });
+});
+
+describe('outside writes warning', () => {
+  const withSessions = (sessions: { id: string; sceneSlug: string; status: string }[]) => {
+    const value = { runAgent: vi.fn(), sessions, activeId: null, setActiveId: vi.fn(), manager: {} as never, pickAgent: vi.fn() } as unknown as TerminalContextValue;
+    render(
+      <ThemeProvider>
+        <LanguageProvider>
+          <TerminalContext.Provider value={value}>
+            <div style={{ width: 1000, height: 700 }}>
+              <SceneWorkspace root="/w" workspace={{ id: 'ws_1', name: 'W' }} />
+            </div>
+          </TerminalContext.Provider>
+        </LanguageProvider>
+      </ThemeProvider>,
+    );
+  };
+
+  it('warns about writes outside the running scene folder, not inside it', async () => {
+    withSessions([{ id: 's1', sceneSlug: 'alpha', status: 'running' }]);
+    await screen.findByText('Alpha');
+    state.onBatch?.(['scenes/alpha/src/main.tsx', 'workspace.json']);
+    expect(screen.queryByTestId('outside-writes')).toBeNull();
+    state.onBatch?.(['scenes/beta/src/main.tsx', 'DESIGN.md']);
+    const box = await screen.findByTestId('outside-writes');
+    expect(box.textContent).toContain('scenes/beta/src/main.tsx');
+    expect(box.textContent).toContain('DESIGN.md');
+    expect(box.textContent).not.toContain('scenes/alpha');
+  });
+
+  it('is silent when no agent is running', async () => {
+    withSessions([{ id: 's1', sceneSlug: 'alpha', status: 'exited' }]);
+    await screen.findByText('Alpha');
+    state.onBatch?.(['scenes/beta/src/main.tsx']);
+    expect(screen.queryByTestId('outside-writes')).toBeNull();
   });
 });
