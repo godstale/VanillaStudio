@@ -252,6 +252,15 @@
       "pages": [
         "sources/poc-agent-terminal.md"
       ]
+    },
+    "milestone-v5": {
+      "source_file": "Docs/Planning/TODO.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-10-06",
+      "pages": [
+        "sources/milestone-v5.md"
+      ]
     }
   }
 }

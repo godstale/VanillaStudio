@@ -9,7 +9,7 @@
 ## ▶ 진입점 (2026-10-05)
 
 - **기획·설계·지침 문서 개정 완료**(`docs/v2-refactor-spec` 브랜치, main 병합·push는 사용자 승인 대기).
-- **다음 작업**: V4 완료(GUI·실제 에이전트 데모 확인 필요, `wiki/sources/milestone-v4.md`). 다음: V5 레퍼런스 분석(브랜치 `feat/v2-reference`, T5.1부터). main 병합·push는 사용자 승인 대기.
+- **다음 작업**: V5 완료(GUI·실제 에이전트 데모 확인 필요, `wiki/sources/milestone-v5.md`). 다음: V6 시퀀스·플레이그라운드(브랜치 `feat/v2-sequence`, T6.1부터). main 병합·push는 사용자 승인 대기.
 - 이월 항목(v1): T7.2 클린 VM 재실행·T7.5 코드 서명은 V7.7에서 이어받는다.
 
 ---
@@ -89,7 +89,7 @@
 - [x] T5.4 [레인 D · W2] DESIGN.md 분석 마커 구간 읽기/쓰기·`extends` 상속 해석·`mood` 필드(바이트 보존) — 대상: `src/lib/design/*` · 완료 판정: 왕복 테스트(마커 밖 바이트 동일), 상속 우선순위 테스트 · 선행: V3 T3.11 · (D-016, D-026) — 구현: `design/analysis.ts`(마커는 저장소 공통 `vanilla:begin:analysis` 형식으로 문서 정정, CRLF 보존 `applyMarkersKeepEol`), `design/extends.ts`(워크스페이스 DESIGN.md만 상속 허용·참조 해석 전 병합·mood 필드). 런타임 Vite 플러그인의 신 단위 DESIGN 소비는 미연결
 - [x] T5.5 [레인 A · W3] 분석 반영 diff UI(`analysis/*.md`·DESIGN.md 마커 구간·`scene.json` 되쓰기 필드) + 승인/되돌림 — 대상: `src/components/scene/AnalysisDiff.tsx` · 완료 판정: 목 에이전트 반영 → diff → 승인/되돌림 테스트 · 선행: T5.3, T5.4, T4.5 — 구현: `scene/analysisReview.ts`(분석 전후 스냅샷·diff·되돌림), 기존 실행 검토에 통합(`useRunReview`의 `analysis` 옵션, DiffDialog 안의 `AnalysisDiff`). 분석 실행은 완료 상태를 바꾸지 않고, 분석 전 신 DESIGN.md 오버라이드를 준비한다
 - [x] T5.6 [레인 C · W3] URL 레퍼런스 정책 구현(앱 미다운로드·URL 기록만·저작권 안내) + AGENTS.md "스타일 분석용, 복제·삽입 금지" 규칙 렌더 — 대상: `src/lib/guides/agentsMd.ts` · 완료 판정: 렌더 스냅샷 포함 확인 · 선행: T5.3 · (R-7) — 구현: AGENTS.md 레퍼런스 구간(스타일 전용·복제/추적/삽입 금지·저작권·URL 기록 전용)과 인스펙터 안내 문구, 3타입 렌더 테스트
-- [ ] T5.7 [단독 · W4] E2E 데모(영상 레퍼런스 → 분석 → DESIGN·가이드 반영 → 재생성) + `milestone-v5.md` · 선행: T5.1~T5.6
+- [x] T5.7 [단독 · W4] E2E 데모(영상 레퍼런스 → 분석 → DESIGN·가이드 반영 → 재생성) + `milestone-v5.md` · 선행: T5.1~T5.6 — 구현: 목 에이전트 analyze 모드 + `referenceFlow.test.ts`. 실제 에이전트 데모는 사람 확인 대기
 
 ## V6 시퀀스·플레이그라운드 (branch: `feat/v2-sequence`)
 

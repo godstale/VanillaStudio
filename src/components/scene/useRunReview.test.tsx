@@ -227,6 +227,14 @@ describe('useRunReview', () => {
       expect(hook.result.current.current!.analysis).toBeUndefined();
     });
 
+    it('approve links the analysis file to its reference so the guide can point at it', async () => {
+      fs.set('scenes/intro/scene.json', serializeScene({ ...before, references: [{ id: 'ref-1', kind: 'image', path: 'references/ref-1-a.png', url: null, note: '', analysis: null }] } as Scene));
+      const { hook } = await analysisRun();
+      await act(async () => hook.result.current.approve());
+      expect(disk().references[0].analysis).toBe('references/analysis/ref-1.md');
+      expect(fs.get('scenes/intro/GUIDE.md')).toContain('references/analysis/ref-1.md');
+    });
+
     it('approve keeps the files and does not turn the scene into "generated"', async () => {
       const { hook } = await analysisRun();
       await act(async () => hook.result.current.approve());

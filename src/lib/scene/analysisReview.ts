@@ -2,6 +2,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { readAnalysis, writeAnalysis } from '@/lib/design/analysis';
 import { outsideMarkers } from '@/lib/guides/markers';
 import { projectPath, readOptionalFile } from '@/lib/workspace/files';
+import type { Scene } from './schema';
 
 // 레퍼런스 분석 결과 검토(T5.5, D-026). 분석 실행 전에 찍어 둔 상태와 실행 후를 비교해 변경을 보여 주고 승인·되돌림을 받는다.
 // 대상: `references/analysis/*.md`(에이전트가 쓰는 분석 파일)와 신 `DESIGN.md`의 분석 마커 구간. scene.json 되쓰기는 기존 실행 검토(writeback.ts)가 본다.
@@ -96,6 +97,20 @@ export async function reviewAnalysis(root: string, slug: string, before: Analysi
   }
   const design = designChange(before.design, after.design);
   return { files, design, disallowed: design !== null && (design.outsideChanged || design.broken) };
+}
+
+/**
+ * 승인한 분석 파일을 신의 레퍼런스에 연결한다(`references[].analysis`). 그래야 GUIDE.md와 생성 프롬프트가 분석 결과를 가리킨다.
+ * `references`는 에이전트가 쓸 수 없는 필드라서 앱이 승인 시점에 쓴다.
+ */
+export function linkAnalysisFiles(scene: Scene, review: AnalysisReview): Scene {
+  const written = new Set(review.files.filter((f) => f.kind !== 'removed').map((f) => f.path));
+  if (written.size === 0) return scene;
+  const references = scene.references.map((r) => {
+    const path = `references/analysis/${r.id}.md`;
+    return written.has(path) ? { ...r, analysis: path } : r;
+  });
+  return { ...scene, references } as Scene;
 }
 
 async function write(root: string, rel: string, contents: string): Promise<void> {

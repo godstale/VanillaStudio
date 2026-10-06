@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { TerminalContextValue } from '@/components/terminal/terminalContextValue';
 import { writeScene, type TemplateResolver, type WorkspaceRef } from '@/lib/scene/files';
-import { reviewAnalysis, revertAnalysis, snapshotAnalysis, type AnalysisReview, type AnalysisSnapshot } from '@/lib/scene/analysisReview';
+import { linkAnalysisFiles, reviewAnalysis, revertAnalysis, snapshotAnalysis, type AnalysisReview, type AnalysisSnapshot } from '@/lib/scene/analysisReview';
 import type { Scene } from '@/lib/scene/schema';
 import { reviewRun, revertFields, saveSnapshot, type RunReview } from '@/lib/scene/writeback';
 
@@ -88,7 +88,8 @@ export function useRunReview({ root, workspace, resolve, terminals, onApplied }:
   const approve = useCallback(async () => {
     if (!current || current.review.state !== 'ok') return;
     const { after, status } = current.review;
-    await finish({ ...after, status: statusAfter(current, status) } as Scene, 'approved', current.slug);
+    const linked = current.analysis ? linkAnalysisFiles(after, current.analysis) : after;
+    await finish({ ...linked, status: statusAfter(current, status) } as Scene, 'approved', current.slug);
   }, [current, finish]);
 
   const revertDisallowed = useCallback(async () => {
@@ -98,7 +99,8 @@ export function useRunReview({ root, workspace, resolve, terminals, onApplied }:
     if (current.review.state !== 'ok') return; // 무효한 scene.json은 부분 되돌림 대상이 아니다(전부 되돌리기만)
     const { after, disallowed, status } = current.review;
     const fixed = revertFields(after, current.before, disallowed);
-    await finish({ ...fixed, status: statusAfter(current, status) } as Scene, 'reverted-partial', current.slug);
+    const linked = current.analysis ? linkAnalysisFiles(fixed, current.analysis) : fixed;
+    await finish({ ...linked, status: statusAfter(current, status) } as Scene, 'reverted-partial', current.slug);
   }, [current, finish, root]);
 
   const revertAll = useCallback(async () => {

@@ -14,6 +14,7 @@ last_updated: 2026-10-01
 - V1 기반 정리 완료(GUI 데모 확인 대기): [[milestone-v1]]
 - V2 Scene CRUD·지침 생성 완료(GUI 확인 대기): [[milestone-v2]]
 - V3 가이드·인스펙터 완료(GUI 확인 대기): [[milestone-v3]]
+- V5 레퍼런스 분석 완료(GUI·실제 에이전트 데모 확인 대기): [[milestone-v5]]
 - V4 터미널 실행·재생 완료(GUI·실제 에이전트 데모 확인 대기): [[milestone-v4]], [[poc-agent-terminal]]
 
 - 개발 단계: **P4 구현 — 자동화 항목 전부 완료 + T7.2 개발-PC 검증 완료(아래)**. 잔여: clean VM 재실행(T7.2 §4)·T7.5(인증서)·main push 승인 대기. 마일스톤 로그: [[milestone-m1]]·[[milestone-m2]]·[[milestone-m3]]·[[milestone-m4]]·[[milestone-m5]]·[[milestone-m6]], 병렬 배치: [[parallel-execution]] (`Docs/Planning/Parallel-Execution.md`)
