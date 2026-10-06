@@ -94,7 +94,7 @@
 ## V6 시퀀스·플레이그라운드 (branch: `feat/v2-sequence`)
 
 - [x] T6.0 [단독 · W0] **PoC R-1**: 신 간 전환 합성(두 iframe 오버레이 vs 프레임 캡처 오버레이, crossfade·mask-wipe·slide) — 대상: `spikes/r1-transition/`, `wiki/sources/poc-r1.md` · 완료 판정: 방식 채택·지원 전환 범위 결정, 성능 수치 · 선행: V4 · (R-1) — 결과: 두 iframe 오버레이 채택(5종 전환 60fps), `match-cut` v2.0 제외, `custom`은 선언형 JSON(`wiki/sources/poc-r1.md`)
-- [ ] T6.1 [레인 A · W1] `sequence.json` zod + 검증(static 발신 엣지 trigger 제한, `workspaceId` 일치, 노드 존재, start 도달성, 순환 허용 규칙) + canonical — 대상: `src/lib/sequence/schema.ts`, `validate.ts` · 완료 판정: 케이스별 단위 테스트 · 선행: V2 · (D-025, D-032)
+- [x] T6.1 [레인 A · W1] `sequence.json` zod + 검증(static 발신 엣지 trigger 제한, `workspaceId` 일치, 노드 존재, start 도달성, 순환 허용 규칙) + canonical — 대상: `src/lib/sequence/schema.ts`, `validate.ts` · 완료 판정: 케이스별 단위 테스트 · 선행: V2 · (D-025, D-032) — 구현: `sequence/validate.ts`(workspace 불일치·없는 신·static 자동 trigger·모호한 분기·입력 없는 순환·linear 규칙·시작 도달성). 입력이 필요 없는 순환만 오류, 입력 엣지가 낀 순환은 허용
 - [ ] T6.2 [레인 B · W2] 캔버스 엣지 편집(연결·삭제·재연결, 분기 다중 출력 핸들, 시작 신 지정)·엣지 인스펙터(`trigger`·`transition` 폼) — 대상: `src/components/canvas/*`, `src/components/inspector/EdgeSection.tsx` · 완료 판정: 연결 → `sequence.json` 반영, 검증 오류 표시 · 선행: T6.1
 - [ ] T6.3 [레인 C · W2] 전환 라이브러리(T6.0 결과 범위: `cut`·`crossfade`·`slide-*`·`mask-wipe`·`circular-reveal`·`zoom-through`) + 용어집(`transition`) 연결 — 대상: `src/lib/playground/transitions/*`, `resources/glossary/motion.json` · 완료 판정: 전환별 단위·시각 테스트 · 선행: T6.0, T3.1
 - [ ] T6.4 [레인 C · W3] `match-cut`(요소 ID 지정)·`custom` 전환(`transitions/<name>.ts` 계약, 에이전트 구현용 규칙을 AGENTS.md·가이드에 추가) — 대상: `src/lib/playground/transitions/custom.ts`, 가이드 렌더 · 완료 판정: 샘플 custom 전환 로드 테스트 · 선행: T6.3 · (선택: R-1 결과 따라 축소 가능)
