@@ -22,6 +22,10 @@ Ran lint. See lint-report.md for details.
 
 Ran lint. See lint-report.md for details.
 
+## [2026-10-06] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
 # Wiki Log (append-only)
 
 > 형식: `## [YYYY-MM-DD] <type> | <title>` + 한두 줄. type: ingest · decision · phase · research · poc · milestone · lint · update
@@ -311,3 +315,6 @@ Ran lint. See lint-report.md for details.
 
 ## [2026-10-06] update | v1 migration ship gate
 - 3 v1 samples converted and played back; migration ships. See: [[issue-v1-migration]]
+
+## [2026-10-06] milestone | V7 package migration release
+- T7.1-T7.7 done, T7.8 automated part done (installer built), T7.9 logs. Human checks pending. See: [[milestone-v7]], [[phase-p4-v2]]

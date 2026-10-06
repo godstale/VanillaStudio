@@ -9,7 +9,7 @@
 ## ▶ 진입점 (2026-10-05)
 
 - **기획·설계·지침 문서 개정 완료**(`docs/v2-refactor-spec` 브랜치, main 병합·push는 사용자 승인 대기).
-- **다음 작업**: V6 구현 완료(GUI 확인 필요, `wiki/sources/milestone-v6.md`). 다음: V7 패키지·마이그레이션·릴리스(브랜치 `feat/v2-release`, T7.1부터). main 병합·push는 사용자 승인 대기.
+- **다음 작업**: v2 구현 V1~V7 완료. **사람 확인 대기**: GUI(`pnpm tauri dev`)·클린 VM 설치·실제 Claude Code/Codex 데모·코드 서명(`Docs/Verification/Clean-Install-Checklist-v2.md`). 로컬 `main`에는 V1~V6이 병합되어 있고 `feat/v2-release`(V7)는 병합 전. **병합·push는 사용자 승인 대기.**
 - 이월 항목(v1): T7.2 클린 VM 재실행·T7.5 코드 서명은 V7.7에서 이어받는다.
 
 ---
@@ -113,5 +113,5 @@
 - [x] T7.5 [레인 D · W3] v1 프로젝트 마이그레이션(Spec §11.1: 비파괴 복사·best-effort 변환·미변환 필드 표시) + 샘플 3종 시험 → **출하 게이트 판정**(미달 시 UI 숨김·"v1 앱으로 열기" 안내) — 대상: `src/lib/migrate/v1.ts`, `wiki/sources/issue-v1-migration.md` · 완료 판정: 판정 결과 기록 · 선행: T1.4, T7.2 · (D-033) — 구현: Rust `read_v1_project`(읽기 전용), `migrate/v1.ts`(순수 변환 계획)·`applyV1.ts`·온보딩 다이얼로그. **출하 판정: 샘플 3종 재생 통과 → 출하**(`wiki/sources/issue-v1-migration.md`, `pnpm test:e2e:v1`). 변환 중 발견한 신별 params 미적용 런타임 결함 수정
 - [x] T7.6 [레인 E · W3] 샘플 정리: 강동 숲 도서관 샘플을 v2 워크스페이스로 변환, 3타입 샘플 각 1개·시퀀스 샘플 — 대상: `resources/samples/*`, `Docs/Verification/Golden-Samples.md` 갱신 · 완료 판정: 가이드 렌더·재생 회귀 테스트 · 선행: V6 — 구현: 샘플 4종(motion 강동 숲속 도서관 변환·static 랜딩·3d 토러스·시퀀스 데모), JSON 드리프트·가이드 렌더·계약 검사 테스트(`sampleCatalog.test.ts`), 재생 회귀 E2E `pnpm test:e2e:samples`(결정성 포함), `Golden-Samples.md` 갱신
 - [x] T7.7 [레인 B · W4] 사용자 문서 개정(시작하기·신 가이드·시퀀스·공유·레퍼런스·문제 해결) + NOTICE 갱신(제거·추가 의존성) — 대상: `Docs/User-Guide/*`, `NOTICE.md` · 완료 판정: 앱 내 링크 표시, 의존성 표 일치 · 선행: T7.2 — 구현: 사용자 문서 v2 7종(`Docs/User-Guide/01~07`, v1 문서는 `legacy/`로 보관), 설정의 문서 링크 목록(데이터 기반 + 파일·사전·상호 링크 일치 테스트), `NOTICE.md` v2 의존성 표 + 직접 의존성(npm·Cargo) 전수 일치 테스트(react-dom·proxy-agent 누락 발견·보강). 신 노드 키보드 삭제 방지
-- [ ] T7.8 [단독 · W5] 인스톨러 빌드·클린 VM 체크리스트 재실행(v1 T7.2 이월)·코드 서명(v1 T7.5 이월, 사용자 인증서 준비 후) — 대상: `Docs/Verification/Clean-Install-Checklist.md`, `tauri.conf.json` · 완료 판정: 체크리스트 전 항목 통과, 서명 인스톨러 · 선행: T7.1~T7.7
-- [ ] T7.9 [단독 · 마무리] V7 마무리 + **Phase 로그**: `milestone-v7.md`, `wiki/sources/phase-p4-v2.md`, Playbook 프롬프트·User-Checklist·`overview.md` 갱신 · 선행: T7.1~T7.8
+- [ ] T7.8 [단독 · W5] 인스톨러 빌드·클린 VM 체크리스트 재실행(v1 T7.2 이월)·코드 서명(v1 T7.5 이월, 사용자 인증서 준비 후) — 대상: `Docs/Verification/Clean-Install-Checklist.md`, `tauri.conf.json` · 완료 판정: 체크리스트 전 항목 통과, 서명 인스톨러 · 선행: T7.1~T7.7 — **자동 확인분 완료**: `pnpm tauri build` 성공(MSI 21.3MB·NSIS 18.4MB, 번들에 workspace-template·runtime 포함), 릴리스 `app.exe` 실행 10초 생존 확인. **남음(사람)**: 클린 VM 설치·GUI 확인·실제 에이전트 데모·코드 서명 — `Docs/Verification/Clean-Install-Checklist-v2.md` §3·§4
+- [x] T7.9 [단독 · 마무리] V7 마무리 + **Phase 로그**: `milestone-v7.md`, `wiki/sources/phase-p4-v2.md`, Playbook 프롬프트·User-Checklist·`overview.md` 갱신 · 선행: T7.1~T7.8 — `wiki/sources/milestone-v7.md`·`phase-p4-v2.md`, Playbook 프롬프트(§1.2·§2.0)·User-Checklist·`overview.md` 갱신

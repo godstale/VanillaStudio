@@ -15,6 +15,7 @@ last_updated: 2026-10-01
 - V1 기반 정리 완료(GUI 데모 확인 대기): [[milestone-v1]]
 - V2 Scene CRUD·지침 생성 완료(GUI 확인 대기): [[milestone-v2]]
 - V3 가이드·인스펙터 완료(GUI 확인 대기): [[milestone-v3]]
+- **v2 구현 V1~V7 완료**(GUI·클린 VM·실제 에이전트·서명은 사람 확인 대기): [[milestone-v7]], [[phase-p4-v2]]
 - v1 마이그레이션 출하 게이트 통과: [[issue-v1-migration]]
 - V6 시퀀스·플레이그라운드 완료(GUI 확인 대기): [[milestone-v6]]
 - V5 레퍼런스 분석 완료(GUI·실제 에이전트 데모 확인 대기): [[milestone-v5]]

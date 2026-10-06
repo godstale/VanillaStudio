@@ -62,7 +62,9 @@ Docs/Planning/TODO.md의 마일스톤 {{MILESTONE}}을 시작하라.
 2. 변경된 구조를 Docs/(Project-Structure, Technical-Design)에 반영하라.
 3. wiki/sources/milestone-{{MILESTONE}}.md에 한 일·결정·문제·해결·교훈을 기록하고 index/log를 갱신하라.
 4. 이번 마일스톤에서 효과적이었던 프롬프트를 Docs/Playbook/prompts/P4-build.md §1에 추가하라.
-5. push는 하지 말고 승인을 요청하라.
+5. **실제 환경 E2E 1개**를 돌려라(목·가짜가 아니라 실제 브라우저·실제 프로세스). 목 테스트가 못 보는 렌더 정책·런타임 가정·환경 차이가 여기서 드러난다.
+6. 에이전트가 하지 못한 검증(GUI·실제 에이전트·클린 환경)을 보고에 따로 적어라.
+7. push는 하지 말고 승인을 요청하라.
 ```
 
 ### 2.3 병렬 세션 배치 (여러 에이전트)
