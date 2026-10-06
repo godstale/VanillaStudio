@@ -11,6 +11,7 @@ import { sceneStart, type Composition, type ParamsBySceneId } from './compositio
 import { applyAndSettle, readiness } from './ready';
 import { frameFromSearch, parseFrame, setFrame } from './frame';
 import { hostedSteps } from './steps';
+import { hostedBridge, setHostedBridge } from './hostedBridge';
 
 export interface MountOptions {
   /** File-backed provider (`DesignProvider` from `@vanilla/runtime/design`). */
@@ -94,7 +95,11 @@ export function mountVanilla(composition: Composition, options: MountOptions): (
     };
     const b = createBridge({ target, hostOrigin, mode, getSceneId: sceneIdAt });
     bridge = b;
-    cleanups.push(reportClock(b, clock, sceneIdAt), () => b.dispose());
+    setHostedBridge(b);
+    cleanups.push(reportClock(b, clock, sceneIdAt), () => {
+      if (hostedBridge() === b) setHostedBridge(null);
+      b.dispose();
+    });
     // Vite listeners cannot be removed, so a torn-down mount must stay quiet.
     reportHmr({ ...b, hmr: (modules) => alive && b.hmr(modules) }, options.hmr);
   }

@@ -3,6 +3,7 @@
 // (시퀀스 엣지의 trigger가 평가된다). 플레이그라운드 호스트는 Bridge `next`/`prev`로 입력을 위임할 수 있다.
 import { useEffect, useRef, useState } from 'react';
 import type { Bridge } from './bridge';
+import { hostedBridge } from './hostedBridge';
 
 export interface StepSpec {
   id: string;
@@ -86,22 +87,23 @@ export const hostedSteps = (): StepController | null => hosted;
  * 스텝 진행 훅: 창의 클릭·키 입력을 컨트롤러에 넣고, 진행 상황을 Bridge로 알린다.
  * 반환값은 컨트롤러이며, 렌더에는 `onStep` 콜백으로 현재 인덱스를 옮긴다.
  */
-export function useSteps(steps: readonly StepSpec[], bridge: Bridge | null, onStep?: (index: number) => void): StepController {
-  const latest = useRef({ onStep, bridge });
+export function useSteps(steps: readonly StepSpec[], bridge?: Bridge | null, onStep?: (index: number) => void): StepController {
+  const latest = useRef({ onStep, bridge: bridge ?? null });
   useEffect(() => {
-    latest.current = { onStep, bridge };
+    latest.current = { onStep, bridge: bridge ?? null };
   }, [onStep, bridge]);
 
   // 컨트롤러는 한 번만 만들고, 콜백은 항상 최신 onStep·bridge를 읽는다(렌더 중에는 ref를 읽지 않는다).
   // eslint-disable-next-line react-hooks/refs -- 아래 콜백은 렌더가 아니라 사용자 입력 때 실행된다
   const [controller] = useState(() =>
     createStepController(steps, {
+      // `bridge`를 넘기지 않으면 마운트가 만든 호스트 Bridge를 쓴다(신 컴포넌트는 Bridge를 직접 얻을 방법이 없다).
       onStep: (i, total) => {
         latest.current.onStep?.(i);
-        latest.current.bridge?.step(i, total);
+        (latest.current.bridge ?? hostedBridge())?.step(i, total);
       },
-      onDone: () => latest.current.bridge?.done(),
-      onChoice: (label) => latest.current.bridge?.choice(label),
+      onDone: () => (latest.current.bridge ?? hostedBridge())?.done(),
+      onChoice: (label) => (latest.current.bridge ?? hostedBridge())?.choice(label),
     }),
   );
 
