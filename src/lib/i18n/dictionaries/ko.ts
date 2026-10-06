@@ -1338,8 +1338,11 @@ const ko = {
   'userGuide.desc': '저장소의 Docs/User-Guide/에 있는 안내서입니다. 아래 경로에서 열어 보세요.',
   'userGuide.gettingStarted': '시작하기',
   'userGuide.doctor': 'Doctor — 환경 점검',
-  'userGuide.pipeline': '파이프라인',
-  'userGuide.exportLimits': 'Export 형식별 제약',
+  'userGuide.scenes': '신과 가이드',
+  'userGuide.sequence': '시퀀스와 플레이그라운드',
+  'userGuide.references': '레퍼런스',
+  'userGuide.sharing': '공유와 템플릿',
+  'userGuide.troubleshooting': '문제 해결',
 };
 
 export type Dict = typeof ko;

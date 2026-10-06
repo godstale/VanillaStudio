@@ -66,6 +66,8 @@ export function WorkspaceCanvas({
         minZoom={0.05}
         maxZoom={2}
         onlyRenderVisibleElements
+        // 선(연결)은 Backspace·Delete로 지운다. 신 노드는 폴더와 1:1이라 노드 쪽에서 `deletable: false`로 막는다.
+        deleteKeyCode={['Backspace', 'Delete']}
         onMoveEnd={(_, v) => onViewChange?.(v)}
         {...handlers}
         {...viewportProps}

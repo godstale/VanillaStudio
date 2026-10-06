@@ -1341,8 +1341,11 @@ const en: Dict = {
   'userGuide.desc': 'Guides in the repo Docs/User-Guide/ folder. Open them at the paths below.',
   'userGuide.gettingStarted': 'Getting started',
   'userGuide.doctor': 'Doctor — environment check',
-  'userGuide.pipeline': 'Pipeline',
-  'userGuide.exportLimits': 'Export format limits',
+  'userGuide.scenes': 'Scenes and guides',
+  'userGuide.sequence': 'Sequence and playground',
+  'userGuide.references': 'References',
+  'userGuide.sharing': 'Sharing and templates',
+  'userGuide.troubleshooting': 'Troubleshooting',
 };
 
 export default en;

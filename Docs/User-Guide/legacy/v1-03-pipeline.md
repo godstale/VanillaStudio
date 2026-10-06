@@ -1,3 +1,5 @@
+> **보관용(v1)**: 이 문서는 v1(파이프라인·프로젝트) 기준입니다. v2 문서는 `Docs/User-Guide/01-getting-started.md`부터 읽으세요.
+
 # 파이프라인 (Pipeline) — Brief → Export
 
 Vanilla Studio의 제작 흐름은 6단계입니다. 왼쪽 **파이프라인** 패널에 현재 단계와 완료 상태(진행 중·승인됨·완료·잠김)가 표시됩니다.

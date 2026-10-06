@@ -66,6 +66,7 @@ function buildNodes(loaded: Loaded, onOpenFolder: (slug: string) => void, onRunA
     return {
       id: s.id,
       type: 'scene',
+      deletable: false, // 신은 폴더와 1:1이라 키보드로 지우지 않는다
       position: pos.get(s.id) ?? { x: 0, y: 0 },
       data: {
         slug: e.slug,
