@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { open } from '@tauri-apps/plugin-dialog';
-import { FileImage, FileVideo, Film, Link2, Loader2, Plus, Trash2 } from 'lucide-react';
+import { FileImage, FileVideo, Film, Link2, Loader2, Play, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -14,6 +14,8 @@ export interface ReferencesProps {
   scene: Scene;
   /** 새 scene 값을 넘긴다(자동 저장). */
   onChange: (next: Scene) => void;
+  /** 분석 태스크 실행(에이전트 터미널). 없으면 버튼이 꺼진다. */
+  onAnalyze?: () => void;
 }
 
 const KIND_ICON: Record<ReferenceKind, typeof Link2> = { image: FileImage, video: FileVideo, url: Link2 };
@@ -67,7 +69,7 @@ function FrameExtraction({ root, slug, reference }: { root: string; slug: string
 }
 
 /** 레퍼런스 등록(F-REF-01): 이미지·영상 파일(복사)·URL(기록만, 앱은 내려받지 않는다)·메모. */
-export function References({ root, slug, scene, onChange }: ReferencesProps) {
+export function References({ root, slug, scene, onChange, onAnalyze }: ReferencesProps) {
   const { t } = useLanguage();
   const [url, setUrl] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -122,6 +124,14 @@ export function References({ root, slug, scene, onChange }: ReferencesProps) {
           );
         })}
       </ul>
+
+      <div className="flex flex-col gap-1 border-t border-border pt-3">
+        <Button size="sm" disabled={!onAnalyze || scene.references.length === 0} onClick={onAnalyze}>
+          <Play className="mr-1 h-3.5 w-3.5" />
+          {t('references.analyze')}
+        </Button>
+        <p className="text-muted-foreground">{t('references.analyzeHint')}</p>
+      </div>
 
       <div className="flex flex-col gap-2 border-t border-border pt-3">
         <Button size="sm" variant="outline" onClick={() => void pickFile()}>

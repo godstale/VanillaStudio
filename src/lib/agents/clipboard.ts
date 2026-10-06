@@ -14,6 +14,11 @@ export function promptForScene(ctx: GuideContext, changedFields?: readonly strin
   return { kind, text: assemblePrompt(kind, ctx, kind === 'revise' ? { changedFields } : {}) };
 }
 
+/** 레퍼런스 분석 태스크의 프롬프트(D-026). 생성·수정 프롬프트와 별개로, 분석 실행 버튼이 이 텍스트를 전달한다. */
+export function promptForAnalysis(ctx: GuideContext): string {
+  return assemblePrompt('analyze-reference', ctx);
+}
+
 /** 클립보드에 쓴다. 실패하면 false(권한 거부·비포커스 등). */
 export async function copyToClipboard(text: string): Promise<boolean> {
   try {

@@ -14,7 +14,7 @@ import type { InspectorTab } from '@/components/inspector/inspectorTabs';
 import { TemplatesProvider } from '@/components/guides/TemplatesContext';
 import { useTemplates } from '@/components/guides/templatesContextValue';
 import { useSafeTerminals } from '@/components/terminal/terminalContextValue';
-import { promptForScene } from '@/lib/agents/clipboard';
+import { promptForAnalysis, promptForScene } from '@/lib/agents/clipboard';
 import { groupChanges, outsideWrites } from '@/lib/scene/status';
 import { loadThumbnail } from '@/lib/scene/thumbnail';
 import { changedSinceSettled } from '@/lib/scene/revision';
@@ -100,6 +100,7 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
   const review = useRunReview({ root, workspace, resolve, terminals, onApplied });
   const beginReview = review.begin;
   const runRef = useRef<(slug: string) => void>(() => undefined);
+  const analyzeRef = useRef<(slug: string) => void>(() => undefined);
   // 노드에 넘기는 콜백은 참조가 바뀌지 않게 고정하고, 최신 동작은 ref로 읽는다(터미널 상태가 바뀔 때마다 노드를 다시 만들지 않기 위해).
   const onRunAgent = useCallback((slug: string) => runRef.current(slug), []);
   const [inspectorTab, setInspectorTab] = useState<InspectorTab>('overview');
@@ -241,6 +242,25 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
     };
   }, [terminals, workspace, resolve, defaultAgent, t, beginReview, root]);
 
+  // 레퍼런스 분석 실행(D-026): 분석 프롬프트로 같은 에이전트 터미널을 연다. 결과는 실행 후 검토(diff)를 거친다.
+  useEffect(() => {
+    analyzeRef.current = (slug: string) => {
+      const scene = entriesRef.current.find((e) => e.slug === slug)?.scene;
+      if (!terminals || !scene) return;
+      const template = resolve(scene);
+      if (!template) return;
+      setRunError(null);
+      beginReview(slug, scene);
+      terminals
+        .runAgent({ workspaceId: workspace.id, sceneId: scene.id, sceneSlug: slug, sceneName: scene.name, preferredAgentId: defaultAgent, prompt: promptForAnalysis({ workspace, scene, template }) })
+        .catch((e: unknown) => {
+          const message = e instanceof Error ? e.message : String(e);
+          setRunError(message === 'no-enabled-agent' ? t('scene.noAgent') : t('scene.runFailed', { error: message }));
+        });
+    };
+  }, [terminals, workspace, resolve, defaultAgent, t, beginReview]);
+  const onAnalyze = useCallback((slug: string) => analyzeRef.current(slug), []);
+
   // 노드의 재생 버튼: 그 신을 선택하고 인스펙터의 미리보기 탭을 연다.
   useEffect(() => {
     playRef.current = (slug: string) => {
@@ -337,6 +357,7 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
             onSave={saveScene}
             onRename={renameSelected}
             onThumbnail={onThumbnail}
+            onAnalyze={hasTerminals ? onAnalyze : undefined}
           />
         </SlotPortal>
       )}

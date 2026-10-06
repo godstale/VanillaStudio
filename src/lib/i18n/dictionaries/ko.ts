@@ -252,6 +252,8 @@ const ko = {
   'references.url': '레퍼런스 URL',
   'references.addUrl': 'URL 추가',
   'references.urlPolicy': 'URL은 기록만 합니다. 앱은 내려받지 않으며 에이전트가 직접 엽니다.',
+  'references.analyze': '분석 실행',
+  'references.analyzeHint': '분석 프롬프트와 함께 에이전트 터미널을 엽니다. 결과는 끝난 뒤 변경 사항으로 확인합니다.',
   'references.extract': '키프레임 추출',
   'references.reextract': '다시 추출',
   'references.extracting': '추출 중…',

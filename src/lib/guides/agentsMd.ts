@@ -82,7 +82,7 @@ export function agentsMdSections({ workspace, scene, template }: GuideContext): 
         '',
         'References are for style analysis only. Never copy or embed them in the output.',
         'When asked to analyze, write one file per reference to `references/analysis/<id>.md` and keep the findings to style: composition, palette, motion, timing, typography, mood.',
-        'Do not download URLs; use only files already in `references/`.',
+        'Do not download or save anything from URLs; open a URL only to look at it. For videos use the extracted keyframes in `references/analysis/<id>/frames/`.',
       ].join('\n'),
     },
     { id: 'review', body: `## Self-check\n\nBefore you finish, walk through this checklist and record the result in \`.vanilla/self-check.md\`.\n\n${template.checklist.trim()}` },

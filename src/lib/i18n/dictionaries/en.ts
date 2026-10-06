@@ -254,6 +254,8 @@ const en: Dict = {
   'references.url': 'Reference URL',
   'references.addUrl': 'Add URL',
   'references.urlPolicy': 'URLs are only recorded. The app never downloads them; the agent opens them itself.',
+  'references.analyze': 'Run analysis',
+  'references.analyzeHint': 'Opens the agent terminal with the analysis prompt. You review its changes afterwards.',
   'references.extract': 'Extract keyframes',
   'references.reextract': 'Extract again',
   'references.extracting': 'Extracting…',
