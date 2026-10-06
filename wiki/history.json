@@ -261,6 +261,15 @@
       "pages": [
         "sources/milestone-v5.md"
       ]
+    },
+    "poc-r1": {
+      "source_file": "spikes/r1-transition/",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-10-06",
+      "pages": [
+        "sources/poc-r1.md"
+      ]
     }
   }
 }

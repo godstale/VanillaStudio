@@ -22,6 +22,7 @@
 - [[golden-samples]] — 골든 샘플 브리프 5종 초안(P5 품질 기준)
 - [[parallel-execution]] — 병렬 실행 가이드: 웨이브·레인·워크트리·세션 프롬프트 (P4 진입점)
 - [[refactor-spec-v2]] — v2 리팩토링 기획서 초안(Scene 워크스페이스, D-022~D-033 Proposed)
+- [[poc-r1]] — PoC R-1: 신 간 전환 합성(두 iframe 오버레이 채택, 60fps, match-cut 제외)
 - [[milestone-v5]] — V5 레퍼런스 분석 마일스톤 로그(등록·키프레임·분석 프롬프트·DESIGN 구간·검토)
 - [[milestone-v4]] — V4 터미널 실행·재생 마일스톤 로그(PTY·클립보드·판정·미리보기·썸네일·check:scene)
 - [[poc-agent-terminal]] — 에이전트 터미널 실행 목 에이전트 검증·지원 매트릭스

@@ -1,0 +1,39 @@
+<!doctype html>
+<!-- PoC R-1: 전환 합성 스파이크용 가짜 신. ?color=<css color>&name=<A|B> 쪽의 단색 배경 + 움직이는 내용(CSS 애니메이션 + canvas 루프)을 그린다.
+     실제 신처럼 별도 origin(127.0.0.1)에서 열리고, 로드되면 부모에게 ready를 보낸다. -->
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html, body { margin: 0; height: 100%; overflow: hidden; }
+      body { background: var(--bg); font: 48px sans-serif; color: white; }
+      #spin { position: absolute; left: 80px; top: 80px; width: 120px; height: 120px; border: 12px solid white; border-top-color: transparent; border-radius: 50%; animation: s 1s linear infinite; }
+      @keyframes s { to { transform: rotate(360deg); } }
+      canvas { position: absolute; right: 0; bottom: 0; }
+      #label { position: absolute; left: 80px; bottom: 80px; }
+    </style>
+  </head>
+  <body>
+    <div id="spin"></div>
+    <div id="label"></div>
+    <canvas id="c" width="640" height="360"></canvas>
+    <script>
+      const q = new URLSearchParams(location.search);
+      document.documentElement.style.setProperty('--bg', q.get('color') || '#444');
+      document.getElementById('label').textContent = 'Scene ' + (q.get('name') || '?');
+      const ctx = document.getElementById('c').getContext('2d');
+      let n = 0;
+      function frame() {
+        n += 1;
+        ctx.clearRect(0, 0, 640, 360);
+        for (let i = 0; i < 60; i += 1) {
+          ctx.fillStyle = 'rgba(255,255,255,' + (0.2 + 0.6 * ((i % 7) / 7)) + ')';
+          ctx.fillRect(10 + ((n * 3 + i * 40) % 600), 10 + ((i * 53) % 330), 24, 24);
+        }
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+      window.addEventListener('load', () => parent.postMessage({ type: 'ready', name: q.get('name'), at: performance.now() }, '*'));
+    </script>
+  </body>
+</html>

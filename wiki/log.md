@@ -6,6 +6,10 @@ Ran lint. See lint-report.md for details.
 
 Ran lint. See lint-report.md for details.
 
+## [2026-10-06] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
 # Wiki Log (append-only)
 
 > 형식: `## [YYYY-MM-DD] <type> | <title>` + 한두 줄. type: ingest · decision · phase · research · poc · milestone · lint · update
@@ -286,3 +290,6 @@ Ran lint. See lint-report.md for details.
 
 ## [2026-10-06] milestone | V5 reference analysis
 - T5.1-T5.7 done; real agent demo and GUI pending human check. See: [[milestone-v5]]
+
+## [2026-10-06] poc | R-1 scene transitions
+- Two-iframe overlay adopted (60fps for 5 transitions); match-cut dropped from v2.0; custom transitions are declarative. See: [[poc-r1]]

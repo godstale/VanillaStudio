@@ -1,10 +1,11 @@
 # Wiki Lint Report — 2026-10-06
 
-Scanned 62 pages.
+Scanned 63 pages.
 
 ## Structural Issues
 
-No structural issues found.
+### Orphan Pages (no inbound links)
+- `wiki\sources\poc-r1.md`
 
 ## Graph-Aware Issues
 
