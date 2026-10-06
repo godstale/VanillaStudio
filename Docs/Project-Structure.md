@@ -149,3 +149,25 @@ v1 파이프라인·검수·ACP 에이전트·프로젝트 마법사·탭 셸은
 | `src-tauri/src/commands/{scene,template}_commands.rs` | 신 폴더 명령, 템플릿 폴더 읽기(읽기 전용·크기 상한·심링크 거부) |
 | 워크스페이스 `guide-templates/` | 사용자 정의 템플릿 저장 위치(우선순위 최상위) |
 
+### v2 V4~V7 반영분
+
+| 위치 | 내용 |
+| --- | --- |
+| `src/lib/agents/`·`src/lib/terminal/`·`src/components/terminal/` | 에이전트 레지스트리(고정 argv)·프롬프트 클립보드 전달·터미널 세션 관리·터미널 도크 |
+| `src-tauri/src/commands/{pty,trust}_commands.rs` | 신뢰된 폴더에서만 PTY 실행(레지스트리 키로만 argv), 신뢰 저장 |
+| `src/lib/scene/` (추가) | `writeback.ts`(완료 판정·스냅샷·diff·되돌림), `thumbnail.ts`, `check.ts`(계약 검사), `revision.ts`(재생성 변경 필드), `references.ts`·`referenceFrames.ts`, `analysisReview.ts`, `saveAsTemplate.ts` |
+| `resources/workspace-template/scripts/check-scene{,-core}.mjs` | `pnpm check:scene`. 코어는 앱과 CLI가 공유(Node 의존 없음) |
+| `src-tauri/src/commands/reference_commands.rs` | 영상 레퍼런스 키프레임·메타(FFmpeg 고정 argv) |
+| `src/lib/design/` (추가) | `analysis.ts`(분석 마커 구간, CRLF 보존), `extends.ts`(워크스페이스 DESIGN.md 상속) |
+| `packages/runtime/src/` (추가) | Bridge v2(`step`·`done`·`choice`·`next`·`prev`)·canvas 주입·`hostedBridge.ts`(신 컴포넌트가 쓰는 호스트 Bridge)·`paramsFiles.ts`(신별 params) |
+| `src/lib/sequence/` (추가) | `validate.ts`(교차 검증), `edit.ts`(엣지 연산), `manager.ts`(재생 상태 머신) |
+| `src/lib/playground/` (추가) | `iframeScene.ts`(신 iframe + Bridge), `sceneTransitions.ts`, `transitions/`(9종 계획 + WAAPI 실행기 + 선언형 `custom`) |
+| `src/components/{playground,canvas,package}/` | `SequencePlayer`, 엣지 편집(`useSequenceEdges`·`EdgeSection`), `.vsx` 공유·가져오기 다이얼로그 |
+| `src/lib/package/` | `manifest.ts`(zod)·`api.ts`·`import.ts`(`.vsx`) |
+| `src-tauri/src/commands/package_commands.rs` | `.vsx` 만들기(허용 목록·결정적 zip)·검사(zip-slip·심링크·해시)·추출(덮어쓰기 없음) |
+| `src/lib/migrate/v1.ts`·`applyV1.ts`, `src-tauri/src/commands/migrate_commands.rs` | v1 프로젝트 읽기(읽기 전용) → 변환 계획 → 적용 |
+| `resources/samples/` | 샘플 워크스페이스 4종(motion·static·3d·시퀀스). JSON은 `src/lib/sequence/sample*.test.ts`가 생성·검사 |
+| `tests/` | `e2e/`(실제 Chrome E2E 스크립트·하네스·목 에이전트), `fixtures/`(v1 샘플·manifest 골든), `repro/`(재현성) |
+| `spikes/r1-transition/` | PoC R-1 전환 합성 스파이크 |
+| `Docs/User-Guide/` | v2 사용자 문서 7종(`legacy/`는 v1 보관) |
+
