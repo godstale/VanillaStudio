@@ -7,6 +7,7 @@ use commands::export_commands::*;
 use commands::fs_commands::*;
 use commands::process_commands::*;
 use commands::pty_commands::*;
+use commands::reference_commands::*;
 use commands::search_commands::*;
 use commands::scene_commands::*;
 use commands::shell_commands::*;
@@ -63,6 +64,7 @@ pub fn run() {
             find_files,
             run_shell,
             doctor_check,
+            extract_reference_frames,
             ffmpeg_download,
             ffmpeg_download_cancel,
             install_project_deps,

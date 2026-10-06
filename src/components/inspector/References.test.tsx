@@ -3,11 +3,16 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { newScene, type Scene } from '@/lib/scene/schema';
 
-const mocks = vi.hoisted(() => ({ picked: null as string | null, invoked: [] as { cmd: string; args: Record<string, unknown> }[] }));
+const mocks = vi.hoisted(() => ({ picked: null as string | null, extractError: null as string | null, invoked: [] as { cmd: string; args: Record<string, unknown> }[] }));
 vi.mock('@tauri-apps/plugin-dialog', () => ({ open: async () => mocks.picked }));
 vi.mock('@tauri-apps/api/core', () => ({
   invoke: async (cmd: string, args: Record<string, unknown>) => {
     mocks.invoked.push({ cmd, args });
+    if (cmd === 'extract_reference_frames') {
+      if (mocks.extractError) throw mocks.extractError;
+      return { frames: ['a', 'b', 'c'], metaPath: 'm', meta: { duration: 6, width: 1, height: 1, fps: 24, hasAudio: false, videoCodec: 'h264' } };
+    }
+    if (cmd === 'list_dir') throw new Error('no dir');
   },
 }));
 
@@ -27,6 +32,7 @@ function setup(initial: Scene = scene) {
 
 beforeEach(() => {
   mocks.picked = null;
+  mocks.extractError = null;
   mocks.invoked = [];
 });
 
@@ -69,5 +75,27 @@ describe('References', () => {
     expect((onChange.mock.calls[0][0] as Scene).references[0].note).toBe('palette');
     fireEvent.click(screen.getByRole('button', { name: /ref-1 삭제|Remove ref-1/ }));
     expect((onChange.mock.calls[1][0] as Scene).references).toEqual([]);
+  });
+
+  const withVideo = { ...scene, references: [{ id: 'ref-1', kind: 'video', path: 'references/ref-1-clip.mp4', url: null, note: '', analysis: null }] } as Scene;
+
+  it('extracts keyframes for a video reference and shows the result', async () => {
+    setup(withVideo);
+    fireEvent.click(screen.getByRole('button', { name: /키프레임 추출|Extract keyframes/ }));
+    expect(await screen.findByText(/3장|3 frames/)).toBeTruthy();
+    expect(mocks.invoked.find((c) => c.cmd === 'extract_reference_frames')?.args).toMatchObject({ refId: 'ref-1', videoPath: 'references/ref-1-clip.mp4' });
+    expect(screen.getByRole('button', { name: /다시 추출|Extract again/ })).toBeTruthy();
+  });
+
+  it('points to Doctor when FFmpeg is missing', async () => {
+    mocks.extractError = 'ffmpeg-not-installed';
+    setup(withVideo);
+    fireEvent.click(screen.getByRole('button', { name: /키프레임 추출|Extract keyframes/ }));
+    expect((await screen.findByRole('alert')).textContent).toMatch(/Doctor/);
+  });
+
+  it('offers extraction for videos only', () => {
+    setup({ ...scene, references: [{ id: 'ref-1', kind: 'image', path: 'references/ref-1-a.png', url: null, note: '', analysis: null }] } as Scene);
+    expect(screen.queryByRole('button', { name: /키프레임 추출|Extract keyframes/ })).toBeNull();
   });
 });

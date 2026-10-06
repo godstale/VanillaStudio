@@ -84,7 +84,7 @@
 ## V5 레퍼런스 분석 (branch: `feat/v2-reference`)
 
 - [x] T5.1 [레인 A · W1] `references.json` zod·추가 UI(파일 복사/링크, 이미지, URL, 메모)·인스펙터 레퍼런스 섹션 — 대상: `src/lib/scene/references.ts`, `src/components/inspector/References.tsx` · 완료 판정: 추가·삭제·재열기 · 선행: V2 · (F-REF-01) — 구현: scene.json.references가 진실 공급원, `references/references.json`은 에이전트용 거울(writeScene이 함께 씀). 파일은 복사만(링크 없음, D-029), 삭제는 목록에서만(파일 유지)
-- [ ] T5.2 [레인 B · W1] FFmpeg 키프레임·메타 추출(고정 argv, 프레임 수·간격 설정, 진행 표시, 미설치 시 Doctor 안내) — 대상: `src-tauri/src/commands/reference_commands.rs` · 완료 판정: 샘플 mp4 → `references/analysis/<id>/frames/*.jpg`·`meta.json`, argv 고정 테스트 · 선행: T5.1, V1(Doctor) · (D-026)
+- [x] T5.2 [레인 B · W1] FFmpeg 키프레임·메타 추출(고정 argv, 프레임 수·간격 설정, 진행 표시, 미설치 시 Doctor 안내) — 대상: `src-tauri/src/commands/reference_commands.rs` · 완료 판정: 샘플 mp4 → `references/analysis/<id>/frames/*.jpg`·`meta.json`, argv 고정 테스트 · 선행: T5.1, V1(Doctor) · (D-026) — 구현: 키프레임 균등 추출(기본 8장, 최대 24, 폭 1280 JPEG)·ffprobe 메타. 인스펙터 레퍼런스 탭의 [키프레임 추출]. PATH의 구형 ffmpeg는 거부될 수 있어 앱 관리형 우선(테스트는 `VANILLA_TEST_FFMPEG_DIR`로 현대 빌드 지정)
 - [ ] T5.3 [레인 C · W2] 타입별 `analyze-reference.md` 렌더(관점: 구도·팔레트·모션·타이밍·전환·타이포·분위기 / 정적: 레이아웃·타이포·그리드 / 3d: 재질·조명·카메라) + 분석 태스크 실행 버튼 — 대상: `resources/guides/*/prompts/analyze-reference.md`, `src/lib/guides/prompts.ts` · 완료 판정: URL·키프레임 경로·인젝션 방어 문구 포함 스냅샷 · 선행: T5.1, T2.9, T4.4
 - [ ] T5.4 [레인 D · W2] DESIGN.md 분석 마커 구간 읽기/쓰기·`extends` 상속 해석·`mood` 필드(바이트 보존) — 대상: `src/lib/design/*` · 완료 판정: 왕복 테스트(마커 밖 바이트 동일), 상속 우선순위 테스트 · 선행: V3 T3.11 · (D-016, D-026)
 - [ ] T5.5 [레인 A · W3] 분석 반영 diff UI(`analysis/*.md`·DESIGN.md 마커 구간·`scene.json` 되쓰기 필드) + 승인/되돌림 — 대상: `src/components/scene/AnalysisDiff.tsx` · 완료 판정: 목 에이전트 반영 → diff → 승인/되돌림 테스트 · 선행: T5.3, T5.4, T4.5
