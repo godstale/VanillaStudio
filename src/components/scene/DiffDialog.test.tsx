@@ -78,4 +78,41 @@ describe('DiffDialog', () => {
     setup(null);
     expect(screen.queryByTestId('diff-dialog')).toBeNull();
   });
+
+  it('shows the analysis part and offers a partial revert for edits outside the analysis section', () => {
+    const h = {
+      onApprove: vi.fn(),
+      onRevertDisallowed: vi.fn(),
+      onRevertAll: vi.fn(),
+      onClose: vi.fn(),
+    };
+    const analysis = {
+      files: [{ path: 'references/analysis/ref-1.md', kind: 'added' as const, before: null, after: 'warm palette, slow cuts' }],
+      design: { section: { before: null, after: '- warm' }, outsideChanged: true, broken: false },
+      disallowed: true,
+    };
+    render(
+      <LanguageProvider>
+        <DiffDialog open review={ok({ changes: [], disallowed: [] })} analysis={analysis} sceneName="Intro" {...h} />
+      </LanguageProvider>,
+    );
+    const part = screen.getByTestId('analysis-diff');
+    expect(within(part).getByText('references/analysis/ref-1.md')).toBeTruthy();
+    expect(within(part).getByText('warm palette, slow cuts')).toBeTruthy();
+    expect(within(part).getAllByRole('alert').length).toBeGreaterThan(0); // outside-section warning
+    fireEvent.click(screen.getByRole('button', { name: /허용되지 않은 변경만|disallowed/ }));
+    expect(h.onRevertDisallowed).toHaveBeenCalledOnce();
+  });
+
+  it('a clean analysis has no partial-revert button', () => {
+    const analysis = { files: [{ path: 'references/analysis/ref-1.md', kind: 'changed' as const, before: 'a', after: 'b' }], design: null, disallowed: false };
+    render(
+      <LanguageProvider>
+        <DiffDialog open review={ok({ changes: [], disallowed: [] })} analysis={analysis} sceneName="Intro" onApprove={vi.fn()} onRevertDisallowed={vi.fn()} onRevertAll={vi.fn()} onClose={vi.fn()} />
+      </LanguageProvider>,
+    );
+    expect(screen.queryByRole('button', { name: /허용되지 않은 변경만|disallowed/ })).toBeNull();
+    expect(screen.getByText('a')).toBeTruthy();
+    expect(screen.getByText('b')).toBeTruthy();
+  });
 });

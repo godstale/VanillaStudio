@@ -1,5 +1,7 @@
 import { AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { AnalysisDiff } from './AnalysisDiff';
+import type { AnalysisReview } from '@/lib/scene/analysisReview';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { summarizeValue, type RunReview } from '@/lib/scene/writeback';
@@ -9,6 +11,8 @@ export interface DiffDialogProps {
   open: boolean;
   sceneName: string;
   review: RunReview | null;
+  /** 레퍼런스 분석 실행이면 분석 파일·DESIGN.md 구간의 변경(T5.5). */
+  analysis?: AnalysisReview | null;
   /** 변경을 그대로 둔다(완료 상태 저장). */
   onApprove: () => void;
   /** 화이트리스트 밖에서 바뀐 필드만 실행 전 값으로 되돌린다. */
@@ -20,7 +24,7 @@ export interface DiffDialogProps {
 }
 
 /** 에이전트가 끝난 뒤 scene.json 변경을 보여 주고 승인·되돌림을 받는다(R-2). 허용 목록 밖 변경은 경고로 눈에 띄게 한다. */
-export function DiffDialog({ open, sceneName, review, onApprove, onRevertDisallowed, onRevertAll, onClose }: DiffDialogProps) {
+export function DiffDialog({ open, sceneName, review, analysis, onApprove, onRevertDisallowed, onRevertAll, onClose }: DiffDialogProps) {
   const { t } = useLanguage();
   if (!review) return null;
 
@@ -66,6 +70,8 @@ export function DiffDialog({ open, sceneName, review, onApprove, onRevertDisallo
           </div>
         )}
 
+        {analysis && <div className="text-xs"><AnalysisDiff analysis={analysis} /></div>}
+
         <DialogFooter className="flex-wrap gap-2">
           <Button variant="ghost" onClick={onClose}>
             {t('diff.later')}
@@ -73,11 +79,11 @@ export function DiffDialog({ open, sceneName, review, onApprove, onRevertDisallo
           <Button variant="outline" onClick={onRevertAll}>
             {t('diff.revertAll')}
           </Button>
-          {review.state === 'ok' && review.disallowed.length > 0 && (
+          {(review.state === 'ok' && review.disallowed.length > 0) || analysis?.disallowed ? (
             <Button variant="outline" onClick={onRevertDisallowed}>
               {t('diff.revertDisallowed')}
             </Button>
-          )}
+          ) : null}
           {review.state === 'ok' && <Button onClick={onApprove}>{t('diff.approve')}</Button>}
         </DialogFooter>
       </DialogContent>

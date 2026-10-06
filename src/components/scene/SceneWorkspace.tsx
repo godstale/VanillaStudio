@@ -18,6 +18,7 @@ import { promptForAnalysis, promptForScene } from '@/lib/agents/clipboard';
 import { groupChanges, outsideWrites } from '@/lib/scene/status';
 import { loadThumbnail } from '@/lib/scene/thumbnail';
 import { changedSinceSettled } from '@/lib/scene/revision';
+import { createSceneOverride } from '@/lib/design/workspaceDesign';
 import { readSequence, writeSequence } from '@/lib/sequence/file';
 import { addNode, moveNodes, reconcile, type Sequence } from '@/lib/sequence/schema';
 import { projectPath } from '@/lib/workspace/files';
@@ -250,15 +251,17 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
       const template = resolve(scene);
       if (!template) return;
       setRunError(null);
-      beginReview(slug, scene);
-      terminals
-        .runAgent({ workspaceId: workspace.id, sceneId: scene.id, sceneSlug: slug, sceneName: scene.name, preferredAgentId: defaultAgent, prompt: promptForAnalysis({ workspace, scene, template }) })
+      // 분석 결과를 쓸 신 DESIGN.md(워크스페이스 DESIGN.md를 상속하는 오버라이드)를 먼저 준비한 뒤, 실행 전 상태를 찍고 에이전트를 연다.
+      createSceneOverride(root, slug)
+        .catch(() => false)
+        .then(() => beginReview(slug, scene, { analysis: true }))
+        .then(() => terminals.runAgent({ workspaceId: workspace.id, sceneId: scene.id, sceneSlug: slug, sceneName: scene.name, preferredAgentId: defaultAgent, prompt: promptForAnalysis({ workspace, scene, template }) }))
         .catch((e: unknown) => {
           const message = e instanceof Error ? e.message : String(e);
           setRunError(message === 'no-enabled-agent' ? t('scene.noAgent') : t('scene.runFailed', { error: message }));
         });
     };
-  }, [terminals, workspace, resolve, defaultAgent, t, beginReview]);
+  }, [terminals, workspace, resolve, defaultAgent, t, beginReview, root]);
   const onAnalyze = useCallback((slug: string) => analyzeRef.current(slug), []);
 
   // 노드의 재생 버튼: 그 신을 선택하고 인스펙터의 미리보기 탭을 연다.
@@ -365,6 +368,7 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange, defa
         open={review.current !== null}
         sceneName={review.current?.sceneName ?? ''}
         review={review.current?.review ?? null}
+        analysis={review.current?.analysis ?? null}
         onApprove={() => void review.approve()}
         onRevertDisallowed={() => void review.revertDisallowed()}
         onRevertAll={() => void review.revertAll()}

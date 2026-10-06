@@ -14,6 +14,10 @@ vi.mock('@tauri-apps/api/core', () => ({
       fs.set(rel, a.contents ?? '');
       return;
     }
+    if (cmd === 'delete_path') {
+      fs.delete(rel);
+      return;
+    }
     if (cmd === 'list_dir') {
       const base = `${rel.replace(/\/$/, '')}/`;
       const files = [...fs.keys()].filter((k) => k.startsWith(base) && !k.slice(base.length).includes('/'));
@@ -68,13 +72,17 @@ beforeEach(() => {
 describe('useRunReview', () => {
   it('snapshots the scene before the run', async () => {
     const { hook } = setup();
-    act(() => hook.result.current.begin('intro', before));
+    act(() => {
+      void hook.result.current.begin('intro', before);
+    });
     await waitFor(async () => expect((await listSnapshots('/w', 'intro')).map((s) => s.label)).toEqual(['before-run']));
   });
 
   it('does nothing while the agent is still running', async () => {
     const { hook, setSessions } = setup();
-    act(() => hook.result.current.begin('intro', before));
+    act(() => {
+      void hook.result.current.begin('intro', before);
+    });
     setSessions([session('running')]);
     await new Promise((r) => setTimeout(r, 30));
     expect(hook.result.current.current).toBeNull();
@@ -82,7 +90,9 @@ describe('useRunReview', () => {
 
   it('reviews when the terminal exits: warns about disallowed fields', async () => {
     const { hook, setSessions } = setup();
-    act(() => hook.result.current.begin('intro', before));
+    act(() => {
+      void hook.result.current.begin('intro', before);
+    });
     mockAgentWork();
     setSessions([session('exited')]);
     await waitFor(() => expect(hook.result.current.current).not.toBeNull());
@@ -95,7 +105,9 @@ describe('useRunReview', () => {
 
   it('revert disallowed: keeps the allowed edit, restores the others, saves the completion status', async () => {
     const { hook, setSessions, onApplied } = setup();
-    act(() => hook.result.current.begin('intro', before));
+    act(() => {
+      void hook.result.current.begin('intro', before);
+    });
     mockAgentWork();
     setSessions([session('exited')]);
     await waitFor(() => expect(hook.result.current.current).not.toBeNull());
@@ -113,7 +125,9 @@ describe('useRunReview', () => {
 
   it('revert all: scene.json goes back to the state before the run', async () => {
     const { hook, setSessions } = setup();
-    act(() => hook.result.current.begin('intro', before));
+    act(() => {
+      void hook.result.current.begin('intro', before);
+    });
     mockAgentWork();
     setSessions([session('exited')]);
     await waitFor(() => expect(hook.result.current.current).not.toBeNull());
@@ -123,7 +137,9 @@ describe('useRunReview', () => {
 
   it('approve keeps every change and records the completion status', async () => {
     const { hook, setSessions } = setup();
-    act(() => hook.result.current.begin('intro', before));
+    act(() => {
+      void hook.result.current.begin('intro', before);
+    });
     mockAgentWork();
     setSessions([session('exited')]);
     await waitFor(() => expect(hook.result.current.current).not.toBeNull());
@@ -134,7 +150,9 @@ describe('useRunReview', () => {
 
   it('an invalid scene.json after the run cannot be approved, only reverted', async () => {
     const { hook, setSessions } = setup();
-    act(() => hook.result.current.begin('intro', before));
+    act(() => {
+      void hook.result.current.begin('intro', before);
+    });
     fs.set('scenes/intro/scene.json', '{ broken');
     setSessions([session('exited')]);
     await waitFor(() => expect(hook.result.current.current).not.toBeNull());
@@ -147,7 +165,9 @@ describe('useRunReview', () => {
 
   it('missing entry file means needs-revision when approved', async () => {
     const { hook, setSessions } = setup();
-    act(() => hook.result.current.begin('intro', before));
+    act(() => {
+      void hook.result.current.begin('intro', before);
+    });
     fs.set('scenes/intro/scene.json', JSON.stringify({ ...before, structure: 'hybrid' }));
     setSessions([session('exited')]);
     await waitFor(() => expect(hook.result.current.current).not.toBeNull());
@@ -160,12 +180,74 @@ describe('useRunReview', () => {
     setSessions([session('exited')]); // no begin(): nothing to compare against
     await new Promise((r) => setTimeout(r, 30));
     expect(hook.result.current.current).toBeNull();
-    act(() => hook.result.current.begin('intro', before));
+    act(() => {
+      void hook.result.current.begin('intro', before);
+    });
     setSessions([session('exited')]);
     await waitFor(() => expect(hook.result.current.current).not.toBeNull());
     act(() => hook.result.current.dismiss());
     setSessions([session('exited')]); // same session id: not reviewed again
     await new Promise((r) => setTimeout(r, 30));
     expect(hook.result.current.current).toBeNull();
+  });
+
+  describe('analysis runs (T5.5)', () => {
+    const A1 = 'scenes/intro/references/analysis/ref-1.md';
+    const DESIGN = 'scenes/intro/DESIGN.md';
+    const designBase = '---\nextends: ../../DESIGN.md\ncolors: {}\n---\n\n# Scene design\n\nUser prose.\n';
+
+    async function analysisRun() {
+      fs.set(DESIGN, designBase);
+      const h = setup();
+      await act(async () => h.hook.result.current.begin('intro', before, { analysis: true }));
+      // 목 에이전트: 분석 파일을 쓰고 DESIGN.md 구간 밖도 건드린다
+      fs.set(A1, 'palette: warm');
+      fs.set(DESIGN, `${designBase.replace('User prose.', 'Hijacked.')}\n<!-- vanilla:begin:analysis -->\n- warm\n<!-- vanilla:end:analysis -->\n`);
+      h.setSessions([session('exited')]);
+      await waitFor(() => expect(h.hook.result.current.current).not.toBeNull());
+      return h;
+    }
+
+    it('reviews analysis files and the design section together with the scene', async () => {
+      const { hook } = await analysisRun();
+      const a = hook.result.current.current!.analysis!;
+      expect(a.files.map((f) => [f.path, f.kind])).toEqual([['references/analysis/ref-1.md', 'added']]);
+      expect(a.design?.section.after).toBe('- warm');
+      expect(a.disallowed).toBe(true);
+    });
+
+    it('a normal run has no analysis part', async () => {
+      const { hook, setSessions } = setup();
+      act(() => {
+      void hook.result.current.begin('intro', before);
+    });
+      mockAgentWork();
+      setSessions([session('exited')]);
+      await waitFor(() => expect(hook.result.current.current).not.toBeNull());
+      expect(hook.result.current.current!.analysis).toBeUndefined();
+    });
+
+    it('approve keeps the files and does not turn the scene into "generated"', async () => {
+      const { hook } = await analysisRun();
+      await act(async () => hook.result.current.approve());
+      expect(fs.get(A1)).toBe('palette: warm');
+      expect(disk().status).toBe('draft'); // before.status; the entry-exists judgement belongs to generation runs
+    });
+
+    it('revert disallowed undoes the prose edit but keeps the analysis result', async () => {
+      const { hook } = await analysisRun();
+      await act(async () => hook.result.current.revertDisallowed());
+      expect(fs.get(DESIGN)).toContain('User prose.');
+      expect(fs.get(DESIGN)).not.toContain('Hijacked');
+      expect(fs.get(DESIGN)).toContain('- warm');
+      expect(fs.get(A1)).toBe('palette: warm');
+    });
+
+    it('revert all removes new analysis files and restores DESIGN.md', async () => {
+      const { hook } = await analysisRun();
+      await act(async () => hook.result.current.revertAll());
+      expect(fs.has(A1)).toBe(false);
+      expect(fs.get(DESIGN)).toBe(designBase);
+    });
   });
 });
