@@ -7,6 +7,7 @@ import { checkGuide } from '@/lib/guides/guideMd';
 import { applyTemplateDefaults } from '@/lib/guides/merge';
 import { fileExists, projectPath, readOptionalFile } from '@/lib/workspace/files';
 import { evaluateStatus } from './status';
+import { serializeReferences } from './references';
 import { newScene, parseScene, serializeScene, type Scene, type SceneType } from './schema';
 
 // 신 폴더 입출력: scene.json(정규화 직렬화)을 쓰고 생성물(GUIDE.md·AGENTS.md·CLAUDE.md·prompts/*)을 다시 렌더한다.
@@ -56,6 +57,7 @@ async function write(root: string, rel: string, contents: string): Promise<void>
 export async function writeScene(root: string, slug: string, workspace: WorkspaceRef, scene: Scene, resolve: TemplateResolver = builtinResolver): Promise<void> {
   const template = resolve(scene);
   await write(root, scenePath(slug, 'scene.json'), serializeScene(scene));
+  await write(root, scenePath(slug, 'references/references.json'), serializeReferences(scene.references)); // 에이전트용 거울(T5.1)
   if (!template) return; // 템플릿을 쓸 수 없으면 생성물을 다시 만들지 않는다.
   const [agents, claude] = await Promise.all([
     readOptionalFile(root, scenePath(slug, 'AGENTS.md')),

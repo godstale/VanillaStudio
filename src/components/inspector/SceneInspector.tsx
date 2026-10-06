@@ -8,6 +8,7 @@ import { DesignSection } from './DesignSection';
 import { INSPECTOR_TABS, type InspectorTab } from './inspectorTabs';
 import { PreviewPanel } from '@/components/scene/PreviewPanel';
 import { CheckPanel } from '@/components/scene/CheckPanel';
+import { References } from './References';
 import type { GuideContext } from '@/lib/guides/agentsMd';
 import { promptForScene } from '@/lib/agents/clipboard';
 import { changedSinceSettled } from '@/lib/scene/revision';
@@ -19,7 +20,7 @@ import { cn } from '@/lib/utils';
 const AUTOSAVE_MS = 600;
 const TABS = INSPECTOR_TABS;
 type Tab = InspectorTab;
-const LATER: Tab[] = ['references', 'history'];
+const LATER: Tab[] = ['history'];
 
 export interface SceneInspectorProps {
   workspace: { id: string; name: string };
@@ -248,6 +249,8 @@ export function SceneInspector({ workspace, root, slug, scene, template, templat
         )}
 
         {tab === 'design' && <DesignSection root={root} slug={slug} />}
+
+        {tab === 'references' && <References root={root} slug={slug} scene={draft} onChange={(next) => edit(() => next)} />}
 
         {tab === 'preview' &&
           (canvas ? (

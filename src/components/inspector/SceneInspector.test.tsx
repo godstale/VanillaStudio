@@ -35,8 +35,10 @@ describe('SceneInspector', () => {
   it('shows the seven section tabs; later ones are placeholders', () => {
     setup();
     expect(screen.getAllByRole('tab')).toHaveLength(7);
-    fireEvent.click(tab(/레퍼런스|References/));
+    fireEvent.click(tab(/이력|History/));
     expect(screen.getByText(/이후 단계|later step/)).toBeTruthy();
+    fireEvent.click(tab(/레퍼런스|References/));
+    expect(screen.getByTestId('references')).toBeTruthy();
   });
 
   it('shows type and template read-only', () => {
