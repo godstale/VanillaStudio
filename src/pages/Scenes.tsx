@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { FloatingPanel } from '@/components/layout/FloatingPanel';
 import { Onboarding } from '@/components/workspace/Onboarding';
 import { SceneInspector } from '@/components/inspector/SceneInspector';
-import { CheckPanel } from '@/components/scene/CheckPanel';
 import { DiffDialog } from '@/components/scene/DiffDialog';
 import { PreviewPanel } from '@/components/scene/PreviewPanel';
 import { useRunReview } from '@/components/scene/useRunReview';
@@ -237,9 +236,6 @@ function Inner({ root }: { root: string }) {
                   onThumbnail={(slug, url) => setThumbs((m) => ({ ...m, [slug]: url }))}
                 />
               )}
-              <div className="mt-2">
-                <CheckPanel root={root} slug={selected.slug} scene={selected.scene} />
-              </div>
             </section>
           </div>
         )}
