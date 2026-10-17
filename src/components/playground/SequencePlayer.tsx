@@ -21,6 +21,8 @@ export interface SequencePlayerProps {
   hostOrigin: string;
   canvas: { width: number; height: number; fps: number };
   customTransitions?: ReadonlyMap<string, CustomTransition>;
+  /** 지정하면 재생 시작 뒤 그 신으로 이동한다(플레이그라운드 플로팅 재생용). */
+  initialSceneId?: string | null;
 }
 
 const EMPTY_CUSTOM: ReadonlyMap<string, CustomTransition> = new Map();
@@ -45,7 +47,7 @@ const fmt = (s: number) => `${s.toFixed(1)}s`;
  * 시퀀스 재생기(F-PLY-01, T6.6). 신 iframe을 겹쳐 두고 시퀀스 매니저가 trigger로 넘긴다.
  * 입력 레이어가 iframe 위를 덮어 클릭을 받는다(신 안의 버튼은 누를 수 없고, 분기는 아래 선택지로 고른다).
  */
-export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostOrigin, canvas, customTransitions = EMPTY_CUSTOM }: SequencePlayerProps) {
+export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostOrigin, canvas, customTransitions = EMPTY_CUSTOM, initialSceneId }: SequencePlayerProps) {
   const { t } = useLanguage();
   const stageRef = useRef<HTMLDivElement | null>(null);
   const hostRef = useRef<HTMLDivElement | null>(null);
@@ -63,13 +65,17 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
     const off = m.subscribe(() => host.layout(m.getState()));
     setManager(m);
     setStartError(null);
-    m.start().catch((e: unknown) => setStartError(e instanceof Error ? e.message : String(e)));
+    m.start()
+      .then(() => {
+        if (initialSceneId && scenes.has(initialSceneId)) void m.jump(initialSceneId);
+      })
+      .catch((e: unknown) => setStartError(e instanceof Error ? e.message : String(e)));
     return () => {
       off();
       m.dispose();
       setManager(null);
     };
-  }, [sequence, scenes, workspaceId, serverUrl, hostOrigin, canvas, customTransitions]);
+  }, [sequence, scenes, workspaceId, serverUrl, hostOrigin, canvas, customTransitions, initialSceneId]);
 
   useEffect(() => {
     const el = hostRef.current;

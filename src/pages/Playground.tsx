@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { EmptyScreen } from '@/components/layout/EmptyScreen';
+import { FloatingPanel } from '@/components/layout/FloatingPanel';
 import { SequencePlayer } from '@/components/playground/SequencePlayer';
 import { useWorkspace } from '@/lib/context/WorkspaceContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -33,6 +34,8 @@ export function Playground() {
   const navigate = useNavigate();
   const [loaded, setLoaded] = useState<Loaded | { root: string; error: string } | null>(null);
   const [thumbs, setThumbs] = useState<Record<string, string>>({});
+  // 카드 클릭으로 여는 플로팅 재생(우측 하단 1/4). 시퀀스 저장 파일의 최종 결과물을 보여 준다.
+  const [floatScene, setFloatScene] = useState<string | null>(null);
 
   useEffect(() => {
     if (!workspaceRoot) return;
@@ -85,10 +88,11 @@ export function Playground() {
   const origin = previewOriginOf(serverUrl);
 
   return (
-    <div className="flex h-full flex-col gap-4 overflow-auto p-4">
+    <div className="relative flex h-full flex-col gap-4 overflow-auto p-4">
       <div>
         <h1 className="text-base font-semibold">{t('shell.nav.playground')}</h1>
         <p className="mt-1 text-xs text-muted-foreground">{t('gallery.subtitle')}</p>
+        <p className="mt-0.5 text-xs text-muted-foreground">{t('gallery.savedSequence')}</p>
       </div>
 
       {sceneList.length === 0 ? (
@@ -96,12 +100,12 @@ export function Playground() {
       ) : (
         <ul className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4" data-testid="scene-gallery">
           {sceneList.map(([id, s]) => (
-            <li key={id}>
+            <li key={id} className="flex flex-col gap-1 rounded-lg border border-border bg-card p-2 text-left text-xs">
               <button
                 type="button"
-                onClick={() => navigate(`/scenes?scene=${encodeURIComponent(id)}`)}
-                aria-label={t('gallery.openScene', { name: s.name })}
-                className="flex w-full flex-col gap-1 rounded-lg border border-border bg-card p-2 text-left text-xs hover:bg-accent"
+                onClick={() => setFloatScene(id)}
+                aria-label={t('gallery.floatPlayer', { name: s.name })}
+                className="flex w-full flex-col gap-1 rounded text-left hover:bg-accent"
               >
                 <span className="flex h-24 items-center justify-center overflow-hidden rounded bg-muted text-muted-foreground">
                   {thumbs[s.slug] ? <img src={thumbs[s.slug]} alt="" className="h-full w-full object-cover" /> : t('scene.noThumbnail')}
@@ -111,6 +115,14 @@ export function Playground() {
                   {t(`scene.type.${s.type}`)} · {t(`scene.status.${s.status}`)}
                 </span>
               </button>
+              <button
+                type="button"
+                onClick={() => navigate(`/scenes?scene=${encodeURIComponent(id)}`)}
+                aria-label={t('gallery.openScene', { name: s.name })}
+                className="self-end rounded border border-border px-2 py-0.5 text-[11px] hover:bg-accent"
+              >
+                {t('gallery.openScenePage')}
+              </button>
             </li>
           ))}
         </ul>
@@ -118,6 +130,7 @@ export function Playground() {
       <p className="text-xs text-muted-foreground">{t('gallery.onlineLater')}</p>
 
       <h2 className="text-sm font-semibold">{t('gallery.player')}</h2>
+      <p className="text-xs text-muted-foreground">{t('gallery.savedSequence')}</p>
       {loaded.sequence.nodes.length === 0 ? (
         <p className="text-xs text-muted-foreground">{t('player.emptySequence')}</p>
       ) : hasErrors(issues) ? (
@@ -160,6 +173,41 @@ export function Playground() {
             </div>
           )}
         </>
+      )}
+
+      {floatScene && (
+        <FloatingPanel
+          title={`${loaded.scenes.get(floatScene)?.name ?? ''} — ${t('gallery.player')}`}
+          onClose={() => setFloatScene(null)}
+          draggable
+          className="bottom-4 right-4 z-40"
+          style={{ width: 'min(520px, 36vw)', height: 'min(420px, 40vh)', minWidth: 300, minHeight: 280 }}
+          testId="playground-float-player"
+        >
+          <div className="h-full p-2">
+            {loaded.sequence.nodes.length === 0 ? (
+              <p className="text-xs text-muted-foreground">{t('player.emptySequence')}</p>
+            ) : hasErrors(issues) ? (
+              <p className="text-xs text-muted-foreground">{t('player.fixFirst')}</p>
+            ) : !serverUrl || !origin ? (
+              <p role="status" className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                {t('preview.starting')}
+              </p>
+            ) : (
+              <SequencePlayer
+                sequence={loaded.sequence}
+                workspaceId={loaded.workspace.workspaceId}
+                scenes={loaded.scenes}
+                serverUrl={serverUrl}
+                hostOrigin={window.location.origin}
+                canvas={loaded.workspace.canvas}
+                customTransitions={loaded.custom}
+                initialSceneId={floatScene}
+              />
+            )}
+          </div>
+        </FloatingPanel>
       )}
     </div>
   );

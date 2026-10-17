@@ -324,3 +324,6 @@ Ran lint. See lint-report.md for details.
 
 ## [2026-10-17] lint | Wiki health check
 - 69 pages, orphans 0, broken links 0. See: wiki/lint-report.md
+
+## [2026-10-17] update | 앱 UI 다듬기(시퀀스·신·템플릿·플레이그라운드)
+- 시퀀스 신 카드 타이틀 클릭 → 신 화면 이동, 신 화면 콘텐츠 전체 너비+플로팅 툴바·드래그 코멘트·신 우클릭 메뉴(열기·가이드 편집·터미널·폴더·시작신), 템플릿 상단 탭+갤러리 카드+즐겨찾기+적용 다이얼로그(신/시퀀스 대상 선택), 지정 외 우클릭 차단(AppShell 가드), 플레이그라운드 카드 클릭 → 우하단 1/4 플로팅 시퀀스 재생. 검증: lint·typecheck·vitest 154파일 1150테스트 통과.
