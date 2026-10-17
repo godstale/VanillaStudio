@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { useEffect } from 'react';
+import { MemoryRouter, Route, Routes, useSearchParams } from 'react-router-dom';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { ThemeProvider } from '@/lib/context/ThemeContext';
 import { newScene, type Scene } from '@/lib/scene/schema';
-import { promptForScene } from '@/lib/agents/clipboard';
-import { defaultTemplateFor } from '@/lib/guides/template';
 import { newSequence, type Sequence } from '@/lib/sequence/schema';
 
 vi.stubGlobal(
@@ -54,13 +54,31 @@ import { SceneWorkspace } from './SceneWorkspace';
 const sceneA: Scene = newScene({ id: 'scn_AAA', name: 'Alpha', type: 'motion', template: 'commercial@1' });
 const sceneB: Scene = newScene({ id: 'scn_BBB', name: 'Beta', type: 'static', template: 'web-page@1' });
 
-function renderWs() {
+function Probe({ onHit }: { onHit: (scene: string | null) => void }) {
+  const [params] = useSearchParams();
+  useEffect(() => {
+    onHit(params.get('scene'));
+  }, [params, onHit]);
+  return null;
+}
+
+function renderWs(probe?: (scene: string | null) => void) {
   return render(
     <ThemeProvider>
       <LanguageProvider>
-        <div style={{ width: 1000, height: 700 }}>
-          <SceneWorkspace root="/w" workspace={{ id: 'ws_1', name: 'W' }} />
-        </div>
+        <MemoryRouter initialEntries={['/workspace']}>
+          <Routes>
+            <Route
+              path="/workspace"
+              element={
+                <div style={{ width: 1000, height: 700 }}>
+                  <SceneWorkspace root="/w" workspace={{ id: 'ws_1', name: 'W' }} />
+                </div>
+              }
+            />
+            <Route path="/scenes" element={<Probe onHit={probe ?? (() => undefined)} />} />
+          </Routes>
+        </MemoryRouter>
       </LanguageProvider>
     </ThemeProvider>,
   );
@@ -80,7 +98,8 @@ describe('SceneWorkspace', () => {
   it('shows a node per scene folder, including an unreadable one', async () => {
     renderWs();
     expect(await screen.findByText('Alpha')).toBeTruthy();
-    expect(screen.getByText('Beta')).toBeTruthy();
+    // 코멘트 툴박스의 신 선택 옵션에도 같은 이름이 있어 여러 개가 나온다.
+    expect(screen.getAllByText('Beta').length).toBeGreaterThan(0);
     expect(screen.getAllByTestId('scene-node')).toHaveLength(3);
     expect(screen.getAllByRole('alert', { hidden: true }).length).toBeGreaterThan(0); // xyflow hides nodes until measured (jsdom never measures)
   });
@@ -102,46 +121,24 @@ describe('SceneWorkspace', () => {
     fireEvent.click(screen.getByRole('button', { name: /만들기|Create/ }));
     await waitFor(() => expect(state.created).toEqual([expect.objectContaining({ name: 'Gamma', type: '3d' })]));
     await waitFor(() => expect((state.seq as Sequence).nodes.some((n) => n.sceneId === 'scn_NEW000000001')).toBe(true));
-    expect(await screen.findByText('Gamma')).toBeTruthy();
+    expect((await screen.findAllByText('Gamma')).length).toBeGreaterThan(0);
   });
 
-  it('Run agent starts the terminal for that scene with the workspace default agent; failures are shown', async () => {
-    const runAgent = vi.fn(async () => ({}) as never);
-    const value = { runAgent, sessions: [], activeId: null, setActiveId: vi.fn(), manager: {} as never, pickAgent: vi.fn() } as unknown as TerminalContextValue;
-    render(
-      <ThemeProvider>
-        <LanguageProvider>
-          <TerminalContext.Provider value={value}>
-            <div style={{ width: 1000, height: 700 }}>
-              <SceneWorkspace root="/w" workspace={{ id: 'ws_1', name: 'W' }} defaultAgent="codex" />
-            </div>
-          </TerminalContext.Provider>
-        </LanguageProvider>
-      </ThemeProvider>,
-    );
+  it('has no agent-run button; play jumps to the scene screen', async () => {
+    const seen: (string | null)[] = [];
+    renderWs((s) => seen.push(s));
     await screen.findByText('Alpha');
-    const alphaButton = screen.getAllByText(/에이전트 실행|Run agent/)[0].closest('button')!;
-    fireEvent.click(alphaButton);
-    await waitFor(() => expect(runAgent).toHaveBeenCalledOnce());
-    expect(runAgent).toHaveBeenCalledWith({
-      workspaceId: 'ws_1',
-      sceneId: 'scn_AAA',
-      sceneSlug: 'alpha',
-      sceneName: 'Alpha',
-      preferredAgentId: 'codex',
-      // 클립보드로 가는 프롬프트는 인스펙터 미리보기와 같은 함수가 만든다.
-      prompt: promptForScene({ workspace: { id: 'ws_1', name: 'W' }, scene: sceneA, template: defaultTemplateFor('motion') }).text,
-    });
-
-    runAgent.mockRejectedValueOnce(new Error('no-enabled-agent'));
-    fireEvent.click(alphaButton);
-    expect((await screen.findByText(/사용할 수 있는 에이전트가 없습니다|No agent is enabled/))).toBeTruthy();
+    expect(screen.queryByText(/에이전트 실행|Run agent/)).toBeNull();
+    // jsdom에서 노드는 visibility:hidden이라 role 쿼리에 안 잡혀 텍스트로 찾는다.
+    const play = screen.getAllByText(/재생|Play/)[0].closest('button')!;
+    fireEvent.click(play);
+    await waitFor(() => expect(seen).toContain('scn_AAA'));
   });
 
-  it('the run button is disabled without a terminal provider and for unreadable scenes', async () => {
+  it('shows the comment toolbox overlay', async () => {
     renderWs();
     await screen.findByText('Alpha');
-    for (const b of screen.getAllByText(/에이전트 실행|Run agent/)) expect((b.closest('button') as HTMLButtonElement).disabled).toBe(true);
+    expect(await screen.findByTestId('comment-toolbox')).toBeTruthy();
   });
 });
 
@@ -152,9 +149,11 @@ describe('outside writes warning', () => {
       <ThemeProvider>
         <LanguageProvider>
           <TerminalContext.Provider value={value}>
-            <div style={{ width: 1000, height: 700 }}>
-              <SceneWorkspace root="/w" workspace={{ id: 'ws_1', name: 'W' }} />
-            </div>
+            <MemoryRouter initialEntries={['/workspace']}>
+              <div style={{ width: 1000, height: 700 }}>
+                <SceneWorkspace root="/w" workspace={{ id: 'ws_1', name: 'W' }} />
+              </div>
+            </MemoryRouter>
           </TerminalContext.Provider>
         </LanguageProvider>
       </ThemeProvider>,
