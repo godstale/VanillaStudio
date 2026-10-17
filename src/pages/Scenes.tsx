@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SlidersHorizontal, SquareTerminal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { EmptyScreen } from '@/components/layout/EmptyScreen';
 import { FloatingPanel } from '@/components/layout/FloatingPanel';
 import { Onboarding } from '@/components/workspace/Onboarding';
 import { SceneInspector } from '@/components/inspector/SceneInspector';
@@ -50,20 +49,30 @@ function Inner({ root }: { root: string }) {
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [thumbs, setThumbs] = useState<Record<string, string>>({});
 
-  const reloadAll = useCallback(async () => {
+  const fetchAll = useCallback(async () => {
     const ws = await readWorkspace(root);
-    setWorkspace({ id: ws.workspaceId, name: ws.name, canvas: ws.canvas, defaultAgent: ws.defaultAgent });
-    setEntries(await listScenes(root));
-    try {
-      setSeq(await readSequence(root, ws.workspaceId));
-    } catch {
-      setSeq(null);
-    }
+    const [entries, seq] = await Promise.all([listScenes(root), readSequence(root, ws.workspaceId).catch(() => null)]);
+    return { ws, entries, seq };
   }, [root]);
 
+  const apply = useCallback((loaded: { ws: { workspaceId: string; name: string; canvas: LoadedWorkspace['canvas']; defaultAgent?: string }; entries: SceneEntry[]; seq: Sequence | null }) => {
+    setWorkspace({ id: loaded.ws.workspaceId, name: loaded.ws.name, canvas: loaded.ws.canvas, defaultAgent: loaded.ws.defaultAgent });
+    setEntries(loaded.entries);
+    setSeq(loaded.seq);
+    setError(null);
+  }, []);
+
+  const fail = useCallback((e: unknown) => setError(e instanceof Error ? e.message : String(e)), []);
+
+  const reload = useCallback(() => {
+    void fetchAll()
+      .then(apply)
+      .catch(fail);
+  }, [fetchAll, apply, fail]);
+
   useEffect(() => {
-    reloadAll().catch((e: unknown) => setError(e instanceof Error ? e.message : String(e)));
-  }, [reloadAll]);
+    reload();
+  }, [reload]);
 
   useEffect(() => {
     let cancelled = false;
@@ -85,7 +94,7 @@ function Inner({ root }: { root: string }) {
   }, [valid, params]);
 
   const workspaceRef = useMemo(() => ({ id: workspace?.id ?? '', name: workspace?.name ?? '' }), [workspace]);
-  const review = useRunReview({ root, workspace: workspaceRef, resolve, terminals, onApplied: () => void reloadAll().catch(() => undefined) });
+  const review = useRunReview({ root, workspace: workspaceRef, resolve, terminals, onApplied: () => reload() });
 
   const commentScenes = useMemo(
     () => (selected?.scene ? [{ slug: selected.slug, sceneId: selected.scene.id, name: selected.scene.name }] : []),
@@ -116,7 +125,7 @@ function Inner({ root }: { root: string }) {
         setRunError(message === 'no-enabled-agent' ? t('scene.noAgent') : t('scene.runFailed', { error: message }));
       }
     },
-    [entries, resolve, review, root, terminals, t, workspace?.defaultAgent, workspaceRef],
+    [entries, resolve, review, root, terminals, t, workspace, workspaceRef],
   );
 
   if (error) {
@@ -228,11 +237,11 @@ function Inner({ root }: { root: string }) {
             canvas={workspace.canvas}
             onSave={async (scene) => {
               await writeScene(root, selected.slug, workspaceRef, scene, resolve);
-              await reloadAll();
+              reload();
             }}
             onRename={async (name) => {
               await renameScene(root, workspaceRef, selected.slug, name, resolve);
-              await reloadAll();
+              reload();
             }}
             onAnalyze={terminals ? (slug) => void onAnalyze(slug) : undefined}
             isStart={seq?.start === selected.scene.id}
@@ -250,7 +259,6 @@ function Inner({ root }: { root: string }) {
             onSaveAsTemplate={async (name) => {
               const parent = resolve(selected.scene!);
               if (!parent) throw new Error('template-unavailable');
-              const { saveSceneAsTemplate } = await import('@/lib/scene/saveAsTemplate');
               const r = await saveSceneAsTemplate(root, selected.scene!, parent, name, (ref) => catalog.get(ref) !== null);
               await reloadTemplates();
               return { ref: r.template.ref };

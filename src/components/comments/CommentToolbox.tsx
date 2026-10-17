@@ -30,12 +30,10 @@ export function CommentToolbox({ root, scenes, defaultSlug }: Props) {
   const { t } = useLanguage();
   const [files, setFiles] = useState<Record<string, CommentsFile>>({});
   const [failed, setFailed] = useState(false);
-  const [target, setTarget] = useState(defaultSlug ?? scenes[0]?.slug ?? '');
+  const [chosen, setChosen] = useState<string | null>(null);
   const [draft, setDraft] = useState('');
-
-  useEffect(() => {
-    setTarget(defaultSlug ?? scenes[0]?.slug ?? '');
-  }, [defaultSlug, scenes]);
+  // 선택한 신이 목록에 없으면 기본값으로 되돌아간다(effect 없이 렌더 중에 결정).
+  const target = chosen && scenes.some((s) => s.slug === chosen) ? chosen : (defaultSlug ?? scenes[0]?.slug ?? '');
 
   useEffect(() => {
     let cancelled = false;
@@ -147,7 +145,7 @@ export function CommentToolbox({ root, scenes, defaultSlug }: Props) {
           <select
             aria-label={t('scenes.list')}
             value={target}
-            onChange={(e) => setTarget(e.target.value)}
+            onChange={(e) => setChosen(e.target.value)}
             className="h-7 rounded-md border border-input bg-background px-1.5"
           >
             {scenes.map((s) => (
