@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Play } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { EmptyScreen } from '@/components/layout/EmptyScreen';
 import { FloatingPanel } from '@/components/layout/FloatingPanel';
@@ -86,11 +86,12 @@ export function Playground() {
     );
   }
 
-  // 시퀀스 단위 등록: 워크스페이스 1개 = 시퀀스 1개. 신 썸네일은 시퀀스 순서대로 보여 준다.
+  // 시퀀스 단위 등록: 워크스페이스 1개 = 시퀀스 1개. 카드는 첫 번째 신 하나만 보여 주고, 클릭하면 플로팅 화면에서 재생한다.
   const orderedScenes = loaded.sequence.nodes.flatMap((n) => {
     const s = loaded.scenes.get(n.sceneId);
     return s ? [{ id: n.sceneId, ...s }] : [];
   });
+  const firstScene = orderedScenes[0] ?? null;
   const origin = previewOriginOf(serverUrl);
   const playable = loaded.sequence.nodes.length > 0 && !hasErrors(issues);
   const floatTitle = floatScene && loaded.scenes.get(floatScene) ? `${loaded.scenes.get(floatScene)!.name} — ${t('gallery.player')}` : `${loaded.workspace.name} — ${t('gallery.player')}`;
@@ -131,46 +132,38 @@ export function Playground() {
                   </ul>
                 </div>
               )}
-              {orderedScenes.length === 0 ? (
+              {orderedScenes.length === 0 || !firstScene ? (
                 <p className="text-muted-foreground">{t('gallery.empty')}</p>
               ) : (
-                <ul className="grid grid-cols-2 gap-2 md:grid-cols-3">
-                  {orderedScenes.map((s) => (
-                    <li key={s.id} className="flex flex-col gap-1 rounded-md border border-border p-1.5">
-                      <button
-                        type="button"
-                        onClick={() => openFrom(s.id)}
-                        aria-label={t('gallery.floatPlayer', { name: s.name })}
-                        className="flex w-full flex-col gap-1 rounded text-left hover:bg-accent"
-                      >
-                        <span className="flex h-20 items-center justify-center overflow-hidden rounded bg-muted text-muted-foreground">
-                          {thumbs[s.slug] ? <img src={thumbs[s.slug]} alt="" className="h-full w-full object-cover" /> : t('scene.noThumbnail')}
-                        </span>
-                        <b className="truncate text-xs">{s.name}</b>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => navigate(`/scenes?scene=${encodeURIComponent(s.id)}`)}
-                        aria-label={t('gallery.openScene', { name: s.name })}
-                        className="self-end rounded border border-border px-2 py-0.5 text-[11px] hover:bg-accent"
-                      >
-                        {t('gallery.openScenePage')}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+                <div className="flex max-w-xs flex-col gap-1 rounded-md border border-border p-1.5">
+                  <button
+                    type="button"
+                    onClick={() => openFrom(firstScene.id)}
+                    aria-label={t('gallery.floatPlayer', { name: firstScene.name })}
+                    className="flex w-full flex-col gap-1 rounded text-left hover:bg-accent"
+                  >
+                    <span className="flex h-20 items-center justify-center overflow-hidden rounded bg-muted text-muted-foreground">
+                      {thumbs[firstScene.slug] ? <img src={thumbs[firstScene.slug]} alt="" className="h-full w-full object-cover" /> : t('scene.noThumbnail')}
+                    </span>
+                    <b className="truncate text-xs">{firstScene.name}</b>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/scenes?scene=${encodeURIComponent(firstScene.id)}`)}
+                    aria-label={t('gallery.openScene', { name: firstScene.name })}
+                    className="self-end rounded border border-border px-2 py-0.5 text-[11px] hover:bg-accent"
+                  >
+                    {t('gallery.openScenePage')}
+                  </button>
+                </div>
               )}
-              <div className="flex gap-2">
-                <Button size="sm" disabled={!playable} onClick={() => openFrom(null)}>
-                  <Play className="mr-1 h-3.5 w-3.5" />
-                  {t('gallery.playFromStart')}
-                </Button>
-                {!floatOpen && playable && (
+              {!floatOpen && playable && (
+                <div className="flex gap-2">
                   <Button size="sm" variant="outline" onClick={() => setFloatOpen(true)}>
                     {t('gallery.openPlayer')}
                   </Button>
-                )}
-              </div>
+                </div>
+              )}
             </li>
           </ul>
         </section>

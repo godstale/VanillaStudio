@@ -60,16 +60,18 @@ describe('Playground', () => {
   it('registers the sequence (not scenes) and floats the player at the bottom-right', async () => {
     const seen: (string | null)[] = [];
     renderPlayground(seen);
-    // 시퀀스 단위 등록: 갤러리에 시퀀스 카드 1개, 그 안에 시퀀스 순서대로 신 썸네일.
+    // 시퀀스 단위 등록: 갤러리에 시퀀스 카드 1개, 그 안에 첫 번째 신 카드 하나만.
     expect(await screen.findByTestId('sequence-gallery')).toBeTruthy();
     expect(screen.getByText('Alpha')).toBeTruthy();
-    expect(screen.getByText('Beta')).toBeTruthy();
+    expect(screen.queryByText('Beta')).toBeNull();
+    // 처음부터 재생 버튼은 없다.
+    expect(screen.queryByRole('button', { name: /처음부터 재생|Play from the start/ })).toBeNull();
     expect(screen.getByText(/온라인 탐색|Online browsing/)).toBeTruthy();
     // 재생 화면은 기본으로 우측 하단에 플로팅되어 있다.
     const float = await screen.findByTestId('playground-float-player');
     expect(within(float).getByTestId('sequence-player')).toBeTruthy();
     // 썸네일 클릭은 플로팅 화면에서 그 신부터 재생한다(신 화면으로 가지 않는다).
-    fireEvent.click(screen.getByRole('button', { name: /Beta.*플로팅|Play sequence from Beta/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Alpha.*플로팅|Play sequence from Alpha/ }));
     expect(await screen.findByTestId('playground-float-player')).toBeTruthy();
     expect(seen).toEqual([]);
     // 닫았다가 다시 열 수 있다.
