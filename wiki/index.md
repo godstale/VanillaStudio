@@ -22,6 +22,7 @@
 - [[golden-samples]] — 골든 샘플 브리프 5종 초안(P5 품질 기준)
 - [[parallel-execution]] — 병렬 실행 가이드: 웨이브·레인·워크트리·세션 프롬프트 (P4 진입점)
 - [[refactor-spec-v2]] — v2 리팩토링 기획서 초안(Scene 워크스페이스, D-022~D-033 Proposed)
+- [[ui-agent-centric]] — 에이전트 중심 UI 개편(시퀀스·신·템플릿·갤러리·코멘트, D-034)
 - [[phase-p4-v2]] — Phase P4(v2) 구현 로그 V1~V7(교훈·지표)
 - [[milestone-v7]] — V7 패키지·마이그레이션·릴리스 마일스톤 로그
 - [[issue-v1-migration]] — v1 프로젝트 마이그레이션 출하 게이트 판정(샘플 3종 재생 통과)

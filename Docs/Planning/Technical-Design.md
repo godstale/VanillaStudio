@@ -1,6 +1,6 @@
 # Vanilla Studio 기술 설계서 (Technical Design)
 
-- 문서 버전: **v1.0 (v2 리팩토링, 2026-10-05)** — `Refactor-Spec-v2.md` v0.3 승인 반영. v0.x(파이프라인·ACP 구조)는 git 태그 `v1-final` 이전 이력(`git log -- Docs/Planning/Technical-Design.md`)에 남아 있다.
+- 문서 버전: **v1.1 (에이전트 중심 UI, 2026-10-17)** — D-034 반영(셸·메뉴·코멘트 파일). v1.0(v2 리팩토링, 2026-10-05)은 git 이력에 남아 있다.
 - 선행 문서: `Docs/Planning/Refactor-Spec-v2.md`(무엇을 만드는가), `Docs/Planning/Decisions.md`(D-022~D-033)
 - 템플릿 공통 아키텍처(`Docs/Architecture.md`)는 **템플릿 원본으로 유지**하고, 이 문서가 Vanilla Studio 고유 설계의 진실 공급원이다. 충돌 시 이 문서가 우선한다.
 - ⚠️ 표시 항목은 PoC(`Feasibility-Risks.md`)로 확정해야 하는 가정이다.
@@ -13,8 +13,9 @@
 ```
 ┌────────────────────────── Vanilla Studio v2 (Tauri 2 앱) ──────────────────────────┐
 │  WebView (React 19 UI)                                                              │
-│   ├ 사이드바 · Workspace 캔버스(@xyflow/react) · Scene 인스펙터 · 터미널 도크      │
-│   ├ Playground (시퀀스 재생기, 신 iframe 호스트)                                     │
+│   ├ 사이드바(시퀀스·신·템플릿·플레이그라운드·설정[하단]) · 시퀀스 캔버스(@xyflow/react, 코멘트 오버레이) │
+│   ├ 신 화면(신 목록 · 미리보기/계약 검사 · 코멘트 · 플로팅 인스펙터/터미널)      │
+│   ├ 템플릿(가이드·팔레트·구성 기법) · Playground (신 갤러리 + 시퀀스 재생기)      │
 │   └ <iframe sandbox src="http://127.0.0.1:<port>/<sceneId>/">  ← 신 미리보기         │
 │            ▲ postMessage (Vanilla Bridge §5)                                        │
 │  ─────────────── invoke / Channel ───────────────                                   │
@@ -380,6 +381,7 @@ render 모드와 HyperFrames seek의 연결, 준비 대기 신호는 S1에서 �
 | `sequence.json` | `src/lib/sequence/schema.ts` | `version`·`workspaceId`·`id`·`mode`·`nodes[]`·`edges[]`·`start`. 검증: static 신 발신 엣지는 사용자 입력 trigger만, `workspaceId` 일치, 노드의 `sceneId`는 `scenes/*/scene.json`에 존재, start 도달성 |
 | `scenes/<slug>/scene.json` | `src/lib/scene/schema.ts` (공통 + 타입별 확장 `static`·`motion`·`3d`) | 신 ID(`id`, `scn_<alnum>`) 불변, 용어는 glossary ID로 저장, 정규화 직렬화(§8.3, 시간 키 `start`·`end`·`seconds`·`holdSeconds`). 타입 확장은 평면 필드: `static`=`mode`·`steps`·`sections`·`layout`·`breakpoints`·`accessibility`, `3d`=motion 공통 + `composition`·`materials`·`lighting`·`cameraPath`·`performanceBudget`. 검증: `beats`는 0에서 시작·연속·합=`duration.seconds`, `endCard.holdSeconds ≥ 0.7`, static `steps[].advance`는 `click`·`key:`·`choice:`만, 알 수 없는 필드 거부. 사용자 템플릿이 더한 필드 값은 `custom{}`에 저장(D-031). 용어집은 템플릿별 `glossary.json`(`terms[]`: category·id·label·definition·implementationHint·tags), `schema.json`은 `hide`·`defaults`·`fields`(추가 필드)만 허용 |
 | `scenes/<slug>/references/references.json` | `src/lib/scene/references.ts` | `{id, kind: video|image|url, path|url, note, analysis}` |
+| `scenes/<slug>/comments.json` | `src/lib/scene/comments.ts` | `{version, sceneId, comments[{id, createdAt, body, status, history[{at, action}]}]}` — 사용자가 에이전트에게 남기는 수정 요청(D-034) |
 | `guide-templates/*/template.json` | `src/lib/guides/templateSchema.ts` | `{id, version, type, extends, label}` |
 | `manifest.json`(.vsx 내부) | `src/lib/package/manifest.ts` | 파일별 SHA-256, 앱·스키마 버전, 사용 템플릿 목록 |
 

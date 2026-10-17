@@ -318,3 +318,9 @@ Ran lint. See lint-report.md for details.
 
 ## [2026-10-06] milestone | V7 package migration release
 - T7.1-T7.7 done, T7.8 automated part done (installer built), T7.9 logs. Human checks pending. See: [[milestone-v7]], [[phase-p4-v2]]
+
+## [2026-10-17] decision | D-034 agent-centric UI Accepted
+- Sequence/Scenes/Templates/Gallery menus, floating inspector, no dock, comments.json contract. See: [[ui-agent-centric]], [[decisions]]
+
+## [2026-10-17] lint | Wiki health check
+- 69 pages, orphans 0, broken links 0. See: wiki/lint-report.md

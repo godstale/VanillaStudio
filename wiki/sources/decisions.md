@@ -5,7 +5,7 @@ tags: [decisions, phase-p2]
 date: 2026-09-28
 source_file: Docs/Planning/Decisions.md
 sources: []
-last_updated: 2026-09-29
+last_updated: 2026-10-17
 ---
 
 ## Summary
@@ -47,6 +47,7 @@ last_updated: 2026-09-29
 | D-031 | 사용자 정의 가이드 템플릿 v2.0 포함 | Accepted (2026-10-05) | [[refactor-spec-v2]] |
 | D-032 | 정적 페이지 사용자 입력 진행·steps | Accepted (2026-10-05) | [[refactor-spec-v2]] |
 | D-033 | v1 마이그레이션 조건부 출하 | Accepted (2026-10-05) | [[refactor-spec-v2]] |
+| D-034 | 에이전트 중심 UI(시퀀스·신·템플릿·갤러리·코멘트 계약) | Accepted (2026-10-17) | [[ui-agent-centric]] |
 
 ## Connections
 

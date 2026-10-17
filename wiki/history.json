@@ -306,6 +306,15 @@
       "pages": [
         "sources/phase-p4-v2.md"
       ]
+    },
+    "ui-agent-centric": {
+      "source_file": "Docs/Planning/Decisions.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-10-17",
+      "pages": [
+        "sources/ui-agent-centric.md"
+      ]
     }
   }
 }
