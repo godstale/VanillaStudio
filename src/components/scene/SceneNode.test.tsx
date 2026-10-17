@@ -37,12 +37,10 @@ describe('SceneNode', () => {
     expect(screen.getByText(label)).toBeTruthy();
   });
 
-  it('run button becomes "revise" only in needs-revision', () => {
-    const { unmount } = renderNode({ status: 'generated', onRunAgent: () => undefined });
-    expect(screen.getByRole('button', { name: /에이전트 실행|Run agent/ })).toBeTruthy();
-    unmount();
-    renderNode({ status: 'needs-revision', onRunAgent: () => undefined });
-    expect(screen.getByRole('button', { name: /재생성|Revise/ })).toBeTruthy();
+  it('has no agent-run button; the agent runs in a separate terminal', () => {
+    renderNode({ onPlay: () => undefined });
+    expect(screen.queryByRole('button', { name: /에이전트 실행|Run agent|재생성|Revise/ })).toBeNull();
+    expect(screen.getByRole('button', { name: /재생|Play/ })).toBeTruthy();
   });
 
   it('shows the saved thumbnail instead of the placeholder', () => {
@@ -68,28 +66,23 @@ describe('SceneNode', () => {
     expect(screen.getByRole('alert')).toBeTruthy();
   });
 
-  it('opens the folder; run and play are off without handlers', () => {
+  it('opens the folder; play is off without a handler', () => {
     const onOpenFolder = vi.fn();
     renderNode({ onOpenFolder });
     fireEvent.click(screen.getByRole('button', { name: /폴더 열기|Open folder/ }));
     expect(onOpenFolder).toHaveBeenCalledWith('intro');
-    expect((screen.getByRole('button', { name: /에이전트 실행|Run agent/ }) as HTMLButtonElement).disabled).toBe(true);
     expect((screen.getByRole('button', { name: /재생|Play/ }) as HTMLButtonElement).disabled).toBe(true);
   });
 
-  it('Run agent and Play call their handlers with the scene folder when provided', () => {
-    const onRunAgent = vi.fn();
+  it('Play calls its handler with the scene folder when provided', () => {
     const onPlay = vi.fn();
-    renderNode({ onRunAgent, onPlay });
-    fireEvent.click(screen.getByRole('button', { name: /에이전트 실행|Run agent/ }));
+    renderNode({ onPlay });
     fireEvent.click(screen.getByRole('button', { name: /재생|Play/ }));
-    expect(onRunAgent).toHaveBeenCalledWith('intro');
     expect(onPlay).toHaveBeenCalledWith('intro');
   });
 
-  it('both buttons are disabled for an unreadable scene.json', () => {
-    renderNode({ onRunAgent: vi.fn(), onPlay: vi.fn(), error: 'bad' });
-    expect((screen.getByRole('button', { name: /에이전트 실행|Run agent/ }) as HTMLButtonElement).disabled).toBe(true);
+  it('play is disabled for an unreadable scene.json', () => {
+    renderNode({ onPlay: vi.fn(), error: 'bad' });
     expect((screen.getByRole('button', { name: /재생|Play/ }) as HTMLButtonElement).disabled).toBe(true);
   });
 });

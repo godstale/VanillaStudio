@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
-import { AlertTriangle, Box, Clapperboard, FolderOpen, LayoutTemplate, Play, Terminal, type LucideIcon } from 'lucide-react';
+import { AlertTriangle, Box, Clapperboard, FolderOpen, LayoutTemplate, Play, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import type { SceneStatus, SceneType } from '@/lib/scene/schema';
@@ -20,8 +20,6 @@ export interface SceneNodeData extends Record<string, unknown> {
   /** scene.json이 없거나 검증에 실패했을 때의 이유. */
   error?: string;
   onOpenFolder?: (slug: string) => void;
-  /** 에이전트 실행(터미널 도크). 없으면 버튼이 꺼진다. */
-  onRunAgent?: (slug: string) => void;
   /** 미리보기 열기(인스펙터 미리보기 탭). 없으면 버튼이 꺼진다. */
   onPlay?: (slug: string) => void;
 }
@@ -37,7 +35,7 @@ const STATUS_CLASS: Record<SceneStatus, string> = {
   'needs-revision': 'bg-warning/15 text-warning',
 };
 
-// 에이전트 실행·재생 버튼은 V4(터미널·재생)에서 연결한다. 지금은 자리만 둔다.
+// 시퀀스 화면의 신 노드: 에이전트는 별도 터미널에서 실행하므로 실행 버튼을 두지 않는다. 재생·폴더 열기만 둔다.
 function SceneNodeView({ data, selected }: NodeProps<SceneFlowNode>) {
   const { t } = useLanguage();
   const Icon = TYPE_ICON[data.type];
@@ -72,15 +70,6 @@ function SceneNodeView({ data, selected }: NodeProps<SceneFlowNode>) {
         <span>{t('scene.references', { count: data.referenceCount })}</span>
       </div>
       <div className="flex gap-1">
-        <button
-          type="button"
-          disabled={!data.onRunAgent || Boolean(data.error)}
-          onClick={() => data.onRunAgent?.(data.slug)}
-          className="nodrag flex flex-1 items-center justify-center gap-1 rounded border border-border px-1 py-1 hover:bg-accent disabled:opacity-50"
-        >
-          <Terminal className="h-3 w-3" />
-          {t(data.status === 'needs-revision' ? 'scene.revise' : 'scene.runAgent')}
-        </button>
         <button
           type="button"
           disabled={!data.onPlay || Boolean(data.error)}
