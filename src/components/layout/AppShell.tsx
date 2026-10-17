@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
 import { Boxes, FlaskConical, LayoutTemplate, Settings, Workflow, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -45,6 +46,17 @@ function NavButton({ to, icon: Icon, labelKey }: NavItem) {
 /** 앱 셸: 좌측 사이드바 + 메인 화면. 우측 인스펙서·하단 도크는 두지 않는다(인스펙터는 신 화면의 플로팅 박스). */
 export function AppShell() {
   const { t } = useLanguage();
+  // 지정된 곳(`data-allow-context`)·텍스트 입력 계열 외에서는 우클릭 메뉴를 모두 막는다.
+  useEffect(() => {
+    const onContextMenu = (e: MouseEvent) => {
+      const el = e.target instanceof Element ? e.target : null;
+      if (el?.closest('[data-allow-context]')) return;
+      if (el?.closest('input, textarea, select, [contenteditable="true"], .xterm')) return;
+      e.preventDefault();
+    };
+    window.addEventListener('contextmenu', onContextMenu);
+    return () => window.removeEventListener('contextmenu', onContextMenu);
+  }, []);
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground">
       <TitleBar />

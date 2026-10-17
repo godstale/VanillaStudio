@@ -52,4 +52,10 @@ describe('AppShell', () => {
     fireEvent.click(links[4]);
     expect(screen.getByText('SETTINGS-SCREEN')).toBeTruthy();
   });
+
+  it('blocks the context menu outside designated areas', () => {
+    renderShell('/workspace');
+    // fireEvent는 preventDefault가 불리면 false를 돌려준다.
+    expect(fireEvent.contextMenu(screen.getByText('SEQUENCE-SCREEN'))).toBe(false);
+  });
 });

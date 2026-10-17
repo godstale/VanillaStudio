@@ -57,7 +57,7 @@ export function WorkspaceCanvas({
   const { resolvedTheme } = useTheme();
   const viewportProps = initialView ? { defaultViewport: initialView } : { fitView: true };
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full" data-allow-context>
       <ReactFlow
         className="vs-canvas"
         nodes={nodes}
