@@ -97,16 +97,16 @@ beforeEach(() => {
 describe('SceneWorkspace', () => {
   it('shows a node per scene folder, including an unreadable one', async () => {
     renderWs();
-    expect(await screen.findByText('Alpha')).toBeTruthy();
+    // 노드가 늦게 붙을 수 있어 텍스트가 아니라 노드 자체를 기다린다.
+    expect((await screen.findAllByTestId('scene-node')).length).toBe(3);
     // 코멘트 툴박스의 신 선택 옵션에도 같은 이름이 있어 여러 개가 나온다.
     expect(screen.getAllByText('Beta').length).toBeGreaterThan(0);
-    expect(screen.getAllByTestId('scene-node')).toHaveLength(3);
     expect(screen.getAllByRole('alert', { hidden: true }).length).toBeGreaterThan(0); // xyflow hides nodes until measured (jsdom never measures)
   });
 
   it('adds missing scenes to sequence.json on load', async () => {
     renderWs();
-    await screen.findByText('Alpha');
+    await screen.findAllByTestId('scene-node');
     const seq = state.seq as Sequence;
     expect(seq.nodes.map((n) => n.sceneId).sort()).toEqual(['scn_AAA', 'scn_BBB']);
     expect(seq.start).not.toBeNull();
@@ -114,7 +114,7 @@ describe('SceneWorkspace', () => {
 
   it('creates a scene from the dialog and stores its node', async () => {
     renderWs();
-    await screen.findByText('Alpha');
+    await screen.findAllByTestId('scene-node');
     fireEvent.click(screen.getByRole('button', { name: /신 추가|Add scene/ }));
     fireEvent.change(await screen.findByRole('textbox'), { target: { value: 'Gamma' } });
     fireEvent.click(screen.getByDisplayValue('3d'));
@@ -127,7 +127,7 @@ describe('SceneWorkspace', () => {
   it('has no agent-run button; play jumps to the scene screen', async () => {
     const seen: (string | null)[] = [];
     renderWs((s) => seen.push(s));
-    await screen.findByText('Alpha');
+    await screen.findAllByTestId('scene-node');
     expect(screen.queryByText(/에이전트 실행|Run agent/)).toBeNull();
     // jsdom에서 노드는 visibility:hidden이라 role 쿼리에 안 잡혀 텍스트로 찾는다.
     const play = screen.getAllByText(/재생|Play/)[0].closest('button')!;
@@ -137,7 +137,7 @@ describe('SceneWorkspace', () => {
 
   it('shows the comment toolbox overlay', async () => {
     renderWs();
-    await screen.findByText('Alpha');
+    await screen.findAllByTestId('scene-node');
     expect(await screen.findByTestId('comment-toolbox')).toBeTruthy();
   });
 });
@@ -162,7 +162,7 @@ describe('outside writes warning', () => {
 
   it('warns about writes outside the running scene folder, not inside it', async () => {
     withSessions([{ id: 's1', sceneSlug: 'alpha', status: 'running' }]);
-    await screen.findByText('Alpha');
+    await screen.findAllByTestId('scene-node');
     state.onBatch?.(['scenes/alpha/src/main.tsx', 'workspace.json']);
     expect(screen.queryByTestId('outside-writes')).toBeNull();
     state.onBatch?.(['scenes/beta/src/main.tsx', 'DESIGN.md']);
@@ -174,7 +174,7 @@ describe('outside writes warning', () => {
 
   it('is silent when no agent is running', async () => {
     withSessions([{ id: 's1', sceneSlug: 'alpha', status: 'exited' }]);
-    await screen.findByText('Alpha');
+    await screen.findAllByTestId('scene-node');
     state.onBatch?.(['scenes/beta/src/main.tsx']);
     expect(screen.queryByTestId('outside-writes')).toBeNull();
   });
