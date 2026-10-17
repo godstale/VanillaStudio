@@ -74,6 +74,13 @@ describe('SceneNode', () => {
     expect((screen.getByRole('button', { name: /재생|Play/ }) as HTMLButtonElement).disabled).toBe(true);
   });
 
+  it('clicking the title opens the scene screen, like Play does', () => {
+    const onPlay = vi.fn();
+    renderNode({ onPlay });
+    fireEvent.click(screen.getByTitle(/신 화면으로 열기|Open in Scenes/));
+    expect(onPlay).toHaveBeenCalledWith('intro');
+  });
+
   it('Play calls its handler with the scene folder when provided', () => {
     const onPlay = vi.fn();
     renderNode({ onPlay });

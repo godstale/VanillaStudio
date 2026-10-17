@@ -56,4 +56,23 @@ describe('Scenes', () => {
     expect(await screen.findByTestId('scene-inspector-float')).toBeTruthy();
     expect(await screen.findByTestId('scene-inspector')).toBeTruthy();
   });
+
+  it('shows a context menu on right-click with open and guide actions', async () => {
+    renderScenes('/scenes');
+    await screen.findAllByText('Alpha');
+    const item = screen.getByRole('button', { name: /Alpha[\s\S]*모션|Alpha[\s\S]*Motion/ });
+    fireEvent.contextMenu(item);
+    const menu = await screen.findByTestId('scene-context-menu');
+    expect(menu).toBeTruthy();
+    expect(screen.getByRole('menuitem', { name: /신 열기|Open scene/ })).toBeTruthy();
+    fireEvent.click(screen.getByRole('menuitem', { name: /가이드 편집|Edit guide/ }));
+    expect(await screen.findByTestId('scene-inspector-float')).toBeTruthy();
+  });
+
+  it('comments live in a draggable floating panel', async () => {
+    renderScenes('/scenes');
+    await screen.findAllByText('Alpha');
+    expect(await screen.findByTestId('scene-comments-float')).toBeTruthy();
+    expect(await screen.findByTestId('comment-toolbox')).toBeTruthy();
+  });
 });

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { useNavigate } from 'react-router-dom';
 import { applyNodeChanges, Panel, ReactFlowProvider, useReactFlow, type NodeChange, type Viewport } from '@xyflow/react';
-import { MessageSquare, Plus, Share2, PackageOpen, Trash2, X } from 'lucide-react';
+import { GripVertical, MessageSquare, Plus, Share2, PackageOpen, Trash2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { WorkspaceCanvas } from '@/components/canvas/WorkspaceCanvas';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -253,6 +253,9 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
     [entries],
   );
   const [commentsOpen, setCommentsOpen] = useState(true);
+  // 코멘트 플로팅 박스는 헤더 드래그로 옮길 수 있다.
+  const [commentOffset, setCommentOffset] = useState({ x: 0, y: 0 });
+  const commentDrag = useRef<{ startX: number; startY: number; baseX: number; baseY: number } | null>(null);
 
   // 시퀀스 편집(T6.2): 저장할 수 없는 값은 파일에 쓰지 않고 이유를 보여 준다.
   const commitSequence = useCallback(
@@ -371,15 +374,38 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
         {!loadError && (
           <Panel position="top-right">
             {commentsOpen ? (
-              <div className="flex max-h-[60vh] w-72 flex-col rounded-lg border border-border bg-card p-2 shadow-lg">
-                <button
-                  type="button"
-                  aria-label={t('float.close')}
-                  onClick={() => setCommentsOpen(false)}
-                  className="self-end rounded p-0.5 text-muted-foreground hover:bg-accent"
+              <div
+                className="flex max-h-[60vh] w-72 flex-col rounded-lg border border-border bg-card p-2 shadow-lg"
+                data-testid="sequence-comments-float"
+                style={{ transform: `translate(${commentOffset.x}px, ${commentOffset.y}px)` }}
+              >
+                <div
+                  className="flex cursor-move touch-none select-none items-center gap-1 pb-1"
+                  title={t('float.dragHint')}
+                  onPointerDown={(e) => {
+                    if ((e.target as HTMLElement).closest('button')) return;
+                    commentDrag.current = { startX: e.clientX, startY: e.clientY, baseX: commentOffset.x, baseY: commentOffset.y };
+                    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+                  }}
+                  onPointerMove={(e) => {
+                    const d = commentDrag.current;
+                    if (!d) return;
+                    setCommentOffset({ x: d.baseX + e.clientX - d.startX, y: d.baseY + e.clientY - d.startY });
+                  }}
+                  onPointerUp={() => { commentDrag.current = null; }}
+                  onPointerCancel={() => { commentDrag.current = null; }}
                 >
-                  <X className="h-3.5 w-3.5" />
-                </button>
+                  <GripVertical className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
+                  <span className="flex-1 text-[11px] text-muted-foreground">{t('comments.title')}</span>
+                  <button
+                    type="button"
+                    aria-label={t('float.close')}
+                    onClick={() => setCommentsOpen(false)}
+                    className="rounded p-0.5 text-muted-foreground hover:bg-accent"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
                 <div className="min-h-0 flex-1 overflow-hidden">
                   <CommentToolbox root={root} scenes={commentScenes} />
                 </div>

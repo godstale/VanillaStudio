@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { SlidersHorizontal, SquareTerminal } from 'lucide-react';
+import { invoke } from '@tauri-apps/api/core';
+import { MessageSquare, SlidersHorizontal, SquareTerminal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FloatingPanel } from '@/components/layout/FloatingPanel';
 import { Onboarding } from '@/components/workspace/Onboarding';
@@ -25,6 +26,7 @@ import { setStart, checkSavable } from '@/lib/sequence/edit';
 import type { Sequence } from '@/lib/sequence/schema';
 import { saveSceneAsTemplate } from '@/lib/scene/saveAsTemplate';
 import { readWorkspace } from '@/lib/workspace/file';
+import { projectPath } from '@/lib/workspace/files';
 import { cn } from '@/lib/utils';
 
 interface LoadedWorkspace {
@@ -47,6 +49,8 @@ function Inner({ root }: { root: string }) {
   const [runError, setRunError] = useState<string | null>(null);
   const [inspectorOpen, setInspectorOpen] = useState(false);
   const [terminalOpen, setTerminalOpen] = useState(false);
+  const [commentsOpen, setCommentsOpen] = useState(true);
+  const [menu, setMenu] = useState<{ x: number; y: number; slug: string } | null>(null);
   const [thumbs, setThumbs] = useState<Record<string, string>>({});
 
   const fetchAll = useCallback(async () => {
@@ -128,6 +132,36 @@ function Inner({ root }: { root: string }) {
     [entries, resolve, review, root, terminals, t, workspace, workspaceRef],
   );
 
+  const openFolder = useCallback(
+    (slug: string) => {
+      void invoke('reveal_in_explorer', { path: projectPath(root, `scenes/${slug}`), workspaceRoot: root }).catch(() => undefined);
+    },
+    [root],
+  );
+
+  const setStartScene = useCallback(
+    (sceneId: string) => {
+      setSeq((prev) => {
+        if (!prev) return prev;
+        const next = setStart(prev, sceneId);
+        if (!checkSavable(next)) {
+          void writeSequence(root, next).catch(() => undefined);
+          return next;
+        }
+        return prev;
+      });
+    },
+    [root],
+  );
+
+  const openMenuScene = useCallback(
+    (slug: string) => {
+      const id = entries.find((e) => e.slug === slug)?.scene?.id;
+      if (id) setParams({ scene: id });
+    },
+    [entries, setParams],
+  );
+
   if (error) {
     return (
       <p role="alert" className="p-8 text-sm text-destructive">
@@ -136,11 +170,12 @@ function Inner({ root }: { root: string }) {
     );
   }
 
+  // 오른쪽 콘텐츠 패널은 신 미리보기가 전부 쓰고, 조작 버튼·코멘트는 플로팅 패널로 띄운다.
   return (
-    <div className="relative flex h-full min-h-0">
+    <div className="relative flex h-full min-h-0" onClick={() => setMenu(null)}>
       <aside aria-label={t('scenes.list')} className="flex w-56 shrink-0 flex-col border-r border-border bg-card/40">
         <h2 className="border-b border-border px-3 py-2 text-xs font-semibold text-muted-foreground">{t('scenes.list')}</h2>
-        <ul className="min-h-0 flex-1 space-y-1 overflow-auto p-2">
+        <ul className="min-h-0 flex-1 space-y-1 overflow-auto p-2" data-allow-context>
           {valid.map((e) => {
             const active = e.scene!.id === selected?.scene?.id;
             return (
@@ -148,6 +183,11 @@ function Inner({ root }: { root: string }) {
                 <button
                   type="button"
                   onClick={() => setParams({ scene: e.scene!.id })}
+                  onContextMenu={(ev) => {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    setMenu({ x: ev.clientX, y: ev.clientY, slug: e.slug });
+                  }}
                   aria-current={active}
                   className={cn('flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-xs hover:bg-accent', active && 'bg-accent')}
                 >
@@ -170,25 +210,15 @@ function Inner({ root }: { root: string }) {
         {valid.length === 0 && <p className="p-3 text-xs text-muted-foreground">{t('scenes.empty')}</p>}
       </aside>
 
-      <div className="min-w-0 flex-1 overflow-auto p-4">
+      <div className="relative min-w-0 flex-1 overflow-auto p-4">
         {!selected?.scene ? (
           <p className="text-xs text-muted-foreground">{t('scenes.selectHint')}</p>
         ) : (
-          <div className="mx-auto flex max-w-4xl flex-col gap-4">
-            <div className="flex flex-wrap items-center gap-2">
+          <div className="flex w-full flex-col gap-4">
+            <div className="flex flex-wrap items-baseline gap-2 pr-40">
               <h1 className="text-base font-semibold">{selected.scene.name}</h1>
               <span className="text-xs text-muted-foreground">
                 {t(`scene.type.${selected.scene.type}`)} · {t(`scene.status.${selected.scene.status}`)}
-              </span>
-              <span className="ml-auto flex gap-1">
-                <Button size="sm" variant="outline" onClick={() => setInspectorOpen(true)}>
-                  <SlidersHorizontal className="mr-1 h-3.5 w-3.5" />
-                  {t('scenes.openInspector')}
-                </Button>
-                <Button size="sm" variant="outline" onClick={() => setTerminalOpen(true)}>
-                  <SquareTerminal className="mr-1 h-3.5 w-3.5" />
-                  {t('scenes.terminal')}
-                </Button>
               </span>
             </div>
             {runError && (
@@ -211,17 +241,86 @@ function Inner({ root }: { root: string }) {
                 <CheckPanel root={root} slug={selected.slug} scene={selected.scene} />
               </div>
             </section>
-            <section aria-label={t('comments.title')} className="rounded-md border border-border p-3">
-              <CommentToolbox root={root} scenes={commentScenes} defaultSlug={selected.slug} />
-            </section>
+          </div>
+        )}
+
+        {selected?.scene && (
+          <div className="absolute right-4 top-4 flex gap-1 rounded-lg border border-border bg-card/95 p-1 shadow-lg backdrop-blur">
+            <Button size="sm" variant="outline" onClick={() => setInspectorOpen(true)}>
+              <SlidersHorizontal className="mr-1 h-3.5 w-3.5" />
+              {t('scenes.openInspector')}
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => setTerminalOpen(true)}>
+              <SquareTerminal className="mr-1 h-3.5 w-3.5" />
+              {t('scenes.terminal')}
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => setCommentsOpen((v) => !v)} aria-pressed={commentsOpen}>
+              <MessageSquare className="mr-1 h-3.5 w-3.5" />
+              {t('comments.title')}
+            </Button>
           </div>
         )}
       </div>
+
+      {commentsOpen && selected?.scene && (
+        <FloatingPanel
+          title={t('comments.title')}
+          onClose={() => setCommentsOpen(false)}
+          draggable
+          className="right-4 top-20 z-20"
+          style={{ width: 320, height: 420 }}
+          testId="scene-comments-float"
+        >
+          <div className="h-full p-2">
+            <CommentToolbox root={root} scenes={commentScenes} defaultSlug={selected.slug} />
+          </div>
+        </FloatingPanel>
+      )}
+
+      {menu && (
+        <div
+          role="menu"
+          data-allow-context
+          data-testid="scene-context-menu"
+          className="fixed z-50 w-48 rounded-md border border-border bg-card p-1 text-xs shadow-xl"
+          style={{ left: menu.x, top: menu.y }}
+          onClick={(e) => e.stopPropagation()}
+          onContextMenu={(e) => e.preventDefault()}
+        >
+          {(() => {
+            const entry = entries.find((e) => e.slug === menu.slug);
+            const id = entry?.scene?.id;
+            if (!id) return null;
+            return (
+              <>
+                <button type="button" role="menuitem" className="block w-full rounded px-2 py-1.5 text-left hover:bg-accent" onClick={() => { openMenuScene(menu.slug); setMenu(null); }}>
+                  {t('scenes.menu.open')}
+                </button>
+                <button type="button" role="menuitem" className="block w-full rounded px-2 py-1.5 text-left hover:bg-accent" onClick={() => { openMenuScene(menu.slug); setInspectorOpen(true); setMenu(null); }}>
+                  {t('scenes.menu.editGuide')}
+                </button>
+                <button type="button" role="menuitem" className="block w-full rounded px-2 py-1.5 text-left hover:bg-accent" onClick={() => { openMenuScene(menu.slug); setTerminalOpen(true); setMenu(null); }}>
+                  {t('scenes.menu.terminal')}
+                </button>
+                <button type="button" role="menuitem" className="block w-full rounded px-2 py-1.5 text-left hover:bg-accent" onClick={() => { openFolder(menu.slug); setMenu(null); }}>
+                  {t('scenes.menu.reveal')}
+                </button>
+                {seq && (
+                  <button type="button" role="menuitem" className="block w-full rounded px-2 py-1.5 text-left hover:bg-accent disabled:opacity-50" disabled={seq.start === id} onClick={() => { setStartScene(id); setMenu(null); }}>
+                    {t('scenes.menu.setStart')}
+                  </button>
+                )}
+              </>
+            );
+          })()}
+        </div>
+      )}
 
       {inspectorOpen && selected?.scene && workspace && (
         <FloatingPanel
           title={t('scenes.inspectorTitle')}
           onClose={() => setInspectorOpen(false)}
+          draggable
           className="bottom-4 right-4 top-4"
           style={{ width: 420, height: 'auto' }}
           testId="scene-inspector-float"
@@ -268,7 +367,7 @@ function Inner({ root }: { root: string }) {
       )}
 
       {terminalOpen && (
-        <FloatingPanel title={t('scenes.terminal')} onClose={() => setTerminalOpen(false)} className="bottom-4 left-60" style={{ width: 560, height: 360 }} testId="scene-terminal-float">
+        <FloatingPanel title={t('scenes.terminal')} onClose={() => setTerminalOpen(false)} draggable className="bottom-4 left-60" style={{ width: 560, height: 360 }} testId="scene-terminal-float">
           <div className="h-full min-h-64">{terminals ? <TerminalDock /> : null}</div>
         </FloatingPanel>
       )}

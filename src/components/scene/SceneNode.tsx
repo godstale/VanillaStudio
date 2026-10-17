@@ -51,7 +51,15 @@ function SceneNodeView({ data, selected }: NodeProps<SceneFlowNode>) {
       <Handle type="target" position={Position.Left} />
       <div className="mb-2 flex items-center gap-2">
         <Icon className="h-4 w-4 shrink-0 text-muted-foreground" aria-label={t(`scene.type.${data.type}`)} />
-        <b className="min-w-0 flex-1 truncate text-sm">{data.name}</b>
+        <button
+          type="button"
+          disabled={!data.onPlay || Boolean(data.error)}
+          onClick={() => data.onPlay?.(data.slug)}
+          title={t('scene.openScene')}
+          className="min-w-0 flex-1 truncate text-left text-sm font-bold hover:underline disabled:no-underline"
+        >
+          {data.name}
+        </button>
         {data.isStart && <span className="rounded bg-primary px-1.5 py-0.5 text-[10px] text-primary-foreground">{t('sequence.start')}</span>}
         <span className={cn('rounded px-1.5 py-0.5 text-[10px]', STATUS_CLASS[data.status])}>{t(`scene.status.${data.status}`)}</span>
       </div>
