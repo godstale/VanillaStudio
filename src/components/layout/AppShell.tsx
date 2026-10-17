@@ -1,13 +1,9 @@
-import { createContext, useCallback, useContext, useState, type ReactNode } from 'react';
-import { createPortal } from 'react-dom';
 import { NavLink, Outlet } from 'react-router-dom';
-import { Boxes, FlaskConical, Folder, Settings, type LucideIcon } from 'lucide-react';
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { Boxes, FlaskConical, LayoutTemplate, Settings, Workflow, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { Switcher } from '@/components/workspace/Switcher';
-import { TerminalDock } from '@/components/terminal/TerminalDock';
-import { useSafeTerminals } from '@/components/terminal/terminalContextValue';
+import { TitleBar } from './TitleBar';
 
 interface NavItem {
   to: string;
@@ -16,102 +12,56 @@ interface NavItem {
 }
 
 // 화면 추가: 항목 하나 + App.tsx 라우트 하나(Docs/Extension-Guide.md).
+// 시퀀스(기존 워크스페이스 캔버스) · 신 · 템플릿 · 플레이그라운드. 설정은 가장 하단에 둔다.
 const NAV_ITEMS: NavItem[] = [
-  { to: '/workspace', icon: Folder, labelKey: 'shell.nav.workspace' },
+  { to: '/workspace', icon: Workflow, labelKey: 'shell.nav.sequence' },
   { to: '/scenes', icon: Boxes, labelKey: 'shell.nav.scenes' },
+  { to: '/templates', icon: LayoutTemplate, labelKey: 'shell.nav.templates' },
   { to: '/playground', icon: FlaskConical, labelKey: 'shell.nav.playground' },
-  { to: '/settings', icon: Settings, labelKey: 'shell.nav.settings' },
 ];
 
-const handleClass =
-  'z-10 bg-border/40 transition-colors hover:bg-primary/80 data-[resize-handle-active]:bg-primary';
+const SETTINGS_ITEM: NavItem = { to: '/settings', icon: Settings, labelKey: 'shell.nav.settings' };
 
-type SlotName = 'inspector' | 'dock';
-type SlotElements = Record<SlotName, HTMLElement | null>;
-const SlotContext = createContext<SlotElements>({ inspector: null, dock: null });
-
-/**
- * 화면이 인스펙터·도크 자리에 내용을 넣는 방법: `<SlotPortal name="inspector">…</SlotPortal>`.
- * 자리(AppShell)가 마운트되기 전이거나 AppShell 밖이면 아무것도 그리지 않는다. 내용이 있으면 "비어 있음" 문구는 숨겨진다.
- */
-export function SlotPortal({ name, children }: { name: SlotName; children: ReactNode }) {
-  const el = useContext(SlotContext)[name];
-  return el ? createPortal(children, el) : null;
-}
-
-function Slot({ name, onTarget, children }: { name: SlotName; onTarget: (el: HTMLElement | null) => void; children?: ReactNode }) {
+function NavButton({ to, icon: Icon, labelKey }: NavItem) {
   const { t } = useLanguage();
   return (
-    <section
-      aria-label={t(`shell.${name}`)}
-      data-slot={name}
-      className="flex h-full w-full flex-col overflow-hidden bg-card/40"
+    <NavLink
+      key={to}
+      to={to}
+      title={t(labelKey)}
+      aria-label={t(labelKey)}
+      className={({ isActive }) =>
+        cn(
+          'flex h-10 w-10 items-center justify-center rounded-md transition-colors',
+          isActive ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-accent hover:text-foreground',
+        )
+      }
     >
-      <h2 className="border-b border-border px-3 py-2 text-xs font-semibold text-muted-foreground">
-        {t(`shell.${name}`)}
-      </h2>
-      <div className="min-h-0 flex-1 overflow-auto">
-        <div ref={onTarget} className="peer" />
-        {children ?? <p className="p-3 text-xs text-muted-foreground peer-[:not(:empty)]:hidden">{t('shell.slotEmpty')}</p>}
-      </div>
-    </section>
+      <Icon className="h-5 w-5" />
+    </NavLink>
   );
 }
 
+/** 앱 셸: 좌측 사이드바 + 메인 화면. 우측 인스펙서·하단 도크는 두지 않는다(인스펙터는 신 화면의 플로팅 박스). */
 export function AppShell() {
   const { t } = useLanguage();
-  const terminals = useSafeTerminals();
-  const [slots, setSlots] = useState<SlotElements>({ inspector: null, dock: null });
-  // ref 콜백은 렌더마다 새로 만들면 null↔요소를 반복 호출해 무한 갱신이 되므로 고정한다.
-  const inspectorRef = useCallback((el: HTMLElement | null) => setSlots((s) => (s.inspector === el ? s : { ...s, inspector: el })), []);
-  const dockRef = useCallback((el: HTMLElement | null) => setSlots((s) => (s.dock === el ? s : { ...s, dock: el })), []);
   return (
-    <SlotContext.Provider value={slots}>
-    <div className="flex h-screen w-screen overflow-hidden bg-background text-foreground">
-      <nav
-        aria-label={t('shell.nav.label')}
-        className="flex w-14 shrink-0 flex-col items-center gap-1 border-r border-border bg-sidebar py-2"
-      >
-        <Switcher />
-        {NAV_ITEMS.map(({ to, icon: Icon, labelKey }) => (
-          <NavLink
-            key={to}
-            to={to}
-            title={t(labelKey)}
-            aria-label={t(labelKey)}
-            className={({ isActive }) =>
-              cn(
-                'flex h-10 w-10 items-center justify-center rounded-md transition-colors',
-                isActive
-                  ? 'bg-primary text-primary-foreground'
-                  : 'text-muted-foreground hover:bg-accent hover:text-foreground',
-              )
-            }
-          >
-            <Icon className="h-5 w-5" />
-          </NavLink>
-        ))}
-      </nav>
-      <PanelGroup direction="horizontal" autoSaveId="vs-shell-h" className="min-w-0 flex-1">
-        <Panel id="vs-main" order={1} minSize={40} className="min-w-0">
-          <PanelGroup direction="vertical" autoSaveId="vs-shell-v">
-            <Panel id="vs-content" order={1} minSize={30}>
-              <main className="h-full overflow-auto">
-                <Outlet />
-              </main>
-            </Panel>
-            <PanelResizeHandle className={cn('h-1', handleClass)} />
-            <Panel id="vs-dock" order={2} defaultSize={22} minSize={8} collapsible collapsedSize={0}>
-              <Slot name="dock" onTarget={dockRef}>{terminals ? <TerminalDock /> : undefined}</Slot>
-            </Panel>
-          </PanelGroup>
-        </Panel>
-        <PanelResizeHandle className={cn('w-1', handleClass)} />
-        <Panel id="vs-inspector" order={2} defaultSize={24} minSize={16} collapsible collapsedSize={0}>
-          <Slot name="inspector" onTarget={inspectorRef} />
-        </Panel>
-      </PanelGroup>
+    <div className="flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground">
+      <TitleBar />
+      <div className="flex min-h-0 flex-1">
+        <nav aria-label={t('shell.nav.label')} className="flex w-14 shrink-0 flex-col items-center gap-1 border-r border-border bg-sidebar py-2">
+          <Switcher />
+          {NAV_ITEMS.map((item) => (
+            <NavButton key={item.to} {...item} />
+          ))}
+          <div className="mt-auto flex flex-col items-center gap-1">
+            <NavButton {...SETTINGS_ITEM} />
+          </div>
+        </nav>
+        <main className="h-full min-w-0 flex-1 overflow-auto">
+          <Outlet />
+        </main>
+      </div>
     </div>
-    </SlotContext.Provider>
   );
 }

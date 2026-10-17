@@ -10,7 +10,7 @@ vi.mock('@/lib/db/repositories/workspacesRepo', () => ({
   removeWorkspace: async () => undefined,
 }));
 
-import { AppShell, SlotPortal } from './AppShell';
+import { AppShell } from './AppShell';
 import { EmptyScreen } from './EmptyScreen';
 
 function renderShell(initial: string) {
@@ -19,9 +19,9 @@ function renderShell(initial: string) {
       <MemoryRouter initialEntries={[initial]}>
         <Routes>
           <Route element={<AppShell />}>
-            <Route path="/workspace" element={<EmptyScreen title="WS-SCREEN" />} />
+            <Route path="/workspace" element={<EmptyScreen title="SEQUENCE-SCREEN" />} />
             <Route path="/scenes" element={<EmptyScreen title="SCENES-SCREEN" />} />
-            <Route path="/slot" element={<SlotPortal name="inspector"><p>IN-SLOT</p></SlotPortal>} />
+            <Route path="/templates" element={<EmptyScreen title="TEMPLATES-SCREEN" />} />
             <Route path="/playground" element={<EmptyScreen title="PLAY-SCREEN" />} />
           </Route>
           <Route path="/settings" element={<div>SETTINGS-SCREEN</div>} />
@@ -32,12 +32,12 @@ function renderShell(initial: string) {
 }
 
 describe('AppShell', () => {
-  it('shows the four sidebar entries and the inspector/dock slots', () => {
-    const { container } = renderShell('/workspace');
-    expect(screen.getAllByRole('link')).toHaveLength(4);
-    expect(container.querySelector('[data-slot="inspector"]')).not.toBeNull();
-    expect(container.querySelector('[data-slot="dock"]')).not.toBeNull();
-    expect(screen.getByText('WS-SCREEN')).toBeTruthy();
+  it('shows the four sidebar entries plus settings pinned at the bottom', () => {
+    renderShell('/workspace');
+    const links = screen.getAllByRole('link');
+    expect(links).toHaveLength(5);
+    expect(links[4].getAttribute('href')).toContain('/settings');
+    expect(screen.getByText('SEQUENCE-SCREEN')).toBeTruthy();
   });
 
   it('navigates between screens from the sidebar', () => {
@@ -46,14 +46,10 @@ describe('AppShell', () => {
     fireEvent.click(links[1]);
     expect(screen.getByText('SCENES-SCREEN')).toBeTruthy();
     fireEvent.click(links[2]);
-    expect(screen.getByText('PLAY-SCREEN')).toBeTruthy();
+    expect(screen.getByText('TEMPLATES-SCREEN')).toBeTruthy();
     fireEvent.click(links[3]);
+    expect(screen.getByText('PLAY-SCREEN')).toBeTruthy();
+    fireEvent.click(links[4]);
     expect(screen.getByText('SETTINGS-SCREEN')).toBeTruthy();
-  });
-
-  it('lets a screen put content into the inspector slot', async () => {
-    const { container } = renderShell('/slot');
-    expect(await screen.findByText('IN-SLOT')).toBeTruthy();
-    expect(container.querySelector('[data-slot="inspector"]')?.textContent).toContain('IN-SLOT');
   });
 });

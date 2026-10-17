@@ -1,6 +1,7 @@
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Workspace from '@/pages/Workspace';
 import Scenes from '@/pages/Scenes';
+import Templates from '@/pages/Templates';
 import Playground from '@/pages/Playground';
 import SettingsLayout from '@/pages/Settings/SettingsLayout';
 import SettingsGeneral from '@/pages/Settings/SettingsGeneral';
@@ -32,6 +33,7 @@ export default function App() {
                 <Route element={<AppShell />}>
                   <Route path="/workspace" element={<Workspace />} />
                   <Route path="/scenes" element={<Scenes />} />
+                  <Route path="/templates" element={<Templates />} />
                   <Route path="/playground" element={<Playground />} />
                 </Route>
                 <Route path="/settings" element={<SettingsLayout />}>
