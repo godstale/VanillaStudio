@@ -293,6 +293,12 @@ pub fn open_workspace<R: Runtime>(app: AppHandle<R>, path: String) -> Result<Fol
         let _ = fs::create_dir_all(plain.join("scenes"));
         let _ = fs::create_dir_all(plain.join(".vanilla"));
         let _ = install_agent_catalog_resources(template.parent(), &plain);
+        // 앱 소유 런타임도 갱신한다: Bridge 프로토콜이 확장되면(`input` 등) 기존 워크스페이스의
+        // 낡은 `vanilla/runtime` 복사본이 새 호스트 메시지를 무시해 static 신이 멈춘다.
+        // 사용자 파일이 아니라 앱이 복사한 것이므로 덮어써도 된다(내용이 같으면 건너뛴다).
+        if let Ok(runtime) = resolve_resource_dir(&app, "runtime") {
+            let _ = install_runtime(&runtime, &plain);
+        }
     }
     set_active_workspace_internal(Some(plain.to_string_lossy().to_string()));
     Ok(kind)

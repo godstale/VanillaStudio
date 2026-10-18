@@ -16,7 +16,12 @@ const motion = (over: Record<string, unknown> = {}) => ({
 const goodSrc = {
   'src/index.html': '<div id="root"></div>',
   'src/main.tsx': "const title = 'Hello World';\nexport default defineScene({ title });\n",
+  'src/composition.tsx': "import { defineComposition } from '@vanilla/runtime';\nimport s from './scene';\nexport default defineComposition({ scenes: [s] });\n",
 };
+const staticSrc = (extra: Record<string, string> = {}) => ({
+  'src/composition.tsx': goodSrc['src/composition.tsx'],
+  ...extra,
+});
 const rules = (f: { rule: string }[]) => f.map((x) => x.rule);
 
 describe('checkScene', () => {
@@ -43,16 +48,16 @@ describe('checkScene', () => {
   });
 
   it('time rules do not apply to static scenes (free mode)', () => {
-    const f = checkScene({ scene: { type: 'static', name: 'P' }, files: { 'src/main.tsx': 'setInterval(f, 1000);' } });
+    const f = checkScene({ scene: { type: 'static', name: 'P' }, files: staticSrc({ 'src/main.tsx': 'setInterval(f, 1000);' }) });
     expect(f).toEqual([]);
   });
 
   it('warns on hard-coded colors, accepts tokens and ds-ignore', () => {
     const f = checkScene({
       scene: { type: 'static', name: 'P' },
-      files: {
+      files: staticSrc({
         'src/a.css': '.a { color: #ff0000; background: rgb(0 0 0); }\n.b { color: var(--color-ink); }\n/* ds-ignore */\n.c { color: #00ff00; }\n.d { fill: rgb(var(--x) / 50%); }',
-      },
+      }),
     });
     expect(f.filter((x) => x.rule === 'no-hardcoded-colors').map((x) => x.line)).toEqual([1, 1]);
     expect(f.every((x) => x.severity === 'warning')).toBe(true);
@@ -85,6 +90,23 @@ describe('checkScene', () => {
 
   it('reports an empty src/', () => {
     expect(rules(checkScene({ scene: { type: 'static', name: 'P' }, files: {} }))).toContain('entry');
+  });
+
+  it('requires a wired composition in every scene type', () => {
+    // The reported scaffold bug: composition.tsx re-exporting the scene instead of a Composition.
+    const broken = { 'src/composition.tsx': "import Scene from './Scene';\nexport default Scene;\n" };
+    expect(rules(checkScene({ scene: { type: 'static', name: 'P' }, files: broken }))).toContain('require-define-composition');
+    const wired = staticSrc({ 'src/Scene.tsx': "import { defineScene } from '@vanilla/runtime';\nexport default defineScene({ id: 'p', Component: () => null });\n" });
+    expect(rules(checkScene({ scene: { type: 'static', name: 'P' }, files: wired }))).not.toContain('require-define-composition');
+  });
+
+  it('rejects a numeric useSteps argument in static scenes', () => {
+    const bad = staticSrc({ 'src/Scene.tsx': 'const { index, total, next } = useSteps(3);\n' });
+    const f = checkScene({ scene: { type: 'static', name: 'P' }, files: bad });
+    expect(rules(f)).toContain('static-use-steps');
+    expect(f.find((x) => x.rule === 'static-use-steps')).toMatchObject({ file: 'src/Scene.tsx', severity: 'error' });
+    const good = staticSrc({ 'src/Scene.tsx': 'const [index, setIndex] = useState(0);\nuseSteps(STEPS, null, setIndex);\n' });
+    expect(rules(checkScene({ scene: { type: 'static', name: 'P' }, files: good }))).not.toContain('static-use-steps');
   });
 });
 

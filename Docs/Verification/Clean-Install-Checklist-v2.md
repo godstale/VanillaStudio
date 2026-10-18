@@ -13,7 +13,7 @@
 ## 1. 인스톨러 빌드 (자동 확인)
 
 - [x] `pnpm tauri build` 성공 — 결과 파일 경로·크기는 `wiki/sources/milestone-v7.md` §검증에 기록
-- [x] 번들 리소스(`tauri.conf.json` `bundle.resources`): `workspace-template`·`runtime`·`workers`·`palettes`·`skills`. 워크스페이스 만들기는 `resources/workspace-template`·`resources/runtime`을 쓰므로 둘 다 포함되어야 한다.
+- [x] 번들 리소스(`tauri.conf.json` `bundle.resources`): `workspace-template`·`runtime`·`workers`·`palettes`·`skills`·`guides`·`opus`. 워크스페이스 만들기는 `resources/workspace-template`·`resources/runtime`을 쓰고, 에이전트 카탈로그(`.vanilla/resources/{guides,opus,palettes}`)는 `guides`·`opus`·`palettes`에서 복사하므로 모두 포함되어야 한다.
 - [x] 프런트엔드 번들에 가이드 템플릿·용어집(`resources/guides`)이 컴파일되어 들어간다(Vite `?raw`/glob). 별도 리소스 복사가 필요 없다.
 - [ ] **미서명** — §4 대기.
 

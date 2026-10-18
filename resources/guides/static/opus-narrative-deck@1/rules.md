@@ -1,2 +1,2 @@
-- Advance steps strictly on user input (`ArrowRight` / `ArrowLeft`, `Space`, or click) in compliance with D-032, and call `window.sceneRuntime?.reportStep(stepIndex, totalSteps)`.
+- Advance steps strictly on user input (`ArrowRight` / `ArrowLeft`, `Space`, or click) in compliance with D-032: declare each step's trigger in `scene.json` `steps[].advance` (`click` | `key:<Key>` | `choice:<label>`) and drive the page with `useSteps(STEPS, null, setIndex)` from `@vanilla/runtime` (it reports `step`/`done` to the host; never invent a custom reporting API).
 - Render a subtle slide progress bar and `01 / 04` step indicator in the bottom safe area, and morph shared card/title containers smoothly between steps.

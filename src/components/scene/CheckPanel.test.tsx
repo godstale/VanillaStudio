@@ -53,6 +53,7 @@ describe('CheckPanel', () => {
 
   it('reports a pass for a clean scene', async () => {
     fs.set('scenes/intro/src/main.tsx', 'export default defineScene({});');
+    fs.set('scenes/intro/src/composition.tsx', "import { defineComposition } from '@vanilla/runtime';\nimport s from './scene';\nexport default defineComposition({ scenes: [s] });");
     setup();
     fireEvent.click(screen.getByRole('button'));
     expect((await screen.findByRole('status')).textContent).toMatch(/통과|Passed/);

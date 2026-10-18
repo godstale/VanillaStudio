@@ -10,9 +10,20 @@ import { fileURLToPath } from 'node:url';
 const ROOT = process.env.VANILLA_WORKSPACE_ROOT
   ? path.resolve(process.env.VANILLA_WORKSPACE_ROOT)
   : path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const RESOURCES_DIR = fs.existsSync(path.join(ROOT, '.vanilla', 'resources', 'guides'))
-  ? path.join(ROOT, '.vanilla', 'resources')
-  : path.resolve(ROOT, '..');
+// 리소스 탐색 순서: ① 워크스페이스에 설치된 `.vanilla/resources` (Studio가 복사·보충),
+// ② 저장소 체크아웃(`resources/workspace-template/scripts`에서 실행 중일 때).
+// 예전 폴백(`ROOT/..`)은 실제 워크스페이스에서는 부모 폴더를 가리켜 조용히 0건을 냈다.
+const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
+function findResourcesDir() {
+  const installed = path.join(ROOT, '.vanilla', 'resources');
+  if (fs.existsSync(path.join(installed, 'guides'))) return installed;
+  const repoCheckout = path.resolve(SCRIPT_DIR, '..', '..');
+  if (path.basename(path.resolve(SCRIPT_DIR, '..')) === 'workspace-template' && fs.existsSync(path.join(repoCheckout, 'guides'))) {
+    return repoCheckout;
+  }
+  return null;
+}
+const RESOURCES_DIR = findResourcesDir() ?? path.join(ROOT, '.vanilla', 'resources');
 const WORK_ORDER_JSON = path.join(ROOT, '.vanilla', 'work-order.json');
 const WORK_ORDER_MD = path.join(ROOT, 'WORK_ORDER.md');
 const WORKSPACE_JSON = path.join(ROOT, 'workspace.json');
@@ -510,14 +521,22 @@ if (import.meta.hot) {
 }
 `;
 
-  const compositionTsx = `import Scene from './Scene';
+  const compositionTsx = `import { defineComposition } from '@vanilla/runtime';
+import scene from './Scene';
 
-export default Scene;
+export default defineComposition({ scenes: [scene] });
 `;
 
   const durationLine = scene.type === 'static' ? '' : `\n  duration: ${Number(scene.duration?.seconds ?? 6)},`;
+  const draftSteps = scene.type === 'static'
+    ? (Array.isArray(scene.steps) && scene.steps.length
+      ? scene.steps.map((s) => ({ id: String(s.id || 'step'), advance: String(s.advance || 'click') }))
+      : [{ id: 'step-1', advance: 'click' }])
+    : [];
+  const stepsDecl = draftSteps.map((s) => `  { id: ${JSON.stringify(s.id)}, advance: ${JSON.stringify(s.advance)} },`).join('\n');
   const sceneTsx = scene.type === 'static'
-    ? `import { defineScene, param, token, useParams, useFrame, useSteps } from '@vanilla/runtime';
+    ? `import { useState } from 'react';
+import { defineScene, param, token, useParams, useFrame, useSteps } from '@vanilla/runtime';
 
 const params = {
   headline: param.text(${JSON.stringify(scene.name)}, { label: 'Headline' }),
@@ -525,14 +544,21 @@ const params = {
   accentColor: param.color(token('accent'), { label: 'Accent Color' }),
 };
 
+// scene.json steps[]와 같은 순서·진행 규칙이어야 한다. useSteps는 StepSpec[]을 받는다(개수가 아니다).
+const STEPS = [
+${stepsDecl}
+] as const;
+
 function DraftStaticScene() {
   const { headline, subtitle, accentColor } = useParams<typeof params>();
   const { width, height } = useFrame();
-  const { index, total, next } = useSteps(${Math.max(1, scene.steps?.length || 1)});
+  const [index, setIndex] = useState(0);
+  // 호스트 Bridge로 step·done이 보고된다(플레이그라운드는 이 값으로 다음 신을 정한다).
+  useSteps(STEPS, null, setIndex);
+  const total = STEPS.length;
 
   return (
     <div
-      onClick={() => next()}
       style={{
         width,
         height,
@@ -805,6 +831,11 @@ function cmdTemplates(args) {
   });
 
   console.log(`=== Built-in Guide Templates (${templates.length}) ===`);
+  if (templates.length === 0) {
+    console.warn(
+      `Warning: no guide templates found under ${path.join(RESOURCES_DIR, 'guides')}. Reopen the workspace in Vanilla Studio to restore .vanilla/resources, or set VANILLA_WORKSPACE_ROOT to the workspace root.`,
+    );
+  }
   for (const t of templates) {
     const intents = (t.meta.mediaIntents ?? []).join(', ') || t.meta.type;
     const desc = t.meta.description?.ko || t.meta.description?.en || '';
@@ -895,6 +926,13 @@ function cmdScaffoldScene(args) {
   const tplRef = typeof flags.template === 'string' ? flags.template : defaultTemplateFor(type);
   const resolvedTpl = resolveTemplate(tplRef, type);
   const finalTemplateRef = resolvedTpl ? resolvedTpl.ref : defaultTemplateFor(type);
+  if (!resolvedTpl || finalTemplateRef !== tplRef) {
+    // 요청한 템플릿이 없으면 조용히 기본값으로 바뀌던 문제를 알린다.
+    // 보통 `.vanilla/resources/guides`가 비어 있을 때다(Studio에서 워크스페이스를 다시 열면 보충된다).
+    console.warn(
+      `Warning: template '${tplRef}' not found${fs.existsSync(path.join(RESOURCES_DIR, 'guides')) ? '' : ` (no guide templates under ${path.join(RESOURCES_DIR, 'guides')}; reopen the workspace in Vanilla Studio to restore them)`}, using '${finalTemplateRef}' instead.`,
+    );
+  }
   const name = typeof flags.name === 'string' ? flags.name.trim() : slug;
 
   const sceneDir = path.join(SCENES_DIR, slug);
@@ -1157,6 +1195,11 @@ function cmdTaxonomy(args) {
     return true;
   });
   console.log(`=== Storyboard Taxonomy (${terms.length}) ===`);
+  if (terms.length === 0) {
+    console.warn(
+      `Warning: no taxonomy terms found under ${path.join(RESOURCES_DIR, 'guides')}. Reopen the workspace in Vanilla Studio to restore .vanilla/resources.`,
+    );
+  }
   for (const t of terms) {
     const label = t.label?.ko ?? t.label?.en ?? t.id;
     console.log(`- ${t.category}/${t.id}: ${label}`);

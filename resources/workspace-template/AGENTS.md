@@ -28,7 +28,7 @@ Before any code, write with `pnpm vanilla init-storyboard`:
 ### Stage 2: Core Materials First (핵심 재료 먼저 만들기)
 Build data before components — never hard-code copy/specs in component code:
 - `storyboard/data/content.json` (위계형 문구: Hero → Tagline → Brand values → Sections), `storyboard/data/items.json` (도메인·스펙·낮/밤 에셋 매핑).
-- Mirror user-facing copy into each scene's `scene.json` `copy.items`.
+- Mirror user-facing copy into each scene's `scene.json`: timed scenes (`motion`/`3d`) use `copy.items` (plus per-beat `beats[].copy`); static scenes use per-step `steps[].copy` (static scenes have no top-level `copy` field).
 
 ### Stage 3: Bottom-Up Assembly (작은 단위부터 조립)
 Follow `02-design-flow.md` assembly plan in order:

@@ -1,3 +1,3 @@
 - [ ] Advances only on user input (Arrow keys / click) per D-032
-- [ ] Calls `window.sceneRuntime?.reportStep` on step change
+- [ ] Steps driven by `useSteps(STEPS, null, setIndex)` with `steps[].advance` triggers (host receives `step`/`done`)
 - [ ] Slide transitions use smooth spring-morph or slide-x choreography

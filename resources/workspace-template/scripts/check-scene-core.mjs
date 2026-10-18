@@ -77,6 +77,28 @@ function defineSceneFindings(files) {
   return exported ? [] : [{ severity: 'error', rule: 'require-define-scene', message: 'defineScene(...) must be the default export of the scene module.' }];
 }
 
+function compositionFindings(files) {
+  const scripts = Object.entries(files).filter(([f]) => /\.[cm]?[jt]sx?$/i.test(f));
+  // main.tsx mounts a Composition, not a Scene: `export default Scene` in composition.tsx
+  // crashes the mount (composition.scenes is undefined). Applies to every scene type.
+  const wired = scripts.some(([, t]) => /\bdefineComposition\s*\(/.test(maskNonCode(t)));
+  if (wired) return [];
+  return [{ severity: 'error', rule: 'require-define-composition', message: 'No defineComposition(...) call found in src/. src/composition.tsx must default-export defineComposition({ scenes: [...] }); exporting the scene itself crashes the mount.' }];
+}
+
+function staticStepFindings(files) {
+  const out = [];
+  for (const [file, text] of Object.entries(files)) {
+    if (!/\.[cm]?[jt]sx?$/i.test(file)) continue;
+    const code = maskNonCode(text);
+    // useSteps takes StepSpec[], not a count: useSteps(3) never advances (total is NaN).
+    if (/\buseSteps\s*\(\s*\d/.test(code)) {
+      out.push({ severity: 'error', rule: 'static-use-steps', message: 'useSteps(...) takes a StepSpec[] (e.g. useSteps(STEPS, null, setIndex)), not a step count. A numeric argument never advances.', file });
+    }
+  }
+  return out;
+}
+
 function beatFindings(scene) {
   const out = [];
   const err = (rule, message) => out.push({ severity: 'error', rule, message });
@@ -119,8 +141,11 @@ export function checkScene({ scene, files }) {
   const src = Object.fromEntries(Object.entries(files).filter(([f]) => SOURCE_EXT.test(f)));
   const out = colorFindings(src);
   if (Object.keys(src).length === 0) out.push({ severity: 'error', rule: 'entry', message: 'src/ has no source files.' });
+  else out.push(...compositionFindings(src));
   if (scene.type === 'motion' || scene.type === '3d') {
     out.push(...timeFindings(src), ...defineSceneFindings(src), ...beatFindings(scene), ...textFidelityFindings(scene, src));
+  } else if (scene.type === 'static') {
+    out.push(...staticStepFindings(src));
   }
   return out;
 }
