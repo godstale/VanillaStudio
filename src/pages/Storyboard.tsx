@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { useWorkspace } from '@/lib/context/WorkspaceContext';
 import { readWorkspace } from '@/lib/workspace/file';
-import { fileExists } from '@/lib/workspace/files';
 import { listScenes } from '@/lib/scene/files';
+import { readSequence } from '@/lib/sequence/file';
 import {
   BRIEF_MD_REL,
   CONTENT_JSON_REL,
@@ -26,7 +26,7 @@ export function Storyboard() {
     root: string;
     file: StoryboardFile | null;
     docs: Record<string, string | null>;
-    hasSequence: boolean;
+    sequenceNodes: number;
     sceneCount: number;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -43,10 +43,10 @@ export function Storyboard() {
     let cancelled = false;
     (async () => {
       try {
-        await readWorkspace(workspaceRoot);
+        const ws = await readWorkspace(workspaceRoot);
         const { file: sb, raw } = await readStoryboard(workspaceRoot);
-        const [hasSequence, scenes] = await Promise.all([
-          fileExists(workspaceRoot, 'sequence.json'),
+        const [seq, scenes] = await Promise.all([
+          readSequence(workspaceRoot, ws.workspaceId).catch(() => null),
           listScenes(workspaceRoot).catch(() => []),
         ]);
         if (!cancelled) {
@@ -60,8 +60,8 @@ export function Storyboard() {
               [CONTENT_JSON_REL]: raw[CONTENT_JSON_REL],
               [ITEMS_JSON_REL]: raw[ITEMS_JSON_REL],
             },
-            hasSequence,
-            sceneCount: scenes.length,
+            sequenceNodes: seq?.nodes.length ?? 0,
+            sceneCount: scenes.filter((e) => e.scene != null).length,
           });
           setError(null);
         }
@@ -85,9 +85,9 @@ export function Storyboard() {
   }
   const { file, docs } = loaded;
   // 작업 지시서 저장 후에도 에이전트가 파일 생성을 시작하기 전에는 온보딩을 유지한다.
-  // 에이전트 시작 신호: 단계 전진·문서/재료 갱신·시퀀스·신 생성.
+  // 에이전트 시작 신호: 단계 전진·문서/재료 갱신·시퀀스 노드·유효한 신. 빈 스캐폴딩은 시작이 아니다.
   const agentStarted =
-    file !== null && (isAgentStarted(file, docs) || loaded.hasSequence || loaded.sceneCount > 0);
+    file !== null && (isAgentStarted(file, docs) || loaded.sequenceNodes > 0 || loaded.sceneCount > 0);
   if (!agentStarted || !file) {
     return (
       <div className="mx-auto max-w-3xl px-8 py-6">

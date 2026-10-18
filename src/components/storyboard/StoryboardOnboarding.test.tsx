@@ -4,6 +4,7 @@ import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { emptyStoryboard } from '@/lib/storyboard/schema';
 
 const io = vi.hoisted(() => ({ writes: [] as { path: string; contents: string }[] }));
+const sbState = vi.hoisted(() => ({ scenes: [] as unknown[] }));
 
 vi.mock('@tauri-apps/api/core', () => ({
   invoke: vi.fn(async (cmd: string, args?: Record<string, unknown>) => {
@@ -27,6 +28,11 @@ vi.mock('@tauri-apps/api/core', () => ({
   }),
 }));
 
+vi.mock('@/lib/scene/files', () => ({
+  listScenes: async () => sbState.scenes,
+}));
+
+import { newScene } from '@/lib/scene/schema';
 import { StoryboardOnboarding } from './StoryboardOnboarding';
 
 function renderOnboarding(initial: Parameters<typeof StoryboardOnboarding>[0]['initial']) {
@@ -42,7 +48,9 @@ function renderOnboarding(initial: Parameters<typeof StoryboardOnboarding>[0]['i
 describe('StoryboardOnboarding', () => {
   beforeEach(() => {
     io.writes.length = 0;
+    sbState.scenes = [];
     vi.clearAllMocks();
+    vi.useRealTimers();
   });
 
   it('requires title and one-liner, keeps the rest behind Advanced', async () => {
@@ -95,5 +103,26 @@ describe('StoryboardOnboarding', () => {
     // 고급 값이 있으면 펼쳐진 채로 시작한다.
     expect(screen.getByDisplayValue('이유')).toBeTruthy();
     expect(screen.getByRole('status')).toBeTruthy();
+  });
+
+  it('moves on once the agent creates a valid scene', async () => {
+    vi.useFakeTimers();
+    const { onAgentStarted } = renderOnboarding(null);
+    await vi.advanceTimersByTimeAsync(0); // workspaceId 확정·폴링 구독까지 진행
+    sbState.scenes = [
+      { slug: 'intro', scene: newScene({ id: 'scn_AAA', name: 'Intro', type: 'static', template: 'web-page@1' }) },
+    ];
+    await vi.advanceTimersByTimeAsync(3100);
+    expect(onAgentStarted).toHaveBeenCalledTimes(1);
+  });
+
+  it('ignores empty scaffolding: node-less sequence and broken scene folders', async () => {
+    vi.useFakeTimers();
+    const { onAgentStarted } = renderOnboarding(null);
+    await vi.advanceTimersByTimeAsync(0);
+    // 빈 sequence.json(노드 없음)은 invoke 목이, 깨진 신 폴더는 아래 항목이 재현한다.
+    sbState.scenes = [{ slug: 'broken', error: 'missing scene.json' }];
+    await vi.advanceTimersByTimeAsync(9100);
+    expect(onAgentStarted).not.toHaveBeenCalled();
   });
 });

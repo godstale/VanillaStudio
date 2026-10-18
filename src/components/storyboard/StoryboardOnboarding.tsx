@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { listScenes } from '@/lib/scene/files';
+import { readSequence } from '@/lib/sequence/file';
 import { readWorkspace } from '@/lib/workspace/file';
-import { fileExists, projectPath, readOptionalFile } from '@/lib/workspace/files';
+import { projectPath, readOptionalFile } from '@/lib/workspace/files';
 import {
   CONTENT_JSON_PLACEHOLDER,
   DESIGN_FLOW_PLACEHOLDER,
@@ -33,14 +34,15 @@ function splitLines(s: string): string[] {
   return s.split('\n').map((l) => l.trim()).filter(Boolean);
 }
 
-/** 에이전트가 3대 문서·재료·시퀀스·신 중 하나라도 만들기 시작했는가. */
-async function checkAgentStarted(root: string): Promise<boolean> {
+/** 에이전트가 3대 문서·재료·시퀀스·신 중 하나라도 만들기 시작했는가. 빈 스캐폴딩은 시작이 아니다. */
+async function checkAgentStarted(root: string, workspaceId: string): Promise<boolean> {
   try {
     const { file, raw } = await readStoryboard(root);
     if (file && isAgentStarted(file, raw)) return true;
-    if (await fileExists(root, 'sequence.json')) return true;
-    const scenes = await listScenes(root);
-    return scenes.length > 0;
+    const seq = await readSequence(root, workspaceId).catch(() => null);
+    if (seq && seq.nodes.length > 0) return true;
+    const scenes = await listScenes(root).catch(() => []);
+    return scenes.some((e) => e.scene != null);
   } catch {
     return false;
   }
@@ -67,12 +69,26 @@ export function StoryboardOnboarding({ root, initial, onAgentStarted }: Props) {
   const [saved, setSaved] = useState(initial !== null);
   const [failed, setFailed] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [workspaceId, setWorkspaceId] = useState<string | null>(null);
 
   useEffect(() => {
+    let live = true;
+    readWorkspace(root)
+      .then((ws) => {
+        if (live) setWorkspaceId(ws.workspaceId);
+      })
+      .catch(() => undefined);
+    return () => {
+      live = false;
+    };
+  }, [root]);
+
+  useEffect(() => {
+    if (!workspaceId) return;
     let cancelled = false;
     const tick = async () => {
       if (cancelled) return;
-      if (await checkAgentStarted(root)) {
+      if (await checkAgentStarted(root, workspaceId)) {
         cancelled = true;
         onAgentStarted();
       }
@@ -82,7 +98,7 @@ export function StoryboardOnboarding({ root, initial, onAgentStarted }: Props) {
       cancelled = true;
       clearInterval(id);
     };
-  }, [root, onAgentStarted]);
+  }, [root, workspaceId, onAgentStarted]);
 
   async function save() {
     const nextErrors = {
@@ -134,7 +150,8 @@ export function StoryboardOnboarding({ root, initial, onAgentStarted }: Props) {
         await invoke('write_text_file', { path: projectPath(root, rel), contents, workspaceRoot: root });
       }
       setSaved(true);
-      if (await checkAgentStarted(root)) onAgentStarted();
+      setWorkspaceId(ws.workspaceId);
+      if (await checkAgentStarted(root, ws.workspaceId)) onAgentStarted();
     } catch (e) {
       setFailed(e instanceof Error ? e.message : String(e));
     } finally {
