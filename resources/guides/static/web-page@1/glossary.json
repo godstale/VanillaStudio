@@ -504,6 +504,173 @@
       },
       "implementationHint": "clip-path inset animation.",
       "tags": []
+    },
+    {
+      "category": "sections",
+      "id": "interactive-parameter-sandbox",
+      "label": {
+        "ko": "인터랙티브 파라미터 샌드박스",
+        "en": "Interactive Parameter Sandbox"
+      },
+      "definition": {
+        "ko": "슬라이더·토글 조작에 따라 실시간으로 그래프·네트워크·시뮬레이션 결과가 변하는 섹션.",
+        "en": "Live simulation section where sliders or toggles immediately recompute network density, physics, or metrics."
+      },
+      "implementationHint": "Bind controls to state or useParams() and redraw the SVG/Canvas diagram synchronously on input.",
+      "tags": [
+        "opus",
+        "interactive",
+        "simulator",
+        "web",
+        "slide"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/redpersongpt-284430/original.aa458f7e3a.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/redpersongpt-284430",
+      "sourceRef": "awesome-opus5-5-videos#redpersongpt-284430"
+    },
+    {
+      "category": "sections",
+      "id": "multiscale-zoom-comparison",
+      "label": {
+        "ko": "다중 스케일 비교 익스플로러",
+        "en": "Multi-Scale Comparison Explorer"
+      },
+      "definition": {
+        "ko": "전체 구조에서 미시 구조까지 단계별로 확대하거나 정상/비정상 상태를 나란히 비교하는 해설 섹션.",
+        "en": "Interactive comparison view with a state slider and macro-to-micro zoom stages."
+      },
+      "implementationHint": "Provide condition toggle pills and a continuous state slider that interpolates diagram parameters.",
+      "tags": [
+        "opus",
+        "explainer",
+        "comparison",
+        "science",
+        "slide"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/bilimfili1-459762/original.a1f891890a.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/bilimfili1-459762",
+      "sourceRef": "awesome-opus5-5-videos#bilimfili1-459762"
+    },
+    {
+      "category": "layout",
+      "id": "stage-with-control-dock",
+      "label": {
+        "ko": "풀스테이지 + 하단 컨트롤 도크",
+        "en": "Full Stage with Control Dock"
+      },
+      "definition": {
+        "ko": "화면 대부분을 인터랙티브 시각화 캔버스로 쓰고 하단/측면에 미니멀 컨트롤 바를 배치합니다.",
+        "en": "Full-viewport visual stage paired with a floating glass control dock for sliders and step triggers."
+      },
+      "implementationHint": "Use a 100% stage container with an overlay HUD bar anchored at the bottom.",
+      "tags": [
+        "opus",
+        "layout",
+        "interactive",
+        "simulator"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/miguel07code-091611/original.3b02d95627.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/miguel07code-091611",
+      "sourceRef": "awesome-opus5-5-videos#miguel07code-091611"
+    },
+    {
+      "category": "enter",
+      "id": "spring-morph",
+      "label": {
+        "ko": "스프링 컨테이너 모핑",
+        "en": "Spring Container Morph"
+      },
+      "definition": {
+        "ko": "이전 스텝의 카드가 스프링 물리로 크기·비율을 바꾸며 다음 스텝 레이아웃으로 변형됩니다.",
+        "en": "The step container morphs its bounds with a damped spring while inner copy cross-blurs."
+      },
+      "implementationHint": "Animate container bounding box with cubic-bezier(0.22, 1, 0.36, 1) over 380ms on step change.",
+      "tags": [
+        "opus",
+        "step",
+        "slide",
+        "spring"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/techhalla-498547/original.fbdb194d58.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/techhalla-498547",
+      "sourceRef": "awesome-opus5-5-videos#techhalla-498547"
+    },
+    {
+      "category": "layout",
+      "id": "line-grid-2to1",
+      "label": { "ko": "라인 그리드 2:1", "en": "Line Grid 2:1" },
+      "definition": {
+        "ko": "보더 라인으로 구획된 2:1 비대칭 에디토리얼 그리드.",
+        "en": "Asymmetric 2:1 editorial grid divided by border lines."
+      },
+      "implementationHint": "CSS grid with 2fr 1fr columns and 1px border dividers; keep alignment to the grid.",
+      "tags": ["storyboard", "starter-kit", "web", "slide"]
+    },
+    {
+      "category": "layout",
+      "id": "hierarchy-driven-hero",
+      "label": { "ko": "위계 도출 히어로", "en": "Hierarchy-Driven Hero" },
+      "definition": {
+        "ko": "콘텐츠 위계(메인 타이틀 + 3대 상징 밸류 카드)에서 레이아웃이 자연 도출되는 히어로 구조.",
+        "en": "Hero layout derived from the copy hierarchy: main title plus three value cards."
+      },
+      "implementationHint": "Bind hero layout to storyboard/data/content.json hierarchy; never hard-code copy in the component.",
+      "tags": ["storyboard", "web", "slide"]
+    },
+    {
+      "category": "layout",
+      "id": "continuity-filter-grid",
+      "label": { "ko": "연속성 필터 그리드", "en": "Continuity Filter Grid" },
+      "definition": {
+        "ko": "필터 전환 시 요소가 갑자기 사라지지 않고 연속성을 유지하며 재배치되는 그리드.",
+        "en": "Grid that preserves element continuity while filtering and rearranging."
+      },
+      "implementationHint": "Use shared layout animation (FLIP/layoutId) so cards glide to new positions on filter change.",
+      "tags": ["storyboard", "web"]
+    },
+    {
+      "category": "transition",
+      "id": "shared-layout-transition",
+      "label": { "ko": "공유 레이아웃 전환", "en": "Shared Layout Transition" },
+      "definition": {
+        "ko": "목록 카드에서 상세 화면으로 이미지·요소가 끊기지 않고 그대로 이동·확장되는 전환.",
+        "en": "List-to-detail transition where the element moves and expands without a cut."
+      },
+      "implementationHint": "Framer Motion layoutId / FLIP pattern: keep the same element id across scenes and animate bounds.",
+      "tags": ["storyboard", "web", "slide", "motion"]
+    },
+    {
+      "category": "layout",
+      "id": "horizontal-scroll-panorama",
+      "label": { "ko": "가로 스크롤 파노라마", "en": "Horizontal Scroll Panorama" },
+      "definition": {
+        "ko": "세로 스크롤 중 파노라마 이미지·스토리라인이 가로로 흐르며 서사적 브릿지 역할을 하는 섹션.",
+        "en": "Vertical scroll drives a horizontal panorama strip that bridges story sections."
+      },
+      "implementationHint": "Map vertical scroll progress to horizontal translateX of a wide strip; pure function of scroll progress.",
+      "tags": ["storyboard", "web", "slide", "motion"]
+    },
+    {
+      "category": "theme",
+      "id": "time-blend-4stage",
+      "label": { "ko": "4단계 시간 블렌딩", "en": "4-Stage Time Blend" },
+      "definition": {
+        "ko": "시간대·상태(4단계)에 따라 이미지 오파시티 블렌딩 비율과 배경 토큰이 동기화되어 변하는 연출.",
+        "en": "Image opacity blends and canvas tokens change in sync across four time stages."
+      },
+      "implementationHint": "Drive dayWeight/nightWeight from storyboard visualDirection.themeStages; interpolate canvas token and image opacity.",
+      "tags": ["storyboard", "theme", "web", "motion"]
+    },
+    {
+      "category": "theme",
+      "id": "invariant-variant-matrix",
+      "label": { "ko": "불변·가변 매트릭스", "en": "Invariant-Variant Matrix" },
+      "definition": {
+        "ko": "브랜드 공통 불변 속성(재질·조명·구도·여백)과 아이템별 가변 속성(형태·스펙)을 분리해 일관된 톤을 유지하는 규칙.",
+        "en": "Split shared invariants (material, light, framing) from per-item variants (shape, specs)."
+      },
+      "implementationHint": "Store invariants in 03-visual-direction.md and DESIGN.md; per-item values only in storyboard/data/items.json.",
+      "tags": ["storyboard", "theme"]
     }
   ]
 }

@@ -1,0 +1,2 @@
+- Dedicate 75%+ of the viewport to the live interactive Canvas/SVG simulation stage, with a sleek glassmorphic control dock for sliders, preset pills, and real-time `tabular-nums` telemetry readouts.
+- Provide 3-4 curated one-click preset buttons so the user can immediately observe dramatic regime changes in the simulation.

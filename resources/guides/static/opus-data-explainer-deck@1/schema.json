@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "hide": [],
+  "defaults": {
+    "mode": "steps",
+    "steps": [
+      {
+        "id": "step-1",
+        "title": "01 // Baseline Scale",
+        "copy": "Establish the baseline unit and reference benchmark.",
+        "layout": "stage-with-control-dock",
+        "enter": "spring-morph",
+        "advance": "key:ArrowRight"
+      },
+      {
+        "id": "step-2",
+        "title": "02 // Order-of-Magnitude Zoom",
+        "copy": "Zoom out 100x to reveal structural distribution across cohorts.",
+        "layout": "stage-with-control-dock",
+        "enter": "spring-morph",
+        "advance": "key:ArrowRight"
+      },
+      {
+        "id": "step-3",
+        "title": "03 // Breakdown & Insight",
+        "copy": "Isolate the critical bottleneck and quantify the improvement.",
+        "layout": "bento-grid",
+        "enter": "slide-x",
+        "advance": "click"
+      }
+    ],
+    "sections": [
+      "hero",
+      "multiscale-zoom-comparison",
+      "metrics"
+    ],
+    "layout": "stage-with-control-dock",
+    "breakpoints": [
+      "desktop-first"
+    ],
+    "accessibility": [
+      "keyboard-nav",
+      "high-contrast"
+    ]
+  },
+  "fields": []
+}

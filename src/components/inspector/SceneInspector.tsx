@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
-import { Copy } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Copy, ExternalLink, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { SceneForm } from '@/components/guides/SceneForm';
@@ -12,6 +12,9 @@ import { References } from './References';
 import { SaveAsTemplate } from './SaveAsTemplate';
 import type { GuideContext } from '@/lib/guides/agentsMd';
 import { promptForScene } from '@/lib/agents/clipboard';
+import { applyTemplateDefaults } from '@/lib/guides/merge';
+import { applyDecomposedPreset } from '@/lib/guides/opusCatalog';
+import { recommendForPrompt } from '@/lib/guides/recommend';
 import { changedSinceSettled } from '@/lib/scene/revision';
 import type { GuideTemplate } from '@/lib/guides/template';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -124,7 +127,8 @@ function useAutosave(onSave: (s: Scene) => Promise<void>) {
 
 /** 노드를 고르면 우측에 열리는 신 편집 패널. 선택이 바뀌면 `key`로 새로 마운트해 쓴다. */
 export function SceneInspector({ workspace, root, slug, scene, template, templateError, canvas, tab: tabProp, onTabChange, onSave, onRename, onThumbnail, onAnalyze, isStart, onSetStart, onSaveAsTemplate }: SceneInspectorProps) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+  const lang = locale === 'en' ? 'en' : 'ko';
   const [ownTab, setOwnTab] = useState<Tab>('overview');
   const tab = tabProp ?? ownTab;
   const setTab = (next: Tab) => {
@@ -183,6 +187,102 @@ export function SceneInspector({ workspace, root, slug, scene, template, templat
 
   const brief = draft.brief;
   const setBrief = (k: keyof Scene['brief'], v: string) => edit((s) => ({ ...s, brief: { ...s.brief, [k]: v } }) as Scene);
+
+  const opusRec = useMemo(
+    () =>
+      recommendForPrompt({
+        mediaIntent: draft.brief.mediaIntent,
+        promptText: [draft.name, draft.brief.subject, draft.brief.goal, draft.brief.message, draft.userPrompt].join(' '),
+        sceneType: draft.type,
+        limit: 2,
+      }),
+    [draft.name, draft.brief.mediaIntent, draft.brief.subject, draft.brief.goal, draft.brief.message, draft.userPrompt, draft.type],
+  );
+
+  const recommendationBox = (
+    <details className="rounded-md border border-border bg-muted/20 p-2.5 text-xs" data-testid="inspector-opus-recommendations">
+      <summary className="flex cursor-pointer items-center gap-1.5 font-medium">
+        <Sparkles className="h-3.5 w-3.5 text-primary" />
+        <span>{t('inspector.recommend.title')}</span>
+      </summary>
+      <p className="mt-1 text-[11px] text-muted-foreground">{t('inspector.recommend.desc')}</p>
+      <div className="mt-2 space-y-2">
+        {opusRec.templates.map(({ template: recTpl }) => (
+          <div key={recTpl.ref} className="flex items-center gap-2 rounded border border-border bg-card p-2">
+            {recTpl.meta.previewUrl && (
+              <img
+                src={recTpl.meta.previewUrl}
+                alt={t('tpl.previewAlt', { name: recTpl.meta.label[lang] })}
+                className="h-10 w-16 shrink-0 rounded border border-border object-cover"
+              />
+            )}
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5">
+                <b className="truncate text-[11px]">{recTpl.meta.label[lang]}</b>
+                {recTpl.meta.actionUrl && (
+                  <a
+                    href={recTpl.meta.actionUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-0.5 text-[10px] text-primary hover:underline"
+                  >
+                    <ExternalLink className="h-2.5 w-2.5" />
+                    {t('tpl.liveDemo')}
+                  </a>
+                )}
+              </div>
+              {recTpl.meta.description && (
+                <p className=" truncate text-[10px] text-muted-foreground">{recTpl.meta.description[lang]}</p>
+              )}
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={draft.template === recTpl.ref}
+              onClick={() => edit((s) => applyTemplateDefaults({ ...s, template: recTpl.ref } as Scene, recTpl))}
+            >
+              {t('inspector.recommend.switchTemplate')}
+            </Button>
+          </div>
+        ))}
+
+        {opusRec.decomposedPresets.slice(0, 3).map((preset) => (
+          <div key={preset.id} className="flex items-center gap-2 rounded border border-border bg-card p-2">
+            <img
+              src={preset.previewUrl}
+              alt={t('tpl.previewAlt', { name: preset.label[lang] })}
+              className="h-10 w-16 shrink-0 rounded border border-border object-cover"
+            />
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5">
+                <span className="rounded bg-primary/10 px-1 py-0.5 text-[9px] font-medium text-primary">
+                  {t(`tpl.decomposed.${preset.category}`)}
+                </span>
+                <b className="truncate text-[11px]">{preset.label[lang]}</b>
+                <a
+                  href={preset.actionUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-0.5 text-[10px] text-primary hover:underline"
+                >
+                  <ExternalLink className="h-2.5 w-2.5" />
+                  {t('tpl.liveDemo')}
+                </a>
+              </div>
+              <p className="truncate text-[10px] text-muted-foreground">{preset.description[lang]}</p>
+            </div>
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => edit((s) => applyDecomposedPreset(s, preset))}
+            >
+              {t('inspector.recommend.applyPreset')}
+            </Button>
+          </div>
+        ))}
+      </div>
+    </details>
+  );
 
   return (
     <div className="flex h-full flex-col text-sm" data-testid="scene-inspector">
@@ -249,6 +349,7 @@ export function SceneInspector({ workspace, root, slug, scene, template, templat
                 <option value="en">English</option>
               </select>
             </Field>
+            {recommendationBox}
             {onSaveAsTemplate && template && <SaveAsTemplate onSave={onSaveAsTemplate} />}
           </>
         )}
@@ -258,6 +359,7 @@ export function SceneInspector({ workspace, root, slug, scene, template, templat
             {unusable ?? (
               <>
                 <p className="text-[11px] text-muted-foreground">{t('inspector.tab.guide.hint')}</p>
+                {recommendationBox}
                 <SceneForm scene={draft} template={template!} onChange={(next) => edit(() => next)} />
               </>
             )}

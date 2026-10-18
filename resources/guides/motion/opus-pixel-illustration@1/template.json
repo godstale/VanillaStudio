@@ -1,0 +1,35 @@
+{
+  "id": "opus-pixel-illustration",
+  "version": 1,
+  "type": "motion",
+  "label": {
+    "ko": "Opus 픽셀·프로시저럴 일러스트",
+    "en": "Opus Pixel & Procedural Illustration"
+  },
+  "extends": "commercial@1",
+  "mediaIntents": [
+    "image",
+    "motion"
+  ],
+  "description": {
+    "ko": "외부 비트맵 없이 순수 코드(2D 행렬·Canvas)로 그리는 고해상도 픽셀 아트·아이소메트릭 일러스트와 패럴랙스 루프.",
+    "en": "Code-generated pixel-art & procedural canvas illustration with crisp integer scaling, multi-layer parallax, and ambient loops."
+  },
+  "tags": [
+    "pixel-art",
+    "illustration",
+    "image",
+    "canvas",
+    "retro",
+    "isometric",
+    "artwork",
+    "loop"
+  ],
+  "banned": [
+    "Bilinear blurry canvas scaling (must use pixelated crisp-edges)",
+    "External raster sprite sheets"
+  ],
+  "previewUrl": "https://media.skillry.dev/opus-5-5/zacxbt-944604/original.1fc21723ff.webp",
+  "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/zacxbt-944604",
+  "sourceRef": "awesome-opus5-5-videos#zacxbt-944604"
+}

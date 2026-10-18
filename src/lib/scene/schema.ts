@@ -35,6 +35,7 @@ const briefSchema = z
     audience: text,
     message: text,
     language: z.enum(['ko', 'en']),
+    mediaIntent: z.enum(['web', 'image', 'slide', 'motion']).optional(),
   })
   .strict();
 

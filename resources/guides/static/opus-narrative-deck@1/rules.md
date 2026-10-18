@@ -1,0 +1,2 @@
+- Advance steps strictly on user input (`ArrowRight` / `ArrowLeft`, `Space`, or click) in compliance with D-032, and call `window.sceneRuntime?.reportStep(stepIndex, totalSteps)`.
+- Render a subtle slide progress bar and `01 / 04` step indicator in the bottom safe area, and morph shared card/title containers smoothly between steps.

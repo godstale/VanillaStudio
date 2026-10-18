@@ -105,7 +105,17 @@ export function mergeTemplate(child: GuideTemplate, parent: GuideTemplate): Guid
   const joined = (a: string, b: string, title: string) => (b.trim() ? `${a.trimEnd()}\n\n## ${title} (${who})\n\n${b.trim()}\n` : a);
   return {
     ref: child.ref,
-    meta: child.meta,
+    meta: {
+      ...parent.meta,
+      ...child.meta,
+      tags: child.meta.tags ?? parent.meta.tags,
+      banned: [...new Set([...(parent.meta.banned ?? []), ...(child.meta.banned ?? [])])],
+      mediaIntents: child.meta.mediaIntents ?? parent.meta.mediaIntents,
+      description: child.meta.description ?? parent.meta.description,
+      previewUrl: child.meta.previewUrl ?? parent.meta.previewUrl,
+      actionUrl: child.meta.actionUrl ?? parent.meta.actionUrl,
+      sourceRef: child.meta.sourceRef ?? parent.meta.sourceRef,
+    },
     schema: {
       version: 1,
       hide: [...new Set([...parent.schema.hide, ...child.schema.hide])],

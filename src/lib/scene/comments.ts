@@ -15,11 +15,18 @@ export const commentHistorySchema = z.object({
 });
 export type CommentHistory = z.infer<typeof commentHistorySchema>;
 
+export const rootCauseLayerSchema = z.enum(['auto', 'brief', 'design-flow', 'visual-direction', 'materials', 'scene-polish']);
+export type RootCauseLayer = z.infer<typeof rootCauseLayerSchema>;
+
 export const sceneCommentSchema = z.object({
   id: z.string().min(1),
   createdAt: z.string().min(1),
   body: z.string().min(1),
   status: z.enum(['open', 'done']).default('open'),
+  /** 원인 계층: 화면 코드를 고치기 전 먼저 갱신해야 할 상위 문서. 미지정(auto)은 에이전트가 판단. */
+  layer: rootCauseLayerSchema.default('auto'),
+  /** 원하는 디자인 텍소노미 패턴 ID (예: shared-layout-transition). */
+  taxonomyTags: z.array(z.string()).default([]),
   history: z.array(commentHistorySchema).default([]),
 });
 export type SceneComment = z.infer<typeof sceneCommentSchema>;
@@ -41,7 +48,13 @@ function genId(now: string): string {
   return `cmt_${now.replace(/[^0-9]/g, '').slice(-12)}${Math.floor(Math.random() * 1296).toString(36)}`;
 }
 
-export function addComment(file: CommentsFile, body: string, now: string, id?: string): CommentsFile {
+export function addComment(
+  file: CommentsFile,
+  body: string,
+  now: string,
+  id?: string,
+  opts?: { layer?: RootCauseLayer; taxonomyTags?: string[] },
+): CommentsFile {
   const trimmed = body.trim();
   if (!trimmed) return file;
   const at = now;
@@ -50,6 +63,8 @@ export function addComment(file: CommentsFile, body: string, now: string, id?: s
     createdAt: at,
     body: trimmed,
     status: 'open',
+    layer: opts?.layer ?? 'auto',
+    taxonomyTags: opts?.taxonomyTags ?? [],
     history: [{ at, action: 'created' }],
   };
   return { ...file, comments: [...file.comments, comment] };

@@ -1,0 +1,35 @@
+{
+  "id": "opus-shader-cinematic",
+  "version": 1,
+  "type": "3d",
+  "label": {
+    "ko": "Opus 셰이더 아트·시네마틱 월드",
+    "en": "Opus Shader Art & Cinematic World"
+  },
+  "extends": "three-scene@1",
+  "mediaIntents": [
+    "motion",
+    "image"
+  ],
+  "description": {
+    "ko": "커스텀 GLSL 셰이더, 프리즘 빛 분산, 절차적 파티클 필드로 예술적인 모션 그래픽과 배경 비주얼을 생성하는 3D 템플릿.",
+    "en": "Custom GLSL shader & procedural Three.js visual poem featuring chromatic dispersion, raymarched forms, and volumetric light."
+  },
+  "tags": [
+    "3d",
+    "shader",
+    "glsl",
+    "cinematic",
+    "art",
+    "image",
+    "particles",
+    "dispersion"
+  ],
+  "banned": [
+    "Unbounded shader loops that drop below 60fps",
+    "Uncoupled requestAnimationFrame time accumulators"
+  ],
+  "previewUrl": "https://media.skillry.dev/opus-5-5/_prompts/agioyaz-397647/poster.340f607e45.webp",
+  "actionUrl": "https://x.com/AGIOyaZ/status/2103167623303397647",
+  "sourceRef": "awesome-opus5-5-videos#agioyaz-397647"
+}

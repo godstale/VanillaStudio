@@ -3,8 +3,26 @@
   "version": 1,
   "type": "3d",
   "label": {
-    "ko": "3D 씬",
-    "en": "3D scene"
+    "ko": "3D 애니메이션 씬",
+    "en": "3D animation scene"
   },
-  "extends": null
+  "extends": null,
+  "mediaIntents": [
+    "motion",
+    "web"
+  ],
+  "description": {
+    "ko": "Three.js / React Three Fiber 기반의 결정적 3D 제품·공간·카메라 애니메이션.",
+    "en": "Deterministic Three.js / R3F 3D scene with physically plausible materials, lighting, and camera path."
+  },
+  "tags": [
+    "3d",
+    "threejs",
+    "webgl",
+    "product",
+    "cinematic"
+  ],
+  "previewUrl": "https://media.skillry.dev/opus-5-5/lexnlin-241739/original.cb53056c77.webp",
+  "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/lexnlin-241739",
+  "sourceRef": "awesome-opus5-5-videos#lexnlin-241739"
 }

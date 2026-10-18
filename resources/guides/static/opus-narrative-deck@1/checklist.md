@@ -1,0 +1,3 @@
+- [ ] Advances only on user input (Arrow keys / click) per D-032
+- [ ] Calls `window.sceneRuntime?.reportStep` on step change
+- [ ] Slide transitions use smooth spring-morph or slide-x choreography

@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "id": "opus-spotify-editorial",
+  "name": "Opus Spotify Editorial",
+  "tags": [
+    "light",
+    "opus",
+    "editorial",
+    "audio",
+    "clean"
+  ],
+  "scheme": "light",
+  "colors": {
+    "canvas": "#F3F3F0",
+    "ink": "#121212",
+    "primary": "#0D6A32",
+    "accent": "#8A4F00"
+  },
+  "source": "builtin",
+  "license": "MIT",
+  "previewUrl": "https://media.skillry.dev/opus-5-5/brainextends-606193/original.f7353b2aa2.webp",
+  "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/brainextends-606193"
+}

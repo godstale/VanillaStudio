@@ -1,10 +1,14 @@
 import { z } from 'zod';
 import type { SceneType } from '@/lib/scene/schema';
+import { mergeTemplate } from './merge';
 
 const localized = z.object({ ko: z.string().min(1), en: z.string().min(1) }).strict();
 
 // 가이드 템플릿(D-028): 내장·사용자 정의가 같은 형식. 내장은 번들에서 읽는다(`resources/guides/<type>/<id>@<ver>/`).
 // 사용자 템플릿 로딩(워크스페이스 `guide-templates/`·`templatesDir`)은 V3에서 이 형식 위에 얹는다.
+
+export const MEDIA_INTENTS = ['web', 'image', 'slide', 'motion'] as const;
+export type MediaIntent = (typeof MEDIA_INTENTS)[number];
 
 export const templateMetaSchema = z
   .object({
@@ -13,6 +17,13 @@ export const templateMetaSchema = z
     type: z.enum(['static', 'motion', '3d']),
     label: z.object({ ko: z.string().min(1), en: z.string().min(1) }).strict(),
     extends: z.string().regex(/^[a-z0-9][a-z0-9-]*@\d+$/).nullable(),
+    mediaIntents: z.array(z.enum(MEDIA_INTENTS)).optional(),
+    description: localized.optional(),
+    tags: z.array(z.string()).optional(),
+    banned: z.array(z.string()).optional(),
+    previewUrl: z.string().url().optional(),
+    actionUrl: z.string().url().optional(),
+    sourceRef: z.string().optional(),
   })
   .strict();
 export type TemplateMeta = z.infer<typeof templateMetaSchema>;
@@ -54,6 +65,9 @@ export const termSchema = z
     /** 에이전트용 구현 힌트(영문 고정, 번역 대상 아님). */
     implementationHint: z.string(),
     tags: z.array(z.string()),
+    previewUrl: z.string().url().optional(),
+    actionUrl: z.string().url().optional(),
+    sourceRef: z.string().optional(),
   })
   .strict();
 export type Term = z.infer<typeof termSchema>;
@@ -149,9 +163,37 @@ function groupBuiltin(): Map<string, TemplateFiles> {
 let cache: GuideTemplate[] | null = null;
 
 export function listBuiltinTemplates(): GuideTemplate[] {
-  cache ??= [...groupBuiltin().entries()]
+  if (cache) return cache;
+  const raws = [...groupBuiltin().entries()]
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([key, files]) => buildTemplate(files, key.split('/')[0] as SceneType));
+  const byRef = new Map<string, GuideTemplate>(raws.map((t) => [t.ref, t]));
+  const resolved = new Map<string, GuideTemplate>();
+
+  const resolveOne = (t: GuideTemplate, depth = 0): GuideTemplate => {
+    const hit = resolved.get(t.ref);
+    if (hit) return hit;
+    if (t.meta.extends === null) {
+      resolved.set(t.ref, t);
+      return t;
+    }
+    if (depth >= 6) throw new Error(`Built-in template ${t.ref}: extends chain too deep`);
+    const parentRaw = byRef.get(t.meta.extends);
+    if (!parentRaw) throw new Error(`Built-in template ${t.ref}: parent ${t.meta.extends} not found`);
+    const parent = resolveOne(parentRaw, depth + 1);
+    const merged = mergeTemplate(t, parent);
+    resolved.set(t.ref, merged);
+    return merged;
+  };
+
+  cache = raws
+    .map((t) => ({ rawExtends: t.meta.extends, resolved: resolveOne(t) }))
+    .sort((a, b) => {
+      const aRoot = a.rawExtends === null ? 0 : 1;
+      const bRoot = b.rawExtends === null ? 0 : 1;
+      return aRoot - bRoot || a.resolved.ref.localeCompare(b.resolved.ref);
+    })
+    .map((x) => x.resolved);
   return cache;
 }
 
@@ -159,9 +201,18 @@ export function getBuiltinTemplate(ref: string): GuideTemplate | null {
   return listBuiltinTemplates().find((t) => t.ref === ref) ?? null;
 }
 
+const DEFAULT_TEMPLATE_REFS: Record<SceneType, string> = {
+  static: 'web-page@1',
+  motion: 'commercial@1',
+  '3d': 'three-scene@1',
+};
+
 /** 신 타입의 기본 내장 템플릿(새 신 생성 시 사용). */
 export function defaultTemplateFor(type: SceneType): GuideTemplate {
-  const t = listBuiltinTemplates().find((x) => x.meta.type === type);
+  const list = listBuiltinTemplates();
+  const preferred = list.find((x) => x.ref === DEFAULT_TEMPLATE_REFS[type]);
+  if (preferred) return preferred;
+  const t = list.find((x) => x.meta.type === type);
   if (!t) throw new Error(`No built-in template for ${type}`);
   return t;
 }

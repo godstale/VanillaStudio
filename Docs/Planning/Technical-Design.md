@@ -382,6 +382,9 @@ render 모드와 HyperFrames seek의 연결, 준비 대기 신호는 S1에서 �
 | `scenes/<slug>/scene.json` | `src/lib/scene/schema.ts` (공통 + 타입별 확장 `static`·`motion`·`3d`) | 신 ID(`id`, `scn_<alnum>`) 불변, 용어는 glossary ID로 저장, 정규화 직렬화(§8.3, 시간 키 `start`·`end`·`seconds`·`holdSeconds`). 타입 확장은 평면 필드: `static`=`mode`·`steps`·`sections`·`layout`·`breakpoints`·`accessibility`, `3d`=motion 공통 + `composition`·`materials`·`lighting`·`cameraPath`·`performanceBudget`. 검증: `beats`는 0에서 시작·연속·합=`duration.seconds`, `endCard.holdSeconds ≥ 0.7`, static `steps[].advance`는 `click`·`key:`·`choice:`만, 알 수 없는 필드 거부. 사용자 템플릿이 더한 필드 값은 `custom{}`에 저장(D-031). 용어집은 템플릿별 `glossary.json`(`terms[]`: category·id·label·definition·implementationHint·tags), `schema.json`은 `hide`·`defaults`·`fields`(추가 필드)만 허용 |
 | `scenes/<slug>/references/references.json` | `src/lib/scene/references.ts` | `{id, kind: video|image|url, path|url, note, analysis}` |
 | `scenes/<slug>/comments.json` | `src/lib/scene/comments.ts` | `{version, sceneId, comments[{id, createdAt, body, status, history[{at, action}]}]}` — 사용자가 에이전트에게 남기는 수정 요청(D-034) |
+| `WORK_ORDER.md` · `.vanilla/work-order.json` | `src/lib/workspace/workOrder.ts` | 바닐라 스튜디오 UI 변경사항(시퀀스·신·가이드·파라미터·팔레트)과 신별 코멘트를 집계한 통합 작업 지시서(D-036) |
+| `VANILLA_GUIDE.md` · `.vanilla/resources/` | (초기화 시 복사) | 스튜디오 동작 가이드·스키마·파라미터 역할 및 내장 템플릿·프리셋·팔레트 오프라인 카탈로그(D-036) |
+| `scripts/vanilla-agent.mjs` | (초기화 시 복사) | `pnpm vanilla <cmd>` 에이전트 연동 CLI 브리지(`status`·`templates`·`inspect-template`·`scaffold-scene`·`sync-guides`·`work-order`·`resolve`, D-036) |
 | `guide-templates/*/template.json` | `src/lib/guides/templateSchema.ts` | `{id, version, type, extends, label}` |
 | `manifest.json`(.vsx 내부) | `src/lib/package/manifest.ts` | 파일별 SHA-256, 앱·스키마 버전, 사용 템플릿 목록 |
 

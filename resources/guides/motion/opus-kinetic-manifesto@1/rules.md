@@ -1,0 +1,3 @@
+- Pair a high-contrast editorial serif italic (for emotional/conceptual keywords) with an ultra-bold geometric grotesque (for structural verbs and nouns).
+- Include subtle architectural registration marks (`[01 / 03]`, hairlines, timecode readout) anchored to the safe-area grid.
+- Drive word reveals through baseline `overflow: hidden` masks and `font-weight` / `scaleY` beat pulses.

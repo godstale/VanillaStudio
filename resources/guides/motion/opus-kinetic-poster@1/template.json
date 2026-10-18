@@ -1,0 +1,35 @@
+{
+  "id": "opus-kinetic-poster",
+  "version": 1,
+  "type": "motion",
+  "label": {
+    "ko": "Opus 무빙 포스터·소셜 카드",
+    "en": "Opus Kinetic Poster & Social Visual"
+  },
+  "extends": "commercial@1",
+  "mediaIntents": [
+    "image",
+    "motion"
+  ],
+  "description": {
+    "ko": "포스터·배너·소셜 이미지 요청에 최적화된 고밀도 그래픽 레이아웃과 리퀴드 필·코닉 헤일로 루프 모션.",
+    "en": "Swiss/Spotify-inspired graphic poster & social card with bold color floods, liquid pills, and continuous ambient motion."
+  },
+  "tags": [
+    "poster",
+    "image",
+    "banner",
+    "social-card",
+    "graphic-design",
+    "swiss",
+    "spotify",
+    "thumbnail"
+  ],
+  "banned": [
+    "Tiny unreadable body text below 16px",
+    "Low-contrast pastel-on-pastel typography"
+  ],
+  "previewUrl": "https://media.skillry.dev/opus-5-5/brainextends-606193/original.f7353b2aa2.webp",
+  "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/brainextends-606193",
+  "sourceRef": "awesome-opus5-5-videos#brainextends-606193"
+}

@@ -1,0 +1,2 @@
+- Design every timestamp so that pausing at any frame yields a balanced, gallery-grade graphic poster or social card.
+- Use bold Swiss grid alignment, oversized display typography, and high-contrast duotone/tritone color floods from `DESIGN.md`.

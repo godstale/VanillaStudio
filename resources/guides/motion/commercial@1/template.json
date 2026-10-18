@@ -6,5 +6,22 @@
     "ko": "상업 모션 그래픽",
     "en": "Commercial motion graphic"
   },
-  "extends": null
+  "extends": null,
+  "mediaIntents": [
+    "motion",
+    "image"
+  ],
+  "description": {
+    "ko": "제품·브랜드 메시지를 정확한 원문 카피와 비트 구조로 전달하는 범용 상업 모션 그래픽.",
+    "en": "General commercial motion graphic with exact copy fidelity, structured beats, and brand end card."
+  },
+  "tags": [
+    "commercial",
+    "brand",
+    "product",
+    "motion"
+  ],
+  "previewUrl": "https://media.skillry.dev/opus-5-5/deedydas-252537/original.8d653fb34b.webp",
+  "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/deedydas-252537",
+  "sourceRef": "awesome-opus5-5-videos#deedydas-252537"
 }

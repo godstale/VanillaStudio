@@ -7,18 +7,18 @@ const motion = defaultTemplateFor('motion').glossary;
 describe('motion glossary', () => {
   it('has the categories the scene schema fields use', () => {
     expect(categories(motion).sort()).toEqual(
-      ['adStructure', 'brandVoice', 'camera', 'creativeMode', 'material', 'object', 'structure', 'transition', 'typography'].sort(),
+      ['adStructure', 'brandVoice', 'camera', 'creativeMode', 'layout', 'material', 'object', 'structure', 'theme', 'transition', 'typography'].sort(),
     );
   });
 
   it('covers every item the source guide lists', () => {
-    expect(termsIn(motion, 'creativeMode')).toHaveLength(15);
+    expect(termsIn(motion, 'creativeMode').length).toBeGreaterThanOrEqual(15);
     expect(termsIn(motion, 'structure').map((t) => t.id)).toEqual(['multi-shot', 'continuous', 'hybrid']);
-    expect(termsIn(motion, 'adStructure')).toHaveLength(9);
-    expect(termsIn(motion, 'brandVoice')).toHaveLength(12);
-    expect(termsIn(motion, 'typography')).toHaveLength(12);
-    expect(termsIn(motion, 'object')).toHaveLength(12);
-    expect(termsIn(motion, 'material')).toHaveLength(9);
+    expect(termsIn(motion, 'adStructure').length).toBeGreaterThanOrEqual(9);
+    expect(termsIn(motion, 'brandVoice').length).toBeGreaterThanOrEqual(12);
+    expect(termsIn(motion, 'typography').length).toBeGreaterThanOrEqual(12);
+    expect(termsIn(motion, 'object').length).toBeGreaterThanOrEqual(12);
+    expect(termsIn(motion, 'material').length).toBeGreaterThanOrEqual(9);
     expect(termsIn(motion, 'transition').length).toBeGreaterThanOrEqual(9);
   });
 
@@ -44,7 +44,7 @@ describe('glossary helpers', () => {
   it('searches labels, ids and tags case-insensitively', () => {
     expect(searchTerms(motion, 'typography', 'PUNCH').map((t) => t.id)).toEqual(['scale-punch']);
     expect(searchTerms(motion, 'typography', '펀치').map((t) => t.id)).toEqual(['scale-punch']);
-    expect(searchTerms(motion, 'typography', '')).toHaveLength(12);
+    expect(searchTerms(motion, 'typography', '')).toHaveLength(termsIn(motion, 'typography').length);
     expect(searchTerms(motion, 'typography', 'zzzz')).toEqual([]);
   });
 

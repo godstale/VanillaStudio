@@ -15,6 +15,41 @@ export interface GuideContext {
 export function agentsMdSections({ workspace, scene, template }: GuideContext): MarkerSection[] {
   const writable = agentWritableFields(scene.type).map((f) => `\`${f}\``).join(', ');
   const timed = scene.type !== 'static';
+  const banned = template.meta.banned ?? [];
+  const bannedBlock = banned.length > 0 ? `\n\n### Banned patterns (strictly forbidden)\n\n${banned.map((b) => `- ${b}`).join('\n')}` : '';
+
+  const hintLines: string[] = [];
+  if (scene.type !== 'static') {
+    const mv = scene.motionVocabulary;
+    const chosen: [string, string][] = [
+      ...scene.creativeMode.map((id): [string, string] => ['creativeMode', id]),
+      ...(scene.adStructure ? [['adStructure', scene.adStructure] as [string, string]] : []),
+      ...mv.typography.map((id): [string, string] => ['typography', id]),
+      ...mv.object.map((id): [string, string] => ['object', id]),
+      ...mv.camera.map((id): [string, string] => ['camera', id]),
+      ...mv.material.map((id): [string, string] => ['material', id]),
+      ...mv.transition.map((id): [string, string] => ['transition', id]),
+    ];
+    for (const [cat, id] of chosen) {
+      const term = template.glossary.terms.find((t) => t.category === cat && t.id === id);
+      if (term?.implementationHint) {
+        hintLines.push(`- **${cat}/${id}** (${term.label.en}): ${term.implementationHint}`);
+      }
+    }
+  } else {
+    const chosen: [string, string][] = [
+      ...(scene.layout ? [['layout', scene.layout] as [string, string]] : []),
+      ...scene.sections.map((id): [string, string] => ['sections', id]),
+    ];
+    for (const [cat, id] of chosen) {
+      const term = template.glossary.terms.find((t) => t.category === cat && t.id === id);
+      if (term?.implementationHint) {
+        hintLines.push(`- **${cat}/${id}** (${term.label.en}): ${term.implementationHint}`);
+      }
+    }
+  }
+  const hintsBlock = hintLines.length > 0 ? `\n\n### Selected technique implementation hints\n\n${hintLines.join('\n')}` : '';
+
   return [
     {
       id: 'identity',
@@ -27,6 +62,7 @@ export function agentsMdSections({ workspace, scene, template }: GuideContext): 
         `- scene: ${scene.name}`,
         `- type: ${scene.type}`,
         `- template: ${template.ref}`,
+        ...(scene.brief.mediaIntent ? [`- mediaIntent: ${scene.brief.mediaIntent}`] : []),
         '',
         'This folder is one scene of one workspace. It is your working directory; work only here (cwd and below).',
       ].join('\n'),
@@ -36,7 +72,7 @@ export function agentsMdSections({ workspace, scene, template }: GuideContext): 
       body: [
         '## Task',
         '',
-        'Read these first, in order: `GUIDE.md` (the scene spec), `scene.json` (the source of truth), `../../DESIGN.md` (design tokens).',
+        'Read these first, in order: `GUIDE.md` (the scene spec), `scene.json` (the source of truth), `../../DESIGN.md` (design tokens), `comments.json` (scene comments), and `../../WORK_ORDER.md` (workspace work order & user changes).',
         'Then implement the scene as code under `src/`. Do not use generative image or video AI services.',
       ].join('\n'),
     },
@@ -74,7 +110,7 @@ export function agentsMdSections({ workspace, scene, template }: GuideContext): 
         'Keep JSON formatting stable: 2-space indent, LF, keys in the existing order.',
       ].join('\n'),
     },
-    { id: 'type-rules', body: `## ${scene.type} rules (${template.ref})\n\n${template.rules.trim()}` },
+    { id: 'type-rules', body: `## ${scene.type} rules (${template.ref})\n\n${template.rules.trim()}${bannedBlock}${hintsBlock}` },
     {
       id: 'references',
       body: [

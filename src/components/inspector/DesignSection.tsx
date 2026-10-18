@@ -7,6 +7,7 @@ import { StringList } from '@/components/guides/StringList';
 import { BUILT_IN_PALETTES, listProjectPalettes, type PaletteFile } from '@/lib/design/palettes';
 import { readMood, writeMood } from '@/lib/design/mood';
 import { applyPalette, createSceneOverride, hasSceneOverride, readDesign, sceneDesignPath, writeDesign } from '@/lib/design/workspaceDesign';
+import { recordStudioChange } from '@/lib/workspace/workOrder';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 export interface DesignSectionProps {
@@ -58,18 +59,41 @@ export function DesignSection({ root, slug }: DesignSectionProps) {
   async function apply(p: PaletteFile) {
     if (text == null) return;
     const result = applyPalette(text, p);
-    if (await write(result.text)) setMessage({ kind: 'ok', text: t('design.section.applied', { name: p.name, count: result.bodyReplacements }) });
+    if (await write(result.text)) {
+      setMessage({ kind: 'ok', text: t('design.section.applied', { name: p.name, count: result.bodyReplacements }) });
+      void recordStudioChange(root, {
+        scope: 'design',
+        targetId: 'DESIGN.md',
+        targetName: 'DESIGN.md',
+        summary: `컬러 팔레트 "${p.name}"(${p.id}) 적용`,
+        fields: ['colors'],
+      });
+    }
   }
 
   async function setMood(keywords: string[]) {
     if (text == null) return;
-    await write(writeMood(text, keywords));
+    if (await write(writeMood(text, keywords))) {
+      void recordStudioChange(root, {
+        scope: 'design',
+        targetId: 'DESIGN.md',
+        targetName: 'DESIGN.md',
+        summary: `디자인 분위기(mood) 키워드 변경: ${keywords.join(', ') || '(없음)'}`,
+        fields: ['mood'],
+      });
+    }
   }
 
   async function makeOverride() {
     try {
       await createSceneOverride(root, slug);
       setOverride(true);
+      void recordStudioChange(root, {
+        scope: 'design',
+        targetId: sceneDesignPath(slug),
+        targetName: sceneDesignPath(slug),
+        summary: `신 전용 디자인 오버라이드 파일 생성 (${sceneDesignPath(slug)})`,
+      });
     } catch (e) {
       setMessage({ kind: 'error', text: e instanceof Error ? e.message : String(e) });
     }

@@ -35,6 +35,27 @@ describe('NewSceneDialog', () => {
     await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false));
   });
 
+  it('recommends an Opus template from prompt input and shows preview & live demo link', async () => {
+    const { onCreate } = renderDialog();
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Morph Hero' } });
+    fireEvent.change(screen.getByTestId('new-scene-prompt-input'), {
+      target: { value: '120BPM UI state morph loop' },
+    });
+    expect(screen.getByTestId('selected-template-preview')).toBeTruthy();
+    fireEvent.click(create());
+    await waitFor(() =>
+      expect(onCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'Morph Hero',
+          type: 'motion',
+          template: expect.objectContaining({ ref: 'opus-ui-morph-loop@1' }),
+          initialBrief: { subject: '120BPM UI state morph loop' },
+          initialUserPrompt: '120BPM UI state morph loop',
+        }),
+      ),
+    );
+  });
+
   it('shows the error and stays open when creating fails', async () => {
     const { onOpenChange } = renderDialog(vi.fn(async () => Promise.reject(new Error('disk full'))));
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'X' } });

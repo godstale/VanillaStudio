@@ -45,6 +45,8 @@
 
 - [[research-2026-09-28-agents-rendering]] — 에이전트 연동·HTML 렌더·PPT·라이선스 조사
 - [[research-2026-09-29-design-md-hyperframes]] — DESIGN.md 형식, HyperFrames FRAME.MD 프리셋 12종·카탈로그(템플릿 참고 자료)
+- [[research-2026-10-18-awesome-opus55-videos]] — Opus 5.5 모션 그래픽 703개 분석·분해 프리셋·12종 템플릿·추천 엔진(D-035)
+
 
 ## Domain / Product Concepts
 

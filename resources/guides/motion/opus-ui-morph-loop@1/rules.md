@@ -1,0 +1,3 @@
+- Maintain a single persistent DOM/SVG hero container whose width, height, border-radius, and background interpolate via a closed-form damped spring sum over `useTime()`.
+- Snap state triggers to a 120BPM grid (0.5s per beat) and ensure the state at `t = duration` matches `t = 0` for a seamless loop.
+- Stagger leading and trailing horizontal edges by 25-35ms during width expansions to create a liquid pill feel.

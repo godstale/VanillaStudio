@@ -51,9 +51,9 @@ describe('SettingsTemplates', () => {
   it('lists the built-in templates as usable', async () => {
     renderPage();
     const list = await screen.findByTestId('template-list');
-    expect(within(list).getAllByRole('listitem')).toHaveLength(3);
-    expect(within(list).getAllByText(/^내장$|^Built-in$/)).toHaveLength(3);
-    expect(within(list).getAllByText(/사용 가능|Usable/)).toHaveLength(3);
+    expect(within(list).getAllByRole('listitem')).toHaveLength(15);
+    expect(within(list).getAllByText(/^내장$|^Built-in$/)).toHaveLength(15);
+    expect(within(list).getAllByText(/사용 가능|Usable/)).toHaveLength(15);
     expect(within(list).queryByRole('button', { name: /^편집$|^Edit$/ })).toBeNull(); // built-ins are not editable
   });
 

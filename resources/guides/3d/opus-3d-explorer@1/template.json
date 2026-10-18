@@ -1,0 +1,34 @@
+{
+  "id": "opus-3d-explorer",
+  "version": 1,
+  "type": "3d",
+  "label": {
+    "ko": "Opus 3D 익스플로러·제품 분해 뷰",
+    "en": "Opus 3D Explorer & Exploded Cutaway"
+  },
+  "extends": "three-scene@1",
+  "mediaIntents": [
+    "web",
+    "motion"
+  ],
+  "description": {
+    "ko": "프로시저럴 Three.js 지오메트리와 HUD 라벨 콜아웃으로 하드웨어·우주·건축 구조를 분해·탐색하는 3D 신.",
+    "en": "Procedural Three.js showcase with exploded-view cutaway choreography, PBR materials, and 2D HUD callout lines."
+  },
+  "tags": [
+    "3d",
+    "threejs",
+    "exploded-view",
+    "product",
+    "explorer",
+    "webgl",
+    "hud"
+  ],
+  "banned": [
+    "External unbundled GLTF/HDR URLs that fail offline",
+    "Non-deterministic clock.getDelta() physics"
+  ],
+  "previewUrl": "https://media.skillry.dev/opus-5-5/bthreeagency-827092/original.353cb53c14.webp",
+  "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/bthreeagency-827092",
+  "sourceRef": "awesome-opus5-5-videos#bthreeagency-827092"
+}

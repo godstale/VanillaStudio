@@ -8,7 +8,9 @@ import {
   setCommentStatus,
   writeComments,
   type CommentsFile,
+  type RootCauseLayer,
 } from '@/lib/scene/comments';
+import { syncWorkOrderFiles } from '@/lib/workspace/workOrder';
 import { cn } from '@/lib/utils';
 
 export interface CommentScene {
@@ -32,6 +34,8 @@ export function CommentToolbox({ root, scenes, defaultSlug }: Props) {
   const [failed, setFailed] = useState(false);
   const [chosen, setChosen] = useState<string | null>(null);
   const [draft, setDraft] = useState('');
+  const [layer, setLayer] = useState<RootCauseLayer>('auto');
+  const [taxonomy, setTaxonomy] = useState('');
   // 선택한 신이 목록에 없으면 기본값으로 되돌아간다(effect 없이 렌더 중에 결정).
   const target = chosen && scenes.some((s) => s.slug === chosen) ? chosen : (defaultSlug ?? scenes[0]?.slug ?? '');
 
@@ -57,6 +61,7 @@ export function CommentToolbox({ root, scenes, defaultSlug }: Props) {
       try {
         await writeComments(root, slug, next);
         setFiles((m) => ({ ...m, [slug]: next }));
+        void syncWorkOrderFiles(root);
       } catch {
         setFailed(true);
       }
@@ -68,7 +73,8 @@ export function CommentToolbox({ root, scenes, defaultSlug }: Props) {
     const scene = scenes.find((s) => s.slug === target);
     if (!scene || !draft.trim()) return;
     const base = files[target] ?? { version: 1 as const, sceneId: scene.sceneId, comments: [] };
-    await mutate(target, addComment(base, draft, new Date().toISOString()));
+    const tags = taxonomy.split(',').map((s) => s.trim()).filter(Boolean);
+    await mutate(target, addComment(base, draft, new Date().toISOString(), undefined, { layer, taxonomyTags: tags }));
     setDraft('');
   }
 
@@ -98,7 +104,8 @@ export function CommentToolbox({ root, scenes, defaultSlug }: Props) {
                   <li key={c.id} className={cn('rounded border border-border p-2', c.status === 'done' && 'opacity-60')}>
                     <p className="whitespace-pre-wrap break-words">{c.body}</p>
                     <p className="mt-1 text-[10px] text-muted-foreground">
-                      {c.createdAt} · {t(`comments.status.${c.status}`)}
+                      {c.createdAt} · {t(`comments.status.${c.status}`)} · {t(`comments.layer.${c.layer ?? 'auto'}`)}
+                      {(c.taxonomyTags ?? []).length > 0 && ` · ${(c.taxonomyTags ?? []).join(', ')}`}
                     </p>
                     {c.history.length > 1 && (
                       <details className="mt-1 text-[10px] text-muted-foreground">
@@ -141,6 +148,27 @@ export function CommentToolbox({ root, scenes, defaultSlug }: Props) {
         )}
       </div>
       <div className="flex flex-col gap-1 border-t border-border pt-2">
+        <div className="flex gap-1">
+          <select
+            aria-label={t('comments.layer')}
+            value={layer}
+            onChange={(e) => setLayer(e.target.value as RootCauseLayer)}
+            className="h-7 min-w-0 flex-1 rounded-md border border-input bg-background px-1.5"
+          >
+            {(['auto', 'brief', 'design-flow', 'visual-direction', 'materials', 'scene-polish'] as const).map((l) => (
+              <option key={l} value={l}>
+                {t(`comments.layer.${l}`)}
+              </option>
+            ))}
+          </select>
+          <input
+            value={taxonomy}
+            onChange={(e) => setTaxonomy(e.target.value)}
+            placeholder={t('comments.taxonomy')}
+            aria-label={t('comments.taxonomy')}
+            className="h-7 min-w-0 flex-1 rounded-md border border-input bg-background px-2"
+          />
+        </div>
         {scenes.length > 1 && (
           <select
             aria-label={t('scenes.list')}

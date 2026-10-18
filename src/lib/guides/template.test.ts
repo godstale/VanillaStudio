@@ -2,10 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { buildTemplate, defaultTemplateFor, getBuiltinTemplate, listBuiltinTemplates } from './template';
 
 describe('built-in templates', () => {
-  it('ships one valid skeleton per scene type', () => {
+  it('ships valid templates for every scene type including the base skeletons', () => {
     const t = listBuiltinTemplates();
-    expect(t.map((x) => x.ref).sort()).toEqual(['commercial@1', 'three-scene@1', 'web-page@1']);
-    expect(t.map((x) => x.meta.type).sort()).toEqual(['3d', 'motion', 'static']);
+    const refs = t.map((x) => x.ref);
+    expect(refs).toEqual(expect.arrayContaining(['commercial@1', 'three-scene@1', 'web-page@1']));
+    expect([...new Set(t.map((x) => x.meta.type))].sort()).toEqual(['3d', 'motion', 'static']);
     for (const x of t) {
       expect(x.rules.length).toBeGreaterThan(0);
       expect(x.checklist.length).toBeGreaterThan(0);

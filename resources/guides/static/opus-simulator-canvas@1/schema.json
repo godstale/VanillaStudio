@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "hide": [],
+  "defaults": {
+    "mode": "scroll",
+    "steps": [],
+    "sections": [
+      "hero",
+      "interactive-parameter-sandbox",
+      "metrics"
+    ],
+    "layout": "stage-with-control-dock",
+    "breakpoints": [
+      "desktop-first"
+    ],
+    "accessibility": [
+      "keyboard-nav",
+      "high-contrast"
+    ]
+  },
+  "fields": []
+}

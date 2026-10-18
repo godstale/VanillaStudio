@@ -1,5 +1,6 @@
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Workspace from '@/pages/Workspace';
+import Storyboard from '@/pages/Storyboard';
 import Scenes from '@/pages/Scenes';
 import Templates from '@/pages/Templates';
 import Playground from '@/pages/Playground';
@@ -31,6 +32,7 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<Navigate to="/workspace" replace />} />
                 <Route element={<AppShell />}>
+                  <Route path="/storyboard" element={<Storyboard />} />
                   <Route path="/workspace" element={<Workspace />} />
                   <Route path="/scenes" element={<Scenes />} />
                   <Route path="/templates" element={<Templates />} />

@@ -74,7 +74,7 @@ export function buildCatalog(builtin: GuideTemplate[], global: RawTemplateFolder
     let result: { template?: GuideTemplate; error?: string };
     if (entry.error || !entry.raw) {
       result = { error: entry.error ?? 'unreadable template' };
-    } else if (entry.raw.meta.extends === null) {
+    } else if (entry.source === 'builtin' || entry.raw.meta.extends === null) {
       result = { template: entry.raw };
     } else if (depth >= MAX_DEPTH) {
       result = { error: `${entry.ref}: extends chain too deep` };

@@ -1,0 +1,3 @@
+- [ ] `imageSmoothingEnabled = false` and `image-rendering: pixelated` applied
+- [ ] All pixel sprites and dithered gradients are generated procedurally in code
+- [ ] Seamless ambient loop driven by `useTime()`

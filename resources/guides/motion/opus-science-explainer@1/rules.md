@@ -1,0 +1,3 @@
+- Compute all curves, vectors, epicycles, and state trajectories mathematically as pure functions of `useTime()`.
+- Color-code variables in the formula callout so they match the exact stroke color of the corresponding geometric element on stage.
+- Use `font-variant-numeric: tabular-nums` for all live parameter readouts.

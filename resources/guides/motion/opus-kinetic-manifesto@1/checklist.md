@@ -1,0 +1,3 @@
+- [ ] Serif + Sans contrast is clearly established via DESIGN.md tokens
+- [ ] Every phrase reveal uses mask-line-rise, orbital path, or beat-pulse
+- [ ] Maximum 6-7 focal words per beat

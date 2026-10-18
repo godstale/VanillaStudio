@@ -1,0 +1,2 @@
+- Pair a persistent SVG/Canvas data visualization stage with step-by-step narrative cards so each step smoothly interpolates the chart axes, scale factor, or highlighted data series.
+- Advance steps only via user keyboard/click input (D-032) and allow hovering/clicking data points on the current step for detail tooltips.

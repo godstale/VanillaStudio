@@ -1,0 +1,3 @@
+- [ ] Diagram geometry is mathematically derived from `useTime()`
+- [ ] Formula terms and diagram strokes share matching semantic/accent colors
+- [ ] Axes and live counters use tabular monospace numbers

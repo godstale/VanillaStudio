@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "hide": [],
+  "defaults": {
+    "duration": {
+      "seconds": 5
+    },
+    "creativeMode": [
+      "kinetic-type",
+      "one-shape-ui-morph"
+    ],
+    "structure": "continuous",
+    "adStructure": "beat-grid-120bpm",
+    "brandVoice": [
+      "bold",
+      "playful",
+      "editorial"
+    ],
+    "visualStyle": {
+      "medium": "Swiss grid graphic poster with oversized cropped typography and vector badges",
+      "lighting": "Flat high-contrast duotone/tritone graphic flood with subtle film grain",
+      "typography": "Ultra-bold condensed/grotesque display + crisp pill metadata tags",
+      "density": "Poster hierarchy: 1 giant graphic motif + 1 headline + corner metadata",
+      "cameraFeeling": "Locked poster frame with internal kinetic layout shifts",
+      "mood": "Iconic festival poster / Spotify Wrapped graphic energy"
+    },
+    "motionVocabulary": {
+      "typography": [
+        "mask-line-rise",
+        "variable-weight-beat-pulse"
+      ],
+      "object": [
+        "edge-staggered-liquid-pill",
+        "spring-pop"
+      ],
+      "camera": [
+        "push-in"
+      ],
+      "material": [
+        "grain-overlay",
+        "iridescent-conic-halo"
+      ],
+      "transition": [
+        "color-flood-contract",
+        "morph"
+      ]
+    },
+    "beats": [
+      {
+        "id": "beat-1",
+        "start": 0,
+        "end": 2,
+        "role": "poster-impact",
+        "copy": "SOUND OF 2026",
+        "visual": "Oversized display title interlocks with expanding liquid pill graphic frame",
+        "motion": [
+          "mask-line-rise",
+          "edge-staggered-liquid-pill"
+        ],
+        "camera": "push-in",
+        "transitionOut": "color-flood-contract",
+        "notes": "Every frame must stand alone as a print-ready poster"
+      },
+      {
+        "id": "beat-2",
+        "start": 2,
+        "end": 5,
+        "role": "poster-hold-loop",
+        "copy": "CURATED BY CODE",
+        "visual": "Corner index badges and geometric motif pulse in a continuous loop ready for thumbnail capture",
+        "motion": [
+          "variable-weight-beat-pulse",
+          "iridescent-conic-halo"
+        ],
+        "camera": "push-in",
+        "transitionOut": "morph",
+        "notes": "Maintain full poster composition readability at all timestamps"
+      }
+    ],
+    "endCard": {
+      "holdSeconds": 1.2,
+      "elements": [
+        "Full poster composition",
+        "Corner edition stamp"
+      ]
+    },
+    "constraints": {
+      "avoid": [
+        "Empty white frames during transitions"
+      ],
+      "noUnspecifiedElements": true
+    }
+  },
+  "fields": []
+}

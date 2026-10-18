@@ -17,7 +17,7 @@ const folder = (id: string, ver: number, over: { extends?: string | null; type?:
 describe('template catalog', () => {
   it('contains the built-ins when there are no user templates', () => {
     const c = buildCatalog(builtin);
-    expect(c.usable().map((e) => e.ref).sort()).toEqual(['commercial@1', 'three-scene@1', 'web-page@1']);
+    expect(c.usable().map((e) => e.ref)).toEqual(expect.arrayContaining(['commercial@1', 'three-scene@1', 'web-page@1']));
     expect(c.get('commercial@1')?.source).toBe('builtin');
     expect(c.get('missing@1')).toBeNull();
   });

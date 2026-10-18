@@ -330,3 +330,22 @@ Ran lint. See lint-report.md for details.
 
 ## [2026-10-17] update | 신 화면 계약 검사 제거·플레이그라운드 시퀀스 단위 개편
 - 신 화면 본문의 계약 검사(CheckPanel) 섹션 삭제(인스펙터 미리보기 탭은 유지). 플레이그라운드는 시퀀스 단위 등록 1카드(시퀀스 순서대로 신 썸네일)+재생은 우하단 플로팅 전용으로 개편, 큰 인라인 재생기 삭제. 검증: lint·typecheck·vitest 154파일 1150테스트 통과.
+
+## [2026-10-18] decision | D-035 Opus 5.5 아카이브 분해·템플릿화 및 4대 매체 의도 추천 엔진 구현
+- `yihui-dev/awesome-opus5-5-videos` 분석 반영: 내장 가이드 템플릿 12종(`opus-*@1`) + 분해형 세부 프리셋 15종(신/비트 구조·타이포그래피·모션 효과·3D 설정, `opus-catalog.json`) + 쇼케이스 레시피 22종 + WCAG AA 검증 컬러 팔레트 8종(`opus-*`) + 용어집 기법 20종 추가. 모든 항목에 미리보기 이미지(`previewUrl`)와 실시간 동작 확인 링크(`actionUrl`) 포함. 4대 매체 의도(`web`·`image`·`slide`·`motion`) 로컬 추천 엔진(`recommend.ts`) 및 `NewSceneDialog`·`SceneInspector`·`/templates` 연동 완료. → [[research-2026-10-18-awesome-opus55-videos]], [[decisions]]
+
+## [2026-10-18] lint | Wiki health check
+- 69 pages, orphans 0, broken links 0. See: wiki/lint-report.md
+
+## [2026-10-18] decision | D-036 워크스페이스 비파괴 초기화 및 AI 에이전트 연동 브리지 구현
+- 시작 시 미초기화 워크스페이스 상태 자동 정리 후 온보딩 표시. 빈 폴더·비어 있지 않은 폴더 모두 비파괴 초기화(`AGENTS.md`·`CLAUDE.md` 마커 병합, `VANILLA_GUIDE.md`·`WORK_ORDER.md`·`.vanilla/work-order.json`·`.vanilla/resources/`·`scripts/vanilla-agent.mjs` 생성). 스튜디오 변경 내역과 코멘트를 `WORK_ORDER.md`로 통합 기록하고 `pnpm vanilla` CLI 브리지로 에이전트 탐색·스캐폴딩·동기화·처리 완료 연동. → [[decisions]], [[ui-agent-centric]]
+
+## [2026-10-18] lint | Wiki health check
+- 69 pages, orphans 0, broken links 0. See: wiki/lint-report.md
+
+## [2026-10-18] decision | D-037 스토리보드 & 3-문서 Material-First 워크플로 구현
+- Storyboard(/storyboard) 최상단 메뉴 + storyboard.json/01-brief/02-design-flow/03-visual-direction/data 재료 계약(zod·canonical), 코멘트·작업지시서 원인 계층(layer)+taxonomyTags 및 WORK_ORDER 역추적 체크리스트, CLI storyboard/init-storyboard/taxonomy, 5단계 에이전트 프로세스, 텍소노미 7종 용어집 등록. 기본 진입은 /workspace 유지. → [[decisions]]
+
+## [2026-10-18] ui | 작업 지시서 온보딩 개편(필수·고급·에이전트 시작 대기)
+- 타이틀·매체 의도·핵심 한 줄을 필수 입력으로, 목적·포함·제외는 고급(접기) 항목으로. brief.title 스키마 추가(구 파일은 기본값 ''으로 호환), 01-brief·WORK_ORDER에 타이틀 기록.
+- 저장 후에도 온보딩 화면을 유지하고 3초 간격으로 에이전트 시작 신호(단계 전진·문서/재료 갱신·sequence.json·scenes/)를 감시, 신호 때 스토리보드 보드로 전환. 시작 전 재편집·재저장 가능(자리 표시자 문서는 덮어쓰지 않음).

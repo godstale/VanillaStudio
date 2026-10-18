@@ -97,7 +97,9 @@ fn slug(name: &str) -> String {
     if s.is_empty() { "vanilla-workspace".into() } else { s }
 }
 
-/// 템플릿을 `{{키}}` 치환하며 복사한다. 심링크 엔트리는 거부한다.
+/// 템플릿을 `{{키}}` 치환하며 비파괴(non-destructive)로 복사한다. 심링크 엔트리는 거부한다.
+/// 기존 사용자 파일(`DESIGN.md`, `CREDITS.md`, `sequence.json`, `WORK_ORDER.md` 등)은 보존하고,
+/// `AGENTS.md`·`CLAUDE.md`는 이미 있으면 마커/참조가 없을 때만 덧붙인다.
 fn copy_template(src: &Path, dst: &Path, vars: &[(&str, &str)]) -> Result<(), String> {
     fs::create_dir_all(dst).map_err(|e| e.to_string())?;
     for entry in fs::read_dir(src).map_err(|e| format!("read '{}': {}", src.display(), e))? {
@@ -106,22 +108,84 @@ fn copy_template(src: &Path, dst: &Path, vars: &[(&str, &str)]) -> Result<(), St
         if ft.is_symlink() {
             return Err(format!("Template contains a symlink: {}", entry.path().display()));
         }
-        let target = dst.join(entry.file_name());
+        let file_name = entry.file_name();
+        let name_str = file_name.to_string_lossy();
+        let target = dst.join(&file_name);
         if ft.is_dir() {
             copy_template(&entry.path(), &target, vars)?;
             continue;
         }
         let bytes = fs::read(entry.path()).map_err(|e| e.to_string())?;
-        let out = match String::from_utf8(bytes) {
+        let rendered_str = match String::from_utf8(bytes) {
             Ok(mut text) => {
                 for (k, v) in vars {
                     text = text.replace(&format!("{{{{{k}}}}}"), v);
                 }
-                text.into_bytes()
+                Ok(text)
             }
-            Err(e) => e.into_bytes(),
+            Err(e) => Err(e.into_bytes()),
         };
+
+        if target.exists() {
+            if name_str == "AGENTS.md" {
+                if let (Ok(existing), Ok(rendered)) = (fs::read_to_string(&target), &rendered_str) {
+                    if !existing.contains("<!-- vanilla:begin:workspace -->") {
+                        let merged = format!("{}\n\n{}", existing.trim_end(), rendered);
+                        fs::write(&target, merged).map_err(|e| e.to_string())?;
+                    }
+                }
+                continue;
+            }
+            if name_str == "CLAUDE.md" {
+                if let Ok(existing) = fs::read_to_string(&target) {
+                    if !existing.contains("@AGENTS.md") {
+                        let merged = format!("{}\n@AGENTS.md\n", existing.trim_end());
+                        fs::write(&target, merged).map_err(|e| e.to_string())?;
+                    }
+                }
+                continue;
+            }
+            if name_str != "VANILLA_GUIDE.md" && !name_str.ends_with(".mjs") && !name_str.ends_with(".d.mts") {
+                // 기존 사용자 파일(DESIGN.md, WORK_ORDER.md, sequence.json, package.json 등)은 덮어쓰지 않고 보존한다.
+                continue;
+            }
+        }
+
+        let out = match rendered_str {
+            Ok(text) => text.into_bytes(),
+            Err(raw) => raw,
+        };
+        if fs::read(&target).ok().as_deref() == Some(out.as_slice()) {
+            continue;
+        }
         fs::write(&target, out).map_err(|e| e.to_string())?;
+    }
+    Ok(())
+}
+
+fn copy_dir_no_symlinks(src: &Path, dst: &Path) -> Result<(), String> {
+    fs::create_dir_all(dst).map_err(|e| e.to_string())?;
+    for entry in fs::read_dir(src).map_err(|e| e.to_string())? {
+        let entry = entry.map_err(|e| e.to_string())?;
+        let ft = entry.file_type().map_err(|e| e.to_string())?;
+        if ft.is_symlink() {
+            return Err(format!("Resource contains a symlink: {}", entry.path().display()));
+        }
+        let name = entry.file_name();
+        if ft.is_dir() {
+            if name == "node_modules" {
+                continue;
+            }
+            copy_dir_no_symlinks(&entry.path(), &dst.join(&name))?;
+        } else {
+            let target = dst.join(&name);
+            if let (Ok(src_bytes), Ok(dst_bytes)) = (fs::read(entry.path()), fs::read(&target)) {
+                if src_bytes == dst_bytes {
+                    continue;
+                }
+            }
+            fs::copy(entry.path(), target).map_err(|e| e.to_string())?;
+        }
     }
     Ok(())
 }
@@ -132,58 +196,69 @@ fn install_runtime(runtime: &Path, workspace: &Path) -> Result<(), String> {
     if !runtime.is_dir() {
         return Err(format!("Runtime not found: {}", runtime.display()));
     }
-    fn copy(src: &Path, dst: &Path) -> Result<(), String> {
-        fs::create_dir_all(dst).map_err(|e| e.to_string())?;
-        for entry in fs::read_dir(src).map_err(|e| e.to_string())? {
-            let entry = entry.map_err(|e| e.to_string())?;
-            let ft = entry.file_type().map_err(|e| e.to_string())?;
-            if ft.is_symlink() {
-                return Err(format!("Runtime contains a symlink: {}", entry.path().display()));
-            }
-            let name = entry.file_name();
-            if ft.is_dir() {
-                if name == "node_modules" {
-                    continue;
-                }
-                copy(&entry.path(), &dst.join(&name))?;
-            } else {
-                fs::copy(entry.path(), dst.join(&name)).map_err(|e| e.to_string())?;
-            }
+    copy_dir_no_symlinks(runtime, &workspace.join("vanilla").join("runtime"))
+}
+
+/// 에이전트 CLI(`pnpm vanilla ...`)가 오프라인에서도 템플릿·Opus 프리셋·팔레트를 조회하고 스캐폴딩할 수 있도록
+/// `.vanilla/resources/{guides,opus,palettes}`에 내장 리소스를 복사한다.
+fn install_agent_catalog_resources(resources_root: Option<&Path>, workspace: &Path) -> Result<(), String> {
+    let Some(res_root) = resources_root else { return Ok(()) };
+    let dst_root = workspace.join(".vanilla").join("resources");
+    for sub in ["guides", "opus", "palettes"] {
+        let src = res_root.join(sub);
+        if src.is_dir() {
+            copy_dir_no_symlinks(&src, &dst_root.join(sub))?;
         }
-        Ok(())
     }
-    copy(runtime, &workspace.join("vanilla").join("runtime"))
+    Ok(())
 }
 
 fn create(dir: &Path, name: &str, canvas: Canvas, template: &Path, runtime: &Path) -> Result<String, String> {
     if name.trim().is_empty() {
         return Err("Workspace name must not be empty".into());
     }
-    if inspect(dir)? != FolderKind::Empty {
-        return Err("Folder is not empty; refusing to create a workspace here".into());
+    if matches!(inspect(dir)?, FolderKind::Workspace { .. }) {
+        return Err("Folder is already a Vanilla Studio workspace".into());
     }
+    if !template.is_dir() {
+        return Err(format!("Template not found: {}", template.display()));
+    }
+    if !runtime.is_dir() {
+        return Err(format!("Runtime not found: {}", runtime.display()));
+    }
+    let pre_existing: std::collections::HashSet<std::ffi::OsString> = fs::read_dir(dir)
+        .map_err(|e| e.to_string())?
+        .filter_map(Result::ok)
+        .map(|e| e.file_name())
+        .collect();
+
     let id = new_workspace_id();
     let name = name.trim();
     let build = || -> Result<(), String> {
         copy_template(template, dir, &[("workspaceName", name), ("workspaceId", &id), ("workspaceSlug", &slug(name))])?;
+        fs::create_dir_all(dir.join("scenes")).map_err(|e| e.to_string())?;
+        fs::create_dir_all(dir.join(".vanilla")).map_err(|e| e.to_string())?;
         install_runtime(runtime, dir)?;
+        install_agent_catalog_resources(template.parent(), dir)?;
         let file = WorkspaceFile { version: 1, workspace_id: id.clone(), name: name.to_string(), canvas };
         let mut json = serde_json::to_string_pretty(&file).map_err(|e| e.to_string())?;
         json.push('\n');
         fs::write(dir.join(WORKSPACE_FILE), json).map_err(|e| e.to_string())
     };
     if let Err(e) = build() {
-        // 폴더는 비어 있었으므로(.git 제외) 만들다 만 파일을 모두 치워 다시 시도할 수 있게 한다.
-        clear_except_git(dir);
+        // 기존에 있던 사용자 파일은 건드리지 않고, 방금 생성하려던 엔트리만 정리한다.
+        clear_newly_created(dir, &pre_existing);
         return Err(e);
     }
+    let plain = super::process_commands::plain_path(&dir.canonicalize().unwrap_or_else(|_| dir.to_path_buf()));
+    set_active_workspace_internal(Some(plain.to_string_lossy().to_string()));
     Ok(id)
 }
 
-fn clear_except_git(dir: &Path) {
+fn clear_newly_created(dir: &Path, pre_existing: &std::collections::HashSet<std::ffi::OsString>) {
     let Ok(rd) = fs::read_dir(dir) else { return };
     for entry in rd.filter_map(Result::ok) {
-        if entry.file_name() == ".git" {
+        if entry.file_name() == ".git" || pre_existing.contains(&entry.file_name()) {
             continue;
         }
         let p = entry.path();
@@ -204,14 +279,22 @@ pub fn create_workspace<R: Runtime>(app: AppHandle<R>, path: String, name: Strin
 }
 
 /// 유효한 워크스페이스 폴더를 열고 파일 명령의 활성 스코프로 설정한다.
+/// 누락된 에이전트 지침·가이드·작업지시서·카탈로그 파일이 있으면 비파괴로 보충한다.
 #[tauri::command]
-pub fn open_workspace(path: String) -> Result<FolderKind, String> {
+pub fn open_workspace<R: Runtime>(app: AppHandle<R>, path: String) -> Result<FolderKind, String> {
     let canonical = Path::new(&path).canonicalize().map_err(|e| e.to_string())?;
-    let kind = inspect(&canonical)?;
-    if !matches!(kind, FolderKind::Workspace { .. }) {
+    let plain = super::process_commands::plain_path(&canonical);
+    let kind = inspect(&plain)?;
+    let FolderKind::Workspace { ref workspace_id, ref name } = kind else {
         return Err("Folder is not a Vanilla Studio workspace".into());
+    };
+    if let Ok(template) = resolve_resource_dir(&app, "workspace-template") {
+        let _ = copy_template(&template, &plain, &[("workspaceName", name), ("workspaceId", workspace_id), ("workspaceSlug", &slug(name))]);
+        let _ = fs::create_dir_all(plain.join("scenes"));
+        let _ = fs::create_dir_all(plain.join(".vanilla"));
+        let _ = install_agent_catalog_resources(template.parent(), &plain);
     }
-    set_active_workspace_internal(Some(canonical.to_string_lossy().to_string()));
+    set_active_workspace_internal(Some(plain.to_string_lossy().to_string()));
     Ok(kind)
 }
 
@@ -269,9 +352,25 @@ mod tests {
         assert!(!agents.contains("{{"));
         let pkg = fs::read_to_string(d.path().join("package.json")).unwrap();
         assert!(pkg.contains("\"name\": \"my-reel\""));
-        for f in ["CLAUDE.md", "DESIGN.md", "vite.config.ts", ".gitignore", "CREDITS.md", "workspace.json"] {
+        for f in [
+            "CLAUDE.md",
+            "DESIGN.md",
+            "VANILLA_GUIDE.md",
+            "WORK_ORDER.md",
+            "sequence.json",
+            ".vanilla/work-order.json",
+            "scripts/vanilla-agent.mjs",
+            "vite.config.ts",
+            ".gitignore",
+            "CREDITS.md",
+            "workspace.json",
+        ] {
             assert!(d.path().join(f).is_file(), "{f}");
         }
+        assert!(d.path().join("scenes").is_dir(), "scenes/");
+        assert!(d.path().join(".vanilla/resources/guides").is_dir(), ".vanilla/resources/guides");
+        assert!(d.path().join(".vanilla/resources/opus/opus-catalog.json").is_file(), ".vanilla/resources/opus/opus-catalog.json");
+        assert!(d.path().join(".vanilla/resources/palettes").is_dir(), ".vanilla/resources/palettes");
     }
 
     #[test]
@@ -298,15 +397,23 @@ mod tests {
     }
 
     #[test]
-    fn refuses_nonempty_and_existing_workspace() {
+    fn initializes_nonempty_folder_preserving_user_files_and_refuses_existing_workspace() {
         let d = tempfile::tempdir().unwrap();
-        fs::write(d.path().join("a.txt"), "x").unwrap();
+        fs::write(d.path().join("a.txt"), "keep-me").unwrap();
+        fs::write(d.path().join("AGENTS.md"), "# Existing User Agent Notes").unwrap();
         assert_eq!(inspect(d.path()).unwrap(), FolderKind::Other);
-        assert!(create(d.path(), "n", canvas(), &tpl(), &rt()).is_err());
 
-        let w = tempfile::tempdir().unwrap();
-        create(w.path(), "n", canvas(), &tpl(), &rt()).unwrap();
-        assert!(create(w.path(), "n", canvas(), &tpl(), &rt()).is_err());
+        let id = create(d.path(), "n", canvas(), &tpl(), &rt()).unwrap();
+        assert_eq!(fs::read_to_string(d.path().join("a.txt")).unwrap(), "keep-me");
+        let agents = fs::read_to_string(d.path().join("AGENTS.md")).unwrap();
+        assert!(agents.contains("# Existing User Agent Notes"));
+        assert!(agents.contains(&format!("workspaceId: {id}")));
+        assert!(d.path().join("VANILLA_GUIDE.md").is_file());
+        assert!(d.path().join("WORK_ORDER.md").is_file());
+        assert!(d.path().join("sequence.json").is_file());
+
+        // 이미 초기화된 워크스페이스에 다시 create를 호출하면 거부한다
+        assert!(create(d.path(), "n", canvas(), &tpl(), &rt()).is_err());
     }
 
     #[test]

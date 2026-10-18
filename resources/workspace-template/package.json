@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "check:scene": "node scripts/check-scene.mjs"
+    "check:scene": "node scripts/check-scene.mjs",
+    "vanilla": "node scripts/vanilla-agent.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^9.8.1",

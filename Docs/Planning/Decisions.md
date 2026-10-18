@@ -228,3 +228,36 @@
   - 코멘트 계약: `scenes/<slug>/comments.json`(zod `src/lib/scene/comments.ts`, `{id, createdAt, body, status, history[{at, action}]}`) — 시간·처리 내역과 함께 남겨 에이전트가 인식한다.
 - **근거**: D-022(앱은 에이전트를 조종하지 않는다)의 연장. 앱 내 실행 버튼·도크를 걷어내고 파일(코멘트·가이드) 기반 협업으로 일원화한다.
 - **영향**: `Technical-Design.md` §1(셸 구성)·§8.2(코멘트 파일) 개정. 후속(미포함): 신 `AGENTS.md`에 `comments.json` 읽기 규칙 명시, 시작 신 지정 외 되쓰기 화이트리스트 정리.
+
+## D-035 Opus 5.5 모션 그래픽 아카이브 분해·템플릿화 및 4대 매체 의도 추천 — Accepted (2026-10-18)
+
+- **맥락**: 사용자 요청(2026-10-18) — `yihui-dev/awesome-opus5-5-videos`(MIT, 703개 예제)를 분석해 Vanilla Studio의 내장 템플릿·용어집·팔레트로 등록하고, 사용자가 웹·이미지·슬라이드·모션그래픽 생성을 요청할 때 가장 어울리는 템플릿과 세부 구성 요소(신/비트 구조·타이포그래피·모션 효과·컬러·3D 설정)를 추천·조합하며 미리보기 이미지와 동작 확인 링크를 제공하도록 리팩토링.
+- **결정**:
+  - **내장 가이드 템플릿 상속(`extends`) 및 12종 특화 템플릿 추가**: `listBuiltinTemplates()`가 내장 간 `extends`를 해석하도록 확장하고, 기본 3종(`commercial@1`, `web-page@1`, `three-scene@1`) 위에 4대 매체 의도(`web`, `image`, `slide`, `motion`)별 특화 템플릿 12종(`opus-ui-morph-loop@1`, `opus-keynote-launch@1`, `opus-kinetic-manifesto@1`, `opus-science-explainer@1`, `opus-kinetic-poster@1`, `opus-pixel-illustration@1`, `opus-interactive-hero@1`, `opus-simulator-canvas@1`, `opus-narrative-deck@1`, `opus-data-explainer-deck@1`, `opus-3d-explorer@1`, `opus-shader-cinematic@1`)을 등록.
+  - **세부 항목별 분해 프리셋(`resources/opus/opus-catalog.json`, `src/lib/guides/opusCatalog.ts`)**: 하나의 시퀀스/신 전체 템플릿뿐 아니라 `scene-beats`(신/비트·스텝 타임라인 구조), `typography-style`(타이포그래피·비주얼 무드), `motion-effects`(모션 어휘·안무 키트), `3d-stage`(3D 구도·PBR/셰이더 재질·카메라), 그리고 WCAG AA 검증을 통과한 8종 Opus 컬러 팔레트(`opus-*`)와 20종 용어집 기법으로 분해해 기존 어떤 신에도 개별 병합(`applyDecomposedPreset`) 가능하게 함.
+  - **미리보기 이미지(`previewUrl`)와 동작 확인 링크(`actionUrl`)**: 템플릿 메타데이터(`templateMetaSchema`), 용어집(`termSchema`), 팔레트(`paletteFileSchema`), 레시피·세부 프리셋에 `previewUrl`(`https://media.skillry.dev/...`)과 `actionUrl`(`https://skillry.dev/...` 또는 원본 포스트)을 포함하고 Tauri CSP `img-src`에 허용 도메인을 추가.
+  - **로컬 매체 의도·프롬프트 추천 엔진(`src/lib/guides/recommend.ts`)**: 외부 LLM 호출 없이 한·영 키워드와 4대 매체 의도로 최적의 템플릿·세부 프리셋·팔레트를 즉시 추천하며, `NewSceneDialog`, `SceneInspector`, `/templates` 갤러리에서 연동. 생성 시 선택된 기법의 `implementationHint`와 템플릿의 `banned` 금지 패턴을 신 `AGENTS.md`에 자동 주입해 코딩 에이전트와 협업.
+- **근거**: D-006(생성형 이미지 AI 배제 — `ai-image` 카테고리 제외), D-022(에이전트 중립·파일 기반 지침 전달), D-028·D-031(동일 템플릿 스키마 확장 규칙) 준수.
+
+## D-036 워크스페이스 비파괴 초기화 및 AI 에이전트 브리지(`pnpm vanilla` · `WORK_ORDER.md` · `VANILLA_GUIDE.md`) — Accepted (2026-10-18)
+
+- **맥락**: 사용자 요청(2026-10-18) — 첫 실행 시 미초기화/유효하지 않은 워크스페이스 상태를 정리해 작업 폴더 선택 안내를 노출하고, 사용자가 선택한 폴더가 비어 있든 기존 파일이 있든 에러 대신 AI 에이전트 작업 환경을 비파괴적으로 초기화해야 한다. 또한 디자인·화면 생성은 AI 에이전트가 주도(인터뷰 → 러프 드래프트 → 정밀 다듬기)하고 Vanilla Studio는 결과물 검토·세부 수정 도구로서 변경 내역과 코멘트를 에이전트에 전달하고, 에이전트가 내장 템플릿·기법·참조 이미지를 탐색할 수 있는 연동 통로를 제공해야 한다.
+- **결정**:
+  - **시작 시 워크스페이스 검증 및 비파괴 초기화**: `WorkspaceContext` 복원 시 `inspect_workspace_folder`로 실제 유효성을 검사해 미초기화 폴더면 온보딩을 표시한다. 폴더 선택 시 빈 폴더(`Empty`)와 비어 있지 않은 일반 폴더(`Other`) 모두 `create_workspace`를 허용하며, 기존 사용자 파일은 보존하고 `AGENTS.md`·`CLAUDE.md`는 마커 구간(`<!-- vanilla:begin:workspace -->`)만 병합한다.
+  - **초기화 4대 산출물**:
+    1. 에이전트 지침(`AGENTS.md`, `CLAUDE.md`): 3단계 워크플로(Phase 1 사용자 인터뷰 & 템플릿 탐색 → Phase 2 드래프트 우선 스캐폴딩 → Phase 3 `WORK_ORDER.md` 기반 반복 정밀 수정) 정의.
+    2. 바닐라 스튜디오 동작·구조·참조 가이드(`VANILLA_GUIDE.md` + `.vanilla/resources/{guides,opus,palettes}`): `sequence.json`·`scene.json`·`param.*` 역할과 15종 내장 템플릿·12종 세부 프리셋·14종 팔레트의 미리보기 이미지(`previewUrl`)·라이브 데모(`actionUrl`) 수록.
+    3. 통합 작업 지시서(`WORK_ORDER.md` + `.vanilla/work-order.json` + `scenes/<slug>/comments.json`): 바닐라 스튜디오 UI에서 발생한 시퀀스/신/가이드/파라미터/디자인 팔레트 변경(`recordStudioChange`)과 신별 사용자 코멘트를 자동 집계.
+    4. 에이전트 연동 CLI 브리지(`scripts/vanilla-agent.mjs`, `pnpm vanilla <cmd>`): 외부 의존성 없는 Node 내장 스크립트로 `status`, `templates`, `inspect-template`, `scaffold-scene`, `sync-guides`, `work-order`, `resolve` 명령 제공.
+- **근거**: D-022(파일 기반 에이전트 중립 연동), D-023(파일이 진실 공급원), D-034(코멘트 계약) 확장.
+
+## D-037 스토리보드 & 3-문서 Material-First 워크플로 — Accepted (2026-10-18)
+
+- **맥락**: `Docs/QualityControl/claude-code-website-guide.md`의 핵심 통찰("AI 티는 대충 던진 지시가 만든 평균의 디자인이며, 고품질 결과물은 3대 문서 분리 → 핵심 재료 선행 구축 → 작은 단위 상향식 조립 → 원인 문서 역추적 수정에서 나온다")을 웹·이미지·슬라이드·모션 전반에 이식 (Refactor Plan `Docs/Planning/Storyboard-Quality-Refactor-Plan.md` v1.0).
+- **결정**:
+  - 메뉴: Storyboard(`/storyboard`)를 최상단(Storyboard → Sequence → Scenes → Templates → Playground → Settings)에 배치. 워크스페이스 진입 기본 화면은 기존 `/workspace` 유지(복귀 호환).
+  - 파일: 워크스페이스 루트 `storyboard/`에 `storyboard.json`(zod·canonical 진실 공급원) + `01-brief.md` + `02-design-flow.md` + `03-visual-direction.md` + `data/{content,items}.json` 정규화.
+  - 프로토콜: 코멘트·작업 지시서에 원인 계층(`auto|brief|design-flow|visual-direction|materials|scene-polish`) + `taxonomyTags` 도입(하위 호환 기본값). `renderWorkOrderMarkdown`이 항목마다 역추적 체크리스트를 생성. 화면 코드를 즉흥 수정하지 않고 상위 문서·데이터부터 갱신 후 재조립.
+  - 에이전트: 루트 `AGENTS.md`를 5단계(Stage 0 세계관·의도 → Stage 1 글 3개 → Stage 2 핵심 재료 → Stage 3 상향식 조립 → Stage 4 원인 문서 역추적 수정)로 개편. CLI에 `storyboard`·`init-storyboard`·`taxonomy` 추가. 스토리보드 텍소노미 7종(`line-grid-2to1`, `hierarchy-driven-hero`, `continuity-filter-grid`, `shared-layout-transition`, `horizontal-scroll-panorama`, `time-blend-4stage`, `invariant-variant-matrix`)을 내장 용어집에 등록.
+- **근거**: D-023(파일이 진실 공급원), D-022(에이전트 중립 — CLI·파일 기반 전달만), D-006(생성형 AI 배제), D-028(템플릿 동일 스키마).
+- **영향**: `Technical-Design.md` §1(셸)·§4(시퀀스/신 계약 확장)·§8(스토리보드 파일 계약) 후속 개정 대상.

@@ -23,7 +23,7 @@ describe('built-in template content', () => {
   });
 
   it('static glossary covers the fields the static scene schema uses', () => {
-    expect(categories(byType('static').glossary).sort()).toEqual(['accessibility', 'breakpoints', 'enter', 'layout', 'sections']);
+    expect(categories(byType('static').glossary).sort()).toEqual(['accessibility', 'breakpoints', 'enter', 'layout', 'sections', 'theme', 'transition']);
     expect(termsIn(byType('static').glossary, 'enter').length).toBeGreaterThan(3);
   });
 

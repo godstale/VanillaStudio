@@ -1,0 +1,3 @@
+- [ ] Every slider, toggle, and preset button immediately updates the live simulation
+- [ ] Control dock uses tabular-nums for live numeric readouts
+- [ ] Fits cleanly in the viewport without unintended scrollbars

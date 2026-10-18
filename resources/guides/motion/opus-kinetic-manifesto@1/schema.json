@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "hide": [],
+  "defaults": {
+    "duration": {
+      "seconds": 8
+    },
+    "creativeMode": [
+      "kinetic-spoken-manifesto",
+      "kinetic-type"
+    ],
+    "structure": "hybrid",
+    "adStructure": "hook-benefit-cta",
+    "brandVoice": [
+      "editorial",
+      "bold",
+      "poetic"
+    ],
+    "visualStyle": {
+      "medium": "Editorial kinetic stage with fine architectural hairlines and SVG text paths",
+      "lighting": "High-contrast parchment or obsidian spotlight with subtle vignette",
+      "typography": "Paired Instrument Serif Italic (accent words) + Neo-Grotesque Display 800",
+      "density": "3-6 words per beat, extreme scale contrast (10:1 hero vs micro-index)",
+      "cameraFeeling": "Whip-pan and 90-degree architectural stage rotation on phrase shifts",
+      "mood": "Urgent, literary, museum-grade editorial impact"
+    },
+    "motionVocabulary": {
+      "typography": [
+        "mask-line-rise",
+        "variable-weight-beat-pulse",
+        "orbital-trajectory-baseline",
+        "word-stagger"
+      ],
+      "object": [
+        "spring-pop"
+      ],
+      "camera": [
+        "push-in",
+        "pan-left-right"
+      ],
+      "material": [
+        "grain-overlay",
+        "neon-glow"
+      ],
+      "transition": [
+        "color-flood-contract",
+        "whip-pan"
+      ]
+    },
+    "beats": [
+      {
+        "id": "beat-1",
+        "start": 0,
+        "end": 2.5,
+        "role": "thesis",
+        "copy": "BUILD THE FLOOR.",
+        "visual": "Massive stacked grotesque words rise from baseline masks with micro index [01] in corner",
+        "motion": [
+          "mask-line-rise",
+          "variable-weight-beat-pulse"
+        ],
+        "camera": "push-in",
+        "transitionOut": "whip-pan",
+        "notes": "Accent word pulses weight 300 -> 900 on beat"
+      },
+      {
+        "id": "beat-2",
+        "start": 2.5,
+        "end": 5.5,
+        "role": "orbital-turn",
+        "copy": "ESCAPE THE GRAVITY OF TEMPLATES",
+        "visual": "Italic serif phrase travels along elliptical SVG arc around a central typographic monolith",
+        "motion": [
+          "orbital-trajectory-baseline",
+          "word-stagger"
+        ],
+        "camera": "pan-left-right",
+        "transitionOut": "color-flood-contract",
+        "notes": "Architectural crosshair lines frame the arc"
+      },
+      {
+        "id": "beat-3",
+        "start": 5.5,
+        "end": 8,
+        "role": "resolution",
+        "copy": "WRITE MOTION IN CODE.",
+        "visual": "Full-bleed color flood contracts into crisp editorial lockup with issue timestamp",
+        "motion": [
+          "color-flood-contract",
+          "mask-line-rise"
+        ],
+        "camera": "push-in",
+        "transitionOut": "hard-cut",
+        "notes": "Hold final statement >= 0.9s"
+      }
+    ],
+    "endCard": {
+      "holdSeconds": 0.9,
+      "elements": [
+        "Editorial manifesto lockup",
+        "Issue index"
+      ]
+    },
+    "constraints": {
+      "avoid": [
+        "Plain subtitle fade-ins",
+        "Cluttered icons"
+      ],
+      "noUnspecifiedElements": true
+    }
+  },
+  "fields": []
+}

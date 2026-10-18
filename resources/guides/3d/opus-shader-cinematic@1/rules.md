@@ -1,0 +1,2 @@
+- Feed `useTime()` directly into `ShaderMaterial.uniforms.uTime.value` before `renderer.render(scene, camera)` so scrubbing to any timestamp produces the exact same shader pattern.
+- Map shader color uniforms to the active `DESIGN.md` palette tokens via `useDesign()`.

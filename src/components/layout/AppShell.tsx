@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useEffect } from 'react';
-import { Boxes, FlaskConical, LayoutTemplate, Settings, Workflow, type LucideIcon } from 'lucide-react';
+import { Boxes, ClipboardList, FlaskConical, LayoutTemplate, Settings, Workflow, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { Switcher } from '@/components/workspace/Switcher';
@@ -13,8 +13,9 @@ interface NavItem {
 }
 
 // 화면 추가: 항목 하나 + App.tsx 라우트 하나(Docs/Extension-Guide.md).
-// 시퀀스(기존 워크스페이스 캔버스) · 신 · 템플릿 · 플레이그라운드. 설정은 가장 하단에 둔다.
+// 제작 흐름 순서: 스토리보드(기획·재료·조립) → 시퀀스(기존 워크스페이스 캔버스) → 신 → 템플릿 → 플레이그라운드. 설정은 가장 하단에 둔다.
 const NAV_ITEMS: NavItem[] = [
+  { to: '/storyboard', icon: ClipboardList, labelKey: 'shell.nav.storyboard' },
   { to: '/workspace', icon: Workflow, labelKey: 'shell.nav.sequence' },
   { to: '/scenes', icon: Boxes, labelKey: 'shell.nav.scenes' },
   { to: '/templates', icon: LayoutTemplate, labelKey: 'shell.nav.templates' },

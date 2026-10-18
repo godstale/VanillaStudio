@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "id": "opus-cobalt-cyan",
+  "name": "Opus Cobalt Cyan",
+  "tags": [
+    "light",
+    "opus",
+    "editorial",
+    "swiss",
+    "tech"
+  ],
+  "scheme": "light",
+  "colors": {
+    "canvas": "#EDE6D5",
+    "ink": "#07080A",
+    "primary": "#1B3ED2",
+    "accent": "#0E7490"
+  },
+  "source": "builtin",
+  "license": "MIT",
+  "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-402193/original.9c664f011f.webp",
+  "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-402193"
+}

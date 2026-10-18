@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "hide": [],
+  "defaults": {
+    "duration": {
+      "seconds": 10
+    },
+    "creativeMode": [
+      "infographic-reveal",
+      "kinetic-type"
+    ],
+    "structure": "multi-shot",
+    "adStructure": "problem-solution-reveal",
+    "brandVoice": [
+      "educational",
+      "precise",
+      "clear"
+    ],
+    "visualStyle": {
+      "medium": "Precision SVG/Canvas mathematical stage with coordinate grid and vector arrows",
+      "lighting": "Deep obsidian slate with luminous cyan, gold, and coral signal traces",
+      "typography": "Clean technical sans + monospace formula/parameter readouts (tabular-nums)",
+      "density": "1 active equation + 1 synchronized geometric/wave diagram",
+      "cameraFeeling": "Smooth orthographic pan from geometric circle to time-domain graph",
+      "mood": "3Blue1Brown clarity, intellectual discovery"
+    },
+    "motionVocabulary": {
+      "typography": [
+        "counter-roll",
+        "mask-line-rise"
+      ],
+      "object": [
+        "bar-grow",
+        "line-draw",
+        "closed-form-spring-sum"
+      ],
+      "camera": [
+        "pan-left-right",
+        "push-in"
+      ],
+      "material": [
+        "neon-glow"
+      ],
+      "transition": [
+        "morph",
+        "match-cut"
+      ]
+    },
+    "beats": [
+      {
+        "id": "beat-1",
+        "start": 0,
+        "end": 3,
+        "role": "intuition",
+        "copy": "Every complex signal is a sum of simple circles.",
+        "visual": "Single rotating phasor vector draws a pure sine wave across a dark coordinate grid",
+        "motion": [
+          "line-draw",
+          "counter-roll"
+        ],
+        "camera": "push-in",
+        "transitionOut": "morph",
+        "notes": "Color-code frequency term to match vector radius"
+      },
+      {
+        "id": "beat-2",
+        "start": 3,
+        "end": 7.5,
+        "role": "superposition",
+        "copy": "Add harmonics: N = 1 -> 5 -> 15",
+        "visual": "Epicycle chain attaches tip-to-tail; resulting waveform sharpens into a square wave",
+        "motion": [
+          "closed-form-spring-sum",
+          "line-draw"
+        ],
+        "camera": "pan-left-right",
+        "transitionOut": "match-cut",
+        "notes": "Live harmonic counter increments with tabular-nums"
+      },
+      {
+        "id": "beat-3",
+        "start": 7.5,
+        "end": 10,
+        "role": "synthesis",
+        "copy": "Time Domain <-> Frequency Spectrum",
+        "visual": "Waveform decomposes into vertical frequency spectrum bars with exact amplitude labels",
+        "motion": [
+          "bar-grow",
+          "mask-line-rise"
+        ],
+        "camera": "push-in",
+        "transitionOut": "hard-cut",
+        "notes": "Hold final spectrum summary >= 0.85s"
+      }
+    ],
+    "endCard": {
+      "holdSeconds": 0.9,
+      "elements": [
+        "Formula lockup",
+        "Spectrum summary"
+      ]
+    },
+    "constraints": {
+      "avoid": [
+        "Fake uncomputed curves",
+        "Cluttered legends"
+      ],
+      "noUnspecifiedElements": true
+    }
+  },
+  "fields": []
+}

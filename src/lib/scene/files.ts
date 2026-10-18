@@ -102,6 +102,9 @@ export interface CreateSceneInput {
   language?: 'ko' | 'en';
   /** 해석이 끝난 템플릿(사용자 템플릿 포함). 생략하면 그 타입의 기본 내장 템플릿. */
   template?: GuideTemplate;
+  /** 생성 시 초기 브리프(예: 매체 의도·주제) 또는 초기 사용자 프롬프트. */
+  initialBrief?: Partial<Scene['brief']>;
+  initialUserPrompt?: string;
 }
 
 export async function createScene(root: string, workspace: WorkspaceRef, input: CreateSceneInput): Promise<{ slug: string; scene: Scene }> {
@@ -109,7 +112,16 @@ export async function createScene(root: string, workspace: WorkspaceRef, input: 
   if (template.meta.type !== input.type) throw new Error(`Template ${template.ref} is for ${template.meta.type}, not ${input.type}`);
   const info = await invoke<SceneInfo>('create_scene', { workspaceRoot: root, name: input.name });
   try {
-    const scene = applyTemplateDefaults(newScene({ id: info.sceneId, name: input.name.trim(), type: input.type, template: template.ref, language: input.language }), template);
+    let scene = applyTemplateDefaults(newScene({ id: info.sceneId, name: input.name.trim(), type: input.type, template: template.ref, language: input.language }), template);
+    if (input.initialBrief || input.initialUserPrompt !== undefined) {
+      scene = parseScene(
+        serializeScene({
+          ...scene,
+          brief: input.initialBrief ? { ...scene.brief, ...input.initialBrief } : scene.brief,
+          userPrompt: input.initialUserPrompt !== undefined ? input.initialUserPrompt : scene.userPrompt,
+        }),
+      );
+    }
     await writeScene(root, info.slug, workspace, scene, () => template);
     return { slug: info.slug, scene };
   } catch (e) {

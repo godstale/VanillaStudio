@@ -1,0 +1,3 @@
+- [ ] Data visualization smoothly interpolates between steps
+- [ ] User can step forward/backward via keyboard or step dock
+- [ ] Numeric axes and callouts use tabular-nums

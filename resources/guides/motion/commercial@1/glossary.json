@@ -1360,6 +1360,433 @@
       },
       "implementationHint": "scale outgoing up and incoming from smaller to 1.",
       "tags": []
+    },
+    {
+      "category": "creativeMode",
+      "id": "one-shape-ui-morph",
+      "label": {
+        "ko": "단일 도형 UI 모핑",
+        "en": "One-Shape UI Morph"
+      },
+      "definition": {
+        "ko": "컷 전환 없이 하나의 컨테이너가 크기·곡률·색상을 바꾸며 여러 UI 상태로 연속 변형됩니다.",
+        "en": "One element continuously morphs its size, radius, and color across 8-12 UI states without cuts."
+      },
+      "implementationHint": "Compute width, height, borderRadius, and backgroundColor from closed-form springs inside useTime(); swap inner UI with a short 80ms blur transition.",
+      "tags": [
+        "opus",
+        "ui",
+        "morph",
+        "dribbble",
+        "spring"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-402193/original.9c664f011f.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-402193",
+      "sourceRef": "awesome-opus5-5-videos#twoclipping-402193"
+    },
+    {
+      "category": "creativeMode",
+      "id": "keynote-continuous-launch",
+      "label": {
+        "ko": "키노트 연속 런칭 필름",
+        "en": "Keynote Continuous Launch"
+      },
+      "definition": {
+        "ko": "페이드나 컷 없이 각 장면이 이전 오브젝트에서 자라나듯 이어지는 애플 키노트풍 런칭 영상.",
+        "en": "Apple-keynote launch film in one continuous take where every scene grows out of the previous object."
+      },
+      "implementationHint": "Never crossfade or cut; flood the frame from an expanding button or wordmark, then contract into the next scene.",
+      "tags": [
+        "opus",
+        "keynote",
+        "launch",
+        "apple",
+        "continuous"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-000267/original.87cf7f8c74.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-000267",
+      "sourceRef": "awesome-opus5-5-videos#twoclipping-000267"
+    },
+    {
+      "category": "creativeMode",
+      "id": "kinetic-spoken-manifesto",
+      "label": {
+        "ko": "키네틱 매니페스토 필드",
+        "en": "Kinetic Spoken-Word Manifesto"
+      },
+      "definition": {
+        "ko": "선언문 문장이 물리적 역학장(궤도·자기장·중력)을 재구성하며 주제를 전달합니다.",
+        "en": "Miniature speech staged inside a typographic field where each line reorganizes the frame geometry."
+      },
+      "implementationHint": "Treat word baselines as trajectories or field plates; drive letterform offsets and field lines deterministically from t.",
+      "tags": [
+        "opus",
+        "kinetic",
+        "manifesto",
+        "typography",
+        "poster"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/gdgtify-929495/original.bf87884126.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/gdgtify-929495",
+      "sourceRef": "awesome-opus5-5-videos#gdgtify-929495"
+    },
+    {
+      "category": "creativeMode",
+      "id": "pixel-grid-procedural",
+      "label": {
+        "ko": "절차적 픽셀 그리드 아트",
+        "en": "Procedural Pixel Grid Art"
+      },
+      "definition": {
+        "ko": "외부 이미지 없이 고정 논리 해상도와 정수 좌표 스냅만으로 선명한 16비트 픽셀 애니메이션을 그립니다.",
+        "en": "Procedural pixel art drawn on a fixed logical grid with integer coordinate snapping and palette indexing."
+      },
+      "implementationHint": "Render to a low-res logical canvas (e.g. 160x90) with imageSmoothingEnabled=false and quantize smooth pose parameters to integer pixel coordinates.",
+      "tags": [
+        "opus",
+        "pixel",
+        "canvas",
+        "illustration",
+        "poster"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/zacxbt-944604/original.1fc21723ff.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/zacxbt-944604",
+      "sourceRef": "awesome-opus5-5-videos#zacxbt-944604"
+    },
+    {
+      "category": "adStructure",
+      "id": "beat-grid-120bpm",
+      "label": {
+        "ko": "120 BPM 비트 그리드 진행",
+        "en": "120 BPM Beat-Grid Progression"
+      },
+      "definition": {
+        "ko": "일정한 BPM(예: 0.5초 간격)마다 정확히 하나의 상태 변화나 타이포 타격이 일어나는 리듬 구조.",
+        "en": "Every state change or typographic hit lands strictly on a constant BPM beat grid (e.g. every 0.5s at 120 BPM)."
+      },
+      "implementationHint": "Quantize beat boundaries to multiples of 60/BPM seconds; trigger spring step-responses on exact beat timestamps.",
+      "tags": [
+        "opus",
+        "beat",
+        "rhythm",
+        "music"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/morse-369333/original.519a9f00ee.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/morse-369333",
+      "sourceRef": "awesome-opus5-5-videos#morse-369333"
+    },
+    {
+      "category": "typography",
+      "id": "mask-line-rise",
+      "label": {
+        "ko": "마스크 라인 라이즈",
+        "en": "Mask-Line Rise"
+      },
+      "definition": {
+        "ko": "문구가 보이지 않는 기준선(마스크) 아래에서 위쪽으로 미끄러져 올라오며 선명하게 드러납니다.",
+        "en": "Text rises cleanly out of an invisible horizontal mask line with spring or expoOut easing."
+      },
+      "implementationHint": "Wrap each line in overflow:hidden and animate translateY from 105% to 0% using ease.expoOut.",
+      "tags": [
+        "opus",
+        "mask",
+        "text",
+        "keynote"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/lukasersil-726495/original.2886d94586.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/lukasersil-726495",
+      "sourceRef": "awesome-opus5-5-videos#lukasersil-726495"
+    },
+    {
+      "category": "typography",
+      "id": "variable-weight-beat-pulse",
+      "label": {
+        "ko": "가변 굵기·폭 비트 펄스",
+        "en": "Variable Weight Beat Pulse"
+      },
+      "definition": {
+        "ko": "비트마다 글자의 굵기(font-weight)나 장평이 얇은 상태에서 블랙으로 튕기듯 변화합니다.",
+        "en": "Typography swings from thin to heavy black or wide width on the beat."
+      },
+      "implementationHint": "Interpolate fontWeight (200 to 900) or scaleX on beat intervals using closed-form spring response.",
+      "tags": [
+        "opus",
+        "variable-font",
+        "kinetic",
+        "beat"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/howdevelop-733090/original.c156b8a720.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/howdevelop-733090",
+      "sourceRef": "awesome-opus5-5-videos#howdevelop-733090"
+    },
+    {
+      "category": "typography",
+      "id": "orbital-trajectory-baseline",
+      "label": {
+        "ko": "궤도·역학선 베이스라인",
+        "en": "Orbital Trajectory Baseline"
+      },
+      "definition": {
+        "ko": "문장의 베이스라인이 닫힌 궤도에서 열린 탈출 궤도로 변하며 글자들이 그 궤적을 따라 주행합니다.",
+        "en": "The baseline of a sentence forms a curved orbital path that opens into an escape trajectory."
+      },
+      "implementationHint": "Position characters or words along a parametric curve P(u, t) and rotate each glyph to match the tangent.",
+      "tags": [
+        "opus",
+        "trajectory",
+        "orbit",
+        "svg",
+        "poster"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/_prompts/gdgtify-989608/poster.094984c36d.webp",
+      "actionUrl": "https://x.com/Gdgtify/status/2105669567036989608",
+      "sourceRef": "awesome-opus5-5-videos#gdgtify-989608"
+    },
+    {
+      "category": "object",
+      "id": "closed-form-spring-sum",
+      "label": {
+        "ko": "해석적 다중 스프링 합산",
+        "en": "Closed-Form Spring Sum"
+      },
+      "definition": {
+        "ko": "목표값이 여러 번 바뀔 때 각 변화 시점의 해석적 스프링 응답을 합산해 시간 t의 순수 함수로 물리 모션을 계산합니다.",
+        "en": "Computes multi-target spring motion as the sum of closed-form damped harmonic step responses of time t."
+      },
+      "implementationHint": "For targets changing at t_i by delta_i, sum delta_i * (1 - exp(-zeta*w*(t-t_i)) * cos(w_d*(t-t_i))) for t >= t_i.",
+      "tags": [
+        "opus",
+        "spring",
+        "physics",
+        "deterministic"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-402193/original.9c664f011f.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-402193",
+      "sourceRef": "awesome-opus5-5-videos#twoclipping-402193"
+    },
+    {
+      "category": "object",
+      "id": "edge-staggered-liquid-pill",
+      "label": {
+        "ko": "양 끝단 차등 스프링(리퀴드 필)",
+        "en": "Edge-Staggered Liquid Pill"
+      },
+      "definition": {
+        "ko": "탭 인디케이터나 토글 노브의 앞쪽 끝과 뒤쪽 끝이 서로 다른 강성의 스프링으로 움직여 유체처럼 늘어났다 모입니다.",
+        "en": "Leading and trailing edges of a pill or indicator ride different springs so it stretches like liquid in transit."
+      },
+      "implementationHint": "Animate left and right edges with separate spring stiffnesses (e.g. w_lead=28, w_trail=18) and derive x and width.",
+      "tags": [
+        "opus",
+        "liquid",
+        "ui",
+        "spring",
+        "pill"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/brainextends-606193/original.f7353b2aa2.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/brainextends-606193",
+      "sourceRef": "awesome-opus5-5-videos#brainextends-606193"
+    },
+    {
+      "category": "object",
+      "id": "direct-cursor-choreography",
+      "label": {
+        "ko": "커서 직접 조작 안무",
+        "en": "Direct Cursor Choreography"
+      },
+      "definition": {
+        "ko": "화살표 커서가 클릭·드래그·타이핑으로 모든 UI 변화를 직접 구동하며 드래그 중에는 커서 위치를 따라갑니다.",
+        "en": "An animated cursor drives every UI change with clicks, drags, and elastic over-pull before springing back."
+      },
+      "implementationHint": "Render a crisp SVG cursor layer whose position and click scale are pure functions of t synchronized with UI state transitions.",
+      "tags": [
+        "opus",
+        "cursor",
+        "ui",
+        "interaction"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-000267/original.87cf7f8c74.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-000267",
+      "sourceRef": "awesome-opus5-5-videos#twoclipping-000267"
+    },
+    {
+      "category": "camera",
+      "id": "screen-studio-cursor-zoom",
+      "label": {
+        "ko": "스크린 스튜디오식 커서 추적 줌",
+        "en": "Screen-Studio Cursor Zoom"
+      },
+      "definition": {
+        "ko": "상호작용이 일어나는 UI 지점으로 카메라가 부드럽게 확대·추적하며 커서도 함께 스케일됩니다.",
+        "en": "Camera smoothly zooms and pans to frame the active UI moment while the cursor scales proportionally."
+      },
+      "implementationHint": "Wrap the stage in a camera transform container with scale(s(t)) and translate(tx(t), ty(t)) centered on the active focal widget.",
+      "tags": [
+        "opus",
+        "camera",
+        "zoom",
+        "ui",
+        "screen-studio"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/moritzkremb-466494/original.dc5bd867e2.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/moritzkremb-466494",
+      "sourceRef": "awesome-opus5-5-videos#moritzkremb-466494"
+    },
+    {
+      "category": "material",
+      "id": "iridescent-conic-halo",
+      "label": {
+        "ko": "이리데슨트 코닉 글로우 테두리",
+        "en": "Iridescent Conic Halo"
+      },
+      "definition": {
+        "ko": "입력창이나 히어로 카드 둘레를 회전하는 다색 원추형(conic) 그라데이션 광채가 감쌉니다.",
+        "en": "Apple-Intelligence style rotating conic-gradient halo softly blurred behind an input or hero card."
+      },
+      "implementationHint": "Layer a blurred conic-gradient div behind the card and rotate its angle deterministically with t * 60deg.",
+      "tags": [
+        "opus",
+        "glow",
+        "glass",
+        "ui"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/demonugc-525162/original.eb370273ad.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/demonugc-525162",
+      "sourceRef": "awesome-opus5-5-videos#demonugc-525162"
+    },
+    {
+      "category": "transition",
+      "id": "color-flood-contract",
+      "label": {
+        "ko": "컬러 플러드 수축 전환",
+        "en": "Color Flood & Contract"
+      },
+      "definition": {
+        "ko": "작은 요소(불릿·버튼)의 색상이 화면 전체를 가득 채운 뒤 다음 장면의 오브젝트로 수축해 들어갑니다.",
+        "en": "An accent dot or button floods the entire frame with color and immediately contracts into the next scene hero."
+      },
+      "implementationHint": "Scale a circular or rounded rect accent shape from widget bounds to cover hypot(width,height), swap background, then shrink to target.",
+      "tags": [
+        "opus",
+        "transition",
+        "flood",
+        "keynote"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/brainextends-606193/original.f7353b2aa2.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/brainextends-606193",
+      "sourceRef": "awesome-opus5-5-videos#brainextends-606193"
+    },
+    {
+      "category": "layout",
+      "id": "line-grid-2to1",
+      "label": {
+        "ko": "라인 그리드 2:1",
+        "en": "Line Grid 2:1"
+      },
+      "definition": {
+        "ko": "보더 라인으로 구획된 2:1 비대칭 에디토리얼 그리드.",
+        "en": "Asymmetric 2:1 editorial grid divided by border lines."
+      },
+      "implementationHint": "CSS grid with 2fr 1fr columns and 1px border dividers; keep alignment to the grid.",
+      "tags": [
+        "storyboard"
+      ]
+    },
+    {
+      "category": "transition",
+      "id": "shared-layout-transition",
+      "label": {
+        "ko": "공유 레이아웃 전환",
+        "en": "Shared Layout Transition"
+      },
+      "definition": {
+        "ko": "목록 카드에서 상세 화면으로 요소가 끊기지 않고 이동·확장되는 전환.",
+        "en": "List-to-detail transition where the element moves and expands without a cut."
+      },
+      "implementationHint": "Framer Motion layoutId / FLIP pattern: keep the same element id across scenes and animate bounds.",
+      "tags": [
+        "storyboard"
+      ]
+    },
+    {
+      "category": "layout",
+      "id": "horizontal-scroll-panorama",
+      "label": {
+        "ko": "가로 스크롤 파노라마",
+        "en": "Horizontal Scroll Panorama"
+      },
+      "definition": {
+        "ko": "세로 스크롤 중 파노라마가 가로로 흐르며 브릿지 역할을 하는 섹션.",
+        "en": "Vertical scroll drives a horizontal panorama strip that bridges story sections."
+      },
+      "implementationHint": "Map vertical scroll progress to horizontal translateX of a wide strip; pure function of scroll progress.",
+      "tags": [
+        "storyboard"
+      ]
+    },
+    {
+      "category": "theme",
+      "id": "time-blend-4stage",
+      "label": {
+        "ko": "4단계 시간 블렌딩",
+        "en": "4-Stage Time Blend"
+      },
+      "definition": {
+        "ko": "시간대 4단계에 따라 이미지 블렌딩과 배경 토큰이 동기화되어 변하는 연출.",
+        "en": "Image opacity blends and canvas tokens change in sync across four time stages."
+      },
+      "implementationHint": "Drive dayWeight/nightWeight from storyboard visualDirection.themeStages; interpolate canvas token and image opacity.",
+      "tags": [
+        "storyboard"
+      ]
+    },
+    {
+      "category": "theme",
+      "id": "invariant-variant-matrix",
+      "label": {
+        "ko": "불변·가변 매트릭스",
+        "en": "Invariant-Variant Matrix"
+      },
+      "definition": {
+        "ko": "공통 불변 속성과 아이템별 가변 속성을 분리해 톤을 유지하는 규칙.",
+        "en": "Split shared invariants from per-item variants."
+      },
+      "implementationHint": "Store invariants in 03-visual-direction.md and DESIGN.md; per-item values only in storyboard/data/items.json.",
+      "tags": [
+        "storyboard"
+      ]
+    },
+    {
+      "category": "layout",
+      "id": "continuity-filter-grid",
+      "label": {
+        "ko": "연속성 필터 그리드",
+        "en": "Continuity Filter Grid"
+      },
+      "definition": {
+        "ko": "필터 전환 시 연속성을 유지하며 재배치되는 그리드.",
+        "en": "Grid that preserves element continuity while filtering."
+      },
+      "implementationHint": "Use shared layout animation (FLIP/layoutId) so cards glide to new positions on filter change.",
+      "tags": [
+        "storyboard"
+      ]
+    },
+    {
+      "category": "layout",
+      "id": "hierarchy-driven-hero",
+      "label": {
+        "ko": "위계 도출 히어로",
+        "en": "Hierarchy-Driven Hero"
+      },
+      "definition": {
+        "ko": "콘텐츠 위계에서 레이아웃이 도출되는 히어로 구조.",
+        "en": "Hero layout derived from the copy hierarchy."
+      },
+      "implementationHint": "Bind hero layout to storyboard/data/content.json hierarchy; never hard-code copy.",
+      "tags": [
+        "storyboard"
+      ]
     }
   ]
 }

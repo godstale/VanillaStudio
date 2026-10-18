@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "id": "opus-keynote-lime",
+  "name": "Opus Keynote Lime",
+  "tags": [
+    "light",
+    "opus",
+    "keynote",
+    "launch",
+    "energetic"
+  ],
+  "scheme": "light",
+  "colors": {
+    "canvas": "#F5F5F2",
+    "ink": "#0E0E10",
+    "primary": "#2F6BFF",
+    "accent": "#FF6A2A"
+  },
+  "source": "builtin",
+  "license": "MIT",
+  "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-000267/original.87cf7f8c74.webp",
+  "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-000267"
+}

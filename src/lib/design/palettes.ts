@@ -31,6 +31,14 @@ import sageField from '../../../resources/palettes/sage-field.json';
 import slateGrove from '../../../resources/palettes/slate-grove.json';
 import tideGlass from '../../../resources/palettes/tide-glass.json';
 import violetBunker from '../../../resources/palettes/violet-bunker.json';
+import opusBotanicalParchment from '../../../resources/palettes/opus-botanical-parchment.json';
+import opusCobaltCyan from '../../../resources/palettes/opus-cobalt-cyan.json';
+import opusCyberMagenta from '../../../resources/palettes/opus-cyber-magenta.json';
+import opusKeynoteLime from '../../../resources/palettes/opus-keynote-lime.json';
+import opusMagneticMonument from '../../../resources/palettes/opus-magnetic-monument.json';
+import opusOrbitalCoral from '../../../resources/palettes/opus-orbital-coral.json';
+import opusSpotifyEditorial from '../../../resources/palettes/opus-spotify-editorial.json';
+import opusStudioMint from '../../../resources/palettes/opus-studio-mint.json';
 
 const slug = z.string().regex(/^[a-z0-9][a-z0-9-]*$/, 'kebab-case id');
 
@@ -47,6 +55,8 @@ export const paletteFileSchema = z
     colors: z.record(z.string(), z.string()),
     source: z.enum(['builtin', 'user', 'extracted', 'generated']),
     license: z.string().max(40).optional(),
+    previewUrl: z.string().url().optional(),
+    actionUrl: z.string().url().optional(),
   })
   .passthrough()
   .superRefine((p, ctx) => {
@@ -112,6 +122,14 @@ export const BUILT_IN_PALETTES: PaletteFile[] = [
   mustParse(midnightRampart, 'midnight-rampart.json'),
   mustParse(mintWorkbench, 'mint-workbench.json'),
   mustParse(mossLantern, 'moss-lantern.json'),
+  mustParse(opusBotanicalParchment, 'opus-botanical-parchment.json'),
+  mustParse(opusCobaltCyan, 'opus-cobalt-cyan.json'),
+  mustParse(opusCyberMagenta, 'opus-cyber-magenta.json'),
+  mustParse(opusKeynoteLime, 'opus-keynote-lime.json'),
+  mustParse(opusMagneticMonument, 'opus-magnetic-monument.json'),
+  mustParse(opusOrbitalCoral, 'opus-orbital-coral.json'),
+  mustParse(opusSpotifyEditorial, 'opus-spotify-editorial.json'),
+  mustParse(opusStudioMint, 'opus-studio-mint.json'),
   mustParse(paperDawn, 'paper-dawn.json'),
   mustParse(pineSignal, 'pine-signal.json'),
   mustParse(plumNight, 'plum-night.json'),

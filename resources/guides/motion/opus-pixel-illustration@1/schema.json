@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "hide": [],
+  "defaults": {
+    "duration": {
+      "seconds": 6
+    },
+    "creativeMode": [
+      "pixel-grid-procedural"
+    ],
+    "structure": "continuous",
+    "adStructure": "single-message",
+    "brandVoice": [
+      "playful",
+      "crafted",
+      "nostalgic"
+    ],
+    "visualStyle": {
+      "medium": "Procedural integer-grid pixel canvas (320x180 upscaled crisp-edges)",
+      "lighting": "Warm sunset/neon palette cycling with dithered light gradients",
+      "typography": "Crisp pixel/monospace HUD badge",
+      "density": "3 parallax depth layers (sky/far silhouette, mid architecture, foreground animated sprites)",
+      "cameraFeeling": "Smooth integer-snapped horizontal parallax pan",
+      "mood": "Cozy 16-bit masterpiece, living diorama"
+    },
+    "motionVocabulary": {
+      "typography": [
+        "typewriter"
+      ],
+      "object": [
+        "spring-pop"
+      ],
+      "camera": [
+        "pan-left-right"
+      ],
+      "material": [
+        "neon-glow"
+      ],
+      "transition": [
+        "match-cut"
+      ]
+    },
+    "beats": [
+      {
+        "id": "beat-1",
+        "start": 0,
+        "end": 3,
+        "role": "diorama-establish",
+        "copy": "PIXEL DIORAMA // 60FPS",
+        "visual": "3-layer pixel scene with animated water reflections, drifting clouds, and glowing lanterns",
+        "motion": [
+          "typewriter"
+        ],
+        "camera": "pan-left-right",
+        "transitionOut": "match-cut",
+        "notes": "All sprites rendered from procedural palette indices"
+      },
+      {
+        "id": "beat-2",
+        "start": 3,
+        "end": 6,
+        "role": "ambient-cycle",
+        "copy": "PURE PROCEDURAL ART",
+        "visual": "Lantern glow pulses and foreground character/vehicle completes seamless loop cycle",
+        "motion": [
+          "spring-pop"
+        ],
+        "camera": "pan-left-right",
+        "transitionOut": "match-cut",
+        "notes": "Seamless loop at t=6.0s"
+      }
+    ],
+    "endCard": {
+      "holdSeconds": 1,
+      "elements": [
+        "Full pixel illustration",
+        "Title HUD"
+      ]
+    },
+    "constraints": {
+      "avoid": [
+        "Sub-pixel anti-aliased blur"
+      ],
+      "noUnspecifiedElements": true
+    }
+  },
+  "fields": []
+}

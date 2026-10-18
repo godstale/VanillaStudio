@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "hide": [],
+  "defaults": {
+    "duration": {
+      "seconds": 10
+    },
+    "creativeMode": [
+      "product-showcase",
+      "infographic-reveal"
+    ],
+    "structure": "continuous",
+    "adStructure": "problem-solution-reveal",
+    "brandVoice": [
+      "technical",
+      "confident",
+      "futuristic"
+    ],
+    "visualStyle": {
+      "medium": "Procedural Three.js PBR assembly with crisp 2D SVG HUD callout overlay",
+      "lighting": "Three-point studio rim lighting with warm key and cool fill",
+      "typography": "Technical display sans + monospace HUD coordinate callouts",
+      "density": "1 central multi-part 3D assembly + 3 synchronized HUD labels",
+      "cameraFeeling": "Smooth orbital arc into macro cutaway inspection",
+      "mood": "Precision engineering showcase"
+    },
+    "motionVocabulary": {
+      "typography": [
+        "mask-line-rise",
+        "counter-roll"
+      ],
+      "object": [
+        "closed-form-spring-sum",
+        "rotate-3d"
+      ],
+      "camera": [
+        "orbit",
+        "push-in"
+      ],
+      "material": [
+        "metallic-sheen",
+        "glass-blur"
+      ],
+      "transition": [
+        "morph",
+        "match-cut"
+      ]
+    },
+    "beats": [
+      {
+        "id": "beat-1",
+        "start": 0,
+        "end": 3.5,
+        "role": "assembled-orbit",
+        "copy": "PRECISION ARCHITECTURE",
+        "visual": "Assembled 3D core rotates along orbital arc under studio rim light",
+        "motion": [
+          "rotate-3d"
+        ],
+        "camera": "orbit",
+        "transitionOut": "morph",
+        "notes": "Establish metallic/glass material contrast"
+      },
+      {
+        "id": "beat-2",
+        "start": 3.5,
+        "end": 7.5,
+        "role": "exploded-cutaway",
+        "copy": "LAYER 01 // OPTICAL CORE -> LAYER 02 // THERMAL SHELL",
+        "visual": "Sub-assemblies separate along axial vectors via spring curve; SVG leader lines attach to each layer",
+        "motion": [
+          "closed-form-spring-sum"
+        ],
+        "camera": "push-in",
+        "transitionOut": "match-cut",
+        "notes": "Project 3D anchor points to 2D HUD coordinates every frame"
+      },
+      {
+        "id": "beat-3",
+        "start": 7.5,
+        "end": 10,
+        "role": "reassemble-lockup",
+        "copy": "ENGINEERED IN CODE",
+        "visual": "Layers snap back into unified silhouette with final brand lockup",
+        "motion": [
+          "closed-form-spring-sum",
+          "mask-line-rise"
+        ],
+        "camera": "orbit",
+        "transitionOut": "hard-cut",
+        "notes": "Hold final silhouette >= 0.85s"
+      }
+    ],
+    "endCard": {
+      "holdSeconds": 0.9,
+      "elements": [
+        "Reassembled 3D hero",
+        "Spec summary HUD"
+      ]
+    },
+    "constraints": {
+      "avoid": [
+        "External network textures"
+      ],
+      "noUnspecifiedElements": true
+    },
+    "composition": "exploded-cutaway-assembly",
+    "materials": [
+      "pbr-metal-rough",
+      "glass-transmission",
+      "emissive-neon"
+    ],
+    "lighting": "three-point-studio",
+    "cameraPath": "orbit-turntable",
+    "performanceBudget": "standard-60fps"
+  },
+  "fields": []
+}

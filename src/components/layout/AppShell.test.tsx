@@ -19,6 +19,7 @@ function renderShell(initial: string) {
       <MemoryRouter initialEntries={[initial]}>
         <Routes>
           <Route element={<AppShell />}>
+            <Route path="/storyboard" element={<EmptyScreen title="STORYBOARD-SCREEN" />} />
             <Route path="/workspace" element={<EmptyScreen title="SEQUENCE-SCREEN" />} />
             <Route path="/scenes" element={<EmptyScreen title="SCENES-SCREEN" />} />
             <Route path="/templates" element={<EmptyScreen title="TEMPLATES-SCREEN" />} />
@@ -32,24 +33,27 @@ function renderShell(initial: string) {
 }
 
 describe('AppShell', () => {
-  it('shows the four sidebar entries plus settings pinned at the bottom', () => {
+  it('shows the five sidebar entries plus settings pinned at the bottom', () => {
     renderShell('/workspace');
     const links = screen.getAllByRole('link');
-    expect(links).toHaveLength(5);
-    expect(links[4].getAttribute('href')).toContain('/settings');
+    expect(links).toHaveLength(6);
+    expect(links[0].getAttribute('href')).toContain('/storyboard');
+    expect(links[5].getAttribute('href')).toContain('/settings');
     expect(screen.getByText('SEQUENCE-SCREEN')).toBeTruthy();
   });
 
   it('navigates between screens from the sidebar', () => {
     renderShell('/workspace');
     const links = screen.getAllByRole('link');
-    fireEvent.click(links[1]);
-    expect(screen.getByText('SCENES-SCREEN')).toBeTruthy();
+    fireEvent.click(links[0]);
+    expect(screen.getByText('STORYBOARD-SCREEN')).toBeTruthy();
     fireEvent.click(links[2]);
-    expect(screen.getByText('TEMPLATES-SCREEN')).toBeTruthy();
+    expect(screen.getByText('SCENES-SCREEN')).toBeTruthy();
     fireEvent.click(links[3]);
-    expect(screen.getByText('PLAY-SCREEN')).toBeTruthy();
+    expect(screen.getByText('TEMPLATES-SCREEN')).toBeTruthy();
     fireEvent.click(links[4]);
+    expect(screen.getByText('PLAY-SCREEN')).toBeTruthy();
+    fireEvent.click(links[5]);
     expect(screen.getByText('SETTINGS-SCREEN')).toBeTruthy();
   });
 
