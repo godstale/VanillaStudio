@@ -36,7 +36,7 @@ last_updated: 2026-10-18
 
 `SequencePlayer`가 모든 키를 `manager.input`에 넣고, 매니저가 static 신에 무조건 `next()`(advance 무시)를 보냈다. 직접 열기는 신의 `controller.input()`이 advance를 검사하므로 정상이었다.
 
-- Bridge에 `input` 메시지 추가(v2.1, `click` | `key:<Key>`, zod 검증): `packages/runtime/src/bridge.ts` + 앱 `src/lib/review/bridgeProtocol.ts`.
+- Bridge에 `input` 메시지 추가(v2.1, `click` | `key:<Key>`, zod 검증): `packages/runtime/src/bridge.ts` + 앱 `src/lib/review/bridgeProtocol.ts`. 결정 D-038.
 - 마운트 `input` 타깃은 신 트리(마운트 컨테이너)에 합성 `click`/`keydown`을 디스패치한다. `useSteps` 창 리스너는 advance에 맞을 때만 진행하고, 신 자체 단축키(N 노트·F 전체화면 등)도 같은 입력을 받는다. 단일 처리 경로라 이중 진행이 없다.
 - 매니저 static 경로는 `h.input()`(타입 위임), 플레이어 다음-단계 버튼은 명시적 `stepForward()`(`next()` 유지, 기존 테스트·동작 보존).
 - 구 런타임(확장 전 워크스페이스 복사본)은 `input`을 무시하므로 §2의 런타임 갱신과 함께 배포한다.

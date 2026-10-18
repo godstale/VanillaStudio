@@ -261,3 +261,15 @@
   - 에이전트: 루트 `AGENTS.md`를 5단계(Stage 0 세계관·의도 → Stage 1 글 3개 → Stage 2 핵심 재료 → Stage 3 상향식 조립 → Stage 4 원인 문서 역추적 수정)로 개편. CLI에 `storyboard`·`init-storyboard`·`taxonomy` 추가. 스토리보드 텍소노미 7종(`line-grid-2to1`, `hierarchy-driven-hero`, `continuity-filter-grid`, `shared-layout-transition`, `horizontal-scroll-panorama`, `time-blend-4stage`, `invariant-variant-matrix`)을 내장 용어집에 등록.
 - **근거**: D-023(파일이 진실 공급원), D-022(에이전트 중립 — CLI·파일 기반 전달만), D-006(생성형 AI 배제), D-028(템플릿 동일 스키마).
 - **영향**: `Technical-Design.md` §1(셸)·§4(시퀀스/신 계약 확장)·§8(스토리보드 파일 계약) 후속 개정 대상.
+
+## D-038 플레이그라운드 static 입력 타입 위임(Bridge `input` v2.1) — Accepted (2026-10-18)
+
+- **맥락**: 에이전트 실사용 검증 — 플레이그라운드에서 모든 키가 `다음`으로 처리되어 신 단축키(N 노트·F 전체화면)가 동작하지 않고, ←도 앞으로 넘어가며, 마지막 단계에서 엣지와 맞지 않는 클릭이 `done`을 만들어 진행이 멈출 수 있었다. 원인은 호스트가 static 신에 입력 종류와 무관한 `next()`를 보내 신의 `advance` 검사를 우회한 것이다(직접 열기는 신의 `controller.input()`이 검사하므로 정상). → [[issue-playground-scaffold-fixes]]
+- **결정**:
+  - Bridge v2 안에서 `input` 메시지 추가(`click` | `key:<Key>`, zod 검증). `next`/`prev`는 명시적 호스트 단계 이동(미리보기·플레이어 단계 버튼)으로 유지한다.
+  - 마운트 `input` 타깃은 신 트리(마운트 컨테이너)에 합성 `click`/`keydown`을 디스패치한다. `useSteps` 창 리스너가 `advance`에 맞을 때만 진행하고, 신 자체 단축키도 같은 입력을 받는다. 단일 처리 경로라 이중 진행이 없다.
+  - 매니저 static 경로는 `h.input()` 타입 위임으로 바꾸고, 플레이어 다음-단계 버튼은 명시적 `stepForward()`(`next()` 유지)로 분리한다.
+  - 스텝 컨트롤러 복구: `finished` 뒤에도 마지막 스텝 규칙과 맞는 입력이면 `done`을 다시 알리고, `prev()`는 `finished`를 풀고 마지막 스텝으로 되돌린다.
+  - 구 런타임 호환: `open_workspace`가 앱 소유 `vanilla/runtime` 복사본을 갱신한다(낡은 복사본은 `input`을 무시해 static 신이 멈춘 것처럼 보이므로).
+- **근거**: D-032(정적 페이지는 사용자 입력으로만 진행 — 타입 위임이 `advance` 일치를 강제하므로 확장), D-023(앱 소유 복사본 갱신).
+- **영향**: `Technical-Design.md` §5(Bridge v2.1 메시지) 후속 개정 대상. 프로토콜 버전은 2 유지(추가 메시지만 구 런타임이 무시).

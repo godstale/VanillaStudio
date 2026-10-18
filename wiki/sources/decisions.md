@@ -50,6 +50,8 @@ last_updated: 2026-10-18
 | D-034 | 에이전트 중심 UI(시퀀스·신·템플릿·갤러리·코멘트 계약) | Accepted (2026-10-17) | [[ui-agent-centric]] |
 | D-035 | Opus 5.5 아카이브 분해·템플릿화 및 4대 매체 의도 추천·미리보기 링크 | Accepted (2026-10-18) | [[research-2026-10-18-awesome-opus55-videos]] |
 | D-036 | 워크스페이스 비파괴 초기화 및 AI 에이전트 브리지(`pnpm vanilla`·`WORK_ORDER.md`·`VANILLA_GUIDE.md`) | Accepted (2026-10-18) | [[ui-agent-centric]], [[refactor-spec-v2]] |
+| D-037 | 스토리보드 & 3-문서 Material-First 워크플로 | Accepted (2026-10-18) | [[refactor-spec-v2]] |
+| D-038 | 플레이그라운드 static 입력 타입 위임(Bridge `input` v2.1) | Accepted (2026-10-18) | [[issue-playground-scaffold-fixes]] |
 
 ## Connections
 

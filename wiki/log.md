@@ -1,3 +1,7 @@
+## [2026-10-18] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
 ## [2026-10-06] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
@@ -358,3 +362,6 @@ Ran lint. See lint-report.md for details.
 
 ## [2026-10-18] lint | Wiki health check
 - 70 pages, orphans 0, broken links 0. See: wiki/lint-report.md
+
+## [2026-10-18] decision | D-038 플레이그라운드 static 입력 타입 위임(Bridge `input` v2.1)
+- 모든 키가 다음으로 처리되던 문제를 타입 입력 위임으로 수정한 결정. `input` 메시지·합성 디스패치·`stepForward()` 분리·종료 후 복구·런타임 갱신. D-032 확장. → [[decisions]]
