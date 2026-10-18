@@ -36,6 +36,7 @@
 - [[milestone-v1]] — V1 기반 정리 마일스톤 로그(레거시 제거·워크스페이스·셸·캔버스)
 - [[poc-r5]] — PoC R-5: @xyflow/react 캔버스 스파이크(100노드 60fps, 채택)
 - [[issue-v2-legacy-removal]] — v2 레거시 제거 계획(보존·제거 단위 U1~U6, 사용자 확인 대기)
+- [[issue-playground-scaffold-fixes]] — 실사용 검증 5건 수정(스캐폴드 초안·템플릿 번들·static copy 문서·플레이어 키·종료 멈춤)
 
 ## Planning / Decisions
 

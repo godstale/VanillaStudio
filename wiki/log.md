@@ -349,3 +349,12 @@ Ran lint. See lint-report.md for details.
 ## [2026-10-18] ui | 작업 지시서 온보딩 개편(필수·고급·에이전트 시작 대기)
 - 타이틀·매체 의도·핵심 한 줄을 필수 입력으로, 목적·포함·제외는 고급(접기) 항목으로. brief.title 스키마 추가(구 파일은 기본값 ''으로 호환), 01-brief·WORK_ORDER에 타이틀 기록.
 - 저장 후에도 온보딩 화면을 유지하고 3초 간격으로 에이전트 시작 신호(단계 전진·문서/재료 갱신·sequence.json·scenes/)를 감시, 신호 때 스토리보드 보드로 전환. 시작 전 재편집·재저장 가능(자리 표시자 문서는 덮어쓰지 않음).
+
+## [2026-10-18] release | feat/storyboard-brief-onboarding push
+- 스토리보드 묶음 120파일 커밋(030d1f9) 후 origin에 push. main 병합 아님. 작업트리 잔여: 빌드 설정·Tauri 비-스토리보드 명령·신/워크스페이스 UI·agent-reach 스킬(미커밋 유지).
+
+## [2026-10-18] fix | 실사용 검증 5건 수정
+- 스캐폴드 초안 실행 불가·템플릿 조용한 교체+0건·static copy 문서 충돌·플레이어 전 키 다음 처리·마지막 단계 종료 멈춤을 `fix/scaffold-playground-5-issues`에서 수정. Bridge `input`(v2.1) 추가, 번들에 guides·opus 포함, 검사기에 컴포지션·useSteps 검사 추가. 검증: lint·typecheck·vitest 1173·cargo 127 통과. 상세: [[issue-playground-scaffold-fixes]]
+
+## [2026-10-18] lint | Wiki health check
+- 70 pages, orphans 0, broken links 0. See: wiki/lint-report.md
