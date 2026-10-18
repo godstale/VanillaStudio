@@ -83,6 +83,18 @@ export function mountVanilla(composition: Composition, options: MountOptions): (
       },
       next: () => hostedSteps()?.next(),
       prev: () => hostedSteps()?.prev(),
+      // v2.1 typed input delegation: re-dispatch inside the scene tree so both the
+      // step controller (advance-respecting, via its window listeners) and the
+      // scene's own shortcut handlers (e.g. notes, fullscreen keys) see the input.
+      // Unrelated keys never advance the page (issue: every key acted as next).
+      input: (raw) => {
+        const peer: { kind: 'click' } | { kind: 'key'; key: string } = raw.kind === 'click' ? { kind: 'click' } : { kind: 'key', key: raw.key };
+        if (peer.kind === 'click') {
+          container.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+        } else {
+          container.dispatchEvent(new KeyboardEvent('keydown', { key: peer.key, bubbles: true, cancelable: true }));
+        }
+      },
       setParams: (id, values) => state.mergeParams(id, values),
       goto(sceneId) {
         const start = sceneStart(composition, sceneId);

@@ -1,6 +1,6 @@
 import { isTrustedSource, parseSceneMessage, previewFrameUrl, previewOriginOf, sceneEntryPath, withVersion, type HostMessage } from '@/lib/review/bridgeProtocol';
 import type { SceneType } from '@/lib/scene/schema';
-import type { ManagerState, SceneEvent, SceneHandle, SceneHost } from '@/lib/sequence/manager';
+import type { ManagerState, SceneEvent, SceneHandle, SceneHost, UserInput } from '@/lib/sequence/manager';
 
 // 신 하나를 iframe(+Bridge v2)으로 여는 `SceneHandle` 구현(T6.6). 시퀀스 매니저는 이 구현을 모른다.
 // 보안: iframe은 프리뷰 서버(127.0.0.1) origin이고 Tauri IPC가 없다. 메시지는 우리가 만든 iframe 창에서, 고정한 origin으로 온 것만 받는다(isTrustedSource).
@@ -178,6 +178,10 @@ export class IframeScene implements SceneHandle {
 
   prev(): void {
     this.send({ type: 'prev' });
+  }
+
+  input(input: UserInput): void {
+    this.send(input.kind === 'click' ? { type: 'input', payload: { kind: 'click' } } : { type: 'input', payload: { kind: 'key', key: input.key } });
   }
 
   subscribe(listener: (e: SceneEvent) => void): () => void {

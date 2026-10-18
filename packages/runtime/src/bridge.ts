@@ -31,6 +31,18 @@ const HostMessage = z.discriminatedUnion('type', [
   // v2: the playground host delegates user input to a static page (D-032).
   z.object({ v: z.literal(BRIDGE_VERSION), type: z.literal('next') }),
   z.object({ v: z.literal(BRIDGE_VERSION), type: z.literal('prev') }),
+  // v2.1: typed input delegation. Unlike `next`, the page only advances when the
+  // input matches the current step's `advance` rule, so unrelated keys (scene
+  // shortcuts, wrong arrows) never move the page. Unknown to older runtimes,
+  // which ignore it (their workspaces get the new runtime on open).
+  z.object({
+    v: z.literal(BRIDGE_VERSION),
+    type: z.literal('input'),
+    payload: z.discriminatedUnion('kind', [
+      z.object({ kind: z.literal('click') }),
+      z.object({ kind: z.literal('key'), key: z.string().min(1).max(50) }),
+    ]),
+  }),
   z.object({ v: z.literal(BRIDGE_VERSION), type: z.literal('seek'), payload: z.object({ t: z.number().finite().min(0) }) }),
   z.object({ v: z.literal(BRIDGE_VERSION), type: z.literal('setParams'), payload: z.object({ sceneId: z.string().min(1), values: z.record(z.string(), z.unknown()) }) }),
   z.object({ v: z.literal(BRIDGE_VERSION), type: z.literal('goto'), payload: z.object({ sceneId: z.string().min(1) }) }),
@@ -83,11 +95,24 @@ export interface CapturedPayload {
 
 // ---- runtime side -----------------------------------------------------------------------------
 
+export interface StepInput {
+  kind: 'click';
+}
+
+export interface KeyInput {
+  kind: 'key';
+  key: string;
+}
+
+export type HostedInput = StepInput | KeyInput;
+
 export interface BridgeTarget {
   init(payload: { mode: 'preview'; paramsValues: Record<string, Record<string, unknown>>; canvas?: { width: number; height: number; fps: number } }): void;
   /** v2: step forward / back on behalf of the host (static pages). */
   next(): void;
   prev(): void;
+  /** v2.1: typed input delegation (static pages): advance only on matching `advance`. */
+  input(input: HostedInput): void;
   play(): void;
   pause(): void;
   seek(t: number): void;
@@ -223,6 +248,8 @@ export function createBridge(options: BridgeOptions): Bridge {
         return guard(() => target.next());
       case 'prev':
         return guard(() => target.prev());
+      case 'input':
+        return guard(() => target.input(msg.payload));
       case 'seek':
         return guard(() => target.seek(msg.payload.t));
       case 'setParams':

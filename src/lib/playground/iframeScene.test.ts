@@ -152,6 +152,8 @@ describe('IframeScene', () => {
     s.seek(1.5);
     s.next();
     s.prev();
+    s.input({ kind: 'click' });
+    s.input({ kind: 'key', key: 'ArrowRight' });
     expect(post.mock.calls.map((c) => c[0])).toEqual([
       { v: 2, type: 'seek', payload: { t: 0 } },
       { v: 2, type: 'play' },
@@ -160,6 +162,8 @@ describe('IframeScene', () => {
       { v: 2, type: 'seek', payload: { t: 1.5 } },
       { v: 2, type: 'next' },
       { v: 2, type: 'prev' },
+      { v: 2, type: 'input', payload: { kind: 'click' } },
+      { v: 2, type: 'input', payload: { kind: 'key', key: 'ArrowRight' } },
     ]);
     expect(post.mock.calls.every((c) => c[1] === SERVER)).toBe(true);
     s.dispose();

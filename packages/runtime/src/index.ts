@@ -43,4 +43,4 @@ export type { Colors, Design, TypographyStyle } from './design/types';
 export { BRIDGE_VERSION, clockTarget, createBridge, parseHostOrigin, reportClock, reportHmr } from './bridge';
 export { DEFAULT_FRAME, getFrame, useFrame, type Frame } from './frame';
 export { createStepController, matchesAdvance, useSteps, type AdvanceInput, type StepController, type StepSpec } from './steps';
-export type { Bridge, BridgeOptions, BridgeTarget, CapturedPayload, ErrorPayload, HostMessage, ReadyPayload, TimePayload } from './bridge';
+export type { Bridge, BridgeOptions, BridgeTarget, CapturedPayload, ErrorPayload, HostedInput, HostMessage, ReadyPayload, TimePayload } from './bridge';

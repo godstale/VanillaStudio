@@ -99,4 +99,40 @@ describe('mountVanilla', () => {
     unmount = mountVanilla(composition(), { DesignProvider, root, search: '' });
     expect(root.textContent).toBe('hi');
   });
+
+  it('typed input advances a static page only on matching advance (unrelated keys do nothing)', async () => {
+    const { useSteps } = await import('./steps');
+    const STEPS = [
+      { id: 'a', advance: 'click' },
+      { id: 'b', advance: 'key:ArrowRight' },
+    ] as const;
+    function Page() {
+      useSteps(STEPS, null);
+      return createElement('main', null, 'page');
+    }
+    clearScenes();
+    const comp = defineComposition({ scenes: [defineScene({ id: 's', Component: Page })] });
+    unmount = mountVanilla(comp, { DesignProvider, root, search: `?host=${encodeURIComponent(HOST)}` });
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 10));
+    });
+    const types = () => posted.map((m) => m.type);
+    // Unrelated keys (scene shortcuts, wrong arrows) must not move the page.
+    await send({ v: 2, type: 'input', payload: { kind: 'key', key: 'n' } });
+    await send({ v: 2, type: 'input', payload: { kind: 'key', key: 'ArrowLeft' } });
+    expect(types()).not.toContain('step');
+    // A custom scene shortcut handler still sees the key (dispatched in the scene tree).
+    const seen: string[] = [];
+    window.addEventListener('keydown', (e) => seen.push(e.key));
+    await send({ v: 2, type: 'input', payload: { kind: 'key', key: 'f' } });
+    expect(seen).toContain('f');
+    expect(types()).not.toContain('step');
+    // Matching inputs advance; a wrong-kind input on the last step does not finish it.
+    await send({ v: 2, type: 'input', payload: { kind: 'click' } });
+    expect(posted.find((m) => m.type === 'step')?.payload).toEqual({ index: 1, total: 2 });
+    await send({ v: 2, type: 'input', payload: { kind: 'click' } });
+    expect(types()).not.toContain('done');
+    await send({ v: 2, type: 'input', payload: { kind: 'key', key: 'ArrowRight' } });
+    expect(types()).toContain('done');
+  });
 });

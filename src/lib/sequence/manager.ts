@@ -9,7 +9,8 @@ import { hasErrors, validateSequence, type SceneRef, type SequenceIssue } from '
 // trigger 규칙
 //  - end            : motion·3d 신이 끝 시각에 도달(`done`)하면.
 //  - timeout:Ns     : 신이 재생을 시작한 지 N초 뒤(일시정지하면 타이머도 멈추고 재개하면 남은 시간으로 이어간다).
-//  - click · key:K  : 사용자 입력. 현재 신이 static이고 아직 마지막 step이 아니면 입력은 신(step 이동)에게 위임한다. 마지막 step이거나 motion·3d면 엣지를 평가한다.
+//  - click · key:K  : 사용자 입력. static 신에는 타입 입력으로 위임한다(advance와 맞을 때만
+//    step이 이동하고, 마지막 step의 입력은 `done`이 되어 엣지를 평가한다). motion·3d면 엣지를 평가한다.
 //  - choice:<label> : 신의 UI가 `choice` 이벤트로 보고하거나 호스트가 직접 고르게 한 라벨.
 
 export type SceneEvent =
@@ -35,6 +36,11 @@ export interface SceneHandle {
   /** static 신에게 사용자 입력 위임(다음 step). */
   next(): void;
   prev(): void;
+  /**
+   * static 신에게 타입 입력 위임. 신은 현재 스텝의 `advance`와 맞을 때만
+   * 진행한다(맞지 않는 키·클릭은 무시하므로 신 단축키와 충돌하지 않는다).
+   */
+  input(input: UserInput): void;
   subscribe(listener: (e: SceneEvent) => void): () => void;
   dispose(): void;
 }
@@ -321,7 +327,7 @@ export function createSequenceManager(options: ManagerOptions) {
       set({ t });
     },
 
-    /** 사용자 입력(클릭·키). static 신은 마지막 step 전까지 step 이동에 쓰이고, 그 뒤부터 엣지를 평가한다. */
+    /** 사용자 입력(클릭·키). static 신은 타입 입력으로 위임하고(advance와 맞을 때만 진행), motion·3d는 엣지를 평가한다. */
     input(input: UserInput): void {
       const cur = state.current;
       if (cur === null || (state.status !== 'playing' && state.status !== 'paused')) return;
@@ -329,11 +335,17 @@ export function createSequenceManager(options: ManagerOptions) {
       const h = handles.get(cur);
       if (typeOf(cur) === 'static') {
         lastInput = input;
-        h?.next(); // 신이 step을 옮기거나, 마지막 step이면 `done`을 보고한다(그때 lastInput으로 엣지를 고른다)
+        h?.input(input); // 신이 step을 옮기거나, 마지막 step이면 `done`을 보고한다(그때 lastInput으로 엣지를 고른다)
         return;
       }
       const edge = outEdges(cur).find(({ e }) => matchesInput(e.trigger, input));
       if (edge) void follow(edge.i);
+    },
+
+    /** static 신의 다음 step으로 명시적 이동(플레이어 단계 버튼). 입력 종류와 무관하게 한 칸 간다. */
+    stepForward(): void {
+      const cur = state.current;
+      if (cur !== null && typeOf(cur) === 'static' && state.status === 'playing') handles.get(cur)?.next();
     },
 
     /** static 신의 이전 step. */

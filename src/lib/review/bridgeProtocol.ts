@@ -90,6 +90,8 @@ export type HostMessage =
   | { type: 'pause' }
   | { type: 'next' }
   | { type: 'prev' }
+  /** v2.1 typed input: the page advances only when it matches the step's `advance` rule. */
+  | { type: 'input'; payload: { kind: 'click' } | { kind: 'key'; key: string } }
   | { type: 'seek'; payload: { t: number } }
   | { type: 'setParams'; payload: { sceneId: string; values: Record<string, unknown> } }
   | { type: 'goto'; payload: { sceneId: string } }

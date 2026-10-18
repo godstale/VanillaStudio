@@ -13,6 +13,7 @@ function setup(overrides: Partial<Parameters<typeof createBridge>[0]> = {}) {
     pause: vi.fn(),
     next: vi.fn(),
     prev: vi.fn(),
+    input: vi.fn(),
     seek: vi.fn(),
     setParams: vi.fn(),
     goto: vi.fn(),
@@ -42,6 +43,8 @@ describe('host -> scene', () => {
     send(msg('setDesign', { colors: null }));
     send(msg('next'));
     send(msg('prev'));
+    send(msg('input', { kind: 'click' }));
+    send(msg('input', { kind: 'key', key: 'ArrowRight' }));
     send(msg('reload'));
     expect(target.init).toHaveBeenCalledWith({ mode: 'preview', paramsValues: { s1: { speed: 2 } } });
     expect(target.play).toHaveBeenCalledOnce();
@@ -53,6 +56,19 @@ describe('host -> scene', () => {
     expect(target.reload).toHaveBeenCalledOnce();
     expect(target.next).toHaveBeenCalledOnce();
     expect(target.prev).toHaveBeenCalledOnce();
+    expect(target.input.mock.calls).toEqual([[{ kind: 'click' }], [{ kind: 'key', key: 'ArrowRight' }]]);
+  });
+
+  it('routes typed input only when the payload is well-formed', () => {
+    const { send, msg, target } = setup();
+    send(msg('input', { kind: 'key', key: '' }));
+    send(msg('input', { kind: 'key', key: 'x'.repeat(51) }));
+    send(msg('input', { kind: 'key' }));
+    send(msg('input', { kind: 'tap' }));
+    send(msg('input'));
+    expect(target.input).not.toHaveBeenCalled();
+    send(msg('input', { kind: 'click' }));
+    expect(target.input).toHaveBeenCalledOnce();
   });
 
   it('speaks protocol version 2', () => {

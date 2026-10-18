@@ -47,6 +47,21 @@ describe('createStepController', () => {
     expect(onDone).toHaveBeenCalledOnce();
   });
 
+  it('a matching input after finish re-reports done (wrong-input stall recovery)', () => {
+    const { c, onDone } = setup(steps('click', 'key:ArrowRight'));
+    c.input({ kind: 'click' });
+    c.input({ kind: 'click' }); // last step wants ArrowRight: ignored, not finished
+    expect(c.finished).toBe(false);
+    expect(onDone).not.toHaveBeenCalled();
+    c.input({ kind: 'key', key: 'ArrowRight' });
+    expect(c.finished).toBe(true);
+    expect(onDone).toHaveBeenCalledOnce();
+    expect(c.input({ kind: 'click' })).toBe(false); // wrong input: no re-report
+    expect(onDone).toHaveBeenCalledOnce();
+    expect(c.input({ kind: 'key', key: 'ArrowRight' })).toBe(true); // right input: done again
+    expect(onDone).toHaveBeenCalledTimes(2);
+  });
+
   it('never advances by itself: no input, no progress', async () => {
     const { c, onStep, onDone } = setup(steps('click', 'click'));
     await new Promise((r) => setTimeout(r, 30));
@@ -79,12 +94,14 @@ describe('createStepController', () => {
     expect(b.onDone).toHaveBeenCalledOnce();
   });
 
-  it('prev does nothing once the page is finished', () => {
-    const { c } = setup(steps('click', 'click'));
+  it('prev after finish steps back to the last step (wrong-input stall recovery)', () => {
+    const { c, onStep } = setup(steps('click', 'click'));
     c.input({ kind: 'click' });
     c.input({ kind: 'click' });
     expect(c.finished).toBe(true);
     c.prev();
+    expect(c.finished).toBe(false);
     expect(c.index).toBe(1);
+    expect(onStep).toHaveBeenLastCalledWith(1, 2);
   });
 });

@@ -52,6 +52,13 @@ export function createStepController(steps: readonly StepSpec[], events: StepEve
     }
   };
 
+  /** 마지막 스텝의 진행 규칙. `finished` 뒤 재입력 매칭에도 쓴다. */
+  const lastRule = (): string | null => {
+    const step = steps[total - 1];
+    if (step) return step.advance;
+    return null; // 스크롤형 페이지(scroll): 아래 input()의 폴백 규칙과 같아야 한다
+  };
+
   return {
     get index() {
       return index;
@@ -61,7 +68,16 @@ export function createStepController(steps: readonly StepSpec[], events: StepEve
       return finished;
     },
     input(input) {
-      if (finished) return false;
+      if (finished) {
+        // 끝난 뒤의 입력: 마지막 스텝 규칙과 맞을 때만 `done`을 다시 알린다.
+        // 호스트가 엣지와 맞지 않는 입력으로 끝낸 경우(멈춤) 올바른 입력으로 복구할 수 있다.
+        const rule = lastRule();
+        const expected = rule ?? (input.kind === 'key' && (input.key === 'Enter' || input.key === ' ') ? `key:${input.key}` : 'click');
+        if (!matchesAdvance(expected, input)) return false;
+        if (input.kind === 'choice') events.onChoice?.(input.label);
+        events.onDone?.();
+        return true;
+      }
       const step = steps[index];
       // 스텝이 없는 페이지(scroll)는 클릭과 Enter/Space를 입력으로 본다.
       const rule = step ? step.advance : input.kind === 'key' && (input.key === 'Enter' || input.key === ' ') ? `key:${input.key}` : 'click';
@@ -72,7 +88,13 @@ export function createStepController(steps: readonly StepSpec[], events: StepEve
     },
     next: advance,
     prev() {
-      if (finished || index === 0) return;
+      // 끝난 뒤의 prev는 마지막 스텝으로 되돌린다(호스트가 잘못된 입력으로 끝낸 경우의 복구).
+      if (finished) {
+        finished = false;
+        report();
+        return;
+      }
+      if (index === 0) return;
       index -= 1;
       report();
     },

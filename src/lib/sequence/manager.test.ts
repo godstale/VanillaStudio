@@ -35,6 +35,9 @@ class FakeScene implements SceneHandle {
   prev() {
     this.log.push('prev');
   }
+  input(input: { kind: 'click' } | { kind: 'key'; key: string }) {
+    this.log.push(input.kind === 'click' ? 'input:click' : `input:${input.key}`);
+  }
   subscribe(l: (e: SceneEvent) => void) {
     this.listeners.add(l);
     return () => this.listeners.delete(l);
@@ -192,12 +195,12 @@ describe('click and key triggers', () => {
     expect(manager.getState().current).toBe('scn_d');
   });
 
-  it('a static scene gets the input first (step move); only the last step lets it leave', async () => {
+  it('a static scene gets the typed input first (step move); only the last step lets it leave', async () => {
     const { manager, host } = build([edge('scn_s', 'scn_d', 'click')], { ids: ['scn_s', 'scn_d'] });
     await manager.start();
     const page = host.last('scn_s');
     manager.input({ kind: 'click' });
-    expect(page.log).toContain('next');
+    expect(page.log).toEqual(['start', 'input:click']); // typed delegation, not unconditional next
     page.emit({ type: 'step', index: 1, total: 3 }); // not the last step: stay
     await flush();
     expect(manager.getState()).toMatchObject({ current: 'scn_s', step: { index: 1, total: 3 } });
@@ -205,6 +208,18 @@ describe('click and key triggers', () => {
     page.emit({ type: 'done' }); // the last step received input
     await flush();
     expect(manager.getState().current).toBe('scn_d');
+  });
+
+  it('a static scene forwards keys typed (wrong keys stay for the page to ignore)', async () => {
+    const { manager, host } = build([edge('scn_s', 'scn_d', 'key:ArrowRight')], { ids: ['scn_s', 'scn_d'] });
+    await manager.start();
+    const page = host.last('scn_s');
+    manager.input({ kind: 'key', key: 'ArrowLeft' });
+    manager.input({ kind: 'key', key: 'n' });
+    expect(page.log).toEqual(['start', 'input:ArrowLeft', 'input:n']);
+    expect(manager.getState().current).toBe('scn_s'); // no edge evaluated for static input
+    manager.stepForward();
+    expect(page.log).toEqual(['start', 'input:ArrowLeft', 'input:n', 'next']); // explicit step button
   });
 
   it('the static scene leaves by the edge that matches the input that finished it', async () => {

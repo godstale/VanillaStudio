@@ -31,6 +31,8 @@ const IDLE: ManagerState = { status: 'idle', current: null, next: null, step: nu
 /** 키 입력을 시퀀스 입력으로. 입력에 쓰이지 않는 키는 null. */
 function toInput(e: KeyboardEvent): UserInput | null {
   if (e.metaKey || e.ctrlKey || e.altKey) return null;
+  // static 신에는 타입 입력 그대로 위임한다: 신이 advance와 맞을 때만 진행하므로
+  // 신 단축키(N·F 등)나 맞지 않는 화살표가 다음으로 넘어가지 않는다.
   return { kind: 'key', key: e.key };
 }
 
@@ -187,7 +189,7 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
             <Button size="sm" variant="outline" aria-label={t('player.prev')} onClick={() => manager?.back()}>
               <ChevronLeft className="h-3.5 w-3.5" />
             </Button>
-            <Button size="sm" variant="outline" aria-label={t('player.next')} onClick={() => manager?.input({ kind: 'click' })}>
+            <Button size="sm" variant="outline" aria-label={t('player.next')} onClick={() => manager?.stepForward()}>
               <ChevronRight className="h-3.5 w-3.5" />
             </Button>
             {state.step && <span data-testid="player-step">{t('player.step', { index: state.step.index + 1, total: state.step.total })}</span>}
