@@ -12,14 +12,6 @@ export type WorkspaceTabType =
   | 'playground-item'
   | 'terminal';
 
-export type SidePanelView =
-  | 'pipeline'
-  | 'explorer'
-  | 'agent'
-  | 'templates'
-  | 'playground'
-  | null;
-
 export interface WorkspaceTab {
   id: string;
   type: WorkspaceTabType;

@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "workspaceId": "{{workspaceId}}",
+  "id": "seq_main",
+  "mode": "linear",
+  "nodes": [],
+  "edges": [],
+  "start": null
+}

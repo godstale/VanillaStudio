@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "hide": [],
+  "defaults": {
+    "duration": {
+      "seconds": 8
+    },
+    "creativeMode": [
+      "kinetic-type",
+      "product-showcase"
+    ],
+    "structure": "continuous",
+    "adStructure": "single-message",
+    "brandVoice": [
+      "poetic",
+      "futuristic",
+      "editorial"
+    ],
+    "visualStyle": {
+      "medium": "Custom GLSL fragment/vertex shaders with Three.js procedural geometry and dispersion",
+      "lighting": "Rim-backlit volumetric glow with stained-glass spectral refraction",
+      "typography": "Minimalist high-contrast editorial title overlay",
+      "density": "Full-bleed atmospheric shader field + 1 sculptural centerpiece",
+      "cameraFeeling": "Slow dolly-push through refractive light field",
+      "mood": "Ethereal, meditative, gallery installation"
+    },
+    "motionVocabulary": {
+      "typography": [
+        "mask-line-rise"
+      ],
+      "object": [
+        "rotate-3d",
+        "particle-burst"
+      ],
+      "camera": [
+        "push-in",
+        "orbit"
+      ],
+      "material": [
+        "neon-glow",
+        "glass-blur"
+      ],
+      "transition": [
+        "cross-dissolve"
+      ]
+    },
+    "beats": [
+      {
+        "id": "beat-1",
+        "start": 0,
+        "end": 4,
+        "role": "emergence",
+        "copy": "LIGHT IN THE WHITE SPACE",
+        "visual": "Refractive prism geometry emerges from procedural shader field, casting RGB spectral caustics",
+        "motion": [
+          "rotate-3d"
+        ],
+        "camera": "push-in",
+        "transitionOut": "cross-dissolve",
+        "notes": "Pass uTime = useTime() directly into ShaderMaterial uniforms"
+      },
+      {
+        "id": "beat-2",
+        "start": 4,
+        "end": 8,
+        "role": "crescendo-hold",
+        "copy": "PURE MATHEMATICAL FORM",
+        "visual": "Camera orbits through dispersed light beams into calm architectural frame",
+        "motion": [
+          "particle-burst",
+          "mask-line-rise"
+        ],
+        "camera": "orbit",
+        "transitionOut": "hard-cut",
+        "notes": "Hold final visual composition >= 0.9s"
+      }
+    ],
+    "endCard": {
+      "holdSeconds": 1,
+      "elements": [
+        "Shader centerpiece",
+        "Title lockup"
+      ]
+    },
+    "constraints": {
+      "avoid": [
+        "Heavy post-processing passes"
+      ],
+      "noUnspecifiedElements": true
+    },
+    "composition": "single-hero-center",
+    "materials": [
+      "custom-shader",
+      "stained-glass-dispersion",
+      "emissive-neon"
+    ],
+    "lighting": "rim-backlit",
+    "cameraPath": "dolly-push",
+    "performanceBudget": "shader-heavy"
+  },
+  "fields": []
+}

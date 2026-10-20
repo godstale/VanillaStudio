@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>강동 숲속 도서관 강좌 홍보 모션 그래픽</title>
+<style>
+  :root {
+    --bg: #0b1d15;
+    --fg: #f4ead5;
+    --muted: #9fb3a5;
+    --accent: #7fe3c8;
+    --line: #25483a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); font-family: "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif; }
+  .app { display: flex; flex-direction: column; height: 100%; }
+  .stage { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 8px; }
+  canvas { max-width: 100%; max-height: 100%; aspect-ratio: 16 / 9; background: #0f2a1f; border-radius: 6px; }
+  .bar { display: flex; align-items: center; gap: 10px; padding: 8px 14px 12px; }
+  button { background: transparent; color: var(--fg); border: 1px solid var(--line); border-radius: 6px; padding: 4px 12px; font: inherit; font-size: 13px; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  input[type="range"] { flex: 1; accent-color: var(--accent); }
+  .time { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 84px; text-align: right; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="stage"><canvas id="c" width="1920" height="1080" aria-label="강동 숲속 도서관 강좌 홍보 모션 그래픽"></canvas></div>
+  <div class="bar">
+    <button id="play" type="button">일시정지</button>
+    <input id="seek" type="range" min="0" max="10" step="0.01" value="0" aria-label="재생 위치" />
+    <span id="time" class="time">0.00 / 10.00s</span>
+  </div>
+</div>
+<script>
+// 10초 모션 그래픽. 모든 프레임은 시간 t의 순수 함수로 그린다(같은 t -> 같은 프레임).
+// 난수는 고정 시드, 렌더 중 Date/Math.random 사용 없음.
+(function () {
+  var DURATION = 10;
+  var W = 1920, H = 1080;
+  var C = { green0: '#0f2a1f', green1: '#173a2b', green2: '#245240', cream: '#f4ead5', amber: '#f2b45a', mint: '#7fe3c8', ochre: '#b98a4a', moss: '#5f7f4a', wood: '#2a3d2e' };
+  var FONT = '"Pretendard","Noto Sans KR","Malgun Gothic",sans-serif';
+  var canvas = document.getElementById('c');
+  var ctx = canvas.getContext('2d');
+
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function prog(t, a, b) { return clamp((t - a) / (b - a), 0, 1); }
+  function lerp(a, b, k) { return a + (b - a) * k; }
+  function easeOut(k) { return 1 - Math.pow(1 - k, 3); }
+  function easeInOut(k) { return k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; }
+  function easeOutBack(k) { var c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(k - 1, 3) + c1 * Math.pow(k - 1, 2); }
+  function rng(seed) {
+    var a = seed >>> 0;
+    return function () {
+      a = (a + 0x6D2B79F5) >>> 0;
+      var t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function background(g0, g1, glow) {
+    var g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, g0 || C.green0);
+    g.addColorStop(1, g1 || C.green1);
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+    if (glow !== false) {
+      var r = ctx.createRadialGradient(W / 2, H * 0.92, 20, W / 2, H * 0.92, 900);
+      r.addColorStop(0, 'rgba(242,180,90,0.28)');
+      r.addColorStop(1, 'rgba(242,180,90,0)');
+      ctx.fillStyle = r;
+      ctx.fillRect(0, 0, W, H);
+    }
+  }
+
+  function leaf(x, y, size, rot, fill, alpha) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rot);
+    ctx.globalAlpha *= alpha === undefined ? 1 : alpha;
+    ctx.fillStyle = fill;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, size, size * 0.52, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.18)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-size, 0);
+    ctx.lineTo(size, 0);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function paperShadow(draw) {
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.35)';
+    ctx.shadowBlur = 14;
+    ctx.shadowOffsetY = 6;
+    draw();
+    ctx.restore();
+  }
+
+  function title(text, cx, y, size, t0, mode) {
+    // mode: 'wipe' | 'snap' | 'slide' | 'track'. t0 = local seconds the line starts.
+    return function (lt) {
+      var p = prog(lt, t0, t0 + 0.45);
+      if (p <= 0) return;
+      ctx.save();
+      ctx.font = '800 ' + size + 'px ' + FONT;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = C.cream;
+      ctx.shadowColor = 'rgba(0,0,0,0.45)';
+      ctx.shadowBlur = 18;
+      var w = ctx.measureText(text).width;
+      if (mode === 'wipe') {
+        ctx.beginPath();
+        ctx.rect(cx - w / 2 - 20, y - size, (w + 40) * easeInOut(p), size * 2);
+        ctx.clip();
+        ctx.fillText(text, cx, y);
+      } else if (mode === 'snap') {
+        var s = lerp(0.92, 1, easeOutBack(p));
+        ctx.globalAlpha = clamp(p * 3, 0, 1);
+        ctx.translate(cx, y);
+        ctx.scale(s, s);
+        ctx.fillText(text, 0, 0);
+      } else if (mode === 'slide') {
+        ctx.beginPath();
+        ctx.rect(cx - w / 2 - 20, y - size * 0.8, w + 40, size * 1.6);
+        ctx.clip();
+        ctx.fillText(text, cx, y + (1 - easeOut(p)) * size * 1.1);
+      } else {
+        var chars = Array.from(text);
+        var gap = lerp(0.35, 0.06, easeOut(p)) * size;
+        var widths = chars.map(function (ch) { return ctx.measureText(ch).width; });
+        var total = widths.reduce(function (a, b) { return a + b; }, 0) + gap * (chars.length - 1);
+        var x = cx - total / 2;
+        ctx.textAlign = 'left';
+        ctx.globalAlpha = easeOut(p);
+        chars.forEach(function (ch, i) { ctx.fillText(ch, x, y); x += widths[i] + gap; });
+      }
+      ctx.restore();
+    };
+  }
+
+  // ---------- SCENE 1: book-tree forest (0.0–1.6) ----------
+  var r1 = rng(11);
+  var trunks = [];
+  var BOOK_COLORS = ['#3d6a52', '#d9c9a3', '#b98a4a', '#4f7a5f', '#8a6a3a', '#cdbb90', '#2f5a45'];
+  for (var i = 0; i < 9; i++) {
+    var layer = i % 3;
+    var books = [];
+    var y = 1100;
+    while (y > -40) {
+      var hgt = 38 + Math.floor(r1() * 34);
+      books.push({ y: y - hgt, h: hgt - 4, c: BOOK_COLORS[Math.floor(r1() * BOOK_COLORS.length)], dx: Math.floor(r1() * 10) - 5 });
+      y -= hgt;
+    }
+    trunks.push({ x: 120 + i * 205 + r1() * 40, w: 110 + layer * 30 + r1() * 20, layer: layer, books: books });
+  }
+  var falling = [];
+  for (var f = 0; f < 26; f++) falling.push({ x: r1() * W, y0: r1() * H, v: 60 + r1() * 70, s: 10 + r1() * 12, rot: r1() * 6, c: r1() > 0.5 ? C.cream : C.moss });
+
+  function scene1(lt) {
+    background('#0c2218', '#163627');
+    var push = easeInOut(prog(lt, 0, 1.6)) * 0.14;
+    ctx.save();
+    ctx.translate(W / 2, H / 2);
+    ctx.scale(1 + push, 1 + push);
+    ctx.translate(-W / 2, -H / 2);
+    [0, 1, 2].forEach(function (layer) {
+      trunks.forEach(function (tr) {
+        if (tr.layer !== layer) return;
+        var shift = -push * (layer - 1) * 300;
+        ctx.save();
+        ctx.globalAlpha = 0.55 + layer * 0.22;
+        ctx.translate(shift, 0);
+        paperShadow(function () {
+          tr.books.forEach(function (b) {
+            ctx.fillStyle = b.c;
+            ctx.fillRect(tr.x - tr.w / 2 + b.dx, b.y, tr.w, b.h);
+          });
+        });
+        ctx.restore();
+      });
+    });
+    // canopy
+    ctx.fillStyle = 'rgba(36,82,64,0.9)';
+    for (var k = 0; k < 14; k++) {
+      ctx.beginPath();
+      ctx.ellipse(70 + k * 140, 40 + (k % 3) * 18, 130, 90, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // mint glow line up the central trunk
+    var cx = trunks[4].x;
+    var lp = easeOut(prog(lt, 0.9, 1.35));
+    if (lp > 0) {
+      var y1 = lerp(780, 190, lp);
+      ctx.strokeStyle = C.mint;
+      ctx.lineWidth = 6;
+      ctx.shadowColor = C.mint;
+      ctx.shadowBlur = 24;
+      ctx.beginPath();
+      ctx.moveTo(cx, 780);
+      ctx.lineTo(cx, y1);
+      ctx.stroke();
+      var np = prog(lt, 1.25, 1.6);
+      for (var n = 0; n < 5; n++) {
+        var a = (n / 4 - 0.5) * 1.4;
+        ctx.fillStyle = C.mint;
+        ctx.beginPath();
+        ctx.arc(cx + Math.sin(a) * 160, 190 - Math.cos(a) * 30 + Math.abs(n - 2) * 20, 10 * easeOutBack(clamp(np * 1.4 - n * 0.1, 0, 1)), 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    ctx.restore();
+    falling.forEach(function (l) {
+      leaf(l.x + Math.sin(lt * 1.4 + l.rot) * 30, (l.y0 + lt * l.v) % (H + 40), l.s, l.rot + lt, l.c, 0.8);
+    });
+    // match cut: node cluster expands into a ring
+    var mp = prog(lt, 1.3, 1.6);
+    if (mp > 0) {
+      ctx.fillStyle = 'rgba(244,234,213,' + (0.9 * mp) + ')';
+      ctx.beginPath();
+      ctx.arc(cx, 220, 20 + easeInOut(mp) * 900, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // ---------- SCENE 2: AI의 역사 (1.6–3.4) ----------
+  var r2 = rng(22);
+  var dots = [];
+  for (var d = 0; d < 13; d++) {
+    var ang = d * 0.9 + r2() * 0.3;
+    var rad = 60 + d * 27;
+    dots.push({ x: 960 + Math.cos(ang) * rad, y: 470 + Math.sin(ang) * rad * 0.78 });
+  }
+  var title2 = title('AI의 역사', 960, 930, 120, 0.35, 'wipe');
+  function scene2(lt) {
+    background(C.green0, C.green1);
+    // rings
+    for (var i = 0; i < 8; i++) {
+      var rp = easeOut(prog(lt, i * 0.04, 0.5 + i * 0.04));
+      var rad = (70 + i * 58) * rp * (1 + Math.sin(lt * 0.8 + i) * 0.004);
+      ctx.strokeStyle = i % 2 ? 'rgba(244,234,213,0.9)' : 'rgba(217,201,163,0.8)';
+      ctx.lineWidth = 7 - i * 0.4;
+      ctx.beginPath();
+      ctx.ellipse(960, 470, rad * 1.28, rad, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    var shown = 0;
+    dots.forEach(function (dt, i) { if (lt > 0.35 + i * 0.07) shown = i; });
+    ctx.strokeStyle = C.mint;
+    ctx.lineWidth = 2.5;
+    ctx.shadowColor = C.mint;
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    dots.forEach(function (dt, i) { if (i > shown) return; if (i === 0) ctx.moveTo(dt.x, dt.y); else ctx.lineTo(dt.x, dt.y); });
+    ctx.stroke();
+    dots.forEach(function (dt, i) {
+      var p = easeOutBack(prog(lt, 0.35 + i * 0.07, 0.35 + i * 0.07 + 0.25));
+      if (p <= 0) return;
+      ctx.fillStyle = C.mint;
+      ctx.beginPath();
+      ctx.arc(dt.x, dt.y, 9 * p, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.shadowBlur = 0;
+    title2(lt);
+  }
+
+  // ---------- SCENE 3: LLM의 원리 이해 (3.4–5.2) ----------
+  var r3 = rng(33);
+  var tree = [];
+  var level = [0, 1, 3, 7];
+  for (var lv = 0; lv < 4; lv++) {
+    var count = Math.pow(2, lv);
+    for (var j = 0; j < count; j++) {
+      tree.push({ tx: 960 + (j - (count - 1) / 2) * (1000 / Math.pow(2, lv)) * (lv === 3 ? 0.9 : 1), ty: 150 + lv * 175, sx: 160 + r3() * 1600, sy: 120 + r3() * 640, rot: r3() * 6, parent: lv === 0 ? -1 : level[lv - 1] + Math.floor(j / 2) });
+    }
+  }
+  var title3 = title('LLM의 원리 이해', 960, 930, 112, 0.5, 'snap');
+  function scene3(lt) {
+    background(C.green0, '#1a4030');
+    var conv = easeInOut(prog(lt, 0.7, 1.3));
+    var pos = tree.map(function (n, i) {
+      return { x: lerp(n.sx + Math.sin(lt * 1.2 + i) * 22, n.tx, conv), y: lerp(n.sy + Math.cos(lt * 1.1 + i) * 18, n.ty, conv) };
+    });
+    ctx.lineWidth = 2.5;
+    // network edges (floating phase): each node to next two
+    ctx.strokeStyle = 'rgba(127,227,200,' + (0.55 * (1 - conv)) + ')';
+    tree.forEach(function (n, i) {
+      [1, 3].forEach(function (o) {
+        var m = (i + o) % tree.length;
+        ctx.beginPath(); ctx.moveTo(pos[i].x, pos[i].y); ctx.lineTo(pos[m].x, pos[m].y); ctx.stroke();
+      });
+    });
+    ctx.strokeStyle = 'rgba(127,227,200,' + (0.9 * conv) + ')';
+    tree.forEach(function (n, i) {
+      if (n.parent < 0) return;
+      ctx.beginPath(); ctx.moveTo(pos[n.parent].x, pos[n.parent].y); ctx.lineTo(pos[i].x, pos[i].y); ctx.stroke();
+    });
+    tree.forEach(function (n, i) {
+      var pulse = Math.max(0, 1 - Math.abs(((lt * 7) % tree.length) - i) / 1.5);
+      leaf(pos[i].x, pos[i].y, 34, n.rot + lt * 0.4 * (1 - conv), i % 3 ? C.moss : C.cream, 1);
+      ctx.fillStyle = 'rgba(127,227,200,' + (0.35 + pulse * 0.65) + ')';
+      ctx.beginPath(); ctx.arc(pos[i].x, pos[i].y, 7 + pulse * 6, 0, Math.PI * 2); ctx.fill();
+    });
+    title3(lt);
+    // cursor line handoff
+    var cp = prog(lt, 1.55, 1.8);
+    if (cp > 0) {
+      ctx.fillStyle = C.mint;
+      var ce = easeInOut(cp);
+      ctx.fillRect(lerp(300, 1010, ce), 800, lerp(1320, 10, ce), 6);
+    }
+  }
+
+  // ---------- SCENE 4: 바이브 코딩 입문 (5.2–7.0) ----------
+  var r4 = rng(44);
+  var bars = [];
+  for (var b = 0; b < 6; b++) bars.push({ x: (b % 3) * 40, w: 120 + Math.floor(r4() * 200) });
+  var title4 = title('바이브 코딩 입문', 960, 150, 112, 0.3, 'slide');
+  function scene4(lt) {
+    background('#10281d', '#1a3a2b');
+    // window
+    ctx.fillStyle = 'rgba(95,127,74,0.35)';
+    ctx.fillRect(1450, 230, 300, 380);
+    ctx.fillStyle = 'rgba(242,180,90,0.25)';
+    ctx.fillRect(1470, 250, 120, 340);
+    // desk
+    ctx.fillStyle = C.wood;
+    ctx.fillRect(0, 760, W, 320);
+    // lamp
+    var lg = ctx.createRadialGradient(330, 560, 10, 330, 640, 520);
+    lg.addColorStop(0, 'rgba(242,180,90,0.45)');
+    lg.addColorStop(1, 'rgba(242,180,90,0)');
+    ctx.fillStyle = lg;
+    ctx.fillRect(0, 150, 900, 900);
+    paperShadow(function () {
+      ctx.fillStyle = C.amber;
+      ctx.beginPath(); ctx.moveTo(250, 600); ctx.lineTo(410, 600); ctx.lineTo(370, 520); ctx.lineTo(290, 520); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#3b5846';
+      ctx.fillRect(322, 600, 16, 160);
+      ctx.fillRect(280, 748, 100, 14);
+    });
+    // open book
+    paperShadow(function () {
+      ctx.fillStyle = C.cream;
+      ctx.beginPath(); ctx.moveTo(470, 770); ctx.lineTo(660, 735); ctx.lineTo(660, 790); ctx.lineTo(470, 826); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#e4d6b4';
+      ctx.beginPath(); ctx.moveTo(470, 770); ctx.lineTo(300, 735); ctx.lineTo(300, 790); ctx.lineTo(470, 826); ctx.closePath(); ctx.fill();
+    });
+    // laptop
+    var zoom = 1 + easeInOut(prog(lt, 0, 1.6)) * 0.06;
+    ctx.save();
+    ctx.translate(1000, 560); ctx.scale(zoom, zoom); ctx.translate(-1000, -560);
+    paperShadow(function () {
+      ctx.fillStyle = '#d9c9a3';
+      ctx.fillRect(740, 380, 520, 340);
+      ctx.fillStyle = '#b9a97f';
+      ctx.beginPath(); ctx.moveTo(700, 730); ctx.lineTo(1300, 730); ctx.lineTo(1270, 770); ctx.lineTo(730, 770); ctx.closePath(); ctx.fill();
+    });
+    ctx.fillStyle = '#0d2219';
+    ctx.fillRect(760, 400, 480, 300);
+    // typed bars
+    var shownW = 0;
+    bars.forEach(function (bar, i) {
+      var p = prog(lt, 0.15 + i * 0.12, 0.15 + i * 0.12 + 0.2);
+      ctx.fillStyle = i % 2 ? 'rgba(127,227,200,0.75)' : 'rgba(244,234,213,0.55)';
+      ctx.fillRect(790 + bar.x, 430 + i * 26, bar.w * p, 10);
+      if (p > 0) shownW = i;
+    });
+    if (Math.floor(lt * 2.4) % 2 === 0) {
+      ctx.fillStyle = C.mint;
+      ctx.fillRect(790, 430 + (shownW + 1) * 26, 10, 18);
+    }
+    // sprout -> tree
+    var sp = prog(lt, 0.95, 1.7);
+    if (sp > 0) {
+      var baseX = 1000, baseY = 600;
+      var sway = Math.sin(lt * 3) * 6 * sp;
+      var stemH = easeOut(sp) * 120;
+      ctx.strokeStyle = C.moss; ctx.lineWidth = 9; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(baseX, baseY); ctx.quadraticCurveTo(baseX + sway, baseY - stemH / 2, baseX + sway * 1.5, baseY - stemH); ctx.stroke();
+      var lp = easeOutBack(prog(sp, 0.35, 1));
+      if (lp > 0) {
+        leaf(baseX + sway * 1.5 - 30 * lp, baseY - stemH, 30 * lp, -0.5, '#6fa05a', 1);
+        leaf(baseX + sway * 1.5 + 30 * lp, baseY - stemH, 30 * lp, 0.5, '#7fb36a', 1);
+        ctx.fillStyle = 'rgba(244,234,213,' + (0.5 * lp) + ')';
+        ctx.beginPath(); ctx.arc(baseX + sway * 1.5, baseY - stemH - 20, 50 * lp, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    ctx.restore();
+    title4(lt);
+    // leaves scatter right
+    var sc = prog(lt, 1.55, 1.8);
+    if (sc > 0) {
+      for (var q = 0; q < 14; q++) leaf(1000 + sc * (400 + q * 40), 520 - q * 8 + Math.sin(q) * 60, 18, q + sc * 4, C.moss, 1 - sc * 0.4);
+    }
+  }
+
+  // ---------- SCENE 5: 숲속 도서관 (7.0–8.6) ----------
+  var r5 = rng(55);
+  var smallTrees = [];
+  for (var s = 0; s < 14; s++) smallTrees.push({ x: 60 + s * 140 + r5() * 50, h: 160 + r5() * 150, w: 46 + r5() * 24 });
+  var title5 = title('재능기부 강좌', 960, 930, 112, 0.3, 'track');
+  function icon(kind, x, y, p) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(p, p);
+    ctx.fillStyle = 'rgba(15,42,31,0.85)';
+    ctx.beginPath(); ctx.arc(0, 0, 62, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = C.mint; ctx.lineWidth = 4; ctx.shadowColor = C.mint; ctx.shadowBlur = 14;
+    if (kind === 0) { [16, 32, 48].forEach(function (r) { ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.stroke(); }); }
+    if (kind === 1) {
+      var pts = [[-30, 20], [0, -30], [30, 20]];
+      ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); ctx.lineTo(pts[1][0], pts[1][1]); ctx.lineTo(pts[2][0], pts[2][1]); ctx.closePath(); ctx.stroke();
+      ctx.fillStyle = C.mint; pts.forEach(function (pt) { ctx.beginPath(); ctx.arc(pt[0], pt[1], 8, 0, Math.PI * 2); ctx.fill(); });
+    }
+    if (kind === 2) {
+      ctx.beginPath(); ctx.moveTo(0, 36); ctx.lineTo(0, -8); ctx.stroke();
+      ctx.fillStyle = C.mint; ctx.beginPath(); ctx.ellipse(-16, -14, 18, 10, -0.6, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.ellipse(16, -14, 18, 10, 0.6, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+  }
+  function scene5(lt) {
+    var pull = 1.08 - easeInOut(prog(lt, 0, 1.6)) * 0.08;
+    var g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, '#12301f'); g.addColorStop(0.6, '#1d4a35'); g.addColorStop(1, '#10281d');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.save();
+    ctx.translate(W / 2, H * 0.6); ctx.scale(pull, pull); ctx.translate(-W / 2, -H * 0.6);
+    // hills
+    ctx.fillStyle = '#1d4533';
+    ctx.beginPath(); ctx.moveTo(0, 640); ctx.quadraticCurveTo(480, 520, 960, 620); ctx.quadraticCurveTo(1440, 520, 1920, 640); ctx.lineTo(1920, 1080); ctx.lineTo(0, 1080); ctx.closePath(); ctx.fill();
+    // library building
+    paperShadow(function () {
+      ctx.fillStyle = '#c9b78d';
+      ctx.fillRect(740, 520, 440, 200);
+      ctx.fillStyle = '#8a6a3a';
+      ctx.beginPath(); ctx.moveTo(720, 520); ctx.lineTo(960, 430); ctx.lineTo(1200, 520); ctx.closePath(); ctx.fill();
+    });
+    for (var w = 0; w < 4; w++) {
+      var flick = 0.85 + Math.sin(lt * 3 + w) * 0.08;
+      ctx.fillStyle = 'rgba(242,180,90,' + flick + ')';
+      ctx.fillRect(775 + w * 100, 570, 62, 90);
+    }
+    // book-trees
+    smallTrees.forEach(function (tr, i) {
+      if (tr.x > 640 && tr.x < 1290) return;
+      var base = 700 + (i % 3) * 36;
+      ctx.fillStyle = BOOK_COLORS[i % BOOK_COLORS.length];
+      ctx.fillRect(tr.x - tr.w / 2, base - tr.h, tr.w, tr.h);
+      ctx.fillStyle = 'rgba(36,82,64,0.95)';
+      ctx.beginPath(); ctx.ellipse(tr.x, base - tr.h - 20, tr.w * 1.7, tr.w * 1.3, 0, 0, Math.PI * 2); ctx.fill();
+    });
+    ctx.restore();
+    // icons
+    var xs = [640, 960, 1280];
+    var ip = [0, 1, 2].map(function (k) { return easeOutBack(prog(lt, 0.3 + k * 0.15, 0.6 + k * 0.15)); });
+    var lp = prog(lt, 0.7, 1.1);
+    if (lp > 0) {
+      ctx.strokeStyle = C.amber; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(xs[0], 300); ctx.lineTo(lerp(xs[0], xs[2], easeOut(lp)), 300); ctx.stroke();
+    }
+    xs.forEach(function (x, k) { if (ip[k] > 0) icon(k, x, 300 - Math.sin(lt * 2 + k) * 6, ip[k]); });
+    for (var q = 0; q < 10; q++) leaf((q * 211 + lt * 40) % W, 120 + q * 50 + Math.sin(lt + q) * 20, 12, q + lt, C.cream, 0.7);
+    title5(lt);
+  }
+
+  // ---------- SCENE 6: End card (8.4–10.0) ----------
+  var line1 = Array.from('숲에서, AI를 만나다.');
+  function scene6(lt) {
+    background(C.green0, C.green1);
+    // book-tree
+    var tp = easeOutBack(prog(lt, 0.1, 0.7));
+    ctx.save();
+    ctx.translate(960, 760); ctx.scale(tp, tp); ctx.translate(-960, -760);
+    paperShadow(function () {
+      var cols = ['#3d6a52', '#d9c9a3', '#b98a4a', '#4f7a5f', '#cdbb90', '#8a6a3a', '#2f5a45', '#d9c9a3'];
+      for (var i = 0; i < 10; i++) { ctx.fillStyle = cols[i % 8]; ctx.fillRect(924 + (i % 2) * 4, 760 - i * 34, 72, 30); }
+      ctx.fillStyle = 'rgba(36,82,64,0.98)';
+      ctx.beginPath(); ctx.ellipse(960, 380, 190, 130, 0, 0, Math.PI * 2); ctx.fill();
+    });
+    var np = 0.6 + Math.sin(lt * 4) * 0.2;
+    ctx.fillStyle = 'rgba(127,227,200,' + np + ')';
+    ctx.shadowColor = C.mint; ctx.shadowBlur = 24;
+    ctx.beginPath(); ctx.arc(1010, 350, 12, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    // still leaves
+    var r6 = rng(66);
+    for (var k = 0; k < 8; k++) leaf(160 + r6() * 1600, 120 + r6() * 800, 14, r6() * 6, C.cream, 0.55);
+    // slogan, one syllable block at a time
+    ctx.save();
+    ctx.font = '800 108px ' + FONT;
+    ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+    ctx.fillStyle = C.cream;
+    ctx.shadowColor = 'rgba(0,0,0,0.45)'; ctx.shadowBlur = 18;
+    var widths = line1.map(function (ch) { return ctx.measureText(ch).width; });
+    var total = widths.reduce(function (a, b) { return a + b; }, 0);
+    var x = 960 - total / 2;
+    line1.forEach(function (ch, i) {
+      var p = easeOutBack(prog(lt, 0.15 + i * 0.02, 0.15 + i * 0.02 + 0.2));
+      if (p > 0) {
+        ctx.save();
+        ctx.translate(x + widths[i] / 2, 880);
+        var s = lerp(0.8, 1, clamp(p, 0, 1.1));
+        ctx.scale(s, s);
+        ctx.globalAlpha = clamp(p * 2, 0, 1);
+        ctx.fillText(ch, -widths[i] / 2, 0);
+        ctx.restore();
+      }
+      x += widths[i];
+    });
+    ctx.restore();
+    // library name, soft mask reveal
+    var p2 = easeInOut(prog(lt, 0.55, 0.85));
+    if (p2 > 0) {
+      ctx.save();
+      ctx.font = '600 54px ' + FONT;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      var w2 = ctx.measureText('강동 숲속 도서관').width;
+      ctx.beginPath(); ctx.rect(960 - w2 / 2 - 10, 960, (w2 + 20) * p2, 80); ctx.clip();
+      ctx.fillStyle = C.amber;
+      ctx.fillText('강동 숲속 도서관', 960, 1000);
+      ctx.restore();
+    }
+  }
+
+  var SCENES = [
+    { start: 0.0, dur: 1.6, draw: scene1 },
+    { start: 1.6, dur: 1.8, draw: scene2 },
+    { start: 3.4, dur: 1.8, draw: scene3 },
+    { start: 5.2, dur: 1.8, draw: scene4 },
+    { start: 7.0, dur: 1.6, draw: scene5 },
+    { start: 8.4, dur: 1.6, draw: scene6 },
+  ];
+
+  function render(t) {
+    t = clamp(t, 0, DURATION);
+    ctx.save();
+    ctx.clearRect(0, 0, W, H);
+    for (var i = 0; i < SCENES.length; i++) {
+      var sc = SCENES[i];
+      var lt = t - sc.start;
+      var tail = 0.4; // previous scene stays beneath while the next one transitions in
+      if (lt < 0 || lt > sc.dur + tail) continue;
+      ctx.save();
+      if (i > 0 && lt < 0.4) {
+        if (i === 5) {
+          // circular reveal from the library window light
+          var rp = easeInOut(prog(lt, 0, 0.4));
+          ctx.beginPath();
+          ctx.arc(W / 2, 560, rp * 1300, 0, Math.PI * 2);
+          ctx.clip();
+        } else {
+          ctx.globalAlpha = easeOut(prog(lt, 0, 0.3));
+        }
+      }
+      sc.draw(Math.min(lt, sc.dur + tail));
+      ctx.restore();
+    }
+    ctx.restore();
+  }
+
+  // ---------- transport ----------
+  var playBtn = document.getElementById('play');
+  var seek = document.getElementById('seek');
+  var timeEl = document.getElementById('time');
+  var playing = true;
+  var t = 0;
+  var last = null;
+  function show() {
+    seek.value = String(t);
+    timeEl.textContent = t.toFixed(2) + ' / ' + DURATION.toFixed(2) + 's';
+    render(t);
+  }
+  function tick(now) {
+    if (playing) {
+      if (last !== null) t += (now - last) / 1000;
+      if (t >= DURATION) t = t % DURATION;
+      show();
+    }
+    last = now;
+    requestAnimationFrame(tick);
+  }
+  function setPlaying(v) {
+    playing = v;
+    playBtn.textContent = v ? '일시정지' : '재생';
+  }
+  playBtn.addEventListener('click', function () { setPlaying(!playing); });
+  seek.addEventListener('input', function () { setPlaying(false); t = parseFloat(seek.value); show(); });
+  document.addEventListener('keydown', function (e) { if (e.code === 'Space') { e.preventDefault(); setPlaying(!playing); } });
+  window.__seek = function (v) { setPlaying(false); t = v; show(); };
+  var startAt = parseFloat(new URLSearchParams(location.search).get('t') || '');
+  if (!isNaN(startAt)) { setPlaying(false); t = clamp(startAt, 0, DURATION); }
+  show();
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

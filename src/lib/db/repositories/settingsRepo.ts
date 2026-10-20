@@ -15,6 +15,8 @@ interface SettingsRow {
   language: string;
   trusted_workspaces: string;
   last_workspace_root: string | null;
+  templates_dir: string | null;
+  terminal_auto_paste: number | null;
 }
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
@@ -25,6 +27,8 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   language: 'ko',
   trustedWorkspaces: [],
   lastWorkspaceRoot: null,
+  templatesDir: null,
+  terminalAutoPaste: false,
 };
 
 function parseSettingsRow(row: SettingsRow): AppSettings {
@@ -36,6 +40,8 @@ function parseSettingsRow(row: SettingsRow): AppSettings {
     language: row.language === 'en' ? 'en' : 'ko',
     trustedWorkspaces: JSON.parse(row.trusted_workspaces || '[]') as string[],
     lastWorkspaceRoot: row.last_workspace_root,
+    templatesDir: row.templates_dir ?? null,
+    terminalAutoPaste: row.terminal_auto_paste === 1,
   };
 }
 
@@ -49,8 +55,8 @@ async function fetchOrInitRow(db: SqlDatabase): Promise<SettingsRow> {
   await db.execute(
     `INSERT OR IGNORE INTO app_settings (
       id, open_tabs, active_tab_id, theme, language,
-      trusted_workspaces, last_workspace_root
-    ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      trusted_workspaces, last_workspace_root, templates_dir, terminal_auto_paste
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       DEFAULT_APP_SETTINGS.id,
       JSON.stringify(DEFAULT_APP_SETTINGS.openTabs),
@@ -59,6 +65,8 @@ async function fetchOrInitRow(db: SqlDatabase): Promise<SettingsRow> {
       DEFAULT_APP_SETTINGS.language,
       JSON.stringify(DEFAULT_APP_SETTINGS.trustedWorkspaces),
       DEFAULT_APP_SETTINGS.lastWorkspaceRoot,
+      DEFAULT_APP_SETTINGS.templatesDir,
+      DEFAULT_APP_SETTINGS.terminalAutoPaste ? 1 : 0,
     ],
   );
   return {
@@ -69,6 +77,8 @@ async function fetchOrInitRow(db: SqlDatabase): Promise<SettingsRow> {
     language: DEFAULT_APP_SETTINGS.language,
     trusted_workspaces: JSON.stringify(DEFAULT_APP_SETTINGS.trustedWorkspaces),
     last_workspace_root: DEFAULT_APP_SETTINGS.lastWorkspaceRoot,
+    templates_dir: DEFAULT_APP_SETTINGS.templatesDir,
+    terminal_auto_paste: 0,
   };
 }
 
@@ -102,7 +112,21 @@ export async function getSettings(
   return globalSettings;
 }
 
-export async function updateSettings(
+let settingsWriteQueue: Promise<unknown> = Promise.resolve();
+
+export function updateSettings(
+  updates: Partial<Omit<AppSettings, 'id'>>,
+  dbOverride?: SqlDatabase,
+): Promise<AppSettings> {
+  const next = settingsWriteQueue.then(
+    () => updateSettingsInternal(updates, dbOverride),
+    () => updateSettingsInternal(updates, dbOverride),
+  );
+  settingsWriteQueue = next.catch(() => undefined);
+  return next;
+}
+
+async function updateSettingsInternal(
   updates: Partial<Omit<AppSettings, 'id'>>,
   dbOverride?: SqlDatabase,
 ): Promise<AppSettings> {
@@ -115,7 +139,7 @@ export async function updateSettings(
     await db.execute(
       `UPDATE app_settings SET
         open_tabs = ?, active_tab_id = ?, theme = ?, language = ?,
-        trusted_workspaces = ?, last_workspace_root = ?
+        trusted_workspaces = ?, last_workspace_root = ?, templates_dir = ?, terminal_auto_paste = ?
       WHERE id = 'singleton'`,
       [
         JSON.stringify(merged.openTabs),
@@ -124,6 +148,8 @@ export async function updateSettings(
         merged.language,
         JSON.stringify(merged.trustedWorkspaces),
         merged.lastWorkspaceRoot,
+        merged.templatesDir,
+        merged.terminalAutoPaste ? 1 : 0,
       ],
     );
     return merged;
@@ -168,7 +194,7 @@ export async function updateSettings(
       await projectDb.execute(
         `UPDATE app_settings SET
           open_tabs = ?, active_tab_id = ?, theme = ?, language = ?,
-          trusted_workspaces = ?, last_workspace_root = ?
+          trusted_workspaces = ?, last_workspace_root = ?, templates_dir = ?, terminal_auto_paste = ?
         WHERE id = 'singleton'`,
         [
           JSON.stringify(merged.openTabs),
@@ -177,6 +203,8 @@ export async function updateSettings(
           merged.language,
           JSON.stringify(merged.trustedWorkspaces),
           merged.lastWorkspaceRoot,
+          merged.templatesDir,
+          merged.terminalAutoPaste ? 1 : 0,
         ],
       );
       return {

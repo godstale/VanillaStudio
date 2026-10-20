@@ -1,11 +1,11 @@
 ---
-title: 'Technical Design v0.3 (기술 설계서)'
+title: 'Technical Design v1.0 (v2 기술 설계서)'
 type: source
 tags: [planning, architecture, phase-p2]
 date: 2026-09-28
 source_file: Docs/Planning/Technical-Design.md
 sources: [product-spec]
-last_updated: 2026-09-29
+last_updated: 2026-10-05
 ---
 
 ## Summary
@@ -28,3 +28,7 @@ Tauri 앱(React UI + Rust Core)과 외부 프로세스(에이전트 CLI, 프로�
 
 - [[feasibility-risks]] — ⚠️ 항목의 PoC 계획
 - [[decisions]] — D-001~D-017 모두 Accepted (2026-09-29)
+
+## v2 개정 (2026-10-05)
+
+v1.0으로 전면 개정: ACP 호스트·파이프라인 제거, 터미널 실행+클립보드, 가이드 엔진, `workspace.json`·`scene.json`·`sequence.json` 계약, Bridge v2(step·done·choice), `.vsx` 패키지, 보안 개정. 런타임·디자인 토큰·Bridge 본체는 보존. 기획: [[refactor-spec-v2]], 결정: [[decisions]].

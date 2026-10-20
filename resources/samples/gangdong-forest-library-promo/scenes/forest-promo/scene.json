@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "id": "scn_forestPromo01",
+  "name": "강동 숲속 도서관 강좌 홍보",
+  "template": "commercial@1",
+  "brief": {
+    "subject": "강동 숲속 도서관 재능기부 강좌",
+    "goal": "강좌 참여 유도",
+    "audience": "지역 주민·개발 입문자",
+    "message": "숲에서, AI를 만나다.",
+    "language": "ko"
+  },
+  "type": "motion",
+  "duration": {
+    "seconds": 10.000
+  },
+  "creativeMode": [],
+  "structure": "multi-shot",
+  "adStructure": "",
+  "brandVoice": [],
+  "visualStyle": {
+    "medium": "",
+    "lighting": "",
+    "typography": "",
+    "density": "",
+    "cameraFeeling": "",
+    "mood": ""
+  },
+  "motionVocabulary": {
+    "typography": [],
+    "object": [],
+    "camera": [],
+    "material": [],
+    "transition": []
+  },
+  "beats": [
+    {
+      "id": "books",
+      "start": 0.000,
+      "end": 1.600,
+      "role": "opening",
+      "copy": "",
+      "visual": "books grow into trees",
+      "motion": [],
+      "camera": "",
+      "transitionOut": "crossfade",
+      "notes": ""
+    },
+    {
+      "id": "history",
+      "start": 1.600,
+      "end": 3.400,
+      "role": "topic-1",
+      "copy": "",
+      "visual": "timeline of dots",
+      "motion": [],
+      "camera": "",
+      "transitionOut": "crossfade",
+      "notes": ""
+    },
+    {
+      "id": "llm",
+      "start": 3.400,
+      "end": 5.200,
+      "role": "topic-2",
+      "copy": "",
+      "visual": "tree of tokens",
+      "motion": [],
+      "camera": "",
+      "transitionOut": "crossfade",
+      "notes": ""
+    },
+    {
+      "id": "vibe",
+      "start": 5.200,
+      "end": 7.000,
+      "role": "topic-3",
+      "copy": "",
+      "visual": "paper cards and bars",
+      "motion": [],
+      "camera": "",
+      "transitionOut": "crossfade",
+      "notes": ""
+    },
+    {
+      "id": "volunteer",
+      "start": 7.000,
+      "end": 8.400,
+      "role": "topic-4",
+      "copy": "",
+      "visual": "icons over small trees",
+      "motion": [],
+      "camera": "",
+      "transitionOut": "circular-reveal",
+      "notes": ""
+    },
+    {
+      "id": "closing",
+      "start": 8.400,
+      "end": 10.000,
+      "role": "closing",
+      "copy": "",
+      "visual": "tagline and library name",
+      "motion": [],
+      "camera": "",
+      "transitionOut": "",
+      "notes": ""
+    }
+  ],
+  "copy": {
+    "textFidelity": "exact",
+    "items": [
+      "AI의 역사",
+      "LLM의 원리 이해",
+      "바이브 코딩 입문",
+      "재능기부 강좌",
+      "숲에서, AI를 만나다.",
+      "강동 숲속 도서관"
+    ]
+  },
+  "identity": {
+    "product": "",
+    "character": "",
+    "mustKeep": []
+  },
+  "endCard": {
+    "holdSeconds": 1.600,
+    "elements": [
+      "tagline",
+      "library name"
+    ]
+  },
+  "audio": {
+    "voiceOver": null,
+    "soundDesign": null,
+    "music": null
+  },
+  "constraints": {
+    "avoid": [],
+    "noUnspecifiedElements": true
+  },
+  "custom": {},
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

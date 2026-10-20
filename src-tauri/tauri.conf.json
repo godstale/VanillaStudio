@@ -23,7 +23,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self' http://localhost:* ws://localhost:*; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:*; style-src 'self' 'unsafe-inline' http://localhost:*; img-src 'self' asset: https://asset.localhost blob: data: http://localhost:*; font-src 'self' data: http://localhost:*; connect-src 'self' ipc: http://ipc.localhost http://localhost:* ws://localhost:*; frame-src http://127.0.0.1:* http://localhost:*",
+      "csp": "default-src 'self' http://localhost:* ws://localhost:*; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:*; style-src 'self' 'unsafe-inline' http://localhost:*; img-src 'self' asset: https://asset.localhost https://media.skillry.dev blob: data: http://localhost:*; font-src 'self' data: http://localhost:*; connect-src 'self' ipc: http://ipc.localhost http://localhost:* ws://localhost:*; frame-src http://127.0.0.1:* http://localhost:*",
       "assetProtocol": {
         "enable": true,
         "scope": ["$APPDATA/**", "$APPLOCALDATA/**"]
@@ -42,11 +42,13 @@
     ],
     "resources": {
       "../resources/project-template": "resources/project-template",
+      "../resources/workspace-template": "resources/workspace-template",
       "../resources/runtime": "resources/runtime",
       "../resources/workers": "resources/workers",
       "../resources/palettes": "resources/palettes",
-      "../resources/templates": "resources/templates",
-      "../resources/skills": "resources/skills"
+      "../resources/skills": "resources/skills",
+      "../resources/guides": "resources/guides",
+      "../resources/opus": "resources/opus"
     },
     "shortDescription": "Brief to product pipeline studio",
     "category": "DeveloperTool",

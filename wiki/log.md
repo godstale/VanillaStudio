@@ -1,6 +1,20 @@
-# Wiki Log (append-only)
+Ran lint. See lint-report.md for details.
 
-> 형식: `## [YYYY-MM-DD] <type> | <title>` + 한두 줄. type: ingest · decision · phase · research · poc · milestone · lint · update
+## [2026-10-18] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-10-06] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-10-06] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-10-06] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
 
 ## [2026-09-28] phase | P0 준비 확인
 - 템플릿 원본을 git 기준 커밋(master 65272b8)으로 보존, `docs/planning` 브랜치 생성. → [[phase-p0-setup]]
@@ -238,3 +252,104 @@
 
 ## [2026-10-02] lint | Wiki health check
 - orphans 0, broken links 0. See lint-report.md for details.
+
+## [2026-10-05] sample | Gangdong forest library promo motion graphic
+- Saved the video-model prompt (`Docs/Prompts/Gangdong-Forest-Library-Promo-Video-Prompt.txt`, 6.8k chars, per `Docs/Commercial-Motion-Graphic-Prompt-Guide.txt`) and a hand-coded 10s Canvas version (`resources/samples/gangdong-forest-library-promo/index.html`, deterministic render(t), no deps). Registered in the playground (global DB row + files under `%APPDATA%/dev.vanilla.studio/playground/<id>/`, kind video, played by the web player). Sample only: no app code changed. See: [[overview]]
+
+## [2026-10-05] plan | v2 refactor spec drafted
+- Wrote `Docs/Planning/Refactor-Spec-v2.md` v0.1 + D-022~D-028 (Proposed) after interview. Awaiting user review. See: [[refactor-spec-v2]]
+
+## [2026-10-05] decision | v2 spec v0.2: D-029~D-033 (Proposed)
+- Interview round 2 applied to [[refactor-spec-v2]]: one sequence per workspace, global canvas, custom templates in v2.0, static-page input-driven steps, conditional v1 migration.
+
+## [2026-10-05] decision | v2 spec v0.3: interview round 3
+- [[refactor-spec-v2]]: canvas presets, static.mode scroll/steps, configurable global templatesDir. No open questions left; awaiting approval.
+
+## [2026-10-05] update | v2 docs revised: Technical-Design v1.0, AGENTS.md v2, Implementation-Plan v2.0, TODO v2.0
+- D-022~D-033 Accepted (D-010/D-018 Superseded). v1 plan/TODO/parallel guide moved to `Docs/Planning/legacy/`. Next: V1 foundation (T1.0). See: [[implementation-plan]], [[technical-design]], [[parallel-execution]]
+
+## [2026-10-05] update | Legacy removal plan (T1.2)
+- Added issue-v2-legacy-removal (units U1-U6, keep list, 3 open confirmations). See: [[issue-v2-legacy-removal]]
+
+## [2026-10-05] poc | R-5 canvas spike
+- @xyflow/react adopted: 100 nodes 60fps, 300 nodes 59.7fps. See: [[poc-r5]]
+
+## [2026-10-05] milestone | V1 foundation
+- T1.0-T1.13 done; GUI demos pending human check. See: [[milestone-v1]]
+
+## [2026-10-05] milestone | V2 scenes and guides
+- T2.1-T2.12 done. See: [[milestone-v2]]
+
+## [2026-10-06] milestone | V3 guides and inspector
+- T3.1-T3.14 done. See: [[milestone-v3]]
+
+## [2026-10-06] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-10-06] milestone | V4 run and preview
+- T4.1-T4.11 done; real Claude Code/Codex demo and GUI pending human check. See: [[milestone-v4]], [[poc-agent-terminal]]
+
+## [2026-10-06] milestone | V5 reference analysis
+- T5.1-T5.7 done; real agent demo and GUI pending human check. See: [[milestone-v5]]
+
+## [2026-10-06] poc | R-1 scene transitions
+- Two-iframe overlay adopted (60fps for 5 transitions); match-cut dropped from v2.0; custom transitions are declarative. See: [[poc-r1]]
+
+## [2026-10-06] milestone | V6 sequence and playground
+- T6.0-T6.8 done; GUI check pending. See: [[milestone-v6]]
+
+## [2026-10-06] update | v1 migration ship gate
+- 3 v1 samples converted and played back; migration ships. See: [[issue-v1-migration]]
+
+## [2026-10-06] milestone | V7 package migration release
+- T7.1-T7.7 done, T7.8 automated part done (installer built), T7.9 logs. Human checks pending. See: [[milestone-v7]], [[phase-p4-v2]]
+
+## [2026-10-17] decision | D-034 agent-centric UI Accepted
+- Sequence/Scenes/Templates/Gallery menus, floating inspector, no dock, comments.json contract. See: [[ui-agent-centric]], [[decisions]]
+
+## [2026-10-17] lint | Wiki health check
+- 69 pages, orphans 0, broken links 0. See: wiki/lint-report.md
+
+## [2026-10-17] update | 앱 UI 다듬기(시퀀스·신·템플릿·플레이그라운드)
+- 시퀀스 신 카드 타이틀 클릭 → 신 화면 이동, 신 화면 콘텐츠 전체 너비+플로팅 툴바·드래그 코멘트·신 우클릭 메뉴(열기·가이드 편집·터미널·폴더·시작신), 템플릿 상단 탭+갤러리 카드+즐겨찾기+적용 다이얼로그(신/시퀀스 대상 선택), 지정 외 우클릭 차단(AppShell 가드), 플레이그라운드 카드 클릭 → 우하단 1/4 플로팅 시퀀스 재생. 검증: lint·typecheck·vitest 154파일 1150테스트 통과.
+
+## [2026-10-17] update | 신 화면 계약 검사 제거·플레이그라운드 시퀀스 단위 개편
+- 신 화면 본문의 계약 검사(CheckPanel) 섹션 삭제(인스펙터 미리보기 탭은 유지). 플레이그라운드는 시퀀스 단위 등록 1카드(시퀀스 순서대로 신 썸네일)+재생은 우하단 플로팅 전용으로 개편, 큰 인라인 재생기 삭제. 검증: lint·typecheck·vitest 154파일 1150테스트 통과.
+
+## [2026-10-18] decision | D-035 Opus 5.5 아카이브 분해·템플릿화 및 4대 매체 의도 추천 엔진 구현
+- `yihui-dev/awesome-opus5-5-videos` 분석 반영: 내장 가이드 템플릿 12종(`opus-*@1`) + 분해형 세부 프리셋 15종(신/비트 구조·타이포그래피·모션 효과·3D 설정, `opus-catalog.json`) + 쇼케이스 레시피 22종 + WCAG AA 검증 컬러 팔레트 8종(`opus-*`) + 용어집 기법 20종 추가. 모든 항목에 미리보기 이미지(`previewUrl`)와 실시간 동작 확인 링크(`actionUrl`) 포함. 4대 매체 의도(`web`·`image`·`slide`·`motion`) 로컬 추천 엔진(`recommend.ts`) 및 `NewSceneDialog`·`SceneInspector`·`/templates` 연동 완료. → [[research-2026-10-18-awesome-opus55-videos]], [[decisions]]
+
+## [2026-10-18] lint | Wiki health check
+- 69 pages, orphans 0, broken links 0. See: wiki/lint-report.md
+
+## [2026-10-18] decision | D-036 워크스페이스 비파괴 초기화 및 AI 에이전트 연동 브리지 구현
+- 시작 시 미초기화 워크스페이스 상태 자동 정리 후 온보딩 표시. 빈 폴더·비어 있지 않은 폴더 모두 비파괴 초기화(`AGENTS.md`·`CLAUDE.md` 마커 병합, `VANILLA_GUIDE.md`·`WORK_ORDER.md`·`.vanilla/work-order.json`·`.vanilla/resources/`·`scripts/vanilla-agent.mjs` 생성). 스튜디오 변경 내역과 코멘트를 `WORK_ORDER.md`로 통합 기록하고 `pnpm vanilla` CLI 브리지로 에이전트 탐색·스캐폴딩·동기화·처리 완료 연동. → [[decisions]], [[ui-agent-centric]]
+
+## [2026-10-18] lint | Wiki health check
+- 69 pages, orphans 0, broken links 0. See: wiki/lint-report.md
+
+## [2026-10-18] decision | D-037 스토리보드 & 3-문서 Material-First 워크플로 구현
+- Storyboard(/storyboard) 최상단 메뉴 + storyboard.json/01-brief/02-design-flow/03-visual-direction/data 재료 계약(zod·canonical), 코멘트·작업지시서 원인 계층(layer)+taxonomyTags 및 WORK_ORDER 역추적 체크리스트, CLI storyboard/init-storyboard/taxonomy, 5단계 에이전트 프로세스, 텍소노미 7종 용어집 등록. 기본 진입은 /workspace 유지. → [[decisions]]
+
+## [2026-10-18] ui | 작업 지시서 온보딩 개편(필수·고급·에이전트 시작 대기)
+- 타이틀·매체 의도·핵심 한 줄을 필수 입력으로, 목적·포함·제외는 고급(접기) 항목으로. brief.title 스키마 추가(구 파일은 기본값 ''으로 호환), 01-brief·WORK_ORDER에 타이틀 기록.
+- 저장 후에도 온보딩 화면을 유지하고 3초 간격으로 에이전트 시작 신호(단계 전진·문서/재료 갱신·sequence.json·scenes/)를 감시, 신호 때 스토리보드 보드로 전환. 시작 전 재편집·재저장 가능(자리 표시자 문서는 덮어쓰지 않음).
+
+## [2026-10-18] release | feat/storyboard-brief-onboarding push
+- 스토리보드 묶음 120파일 커밋(030d1f9) 후 origin에 push. main 병합 아님. 작업트리 잔여: 빌드 설정·Tauri 비-스토리보드 명령·신/워크스페이스 UI·agent-reach 스킬(미커밋 유지).
+
+## [2026-10-18] fix | 실사용 검증 5건 수정
+- 스캐폴드 초안 실행 불가·템플릿 조용한 교체+0건·static copy 문서 충돌·플레이어 전 키 다음 처리·마지막 단계 종료 멈춤을 `fix/scaffold-playground-5-issues`에서 수정. Bridge `input`(v2.1) 추가, 번들에 guides·opus 포함, 검사기에 컴포지션·useSteps 검사 추가. 검증: lint·typecheck·vitest 1173·cargo 127 통과. 상세: [[issue-playground-scaffold-fixes]]
+
+## [2026-10-18] lint | Wiki health check
+- 70 pages, orphans 0, broken links 0. See: wiki/lint-report.md
+
+## [2026-10-18] decision | D-038 플레이그라운드 static 입력 타입 위임(Bridge `input` v2.1)
+- 모든 키가 다음으로 처리되던 문제를 타입 입력 위임으로 수정한 결정. `input` 메시지·합성 디스패치·`stepForward()` 분리·종료 후 복구·런타임 갱신. D-032 확장. → [[decisions]]
+## [2026-10-20] feature | Scene shared thumbnail poster.svg (D-039 Proposed)
+- Empty scene/sequence thumbnails were all auto-capture .vanilla/thumb.png (local-only). Added committed poster.svg convention drawn in code by the agent, app fallback display, and AGENTS.md/guide-template instructions. See: [[poster-thumbnail-d039]]
+
+## [2026-10-21] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.

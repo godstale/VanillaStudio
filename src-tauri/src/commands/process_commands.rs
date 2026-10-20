@@ -17,36 +17,17 @@ const INSTALL_TIMEOUT: Duration = Duration::from_secs(15 * 60);
 #[serde(rename_all = "camelCase")]
 pub enum OwnedJob {
     ProjectDeps,
-    /// `npm install` of the pinned Claude Code ACP adapter into `<appData>/adapters/<dir>`.
-    ClaudeAdapter,
 }
-
-/// Pinned adapter (PoC S3 verified). Keep in sync with `CLAUDE_ADAPTER_VERSION` in `src/lib/agents/registry.ts`.
-pub const CLAUDE_ADAPTER_PACKAGE: &str = "@agentclientprotocol/claude-agent-acp";
-pub const CLAUDE_ADAPTER_VERSION: &str = "0.83.0";
-/// Folder name under `<appData>/adapters`.
-pub const CLAUDE_ADAPTER_DIR: &str = "claude-agent-acp@0.83.0";
 
 impl OwnedJob {
     pub fn program(self) -> &'static str {
         match self {
             OwnedJob::ProjectDeps => "pnpm",
-            OwnedJob::ClaudeAdapter => "npm",
         }
     }
     pub fn argv(self) -> &'static [&'static str] {
         match self {
-            OwnedJob::ProjectDeps => &["install", "--reporter=append-only"],
-            // --ignore-scripts: the adapter needs no install scripts (verified in T2.2), so a
-            // compromised transitive package cannot run code at install time.
-            OwnedJob::ClaudeAdapter => &[
-                "install",
-                "--no-audit",
-                "--no-fund",
-                "--ignore-scripts",
-                "--save-exact",
-                "@agentclientprotocol/claude-agent-acp@0.83.0",
-            ],
+            OwnedJob::ProjectDeps => &["install", "--ignore-workspace", "--reporter=append-only"],
         }
     }
 }
@@ -143,7 +124,7 @@ fn project_dir(dir: &str) -> Result<PathBuf, String> {
     if get_active_workspace_internal().is_none() {
         return Err("no-workspace".into());
     }
-    resolve_and_verify_workspace_path(dir, None, true)
+    resolve_and_verify_workspace_path(dir, None, true).map(|p| plain_path(&p))
 }
 
 /// `pnpm install` in `project_dir`. The caller must have obtained user consent (wizard, once per
@@ -171,103 +152,6 @@ pub async fn install_project_deps(project_dir: String, on_event: tauri::ipc::Cha
 #[tauri::command]
 pub fn install_project_deps_cancel() {
     INSTALL_CANCEL.store(true, Ordering::SeqCst);
-}
-
-/// `<appData>/adapters/<CLAUDE_ADAPTER_DIR>`.
-pub fn claude_adapter_dir(app_data_dir: &Path) -> PathBuf {
-    app_data_dir.join("adapters").join(CLAUDE_ADAPTER_DIR)
-}
-
-/// Entry script of an installed adapter, relative to its install dir.
-pub const CLAUDE_ADAPTER_ENTRY: &str = "node_modules/@agentclientprotocol/claude-agent-acp/dist/index.js";
-
-#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
-#[serde(rename_all = "camelCase")]
-pub struct AdapterStatus {
-    pub installed: bool,
-    /// Version read from the installed package.json.
-    pub version: Option<String>,
-    /// True when `version` equals the pinned version.
-    pub pinned: bool,
-    pub entry: Option<String>,
-}
-
-/// Inspect an install dir: entry script present and package version read from disk.
-pub fn verify_claude_adapter(dir: &Path) -> AdapterStatus {
-    let entry = dir.join(CLAUDE_ADAPTER_ENTRY);
-    let pkg = dir.join("node_modules").join(CLAUDE_ADAPTER_PACKAGE).join("package.json");
-    let version = std::fs::read_to_string(pkg)
-        .ok()
-        .and_then(|t| serde_json::from_str::<serde_json::Value>(&t).ok())
-        .and_then(|v| v.get("version").and_then(|x| x.as_str().map(str::to_string)));
-    let installed = entry.is_file() && version.is_some();
-    AdapterStatus {
-        installed,
-        pinned: version.as_deref() == Some(CLAUDE_ADAPTER_VERSION),
-        entry: installed.then(|| entry.to_string_lossy().into_owned()),
-        version,
-    }
-}
-
-/// Create the install dir with a minimal package.json so `npm install` stays inside it.
-fn prepare_adapter_dir(dir: &Path) -> Result<(), String> {
-    std::fs::create_dir_all(dir).map_err(|e| e.to_string())?;
-    let pkg = dir.join("package.json");
-    if !pkg.is_file() {
-        std::fs::write(pkg, "{\"private\":true}").map_err(|e| e.to_string())?;
-    }
-    Ok(())
-}
-
-static ADAPTER_RUNNING: AtomicBool = AtomicBool::new(false);
-static ADAPTER_CANCEL: AtomicBool = AtomicBool::new(false);
-
-/// Install the pinned Claude Code adapter into the app data dir. Idempotent: an already verified
-/// install is reported without running npm. The caller must have obtained user consent.
-#[tauri::command]
-pub async fn install_claude_adapter<R: tauri::Runtime>(
-    app: tauri::AppHandle<R>,
-    on_event: tauri::ipc::Channel<InstallEvent>,
-) -> Result<AdapterStatus, String> {
-    use tauri::Manager;
-    let dir = claude_adapter_dir(&app.path().app_data_dir().map_err(|e| e.to_string())?);
-    let status = verify_claude_adapter(&dir);
-    if status.installed && status.pinned {
-        return Ok(status);
-    }
-    if ADAPTER_RUNNING.swap(true, Ordering::SeqCst) {
-        return Err("already-running".into());
-    }
-    ADAPTER_CANCEL.store(false, Ordering::SeqCst);
-    let result = tauri::async_runtime::spawn_blocking(move || {
-        prepare_adapter_dir(&dir)?;
-        let emit: Emit = Arc::new(move |e| {
-            let _ = on_event.send(e);
-        });
-        let code = run_job(OwnedJob::ClaudeAdapter, &dir, &process::fresh_path(), &ADAPTER_CANCEL, INSTALL_TIMEOUT, emit).map_err(|e| e.to_string())?;
-        if code != Some(0) {
-            return Err(format!("exit:{}", code.map_or("none".to_string(), |c| c.to_string())));
-        }
-        let status = verify_claude_adapter(&dir);
-        if status.installed && status.pinned { Ok(status) } else { Err("verify-failed".into()) }
-    })
-    .await
-    .map_err(|e| e.to_string())
-    .and_then(|r| r);
-    ADAPTER_RUNNING.store(false, Ordering::SeqCst);
-    result
-}
-
-#[tauri::command]
-pub fn install_claude_adapter_cancel() {
-    ADAPTER_CANCEL.store(true, Ordering::SeqCst);
-}
-
-/// Read-only status check for the settings screen and the session start guard.
-#[tauri::command]
-pub fn claude_adapter_status<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> Result<AdapterStatus, String> {
-    use tauri::Manager;
-    Ok(verify_claude_adapter(&claude_adapter_dir(&app.path().app_data_dir().map_err(|e| e.to_string())?)))
 }
 
 // ---- preview server (T4.10, D-012) -----------------------------------------------------------------
@@ -322,8 +206,8 @@ pub fn preview_argv(runner: &Path, root: &Path) -> Vec<String> {
     vec![runner.to_string_lossy().into_owned(), "--root".into(), root.to_string_lossy().into_owned()]
 }
 
-/// `\\?\C:\x` breaks some Node tooling; hand Node the plain form.
-fn plain_path(p: &Path) -> PathBuf {
+/// `\\?\C:\x` breaks some Node and cmd.exe tooling; hand child processes the plain form.
+pub fn plain_path(p: &Path) -> PathBuf {
     let s = p.to_string_lossy();
     match s.strip_prefix(r"\\?\") {
         Some(rest) if !rest.starts_with(r"UNC\") => PathBuf::from(rest),
@@ -723,56 +607,6 @@ mod preview_tests {
 mod tests {
     use super::*;
 
-    #[test]
-    fn adapter_job_is_fixed_and_pinned() {
-        assert_eq!(OwnedJob::ClaudeAdapter.program(), "npm");
-        let argv = OwnedJob::ClaudeAdapter.argv();
-        assert_eq!(argv.first(), Some(&"install"));
-        assert!(argv.contains(&"--ignore-scripts"));
-        assert_eq!(argv.last().copied(), Some(format!("{CLAUDE_ADAPTER_PACKAGE}@{CLAUDE_ADAPTER_VERSION}").as_str()));
-        assert_eq!(CLAUDE_ADAPTER_DIR, format!("claude-agent-acp@{CLAUDE_ADAPTER_VERSION}"));
-        assert!(serde_json::from_str::<OwnedJob>("\"claudeAdapter\"").is_ok());
-    }
-
-    #[test]
-    fn verify_adapter_reads_version_from_disk() {
-        let d = tempfile::tempdir().unwrap();
-        assert!(!verify_claude_adapter(d.path()).installed);
-        let pkg_dir = d.path().join("node_modules").join(CLAUDE_ADAPTER_PACKAGE);
-        std::fs::create_dir_all(pkg_dir.join("dist")).unwrap();
-        std::fs::write(pkg_dir.join("dist/index.js"), "").unwrap();
-        std::fs::write(pkg_dir.join("package.json"), "{\"version\":\"0.83.0\"}").unwrap();
-        let s = verify_claude_adapter(d.path());
-        assert!(s.installed && s.pinned);
-        assert_eq!(s.version.as_deref(), Some("0.83.0"));
-        std::fs::write(pkg_dir.join("package.json"), "{\"version\":\"0.1.0\"}").unwrap();
-        let s = verify_claude_adapter(d.path());
-        assert!(s.installed && !s.pinned);
-    }
-
-    #[test]
-    fn prepare_adapter_dir_writes_minimal_package_json() {
-        let d = tempfile::tempdir().unwrap();
-        let dir = claude_adapter_dir(d.path());
-        prepare_adapter_dir(&dir).unwrap();
-        assert_eq!(std::fs::read_to_string(dir.join("package.json")).unwrap(), "{\"private\":true}");
-    }
-
-    /// Real network install into a temp dir (never the app data dir). Run manually:
-    /// `cargo test real_adapter_install -- --ignored --nocapture`
-    #[test]
-    #[ignore]
-    fn real_adapter_install() {
-        let d = tempfile::tempdir().unwrap();
-        let dir = claude_adapter_dir(d.path());
-        prepare_adapter_dir(&dir).unwrap();
-        let noop: Emit = Arc::new(|_| {});
-        let code = run_job(OwnedJob::ClaudeAdapter, &dir, &process::fresh_path(), &AtomicBool::new(false), Duration::from_secs(600), noop).unwrap();
-        assert_eq!(code, Some(0));
-        let s = verify_claude_adapter(&dir);
-        assert!(s.installed && s.pinned, "{s:?}");
-    }
-
     fn noop() -> Emit {
         Arc::new(|_| {})
     }
@@ -780,7 +614,7 @@ mod tests {
     #[test]
     fn argv_is_fixed_and_allowlisted() {
         assert_eq!(OwnedJob::ProjectDeps.program(), "pnpm");
-        assert_eq!(OwnedJob::ProjectDeps.argv(), ["install", "--reporter=append-only"]);
+        assert_eq!(OwnedJob::ProjectDeps.argv(), ["install", "--ignore-workspace", "--reporter=append-only"]);
     }
 
     #[test]
@@ -833,7 +667,7 @@ mod tests {
         assert_eq!(code, Some(3));
         let ev = events.lock().unwrap();
         assert!(matches!(ev.first(), Some(InstallEvent::Started { .. })));
-        assert!(ev.contains(&InstallEvent::Log { stream: "stdout", line: "args=install \"--reporter=append-only\"".into() }));
+        assert!(ev.contains(&InstallEvent::Log { stream: "stdout", line: "args=install --ignore-workspace \"--reporter=append-only\"".into() }));
         assert!(ev.contains(&InstallEvent::Log { stream: "stderr", line: "oops ".into() }));
         assert_eq!(ev.last(), Some(&InstallEvent::Done { exit_code: Some(3) }));
     }

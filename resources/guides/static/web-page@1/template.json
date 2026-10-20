@@ -1,0 +1,28 @@
+{
+  "id": "web-page",
+  "version": 1,
+  "type": "static",
+  "label": {
+    "ko": "정적 웹 페이지·슬라이드",
+    "en": "Static web page / slides"
+  },
+  "extends": null,
+  "mediaIntents": [
+    "web",
+    "slide"
+  ],
+  "description": {
+    "ko": "스크롤 랜딩 페이지 또는 클릭·키 입력으로 진행하는 단계별(steps) 슬라이드 페이지.",
+    "en": "Scroll landing page or user-input-driven step-by-step slide presentation."
+  },
+  "tags": [
+    "web",
+    "landing",
+    "slides",
+    "presentation",
+    "static"
+  ],
+  "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-496100/original.8f1c352eca.webp",
+  "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-496100",
+  "sourceRef": "awesome-opus5-5-videos#twoclipping-496100"
+}

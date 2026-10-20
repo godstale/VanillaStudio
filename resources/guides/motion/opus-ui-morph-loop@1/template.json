@@ -1,0 +1,34 @@
+{
+  "id": "opus-ui-morph-loop",
+  "version": 1,
+  "type": "motion",
+  "label": {
+    "ko": "Opus 원-셰이프 UI 모프 루프",
+    "en": "Opus One-Shape UI Morph Loop"
+  },
+  "extends": "commercial@1",
+  "mediaIntents": [
+    "motion"
+  ],
+  "description": {
+    "ko": "120BPM 비트 그리드 위에서 단일 도형이 8~12개의 UI 상태로 스프링 물리 변환하며 매끄럽게 무한 루프되는 모션 그래픽.",
+    "en": "Seamless 120BPM loop where a single hero shape morphs across 8-12 UI states using closed-form damped springs."
+  },
+  "tags": [
+    "ui-morph",
+    "120bpm",
+    "spring",
+    "loop",
+    "saas",
+    "pill",
+    "halo"
+  ],
+  "banned": [
+    "Independent floating decorative widgets outside the central morphing hero object",
+    "Non-deterministic setInterval or Math.random() particle jitter",
+    "Multi-line body paragraphs or static marketing copy blocks"
+  ],
+  "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-402193/original.9c664f011f.webp",
+  "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-402193",
+  "sourceRef": "awesome-opus5-5-videos#twoclipping-402193"
+}

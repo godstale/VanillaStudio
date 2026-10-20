@@ -1,0 +1,3 @@
+- [ ] Hero includes a genuinely interactive UI preview widget
+- [ ] Bento cards and typography use DESIGN.md CSS variables
+- [ ] Keyboard navigation and reduced-motion respected

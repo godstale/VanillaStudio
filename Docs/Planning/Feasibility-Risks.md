@@ -108,6 +108,7 @@
 | HyperFrames FRAME.MD 형식·프리셋 | Apache-2.0(소개 자료 기준) ⚠️ | 참고용. 프리셋 폰트는 개별 라이선스 확인(대부분 Google Fonts OFL로 보임) |
 | HyperFrames 카탈로그 항목 | 저장소 Apache-2.0, 항목별 `license` 필드는 선택 ⚠️ | 참고용(D-017). GSAP 기반이므로 복사하지 않고 런타임으로 재구현, 차용 시 항목별 확인 + `CREDITS.md` |
 | `yaml` / `culori` | ISC / MIT | 사용 가능 |
+| `@xyflow/react` (React Flow) | MIT (12.12.0, R-5) | 사용 가능. 화면 우하단 귀속 표기 유지. 추가 의존성 `@xyflow/system` 동일 라이선스 |
 | M1 추가 Rust crate: `reqwest`, `sha2`, `hex`, `zip`, `winreg`, `windows-sys`(+dev `tempfile`) | MIT 또는 Apache-2.0 | 사용 가능(FFmpeg 다운로드·SHA-256·zip 해제·레지스트리 PATH·Job Object) |
 | M4 추가 Rust crate: `schemars`(MIT, 기존 transitive를 직접 의존으로 승격) | MIT | 사용 가능(MCP 도구 스키마, T4.20) |
 | M1 추가 JS: `zod`(런타임), `@react-three/fiber`·`three`(런타임 peer/dev), `@types/culori` | MIT | 사용 가능 |

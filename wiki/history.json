@@ -234,6 +234,87 @@
       "pages": [
         "sources/parallel-execution.md"
       ]
+    },
+    "milestone-v4": {
+      "source_file": "Docs/Planning/TODO.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-10-06",
+      "pages": [
+        "sources/milestone-v4.md"
+      ]
+    },
+    "poc-agent-terminal": {
+      "source_file": "Docs/Planning/TODO.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-10-06",
+      "pages": [
+        "sources/poc-agent-terminal.md"
+      ]
+    },
+    "milestone-v5": {
+      "source_file": "Docs/Planning/TODO.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-10-06",
+      "pages": [
+        "sources/milestone-v5.md"
+      ]
+    },
+    "poc-r1": {
+      "source_file": "spikes/r1-transition/",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-10-06",
+      "pages": [
+        "sources/poc-r1.md"
+      ]
+    },
+    "milestone-v6": {
+      "source_file": "Docs/Planning/TODO.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-10-06",
+      "pages": [
+        "sources/milestone-v6.md"
+      ]
+    },
+    "issue-v1-migration": {
+      "source_file": "tests/e2e/v1-migration.mjs",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-10-06",
+      "pages": [
+        "sources/issue-v1-migration.md"
+      ]
+    },
+    "milestone-v7": {
+      "source_file": "Docs/Planning/TODO.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-10-06",
+      "pages": [
+        "sources/milestone-v7.md"
+      ]
+    },
+    "phase-p4-v2": {
+      "source_file": "Docs/Planning/TODO.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-10-06",
+      "pages": [
+        "sources/phase-p4-v2.md"
+      ]
+    },
+    "ui-agent-centric": {
+      "source_file": "Docs/Planning/Decisions.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-10-17",
+      "pages": [
+        "sources/ui-agent-centric.md"
+      ]
     }
   }
 }

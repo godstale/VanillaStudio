@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "hide": [],
+  "defaults": {
+    "duration": {
+      "seconds": 9
+    },
+    "creativeMode": [
+      "keynote-continuous-launch",
+      "ui-choreography",
+      "kinetic-type"
+    ],
+    "structure": "continuous",
+    "adStructure": "problem-solution-reveal",
+    "brandVoice": [
+      "confident",
+      "editorial",
+      "minimal"
+    ],
+    "visualStyle": {
+      "medium": "Layered glass UI elevation over monumental keynote stage",
+      "lighting": "Warm alabaster or obsidian studio gradient with subtle rim glow",
+      "typography": "Clamp(60px, 9vw, 120px) tight display headline (-0.04em) + crisp UI sans",
+      "density": "1 hero surface + 1 floating action callout at a time",
+      "cameraFeeling": "Screen Studio 1.6x cursor-follow zoom with spring pan",
+      "mood": "Flagship keynote launch, effortless clarity"
+    },
+    "motionVocabulary": {
+      "typography": [
+        "mask-line-rise",
+        "word-stagger"
+      ],
+      "object": [
+        "direct-cursor-choreography",
+        "card-stack",
+        "spring-pop"
+      ],
+      "camera": [
+        "screen-studio-cursor-zoom",
+        "push-in"
+      ],
+      "material": [
+        "glass-blur",
+        "soft-shadow"
+      ],
+      "transition": [
+        "color-flood-contract",
+        "whip-pan"
+      ]
+    },
+    "beats": [
+      {
+        "id": "beat-1",
+        "start": 0,
+        "end": 2,
+        "role": "hook-promise",
+        "copy": "One workspace. Zero friction.",
+        "visual": "Monumental headline rises through overflow mask over warm stage",
+        "motion": [
+          "mask-line-rise"
+        ],
+        "camera": "push-in",
+        "transitionOut": "whip-pan",
+        "notes": "Hold headline clarity for 0.6s before UI enters"
+      },
+      {
+        "id": "beat-2",
+        "start": 2,
+        "end": 6.5,
+        "role": "cursor-workflow",
+        "copy": "Click. Transform. Ship.",
+        "visual": "Vector cursor glides along cubic-bezier arc, clicks trigger button, camera zooms 1.65x into live state change",
+        "motion": [
+          "direct-cursor-choreography",
+          "spring-pop"
+        ],
+        "camera": "screen-studio-cursor-zoom",
+        "transitionOut": "color-flood-contract",
+        "notes": "Cursor depresses 0.88x on click and spawns ripple"
+      },
+      {
+        "id": "beat-3",
+        "start": 6.5,
+        "end": 9,
+        "role": "end-card",
+        "copy": "Available Today",
+        "visual": "Accent flood contracts into sleek brand pill and URL callout",
+        "motion": [
+          "color-flood-contract"
+        ],
+        "camera": "push-in",
+        "transitionOut": "hard-cut",
+        "notes": "Hold final brand lockup >= 0.85s"
+      }
+    ],
+    "endCard": {
+      "holdSeconds": 1,
+      "elements": [
+        "Product logo",
+        "One-line promise",
+        "CTA pill"
+      ]
+    },
+    "constraints": {
+      "avoid": [
+        "Dense multi-column tables",
+        "Linear cursor movement"
+      ],
+      "noUnspecifiedElements": true
+    }
+  },
+  "fields": []
+}

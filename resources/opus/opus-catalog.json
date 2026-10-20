@@ -1,0 +1,1535 @@
+{
+  "version": 1,
+  "sourceRepo": "https://github.com/yihui-dev/awesome-opus5-5-videos",
+  "license": "MIT",
+  "recipes": [
+    {
+      "id": "twoclipping-402193",
+      "title": {
+        "ko": "120BPM 원-셰이프 8단계 UI 모프 루프",
+        "en": "120BPM One-Shape 8-State UI Morph Loop"
+      },
+      "summary": {
+        "ko": "단일 중심 도형이 검색창·파형·차트·완료 배지 등 8~12개 UI 상태로 120BPM 비트에 맞춰 끊김 없이 모핑되는 루프.",
+        "en": "A single central shape morphs across 8-12 UI states on a 120BPM grid with closed-form damped springs."
+      },
+      "author": "twoclipping",
+      "mediaIntent": "motion",
+      "sceneType": "motion",
+      "templateRef": "opus-ui-morph-loop@1",
+      "recommendedPaletteId": "opus-cobalt-cyan",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-402193/original.9c664f011f.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-402193",
+      "postUrl": "https://x.com/twoclipping/status/2103273003555402193",
+      "sourceRef": "awesome-opus5-5-videos#twoclipping-402193",
+      "tags": [
+        "ui-morph",
+        "120bpm",
+        "spring",
+        "loop",
+        "saas"
+      ],
+      "promptExcerpt": "<inputs>\nAsk me for: 8 to 12 UI states I want the shape to become (e.g. button, loader, player, slider, toggle, tabs, chart, command palette, toast), pure black and white or one accent color, and a royalty-free song around 120 BPM (e.g. Mixkit, free for commercial use).\n</inputs>\n\n<direction>\nDribbble-level UI motion. One shape, never cut: every state is the same element morphing its size, radius and color while its "
+    },
+    {
+      "id": "twoclipping-000267",
+      "title": {
+        "ko": "애플 키노트급 원-테이크 SaaS 런치 필름",
+        "en": "Apple-Keynote Continuous SaaS Launch Film"
+      },
+      "summary": {
+        "ko": "모뉴멘털 한 줄 약속 타이포에서 시작해 실제 커서 인터랙션과 3~5개 워크플로우 전환으로 이어지는 프로덕트 필름.",
+        "en": "Continuous keynote product launch film transitioning from a monumental promise headline into cursor-led UI states."
+      },
+      "author": "twoclipping",
+      "mediaIntent": "motion",
+      "sceneType": "motion",
+      "templateRef": "opus-keynote-launch@1",
+      "recommendedPaletteId": "opus-keynote-lime",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-000267/original.87cf7f8c74.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-000267",
+      "postUrl": "https://x.com/twoclipping/status/2102554209166000267",
+      "sourceRef": "awesome-opus5-5-videos#twoclipping-000267",
+      "tags": [
+        "keynote",
+        "launch",
+        "cursor",
+        "apple-style",
+        "saas"
+      ],
+      "promptExcerpt": "<inputs>\nAsk me for: the product name and a one-line promise, 3 to 5 UI moments to show, one accent color, 10 to 20 real vertical clips I own, and a royalty-free song with a clear drop (e.g. Mixkit, free for commercial use).\n</inputs>\n\n<direction>\nHigh-end minimal. One idea per shot, lots of empty space, one accent color, one clean sans (Geist or Inter) with tight tracking. Masked type reveals, match cuts, one smooth"
+    },
+    {
+      "id": "gdgtify-929495",
+      "title": {
+        "ko": "BUILD THE FLOOR — 키네틱 스피치 필름",
+        "en": "BUILD THE FLOOR — Kinetic Spoken-Word Film"
+      },
+      "summary": {
+        "ko": "연설의 억양과 리듬을 세리프/산세리프 대비와 건축적 그리드 회전으로 시각화한 20초 키네틱 타이포그래피 필름.",
+        "en": "20-second kinetic spoken-word film treating the viewport as a miniature architectural speech stage."
+      },
+      "author": "Gdgtify",
+      "mediaIntent": "motion",
+      "sceneType": "motion",
+      "templateRef": "opus-kinetic-manifesto@1",
+      "recommendedPaletteId": "opus-botanical-parchment",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/gdgtify-929495/original.bf87884126.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/gdgtify-929495",
+      "postUrl": "https://x.com/Gdgtify/status/2103458245213929495",
+      "sourceRef": "awesome-opus5-5-videos#gdgtify-929495",
+      "tags": [
+        "kinetic-type",
+        "manifesto",
+        "editorial",
+        "serif",
+        "speech"
+      ],
+      "promptExcerpt": "Create a 20.00-second kinetic spoken-word film titled “BUILD THE FLOOR.”  Treat this as an original miniature speech staged entirely through typography. Every line changes the architecture of the frame. The final declaration must stand on something the earlier words physically constructed.  Deliver one self-contained HTML file, 1080×1080, targeting 60fps, using SVG and/or Canvas. Embed all required assets.  ART DIREC"
+    },
+    {
+      "id": "moritzkremb-466494",
+      "title": {
+        "ko": "Screen Studio 스타일 프로덕트 투어 & 줌",
+        "en": "Screen Studio Product Tour & Cursor Zoom"
+      },
+      "summary": {
+        "ko": "부드러운 커서 이동과 클릭 시점의 1.6배 포커스 줌, 글래스모피즘 레이어로 SaaS 핵심 기능을 명확히 보여주는 데모.",
+        "en": "Polished SaaS product launch demo with smooth cursor tracking, click zoom-ins, and tactile UI elevation."
+      },
+      "author": "moritzkremb",
+      "mediaIntent": "motion",
+      "sceneType": "motion",
+      "templateRef": "opus-keynote-launch@1",
+      "recommendedPaletteId": "opus-studio-mint",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/moritzkremb-466494/original.dc5bd867e2.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/moritzkremb-466494",
+      "postUrl": "https://x.com/moritzkremb/status/2103066071838466494",
+      "sourceRef": "awesome-opus5-5-videos#moritzkremb-466494",
+      "tags": [
+        "screen-studio",
+        "cursor-zoom",
+        "saas",
+        "demo",
+        "product"
+      ],
+      "promptExcerpt": "I want you to create a highly professional SaaS product launch video. Go and find some SaaS, preferably just one that people know, so it's easier to identify with it. Pick that, and then make sure to get actual assets and images and all of that stuff from the internet. Turn it into these typical, very professionally edited, motion-graphics-styled product launch videos that you see people making on Twitter when they l"
+    },
+    {
+      "id": "lukasersil-726495",
+      "title": {
+        "ko": "15초 모션 디자인 에이전시 쇼릴",
+        "en": "15s Motion Design Studio Showreel"
+      },
+      "summary": {
+        "ko": "강렬한 마젠타/시안 대비와 빠른 휩팬·마스크 타이포그래피로 시선을 사로잡는 에이전시 쇼릴 인트로.",
+        "en": "High-energy 15-second motion graphics showreel with bold kinetic typography, whip-pans, and neon accents."
+      },
+      "author": "lukasersil",
+      "mediaIntent": "motion",
+      "sceneType": "motion",
+      "templateRef": "opus-kinetic-manifesto@1",
+      "recommendedPaletteId": "opus-cyber-magenta",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/lukasersil-726495/original.2886d94586.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/lukasersil-726495",
+      "postUrl": "https://x.com/lukasersil/status/2103742861971726495",
+      "sourceRef": "awesome-opus5-5-videos#lukasersil-726495",
+      "tags": [
+        "showreel",
+        "kinetic-type",
+        "agency",
+        "intro",
+        "fast-paced"
+      ],
+      "promptExcerpt": "Create a bold, dynamic 15-second motion graphics showreel that feels like the ultimate portfolio piece of an exceptionally talented motion designer. Showcase a wide range of advanced techniques: kinetic typography, smooth transitions, 2D and 3D animation, abstract geometry, fluid simulations, particles, distortion, creative masking, compositing, lighting, depth, and seamless camera movement. Keep the pacing fast, con"
+    },
+    {
+      "id": "daniel-haida-636937",
+      "title": {
+        "ko": "핀테크·북키핑 앱 코드 기반 프로덕트 필름",
+        "en": "Fintech Bookkeeping App Code-Driven Product Film"
+      },
+      "summary": {
+        "ko": "100% 코드(React + SVG + CSS)로 영수증 스캔·자동 분류·실시간 손익 카운터가 맞물려 돌아가는 핀테크 데모.",
+        "en": "Every frame rendered in code: receipts, automated ledger categorization, and tabular numeric counters."
+      },
+      "author": "daniel_haida",
+      "mediaIntent": "motion",
+      "sceneType": "motion",
+      "templateRef": "opus-keynote-launch@1",
+      "recommendedPaletteId": "opus-magnetic-monument",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/daniel-haida-636937/original.965223fcbc.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/daniel-haida-636937",
+      "postUrl": "https://x.com/daniel_haida/status/2104139720829636937",
+      "sourceRef": "awesome-opus5-5-videos#daniel-haida-636937",
+      "tags": [
+        "fintech",
+        "dashboard",
+        "counter",
+        "product-film",
+        "saas"
+      ],
+      "promptExcerpt": "claude code (opus 5.5) made the product film for taxtello, my bookkeeping app\n\nevery frame is code: react + remotion, 0 after effects\nthe soundtrack is code too, synthesized in python from sine waves and noise\n\n1 prompt and 2 rounds of feedback\n\nfull prompt below, steal it ↓\n\nYou are the senior motion designer, product designer and Remotion engineer for Taxtello.\n\nYour task is to create a genuinely premium, Apple-lev"
+    },
+    {
+      "id": "miguel07code-091611",
+      "title": {
+        "ko": "푸리에 변환 에피사이클 & 주파수 스펙트럼 해설",
+        "en": "Fourier Transform Epicycles & Spectrum Explainer"
+      },
+      "summary": {
+        "ko": "회전하는 위상 벡터(에피사이클)의 합이 복잡한 파형을 그리고 주파수 스펙트럼으로 분해되는 수학 시각화.",
+        "en": "Rotating epicycle vectors sum into complex waveforms and decompose into frequency domain bars."
+      },
+      "author": "Miguel07Code",
+      "mediaIntent": "motion",
+      "sceneType": "motion",
+      "templateRef": "opus-science-explainer@1",
+      "recommendedPaletteId": "opus-cobalt-cyan",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/miguel07code-091611/original.3b02d95627.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/miguel07code-091611",
+      "postUrl": "https://x.com/Miguel07Code/status/2103626582896091611",
+      "sourceRef": "awesome-opus5-5-videos#miguel07code-091611",
+      "tags": [
+        "fourier",
+        "math",
+        "science",
+        "explainer",
+        "epicycles"
+      ],
+      "promptExcerpt": "fourier series were hard to learn back in university (2 years ago) and they are fun! \n\nwhat unlocks @HyperFrames_ + @claudeai Opus 5.5 is that you can get the best explainer videos just with 1 prompt\n\nyou are curious about something? ask claude!"
+    },
+    {
+      "id": "emollick-019567",
+      "title": {
+        "ko": "재귀(Recursion) 자기참조 멀티 스타일 해설",
+        "en": "Self-Referential Recursion Visual Explainer"
+      },
+      "summary": {
+        "ko": "재귀 호출이 깊어질 때마다 화면 속 프레임과 비주얼 스타일이 자기참조적으로 중첩·변환되는 영리한 컴퓨터공학 해설.",
+        "en": "Fast-moving, self-referential visual explanation of recursion where each stack depth shifts visual style."
+      },
+      "author": "emollick",
+      "mediaIntent": "motion",
+      "sceneType": "motion",
+      "templateRef": "opus-science-explainer@1",
+      "recommendedPaletteId": "opus-orbital-coral",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/emollick-019567/original.70fbf894e4.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/emollick-019567",
+      "postUrl": "https://x.com/emollick/status/2103688362960019567",
+      "sourceRef": "awesome-opus5-5-videos#emollick-019567",
+      "tags": [
+        "recursion",
+        "cs",
+        "algorithm",
+        "explainer",
+        "self-referential"
+      ],
+      "promptExcerpt": "A video explaining recursion, where every explanation about recursion has a radically different video style, make this self-referential & clever & fast moving."
+    },
+    {
+      "id": "brainextends-606193",
+      "title": {
+        "ko": "Spotify Wrapped 스타일 에디토리얼 무빙 포스터",
+        "en": "Spotify Wrapped Editorial Moving Poster"
+      },
+      "summary": {
+        "ko": "그린/다크 고대비 컬러 플러드와 리퀴드 알약 프레임, 사운드 웨이브 배지가 어우러진 음악·브랜드 포스터.",
+        "en": "Spotify-inspired graphic poster with bold color floods, liquid pill frames, and audio-reactive badges."
+      },
+      "author": "brainextends",
+      "mediaIntent": "image",
+      "sceneType": "motion",
+      "templateRef": "opus-kinetic-poster@1",
+      "recommendedPaletteId": "opus-spotify-editorial",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/brainextends-606193/original.f7353b2aa2.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/brainextends-606193",
+      "postUrl": "https://x.com/brainextends/status/2103801834930606193",
+      "sourceRef": "awesome-opus5-5-videos#brainextends-606193",
+      "tags": [
+        "poster",
+        "spotify",
+        "image",
+        "social-card",
+        "graphic"
+      ],
+      "promptExcerpt": "Create a complete, polished Spotify-themed motion graphics video from the following brief. This prompt is self-contained: no reference video or supplied assets are required.\n\n<deliverables> An 18-second MP4 at 1920×1080 and true 60 fps, with music and subtle sound effects Complete editable source Build, render, inspect, and refine the animation before delivering it Do not stop at a storyboard, still images, or an imp"
+    },
+    {
+      "id": "zacxbt-944604",
+      "title": {
+        "ko": "프로시저럴 픽셀 아트 디오라마 일러스트",
+        "en": "Procedural Pixel-Art Diorama Illustration"
+      },
+      "summary": {
+        "ko": "단일 HTML/Canvas 코드로 픽셀 그리드, 다층 패럴랙스, 물결 반사와 네온 사인을 정교하게 그려내는 픽셀 일러스트.",
+        "en": "Self-contained procedural pixel-art scene with crisp integer scaling, parallax depth, and ambient lighting."
+      },
+      "author": "zacxbt",
+      "mediaIntent": "image",
+      "sceneType": "motion",
+      "templateRef": "opus-pixel-illustration@1",
+      "recommendedPaletteId": "opus-orbital-coral",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/zacxbt-944604/original.1fc21723ff.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/zacxbt-944604",
+      "postUrl": "https://x.com/zacxbt/status/2103808699466944604",
+      "sourceRef": "awesome-opus5-5-videos#zacxbt-944604",
+      "tags": [
+        "pixel-art",
+        "illustration",
+        "image",
+        "canvas",
+        "diorama"
+      ],
+      "promptExcerpt": "Create a single self-contained HTML file that renders an animated pixel art wizard casting a spell, using vanilla JavaScript and Canvas 2D. No external assets, libraries, or network requests.\n\nRENDERING\n- Draw everything to an offscreen canvas at a fixed logical resolution of 128x96, then blit to a fullscreen display canvas scaled by the largest integer factor that fits the window, centered, with imageSmoothingEnable"
+    },
+    {
+      "id": "gdgtify-989608",
+      "title": {
+        "ko": "ESCAPE THE ORBIT — 우주 궤도 타이포 포스터",
+        "en": "ESCAPE THE ORBIT — Orbital Typography Poster"
+      },
+      "summary": {
+        "ko": "타원형 궤도 텍스트 경로와 정밀한 텔레메트리 눈금, 코랄/골드 하이라이트로 구성된 아스트로 그래픽 포스터.",
+        "en": "Orbital baseline typography and aerospace telemetry grid inspired by JFK’s Moon speech."
+      },
+      "author": "Gdgtify",
+      "mediaIntent": "image",
+      "sceneType": "motion",
+      "templateRef": "opus-kinetic-poster@1",
+      "recommendedPaletteId": "opus-orbital-coral",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/_prompts/gdgtify-989608/poster.094984c36d.webp",
+      "actionUrl": "https://x.com/Gdgtify/status/2105669567036989608",
+      "postUrl": "https://x.com/Gdgtify/status/2105669567036989608",
+      "sourceRef": "awesome-opus5-5-videos#gdgtify-989608",
+      "tags": [
+        "poster",
+        "orbital",
+        "space",
+        "typography",
+        "image"
+      ],
+      "promptExcerpt": "Create a 20.00-second kinetic typography film titled “ESCAPE THE ORBIT,” based on John F. Kennedy’s Rice University address, September 12, 1962.\n\nThe central experience: a sentence discovers that it can change its own trajectory.\n\nDeliver one complete, self-contained HTML file. Composition: 1080×1080. Target: 60fps. Use Canvas, SVG, or embedded WebGL. Embed required assets and libraries. The film must work without au"
+    },
+    {
+      "id": "0xvalure-331584",
+      "title": {
+        "ko": "브랜드 로고 리빌 & 소셜 릴스 키비주얼",
+        "en": "Brand Logo Reveal & Social Reel Key Visual"
+      },
+      "summary": {
+        "ko": "미니멀한 기하학 도형들이 스프링 물리학으로 결합하며 브랜드 심볼과 슬로건을 완성하는 키비주얼 포스터.",
+        "en": "World-class logo reveal and social key visual built from geometric spring assembly and conic glow."
+      },
+      "author": "0xValure",
+      "mediaIntent": "image",
+      "sceneType": "motion",
+      "templateRef": "opus-kinetic-poster@1",
+      "recommendedPaletteId": "opus-cyber-magenta",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/0xvalure-331584/original.241313ccf0.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/0xvalure-331584",
+      "postUrl": "https://x.com/0xValure/status/2103603025579331584",
+      "sourceRef": "awesome-opus5-5-videos#0xvalure-331584",
+      "tags": [
+        "logo",
+        "brand",
+        "poster",
+        "reel",
+        "image"
+      ],
+      "promptExcerpt": "Make this PayBox logo into a reel. Pretend you are a world-class motion designer. Make a 10-second dynamic video like the reference"
+    },
+    {
+      "id": "techhalla-498547",
+      "title": {
+        "ko": "인터랙티브 키노트 피치 덱 & 스텝 모핑",
+        "en": "Interactive Keynote Pitch Deck with Step Morphing"
+      },
+      "summary": {
+        "ko": "방향키·클릭으로 슬라이드를 넘길 때마다 핵심 카드와 차트가 매끄럽게 모핑되는 투자·제품 발표용 슬라이드 덱.",
+        "en": "Step-based presentation deck with keyboard navigation, progress HUD, and spring-morphed slide layouts."
+      },
+      "author": "techhalla",
+      "mediaIntent": "slide",
+      "sceneType": "static",
+      "templateRef": "opus-narrative-deck@1",
+      "recommendedPaletteId": "opus-magnetic-monument",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/techhalla-498547/original.fbdb194d58.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/techhalla-498547",
+      "postUrl": "https://x.com/techhalla/status/2103411244468498547",
+      "sourceRef": "awesome-opus5-5-videos#techhalla-498547",
+      "tags": [
+        "slide",
+        "deck",
+        "pitch-deck",
+        "presentation",
+        "keynote"
+      ],
+      "promptExcerpt": "You are a world-class motion designer doing a 20.00s kinetic identity bumper for TechHalla — an AI creator known for stealable workflows, not vibes. This piece must feel like the best designer in the room made a street-poster that moves. Showreel stakes: if this is weak, you don’t get hired.\n\nDURATION: exactly 20.00 seconds. LOOPABLE: frame 0 == frame last (position, opacity, cursor if any).\nFORMAT: one HTML file, 10"
+    },
+    {
+      "id": "bilimfili1-459762",
+      "title": {
+        "ko": "멀티스케일 데이터·과학 비교 프레젠테이션",
+        "en": "Multiscale Data & Science Comparison Deck"
+      },
+      "summary": {
+        "ko": "단계별로 스케일과 데이터 축을 전환하며 미시/거시 지표와 핵심 인사이트를 인터랙티브하게 브리핑하는 슬라이드.",
+        "en": "Interactive data storytelling deck that zooms across orders of magnitude with live synchronized charts."
+      },
+      "author": "Bilimfili1",
+      "mediaIntent": "slide",
+      "sceneType": "static",
+      "templateRef": "opus-data-explainer-deck@1",
+      "recommendedPaletteId": "opus-cobalt-cyan",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/bilimfili1-459762/original.a1f891890a.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/bilimfili1-459762",
+      "postUrl": "https://x.com/Bilimfili1/status/2103743617848459762",
+      "sourceRef": "awesome-opus5-5-videos#bilimfili1-459762",
+      "tags": [
+        "slide",
+        "data-viz",
+        "comparison",
+        "scale",
+        "explainer"
+      ],
+      "promptExcerpt": "Make a 45–50 second vertical video for my app: a glance inside the app.\nShow every feature, use motion, be creative. I want it good enough for your CV.\n\n- Real, not mocked: record each feature being used in the simulator (tap a filter, open a result, add it).\n- Stretch your imagination: let each feature break out of the phone and change the world around it.\n- The bar: a motion designer's showreel piece. The best moti"
+    },
+    {
+      "id": "anabology-491441",
+      "title": {
+        "ko": "에디토리얼 스토리텔링 브리핑 슬라이드",
+        "en": "Editorial Storytelling Briefing Deck"
+      },
+      "summary": {
+        "ko": "따뜻한 페이퍼 톤과 세리프 헤드라인, 인용구 콜아웃으로 리서치나 전략 문서를 품격 있게 전달하는 슬라이드 덱.",
+        "en": "Warm editorial slide deck combining serif typography, structured thesis cards, and step-by-step reveals."
+      },
+      "author": "anabology",
+      "mediaIntent": "slide",
+      "sceneType": "static",
+      "templateRef": "opus-narrative-deck@1",
+      "recommendedPaletteId": "opus-botanical-parchment",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/anabology-491441/original.be0a03ecf7.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/anabology-491441",
+      "postUrl": "https://x.com/anabology/status/2103534482930491441",
+      "sourceRef": "awesome-opus5-5-videos#anabology-491441",
+      "tags": [
+        "slide",
+        "editorial",
+        "briefing",
+        "storytelling",
+        "presentation"
+      ],
+      "promptExcerpt": "I've included an MP4 file and an original link to a video that is called \"Claude Pop.\" It's a pop song that is about increasing rate of progress and the experience of the singularity approaching.\n\nI want you to independently do an end-to-end complete pass on making an updated version of this video. Use the exact same audio track and think and feel very deeply about what is the best way to visually represent all of th"
+    },
+    {
+      "id": "ror-fly-880547",
+      "title": {
+        "ko": "스텝별 프로세스·레시피 인포그래픽 브리핑",
+        "en": "Step-by-Step Process & Recipe Infographic"
+      },
+      "summary": {
+        "ko": "단계별 투입 요소와 정량 수치, 상태 변화를 명확한 다이어그램 애니메이션으로 보여주는 프로세스 설명 슬라이드/영상.",
+        "en": "Visual step-by-step explainer showing quantitative measurements and state progression from start to finish."
+      },
+      "author": "Ror_Fly",
+      "mediaIntent": "slide",
+      "sceneType": "motion",
+      "templateRef": "opus-science-explainer@1",
+      "recommendedPaletteId": "opus-orbital-coral",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/ror-fly-880547/original.59f728b077.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/ror-fly-880547",
+      "postUrl": "https://x.com/Ror_Fly/status/2102853258582880547",
+      "sourceRef": "awesome-opus5-5-videos#ror-fly-880547",
+      "tags": [
+        "slide",
+        "explainer",
+        "process",
+        "infographic",
+        "steps"
+      ],
+      "promptExcerpt": "We're going to try a little test. Do you think you could render a recipe motion graphic animation using javascript or html (w/e you think will produce the best) to show the full recipe from start to finish (empty glass to completed cocktail) - Explainer video style - Showing the recipe ingreidents + measurements as they're going into the cup. Should be a 30s video."
+    },
+    {
+      "id": "twoclipping-496100",
+      "title": {
+        "ko": "플래그십 SaaS 랜딩 히어로 & 라이브 UI 프리뷰",
+        "en": "Flagship SaaS Landing Hero & Live UI Preview"
+      },
+      "summary": {
+        "ko": "대담한 타이포그래피 히어로와 클릭 가능한 라이브 워크스페이스 프리뷰, 벤토 그리드 섹션을 갖춘 모던 웹 페이지.",
+        "en": "Modern SaaS landing page featuring a monumental hero, interactive product preview widget, and bento grid."
+      },
+      "author": "twoclipping",
+      "mediaIntent": "web",
+      "sceneType": "static",
+      "templateRef": "opus-interactive-hero@1",
+      "recommendedPaletteId": "opus-keynote-lime",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-496100/original.8f1c352eca.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-496100",
+      "postUrl": "https://x.com/twoclipping/status/2103835273813496100",
+      "sourceRef": "awesome-opus5-5-videos#twoclipping-496100",
+      "tags": [
+        "web",
+        "landing-page",
+        "saas",
+        "hero",
+        "bento"
+      ],
+      "promptExcerpt": "<inputs>\nAsk me for: a one-word brand name for the wordmark (a verb works best), 9 to 12 high-res photos, a royalty-free song around 120 BPM with a drop and a quiet breakdown (Mixkit, free for commercial use), and a free stock clip of a plain wall with moving plant shadows (Pexels).\n</inputs>\n\n<direction>\nAn Apple-keynote launch film, 2D only, one continuous take. Every scene is made out of the previous one: nothing "
+    },
+    {
+      "id": "iamtanzil-120030",
+      "title": {
+        "ko": "다크 시네마틱 하드웨어·모빌리티 브랜드 웹 헤더",
+        "en": "Dark Cinematic Hardware & Mobility Brand Web Header"
+      },
+      "summary": {
+        "ko": "풀 뷰포트 다크 무드와 정밀한 스펙 카운터, 인터랙티브 모델/컬러 스위처를 갖춘 프리미엄 하드웨어 랜딩 페이지.",
+        "en": "Full-viewport dark cinematic product header with live telemetry specs and interactive configuration controls."
+      },
+      "author": "iamtanzil_",
+      "mediaIntent": "web",
+      "sceneType": "static",
+      "templateRef": "opus-interactive-hero@1",
+      "recommendedPaletteId": "opus-magnetic-monument",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/iamtanzil-120030/original.31773009f1.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/iamtanzil-120030",
+      "postUrl": "https://x.com/iamtanzil_/status/2103459843831120030",
+      "sourceRef": "awesome-opus5-5-videos#iamtanzil-120030",
+      "tags": [
+        "web",
+        "hardware",
+        "dark-mode",
+        "hero",
+        "product-page"
+      ],
+      "promptExcerpt": "# OBLT E-bike Header\n\nA full-viewport, dark, cinematic e-bike product header for the brand **OBLT**, built in React (client component) with pure CSS and an interactive cursor-following \"x-ray\" spotlight reveal — moving the mouse wipes away the bike's exterior photo to expose its internal carbon/gearbox structure underneath. Built with React only (no animation libraries).\n\n## Tech stack (libraries actually imported)\n-"
+    },
+    {
+      "id": "redpersongpt-284430",
+      "title": {
+        "ko": "실시간 파라미터 컨트롤 시뮬레이터 웹 앱",
+        "en": "Real-Time Parameter Control Simulator Web App"
+      },
+      "summary": {
+        "ko": "사용자가 슬라이더와 프리셋 버튼을 조작해 시뮬레이션 파형과 지표를 즉시 실험할 수 있는 인터랙티브 웹 샌드박스.",
+        "en": "Interactive simulation workspace with floating control dock, live sliders, and real-time canvas visualization."
+      },
+      "author": "redpersongpt",
+      "mediaIntent": "web",
+      "sceneType": "static",
+      "templateRef": "opus-simulator-canvas@1",
+      "recommendedPaletteId": "opus-studio-mint",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/redpersongpt-284430/original.aa458f7e3a.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/redpersongpt-284430",
+      "postUrl": "https://x.com/redpersongpt/status/2103807094554284430",
+      "sourceRef": "awesome-opus5-5-videos#redpersongpt-284430",
+      "tags": [
+        "web",
+        "simulator",
+        "sandbox",
+        "interactive",
+        "controls"
+      ],
+      "promptExcerpt": "Create a studio level motion design ad for my app mimicly. Show me the best you got.\n\nYou are the lead creative strategist, product marketer, direct-response ad writer, and hands-on growth operator for Mimicly.\n\nYour job is to deeply understand Mimicly’s real product experience, then turn that understanding into high-quality ad concepts, ad assets, hooks, scripts, and launch-ready creative ideas that do NOT feel gene"
+    },
+    {
+      "id": "bthreeagency-827092",
+      "title": {
+        "ko": "3D 배지·하드웨어 언락 & PBR 쇼케이스",
+        "en": "3D Hardware & Badge Unlock PBR Showcase"
+      },
+      "summary": {
+        "ko": "정교한 금속·유리 PBR 재질과 궤도 카메라, HUD 스펙 라벨이 결합된 인터랙티브 3D 제품/배지 쇼케이스.",
+        "en": "Interactive 3D showcase with PBR metallic/glass materials, orbital camera choreography, and HUD callouts."
+      },
+      "author": "BThreeAgency",
+      "mediaIntent": "web",
+      "sceneType": "3d",
+      "templateRef": "opus-3d-explorer@1",
+      "recommendedPaletteId": "opus-magnetic-monument",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/bthreeagency-827092/original.353cb53c14.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/bthreeagency-827092",
+      "postUrl": "https://x.com/BThreeAgency/status/2103739079745827092",
+      "sourceRef": "awesome-opus5-5-videos#bthreeagency-827092",
+      "tags": [
+        "3d",
+        "threejs",
+        "product",
+        "pbr",
+        "web"
+      ],
+      "promptExcerpt": "Using the linked Figma frame build a badge unlock screen. Match the design exactly. Use the file's assets, lighting, type and layout and add only the motion. Animate the badge so it feels premium and celebratory. Build its scene and then celebrate with gold particles. Treat the badge as a solid 3D object that tilts toward the\ncursor following the rules of physics. Keep it fast and smooth, it should not be bouncy."
+    },
+    {
+      "id": "lexnlin-241739",
+      "title": {
+        "ko": "시네마틱 브라우저 3D 월드 익스플로러",
+        "en": "Cinematic Browser 3D World Explorer"
+      },
+      "summary": {
+        "ko": "절차적 지오메트리와 공간 조명, 카메라 궤도 패스로 구축한 브라우저 기반 3D 환경 탐색 신.",
+        "en": "Browser-based 3D world built with procedural Three.js geometry, atmospheric lighting, and smooth camera paths."
+      },
+      "author": "LexnLin",
+      "mediaIntent": "web",
+      "sceneType": "3d",
+      "templateRef": "opus-3d-explorer@1",
+      "recommendedPaletteId": "opus-cobalt-cyan",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/lexnlin-241739/original.cb53056c77.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/lexnlin-241739",
+      "postUrl": "https://x.com/LexnLin/status/2103194052850241739",
+      "sourceRef": "awesome-opus5-5-videos#lexnlin-241739",
+      "tags": [
+        "3d",
+        "threejs",
+        "world",
+        "explorer",
+        "webgl"
+      ],
+      "promptExcerpt": "Create a cinematic browser-based 3D world that can be explored freely with a camera, focused on breathtaking landscapes and extraordinary original architecture. Fill the world with huge strange buildings, monumental structures, surreal ruins, cliffs, valleys, forests, water, and unusual ultra-detailed forms that feel mysterious and awe-inspiring. This is not a game and not combat-focused, the goal is pure exploration"
+    },
+    {
+      "id": "agioyaz-397647",
+      "title": {
+        "ko": "White Space — 프리즘 광학 분산 3D 셰이더 필름",
+        "en": "White Space — Prismatic Dispersion 3D Shader Film"
+      },
+      "summary": {
+        "ko": "스테인드글라스 색수차 분산과 커스텀 GLSL 셰이더로 빛의 굴절과 공간의 여백을 시적으로 표현한 3D 아트 필름.",
+        "en": "Poetic Three.js & GLSL shader film featuring stained-glass spectral dispersion and sculptural light."
+      },
+      "author": "AGIOyaZ",
+      "mediaIntent": "motion",
+      "sceneType": "3d",
+      "templateRef": "opus-shader-cinematic@1",
+      "recommendedPaletteId": "opus-cyber-magenta",
+      "previewUrl": "https://media.skillry.dev/opus-5-5/_prompts/agioyaz-397647/poster.340f607e45.webp",
+      "actionUrl": "https://x.com/AGIOyaZ/status/2103167623303397647",
+      "postUrl": "https://x.com/AGIOyaZ/status/2103167623303397647",
+      "sourceRef": "awesome-opus5-5-videos#agioyaz-397647",
+      "tags": [
+        "3d",
+        "shader",
+        "glsl",
+        "dispersion",
+        "art"
+      ],
+      "promptExcerpt": "Create a 37-second vertical short film (1080×1920, 30 fps) in three.js, titled \"White Space\".\n\n【Experience】\nWithout showing a single human figure, let viewers physically feel how a life consumed by efficiency loses its light — and how a single empty space lets a richer light pour back in. The climax should make people hold their breath: a world-class stained glass image of the Virgin and two angels projected across a"
+    }
+  ],
+  "decomposedPresets": [
+    {
+      "id": "beats-120bpm-ui-morph-6s",
+      "category": "scene-beats",
+      "targetTypes": [
+        "motion",
+        "3d"
+      ],
+      "mediaIntents": [
+        "motion",
+        "image"
+      ],
+      "label": {
+        "ko": "120BPM 원-셰이프 3비트 모프 루프 (6초)",
+        "en": "120BPM One-Shape 3-Beat Morph Loop (6s)"
+      },
+      "description": {
+        "ko": "0.5초(120BPM) 그리드에 맞춰 Hook(0~1.5s) -> 연속 상태 변환(1.5~3.5s) -> 루프 수렴(3.5~6.0s)으로 이어지는 심리스 루프 타임라인.",
+        "en": "Seamless 6s 120BPM beat grid: Hook (0-1.5s) -> Multi-state Morph (1.5-3.5s) -> Loop Resolve (3.5-6.0s)."
+      },
+      "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-402193/original.9c664f011f.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-402193",
+      "sourceRef": "awesome-opus5-5-videos#twoclipping-402193",
+      "tags": [
+        "120bpm",
+        "loop",
+        "morph",
+        "6s",
+        "beats"
+      ],
+      "patch": {
+        "duration": {
+          "seconds": 6
+        },
+        "structure": "continuous",
+        "adStructure": "beat-grid-120bpm",
+        "beats": [
+          {
+            "id": "beat-1",
+            "start": 0,
+            "end": 1.5,
+            "role": "hook",
+            "copy": "State 01 -> 02",
+            "visual": "Central pill expands into interactive command bar on 120BPM downbeat",
+            "motion": [
+              "closed-form-spring-sum",
+              "iridescent-conic-halo"
+            ],
+            "camera": "push-in",
+            "transitionOut": "morph",
+            "notes": "Snap trigger to 0.5s beat grid"
+          },
+          {
+            "id": "beat-2",
+            "start": 1.5,
+            "end": 3.5,
+            "role": "transform",
+            "copy": "State 03 -> 05",
+            "visual": "Morphs through waveform and live metric card with 28ms edge stagger",
+            "motion": [
+              "edge-staggered-liquid-pill",
+              "counter-roll"
+            ],
+            "camera": "push-in",
+            "transitionOut": "morph",
+            "notes": "Continuous spring velocity across states"
+          },
+          {
+            "id": "beat-3",
+            "start": 3.5,
+            "end": 6,
+            "role": "loop-resolve",
+            "copy": "State 06 -> Origin",
+            "visual": "Resolves into completion badge and seamlessly returns to t=0 geometry",
+            "motion": [
+              "closed-form-spring-sum",
+              "variable-weight-beat-pulse"
+            ],
+            "camera": "push-in",
+            "transitionOut": "match-cut",
+            "notes": "Frame at t=6.0s matches t=0.0s"
+          }
+        ]
+      }
+    },
+    {
+      "id": "beats-keynote-4phase-launch-9s",
+      "category": "scene-beats",
+      "targetTypes": [
+        "motion",
+        "3d"
+      ],
+      "mediaIntents": [
+        "motion",
+        "slide"
+      ],
+      "label": {
+        "ko": "키노트 4단계 프로덕트 런치 아크 (9초)",
+        "en": "Keynote 4-Phase Product Launch Arc (9s)"
+      },
+      "description": {
+        "ko": "모뉴멘털 훅(0~2s) -> 커서 인터랙션 줌(2~5s) -> 결과 카드 피크(5~7s) -> 컬러 플러드 엔드카드(7~9s) 구조.",
+        "en": "4-beat product launch arc: Monumental Hook (0-2s) -> Cursor Zoom Action (2-5s) -> Proof Peak (5-7s) -> Flood End Card (7-9s)."
+      },
+      "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-000267/original.87cf7f8c74.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-000267",
+      "sourceRef": "awesome-opus5-5-videos#twoclipping-000267",
+      "tags": [
+        "keynote",
+        "launch",
+        "cursor",
+        "9s",
+        "beats"
+      ],
+      "patch": {
+        "duration": {
+          "seconds": 9
+        },
+        "structure": "continuous",
+        "adStructure": "problem-solution-reveal",
+        "beats": [
+          {
+            "id": "beat-1",
+            "start": 0,
+            "end": 2,
+            "role": "monumental-hook",
+            "copy": "One-Line Product Promise",
+            "visual": "Giant display headline rises via overflow line mask on warm stage",
+            "motion": [
+              "mask-line-rise"
+            ],
+            "camera": "push-in",
+            "transitionOut": "whip-pan",
+            "notes": "Hold headline for 0.6s"
+          },
+          {
+            "id": "beat-2",
+            "start": 2,
+            "end": 5,
+            "role": "cursor-choreography",
+            "copy": "Direct Action",
+            "visual": "Vector cursor arcs toward primary trigger, clicks with 0.88x press, camera zooms 1.65x",
+            "motion": [
+              "direct-cursor-choreography",
+              "spring-pop"
+            ],
+            "camera": "screen-studio-cursor-zoom",
+            "transitionOut": "morph",
+            "notes": "Fitts-law deceleration into click target"
+          },
+          {
+            "id": "beat-3",
+            "start": 5,
+            "end": 7,
+            "role": "metric-proof",
+            "copy": "Instant Result",
+            "visual": "UI card unfolds with live tabular counter roll and glowing status badge",
+            "motion": [
+              "counter-roll",
+              "card-stack"
+            ],
+            "camera": "push-in",
+            "transitionOut": "color-flood-contract",
+            "notes": "Peak visual payoff"
+          },
+          {
+            "id": "beat-4",
+            "start": 7,
+            "end": 9,
+            "role": "end-card",
+            "copy": "Available Now",
+            "visual": "Accent color flood contracts into centered brand pill and CTA lockup",
+            "motion": [
+              "color-flood-contract"
+            ],
+            "camera": "push-in",
+            "transitionOut": "hard-cut",
+            "notes": "Clean end card hold >= 0.9s"
+          }
+        ]
+      }
+    },
+    {
+      "id": "beats-kinetic-manifesto-8s",
+      "category": "scene-beats",
+      "targetTypes": [
+        "motion"
+      ],
+      "mediaIntents": [
+        "motion",
+        "image",
+        "slide"
+      ],
+      "label": {
+        "ko": "키네틱 매니페스토 3막 타이포 구조 (8초)",
+        "en": "Kinetic Manifesto 3-Act Typographic Arc (8s)"
+      },
+      "description": {
+        "ko": "테제 선언(0~2.5s) -> 궤도형 반전 구절(2.5~5.5s) -> 컬러 플러드 결말(5.5~8.0s)로 구성된 에디토리얼 스피치 구조.",
+        "en": "3-act spoken-word typography structure: Thesis Statement (0-2.5s) -> Orbital Turn (2.5-5.5s) -> Flood Resolution (5.5-8.0s)."
+      },
+      "previewUrl": "https://media.skillry.dev/opus-5-5/gdgtify-929495/original.bf87884126.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/gdgtify-929495",
+      "sourceRef": "awesome-opus5-5-videos#gdgtify-929495",
+      "tags": [
+        "manifesto",
+        "kinetic-type",
+        "editorial",
+        "8s",
+        "beats"
+      ],
+      "patch": {
+        "duration": {
+          "seconds": 8
+        },
+        "structure": "hybrid",
+        "adStructure": "hook-benefit-cta",
+        "beats": [
+          {
+            "id": "beat-1",
+            "start": 0,
+            "end": 2.5,
+            "role": "thesis",
+            "copy": "BUILD THE FOUNDATION",
+            "visual": "Stacked grotesque display words rise from baseline masks with corner index [01]",
+            "motion": [
+              "mask-line-rise",
+              "variable-weight-beat-pulse"
+            ],
+            "camera": "push-in",
+            "transitionOut": "whip-pan",
+            "notes": "Key verb pulses weight on beat"
+          },
+          {
+            "id": "beat-2",
+            "start": 2.5,
+            "end": 5.5,
+            "role": "antithesis-orbit",
+            "copy": "BEYOND STATIC TEMPLATES",
+            "visual": "Italic serif phrase glides along elliptical SVG path around central monolith",
+            "motion": [
+              "orbital-trajectory-baseline",
+              "word-stagger"
+            ],
+            "camera": "pan-left-right",
+            "transitionOut": "color-flood-contract",
+            "notes": "90-degree architectural grid shift"
+          },
+          {
+            "id": "beat-3",
+            "start": 5.5,
+            "end": 8,
+            "role": "synthesis-lockup",
+            "copy": "CRAFTED IN PURE CODE",
+            "visual": "Full-screen accent flood contracts into final editorial manifesto stamp",
+            "motion": [
+              "color-flood-contract",
+              "mask-line-rise"
+            ],
+            "camera": "push-in",
+            "transitionOut": "hard-cut",
+            "notes": "Hold final lockup >= 0.9s"
+          }
+        ]
+      }
+    },
+    {
+      "id": "beats-science-derivation-10s",
+      "category": "scene-beats",
+      "targetTypes": [
+        "motion",
+        "3d"
+      ],
+      "mediaIntents": [
+        "motion",
+        "slide",
+        "web"
+      ],
+      "label": {
+        "ko": "3Blue1Brown 스타일 수식·원리 유도 3단계 (10초)",
+        "en": "3Blue1Brown-Style Visual Derivation 3-Beat Arc (10s)"
+      },
+      "description": {
+        "ko": "직관적 기하학 제시(0~3s) -> 고조파·파라미터 중첩 시연(3~7.5s) -> 스펙트럼/결론 도출(7.5~10s) 구조.",
+        "en": "Visual math/science derivation: Geometric Intuition (0-3s) -> Parameter Superposition (3-7.5s) -> Spectrum Synthesis (7.5-10s)."
+      },
+      "previewUrl": "https://media.skillry.dev/opus-5-5/miguel07code-091611/original.3b02d95627.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/miguel07code-091611",
+      "sourceRef": "awesome-opus5-5-videos#miguel07code-091611",
+      "tags": [
+        "science",
+        "math",
+        "explainer",
+        "10s",
+        "beats"
+      ],
+      "patch": {
+        "duration": {
+          "seconds": 10
+        },
+        "structure": "multi-shot",
+        "adStructure": "problem-solution-reveal",
+        "beats": [
+          {
+            "id": "beat-1",
+            "start": 0,
+            "end": 3,
+            "role": "intuition",
+            "copy": "Simple Building Block",
+            "visual": "Single rotating vector draws fundamental sine curve on dark coordinate grid",
+            "motion": [
+              "line-draw",
+              "counter-roll"
+            ],
+            "camera": "push-in",
+            "transitionOut": "morph",
+            "notes": "Color-match formula variable to vector stroke"
+          },
+          {
+            "id": "beat-2",
+            "start": 3,
+            "end": 7.5,
+            "role": "superposition",
+            "copy": "Superposition (N = 1 -> 15)",
+            "visual": "Epicycle vectors chain tip-to-tail as waveform sharpens in real time",
+            "motion": [
+              "closed-form-spring-sum",
+              "line-draw"
+            ],
+            "camera": "pan-left-right",
+            "transitionOut": "match-cut",
+            "notes": "Live parameter counter uses tabular-nums"
+          },
+          {
+            "id": "beat-3",
+            "start": 7.5,
+            "end": 10,
+            "role": "synthesis",
+            "copy": "Frequency Domain Reveal",
+            "visual": "Time-domain trace decomposes into vertical spectrum bars with exact amplitude readouts",
+            "motion": [
+              "bar-grow",
+              "mask-line-rise"
+            ],
+            "camera": "push-in",
+            "transitionOut": "hard-cut",
+            "notes": "Hold final diagram >= 0.9s"
+          }
+        ]
+      }
+    },
+    {
+      "id": "steps-keynote-4slide-deck",
+      "category": "scene-beats",
+      "targetTypes": [
+        "static"
+      ],
+      "mediaIntents": [
+        "slide",
+        "web"
+      ],
+      "label": {
+        "ko": "키노트 4단 슬라이드 스텝 구조 (사용자 입력 진행)",
+        "en": "Keynote 4-Step Slide Deck Structure (User Input Advance)"
+      },
+      "description": {
+        "ko": "D-032 계약을 준수하는 4단계 프레젠테이션 슬라이드 구조(테제 -> 아키텍처 비교 -> 핵심 지표 증명 -> 결론).",
+        "en": "4-step presentation deck structure with spring-morph shared transitions and keyboard/click triggers (D-032 compliant)."
+      },
+      "previewUrl": "https://media.skillry.dev/opus-5-5/techhalla-498547/original.fbdb194d58.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/techhalla-498547",
+      "sourceRef": "awesome-opus5-5-videos#techhalla-498547",
+      "tags": [
+        "slide",
+        "steps",
+        "deck",
+        "keynote",
+        "presentation"
+      ],
+      "patch": {
+        "mode": "steps",
+        "layout": "single-card",
+        "sections": [
+          "hero",
+          "features",
+          "metrics",
+          "cta"
+        ],
+        "steps": [
+          {
+            "id": "step-1",
+            "title": "01 // Executive Thesis",
+            "copy": "State the core shift in one monumental headline.",
+            "layout": "hero-split",
+            "enter": "spring-morph",
+            "advance": "key:ArrowRight"
+          },
+          {
+            "id": "step-2",
+            "title": "02 // System Architecture",
+            "copy": "Contrast legacy bottleneck vs. deterministic pipeline.",
+            "layout": "bento-grid",
+            "enter": "spring-morph",
+            "advance": "key:ArrowRight"
+          },
+          {
+            "id": "step-3",
+            "title": "03 // Quantitative Proof",
+            "copy": "Highlight 3 key benchmark metrics with live interactive bars.",
+            "layout": "stage-with-control-dock",
+            "enter": "slide-x",
+            "advance": "key:ArrowRight"
+          },
+          {
+            "id": "step-4",
+            "title": "04 // Roadmap & Action",
+            "copy": "Summarize immediate rollout milestones.",
+            "layout": "single-card",
+            "enter": "fade",
+            "advance": "click"
+          }
+        ]
+      }
+    },
+    {
+      "id": "typo-monumental-keynote-sans",
+      "category": "typography-style",
+      "targetTypes": [
+        "motion",
+        "3d"
+      ],
+      "mediaIntents": [
+        "motion",
+        "slide",
+        "web"
+      ],
+      "label": {
+        "ko": "모뉴멘털 키노트 디스플레이 + 태뷸러 모노",
+        "en": "Monumental Keynote Display + Tabular Mono"
+      },
+      "description": {
+        "ko": "clamp(60px, 9vw, 128px), 자간 -0.04em의 초거대 지오메트릭 산세리프 헤드라인과 정밀한 tabular-nums 카운터 조합.",
+        "en": "Ultra-tight monumental geometric sans headline (-0.04em tracking) paired with crisp tabular-nums monospace telemetry."
+      },
+      "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-496100/original.8f1c352eca.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-496100",
+      "sourceRef": "awesome-opus5-5-videos#twoclipping-496100",
+      "tags": [
+        "typography",
+        "monumental",
+        "keynote",
+        "sans",
+        "tabular-nums"
+      ],
+      "patch": {
+        "brandVoice": [
+          "confident",
+          "minimal",
+          "technical"
+        ],
+        "visualStyle": {
+          "medium": "Layered glass UI elevation over monumental keynote stage",
+          "lighting": "High-key studio lighting with subtle specular rim border",
+          "typography": "Display geometric sans 700 (clamp(60px, 9vw, 128px), -0.04em) + JetBrains Mono tabular-nums",
+          "density": "Single hero focal point with 40%+ open negative space",
+          "cameraFeeling": "Locked macro stage with smooth 1.6x cursor-follow zoom",
+          "mood": "Apple/Linear flagship keynote clarity"
+        }
+      }
+    },
+    {
+      "id": "typo-editorial-serif-grotesque",
+      "category": "typography-style",
+      "targetTypes": [
+        "motion",
+        "3d"
+      ],
+      "mediaIntents": [
+        "motion",
+        "image",
+        "slide"
+      ],
+      "label": {
+        "ko": "에디토리얼 세리프 이탤릭 + 네오 그로테스크 대비",
+        "en": "Editorial Serif Italic + Neo-Grotesque Contrast"
+      },
+      "description": {
+        "ko": "감성 핵심어에는 Instrument Serif Italic을, 구조적 동사·명사에는 800 웨이트 그로테스크를 배치하고 코너 인덱스를 더한 매거진 타이포.",
+        "en": "High-contrast pairing of Instrument Serif Italic accent words with ultra-bold Neo-Grotesque 800 and architectural corner indices."
+      },
+      "previewUrl": "https://media.skillry.dev/opus-5-5/gdgtify-929495/original.bf87884126.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/gdgtify-929495",
+      "sourceRef": "awesome-opus5-5-videos#gdgtify-929495",
+      "tags": [
+        "typography",
+        "serif",
+        "editorial",
+        "manifesto",
+        "magazine"
+      ],
+      "patch": {
+        "brandVoice": [
+          "editorial",
+          "bold",
+          "poetic"
+        ],
+        "visualStyle": {
+          "medium": "Editorial print-meets-motion stage with 1px architectural hairlines and corner registration marks",
+          "lighting": "Warm parchment or deep obsidian spotlight with subtle film grain",
+          "typography": "Instrument Serif Italic (accent words) + Plus Jakarta / Inter Display 800 (structural nouns)",
+          "density": "3-6 words per beat, 10:1 scale contrast between hero word and [01/04] micro-index",
+          "cameraFeeling": "Crisp architectural whip-pan and 90-degree layout turns",
+          "mood": "Museum monograph & kinetic spoken-word film"
+        }
+      }
+    },
+    {
+      "id": "typo-swiss-poster-grid",
+      "category": "typography-style",
+      "targetTypes": [
+        "motion"
+      ],
+      "mediaIntents": [
+        "image",
+        "motion"
+      ],
+      "label": {
+        "ko": "스위스 그리드 무빙 포스터 & 리퀴드 배지",
+        "en": "Swiss Grid Moving Poster & Liquid Badges"
+      },
+      "description": {
+        "ko": "듀오톤/트라이톤 컬러 플러드 배경 위에 오버사이즈 타이포그래피와 알약형 메타데이터 태그를 격자로 정렬한 포스터 스타일.",
+        "en": "High-contrast duotone/tritone graphic flood with oversized cropped display type and interlocking pill metadata badges."
+      },
+      "previewUrl": "https://media.skillry.dev/opus-5-5/brainextends-606193/original.f7353b2aa2.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/brainextends-606193",
+      "sourceRef": "awesome-opus5-5-videos#brainextends-606193",
+      "tags": [
+        "typography",
+        "poster",
+        "swiss",
+        "spotify",
+        "image",
+        "graphic"
+      ],
+      "patch": {
+        "brandVoice": [
+          "bold",
+          "playful",
+          "editorial"
+        ],
+        "visualStyle": {
+          "medium": "Swiss grid graphic poster with interlocking vector pills and film grain overlay",
+          "lighting": "Flat high-contrast duotone/tritone graphic flood",
+          "typography": "Ultra-bold condensed display uppercase + rounded pill metadata tags",
+          "density": "Poster hierarchy: 1 giant graphic motif + 1 interlocking title + 4 corner specs",
+          "cameraFeeling": "Locked poster frame with internal layout expansion",
+          "mood": "Spotify Wrapped / festival poster vibrancy"
+        }
+      }
+    },
+    {
+      "id": "typo-scientific-hud-telemetry",
+      "category": "typography-style",
+      "targetTypes": [
+        "motion",
+        "3d"
+      ],
+      "mediaIntents": [
+        "motion",
+        "slide",
+        "web"
+      ],
+      "label": {
+        "ko": "수식·다이어그램 과학 시각화 & HUD 텔레메트리",
+        "en": "Scientific Formula & HUD Telemetry Style"
+      },
+      "description": {
+        "ko": "수식 변수와 다이어그램 스트로크의 색상을 1:1 매칭하고 고정폭 숫자 판독창과 좌표 그리드를 결합한 학술·테크 스타일.",
+        "en": "Color-coded mathematical formulas matched 1:1 with vector diagram strokes over a precision coordinate grid."
+      },
+      "previewUrl": "https://media.skillry.dev/opus-5-5/miguel07code-091611/original.3b02d95627.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/miguel07code-091611",
+      "sourceRef": "awesome-opus5-5-videos#miguel07code-091611",
+      "tags": [
+        "typography",
+        "science",
+        "math",
+        "hud",
+        "monospace",
+        "data-viz"
+      ],
+      "patch": {
+        "brandVoice": [
+          "educational",
+          "precise",
+          "technical"
+        ],
+        "visualStyle": {
+          "medium": "Precision SVG/Canvas coordinate grid with glowing vector traces and leader lines",
+          "lighting": "Deep slate background with luminous cyan, coral, and gold signal strokes",
+          "typography": "Space Grotesk 600 titles + math italic variables + JetBrains Mono tabular-nums readouts",
+          "density": "1 active equation callout + 1 synchronized geometric/wave diagram",
+          "cameraFeeling": "Smooth orthographic pan across coordinate domains",
+          "mood": "3Blue1Brown / research lab clarity"
+        }
+      }
+    },
+    {
+      "id": "motion-kit-spring-ui-morph",
+      "category": "motion-effects",
+      "targetTypes": [
+        "motion",
+        "3d"
+      ],
+      "mediaIntents": [
+        "motion",
+        "web"
+      ],
+      "label": {
+        "ko": "감쇠 스프링 합산 + 엣지 시차 리퀴드 필 모션 키트",
+        "en": "Closed-Form Spring + Edge-Staggered Liquid Pill Kit"
+      },
+      "description": {
+        "ko": "단일 컨테이너가 감쇠 스프링 물리 수식과 좌우 28ms 엣지 시차, 코닉 헤일로 보더를 통해 유기적으로 변형되는 모션 세트.",
+        "en": "Combines closed-form damped spring interpolation, 28ms edge-staggered liquid pill expansion, and iridescent conic halo."
+      },
+      "previewUrl": "https://media.skillry.dev/opus-5-5/morse-369333/original.519a9f00ee.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/morse-369333",
+      "sourceRef": "awesome-opus5-5-videos#morse-369333",
+      "tags": [
+        "motion",
+        "spring",
+        "liquid-pill",
+        "halo",
+        "ui-morph"
+      ],
+      "patch": {
+        "creativeMode": [
+          "one-shape-ui-morph",
+          "ui-choreography"
+        ],
+        "motionVocabulary": {
+          "typography": [
+            "counter-roll",
+            "variable-weight-beat-pulse"
+          ],
+          "object": [
+            "closed-form-spring-sum",
+            "edge-staggered-liquid-pill"
+          ],
+          "camera": [
+            "push-in"
+          ],
+          "material": [
+            "iridescent-conic-halo",
+            "glass-blur"
+          ],
+          "transition": [
+            "morph",
+            "match-cut"
+          ]
+        }
+      }
+    },
+    {
+      "id": "motion-kit-cursor-zoom-keynote",
+      "category": "motion-effects",
+      "targetTypes": [
+        "motion",
+        "3d"
+      ],
+      "mediaIntents": [
+        "motion",
+        "slide",
+        "web"
+      ],
+      "label": {
+        "ko": "Screen Studio 커서 안무 & 포커스 줌 모션 키트",
+        "en": "Screen Studio Cursor Choreography & Focus Zoom Kit"
+      },
+      "description": {
+        "ko": "베지어 곡선 궤적의 벡터 커서 클릭과 카메라 1.6x 포커스 줌, 컬러 플러드 수축 전환을 결합한 제품 데모 모션 세트.",
+        "en": "Pairs curved Bezier cursor choreography and click ripples with 1.6x camera follow-zoom and color-flood transitions."
+      },
+      "previewUrl": "https://media.skillry.dev/opus-5-5/moritzkremb-466494/original.dc5bd867e2.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/moritzkremb-466494",
+      "sourceRef": "awesome-opus5-5-videos#moritzkremb-466494",
+      "tags": [
+        "motion",
+        "cursor",
+        "screen-studio",
+        "zoom",
+        "keynote"
+      ],
+      "patch": {
+        "creativeMode": [
+          "keynote-continuous-launch",
+          "ui-choreography"
+        ],
+        "motionVocabulary": {
+          "typography": [
+            "mask-line-rise",
+            "word-stagger"
+          ],
+          "object": [
+            "direct-cursor-choreography",
+            "spring-pop",
+            "card-stack"
+          ],
+          "camera": [
+            "screen-studio-cursor-zoom",
+            "push-in"
+          ],
+          "material": [
+            "glass-blur",
+            "soft-shadow"
+          ],
+          "transition": [
+            "color-flood-contract",
+            "whip-pan"
+          ]
+        }
+      }
+    },
+    {
+      "id": "motion-kit-kinetic-manifesto-pulse",
+      "category": "motion-effects",
+      "targetTypes": [
+        "motion"
+      ],
+      "mediaIntents": [
+        "motion",
+        "image",
+        "slide"
+      ],
+      "label": {
+        "ko": "마스크 라인 라이즈 + 가변 웨이트 비트 펄스 + 궤도 경로 키트",
+        "en": "Mask Line Rise + Beat Weight Pulse + Orbital Path Kit"
+      },
+      "description": {
+        "ko": "오버플로우 마스크 상승, 비트 동기화 폰트 웨이트 펄스(300->900), 타원형 SVG 텍스트 궤도를 결합한 키네틱 타이포 모션 세트.",
+        "en": "Combines overflow mask line rises, beat-synced font-weight pulses (300->900), and elliptical SVG textPath trajectories."
+      },
+      "previewUrl": "https://media.skillry.dev/opus-5-5/lukasersil-726495/original.2886d94586.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/lukasersil-726495",
+      "sourceRef": "awesome-opus5-5-videos#lukasersil-726495",
+      "tags": [
+        "motion",
+        "kinetic-type",
+        "mask-rise",
+        "beat-pulse",
+        "orbital"
+      ],
+      "patch": {
+        "creativeMode": [
+          "kinetic-spoken-manifesto",
+          "kinetic-type"
+        ],
+        "motionVocabulary": {
+          "typography": [
+            "mask-line-rise",
+            "variable-weight-beat-pulse",
+            "orbital-trajectory-baseline",
+            "word-stagger"
+          ],
+          "object": [
+            "spring-pop"
+          ],
+          "camera": [
+            "push-in",
+            "pan-left-right"
+          ],
+          "material": [
+            "grain-overlay",
+            "neon-glow"
+          ],
+          "transition": [
+            "color-flood-contract",
+            "whip-pan"
+          ]
+        }
+      }
+    },
+    {
+      "id": "motion-kit-interactive-sandbox-dock",
+      "category": "motion-effects",
+      "targetTypes": [
+        "static"
+      ],
+      "mediaIntents": [
+        "web",
+        "slide"
+      ],
+      "label": {
+        "ko": "인터랙티브 파라미터 샌드박스 & 멀티스케일 줌 레이아웃 키트",
+        "en": "Interactive Parameter Sandbox & Control Dock Kit"
+      },
+      "description": {
+        "ko": "정적/웹 신에 실시간 슬라이더·프리셋 컨트롤 독(Control Dock)과 멀티스케일 비교 섹션을 즉시 구성하는 레이아웃·인터랙션 프리셋.",
+        "en": "Configures a static/web scene with a full-bleed simulation stage, floating control dock, and multiscale zoom comparison."
+      },
+      "previewUrl": "https://media.skillry.dev/opus-5-5/redpersongpt-284430/original.aa458f7e3a.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/redpersongpt-284430",
+      "sourceRef": "awesome-opus5-5-videos#redpersongpt-284430",
+      "tags": [
+        "static",
+        "web",
+        "sandbox",
+        "simulator",
+        "control-dock"
+      ],
+      "patch": {
+        "mode": "scroll",
+        "layout": "stage-with-control-dock",
+        "sections": [
+          "hero",
+          "interactive-parameter-sandbox",
+          "multiscale-zoom-comparison",
+          "metrics"
+        ],
+        "breakpoints": [
+          "desktop-first",
+          "responsive-stack"
+        ],
+        "accessibility": [
+          "keyboard-nav",
+          "high-contrast"
+        ]
+      }
+    },
+    {
+      "id": "3d-kit-exploded-pbr-cutaway",
+      "category": "3d-stage",
+      "targetTypes": [
+        "3d"
+      ],
+      "mediaIntents": [
+        "web",
+        "motion"
+      ],
+      "label": {
+        "ko": "3D 익스플로디드 분해 뷰 + PBR 메탈/글래스 + 궤도 턴테이블",
+        "en": "3D Exploded Cutaway + PBR Metal/Glass + Orbit Turntable"
+      },
+      "description": {
+        "ko": "다중 파트 3D 어셈블리가 축을 따라 분해·결합하며 PBR 금속·유리 재질과 3점 스튜디오 조명으로 빛나는 하드웨어 쇼케이스 세팅.",
+        "en": "Multi-part exploded cutaway composition with PBR metal/glass transmission materials and three-point studio orbit camera."
+      },
+      "previewUrl": "https://media.skillry.dev/opus-5-5/bthreeagency-827092/original.353cb53c14.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/bthreeagency-827092",
+      "sourceRef": "awesome-opus5-5-videos#bthreeagency-827092",
+      "tags": [
+        "3d",
+        "exploded-view",
+        "pbr",
+        "cutaway",
+        "product"
+      ],
+      "patch": {
+        "composition": "exploded-cutaway-assembly",
+        "materials": [
+          "pbr-metal-rough",
+          "glass-transmission",
+          "emissive-neon"
+        ],
+        "lighting": "three-point-studio",
+        "cameraPath": "orbit-turntable",
+        "performanceBudget": "standard-60fps"
+      }
+    },
+    {
+      "id": "3d-kit-stained-glass-shader-dolly",
+      "category": "3d-stage",
+      "targetTypes": [
+        "3d"
+      ],
+      "mediaIntents": [
+        "motion",
+        "image"
+      ],
+      "label": {
+        "ko": "3D 프리즘 색수차 분산 + 커스텀 GLSL 셰이더 + 달리 푸시",
+        "en": "3D Stained-Glass Dispersion + Custom Shader + Dolly Push"
+      },
+      "description": {
+        "ko": "RGB 스펙트럼 굴절(Stained-Glass Dispersion)과 커스텀 GLSL 셰이더, 역광 림 라이팅으로 신비로운 공간감을 만드는 3D 아트 세팅.",
+        "en": "Combines custom GLSL shaders, stained-glass chromatic dispersion, rim backlighting, and slow dolly-push camera."
+      },
+      "previewUrl": "https://media.skillry.dev/opus-5-5/_prompts/agioyaz-397647/poster.340f607e45.webp",
+      "actionUrl": "https://x.com/AGIOyaZ/status/2103167623303397647",
+      "sourceRef": "awesome-opus5-5-videos#agioyaz-397647",
+      "tags": [
+        "3d",
+        "shader",
+        "dispersion",
+        "prism",
+        "cinematic"
+      ],
+      "patch": {
+        "composition": "single-hero-center",
+        "materials": [
+          "custom-shader",
+          "stained-glass-dispersion",
+          "emissive-neon"
+        ],
+        "lighting": "rim-backlit",
+        "cameraPath": "dolly-push",
+        "performanceBudget": "shader-heavy"
+      }
+    }
+  ]
+}

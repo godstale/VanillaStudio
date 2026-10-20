@@ -12,7 +12,11 @@
     "lint": "eslint . --max-warnings=0",
     "format": "prettier --write .",
     "test": "vitest run",
-    "test:e2e:review": "node tests/e2e/run-review-preview.mjs"
+    "test:e2e:scene": "node tests/e2e/scene-preview.mjs",
+    "test:e2e:agent": "node tests/e2e/scene-preview.mjs --agent-scene",
+    "test:e2e:sequence": "node tests/e2e/sequence-playback.mjs",
+    "test:e2e:v1": "node tests/e2e/v1-migration.mjs",
+    "test:e2e:samples": "node tests/e2e/samples-playback.mjs"
   },
   "dependencies": {
     "@codemirror/commands": "^6.11.1",
@@ -39,6 +43,7 @@
     "@tauri-apps/plugin-sql": "^2.4.1",
     "@xterm/addon-fit": "^0.11.0",
     "@xterm/xterm": "^6.0.0",
+    "@xyflow/react": "^12.12.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "codemirror": "^6.0.2",

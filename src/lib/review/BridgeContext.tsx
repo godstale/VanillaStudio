@@ -28,6 +28,8 @@ export interface BridgeProviderProps {
   /** Origin of the preview server, e.g. `http://127.0.0.1:5173`; `null` while no server runs. */
   previewOrigin: string | null;
   initialParamsValues?: ParamsValues;
+  /** workspace.json.canvas: `init`으로 신에 주입한다(D-030). */
+  canvas?: { width: number; height: number; fps: number };
   children: ReactNode;
 }
 
@@ -37,7 +39,11 @@ interface PendingCapture {
   timer: ReturnType<typeof setTimeout>;
 }
 
-function BridgeInner({ previewOrigin, initialParamsValues, children }: BridgeProviderProps) {
+function BridgeInner({ previewOrigin, initialParamsValues, canvas, children }: BridgeProviderProps) {
+  const canvasRef = useRef(canvas);
+  useEffect(() => {
+    canvasRef.current = canvas;
+  }, [canvas]);
   const frameRef = useRef<Window | null>(null);
   const originRef = useRef(previewOrigin);
   useEffect(() => {
@@ -90,7 +96,7 @@ function BridgeInner({ previewOrigin, initialParamsValues, children }: BridgePro
       switch (msg.type) {
         case 'ready':
           // Restore what the host owns: params, design override, playhead, play state.
-          send({ type: 'init', payload: { mode: 'preview', paramsValues: paramsRef.current } });
+          send({ type: 'init', payload: { mode: 'preview', paramsValues: paramsRef.current, ...(canvasRef.current ? { canvas: canvasRef.current } : {}) } });
           if (designRef.current) send({ type: 'setDesign', payload: { colors: designRef.current } });
           if (timeRef.current.t > 0) send({ type: 'seek', payload: { t: timeRef.current.t } });
           if (playingRef.current) send({ type: 'play' });
@@ -103,13 +109,15 @@ function BridgeInner({ previewOrigin, initialParamsValues, children }: BridgePro
           timeListeners.current.forEach((l) => l());
           break;
         case 'error':
-          setError(msg.payload);
           if (msg.payload.message.startsWith('capture:')) {
+            // 캡처 실패(예: DOM 전용 신)는 신 오류가 아니다. 요청한 쪽에만 알린다.
             for (const [id, p] of pending.current) {
               clearTimeout(p.timer);
               p.reject(new Error(msg.payload.message));
               pending.current.delete(id);
             }
+          } else {
+            setError(msg.payload);
           }
           break;
         case 'captured': {
@@ -198,13 +206,14 @@ function BridgeInner({ previewOrigin, initialParamsValues, children }: BridgePro
   return <BridgeContext.Provider value={value}>{children}</BridgeContext.Provider>;
 }
 
-export function BridgeProvider({ previewOrigin, initialParamsValues, children }: BridgeProviderProps) {
+export function BridgeProvider({ previewOrigin, initialParamsValues, canvas, children }: BridgeProviderProps) {
   // A new server (new origin) starts from scratch: remounting clears ready/error/playhead.
   return (
     <BridgeInner
       key={previewOrigin ?? 'idle'}
       previewOrigin={previewOrigin}
       initialParamsValues={initialParamsValues}
+      canvas={canvas}
     >
       {children}
     </BridgeInner>

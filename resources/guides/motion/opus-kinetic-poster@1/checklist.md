@@ -1,0 +1,3 @@
+- [ ] Any paused frame works as a standalone graphic poster/image
+- [ ] Strong typographic scale contrast and grid alignment
+- [ ] Zero blank frames between transitions

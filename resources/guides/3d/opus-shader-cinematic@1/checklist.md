@@ -1,0 +1,3 @@
+- [ ] Shader `uTime` uniform is driven strictly by `useTime()`
+- [ ] Shader colors reflect `DESIGN.md` tokens
+- [ ] Sustains 60fps within budget

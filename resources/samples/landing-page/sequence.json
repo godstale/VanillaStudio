@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "workspaceId": "ws_landingpage0001",
+  "id": "seq_main",
+  "mode": "linear",
+  "nodes": [
+    {
+      "sceneId": "scn_landing00001",
+      "pos": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "edges": [],
+  "start": "scn_landing00001"
+}

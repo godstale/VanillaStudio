@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "hide": [],
+  "defaults": {
+    "mode": "scroll",
+    "steps": [],
+    "sections": [
+      "hero",
+      "features",
+      "metrics",
+      "pricing",
+      "cta",
+      "footer"
+    ],
+    "layout": "bento-grid",
+    "breakpoints": [
+      "desktop-first",
+      "responsive-stack"
+    ],
+    "accessibility": [
+      "keyboard-nav",
+      "reduced-motion",
+      "high-contrast"
+    ]
+  },
+  "fields": []
+}

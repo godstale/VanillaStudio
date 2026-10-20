@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "workspaceId": "ws_sampleseq0001",
+  "id": "seq_main",
+  "mode": "interactive",
+  "nodes": [
+    {
+      "sceneId": "scn_demoIntro01",
+      "pos": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "sceneId": "scn_demoPage001",
+      "pos": {
+        "x": 300,
+        "y": 0
+      }
+    },
+    {
+      "sceneId": "scn_demoGlobe01",
+      "pos": {
+        "x": 600,
+        "y": 0
+      }
+    },
+    {
+      "sceneId": "scn_demoOutro01",
+      "pos": {
+        "x": 900,
+        "y": 0
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "scn_demoIntro01",
+      "to": "scn_demoPage001",
+      "trigger": "end",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 600,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_demoPage001",
+      "to": "scn_demoGlobe01",
+      "trigger": "click",
+      "transition": {
+        "type": "slide-left",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_demoGlobe01",
+      "to": "scn_demoOutro01",
+      "trigger": "choice:Finish",
+      "transition": {
+        "type": "circular-reveal",
+        "durationMs": 700,
+        "easing": "ease-in-out",
+        "params": {
+          "x": 50,
+          "y": 50
+        }
+      }
+    },
+    {
+      "from": "scn_demoGlobe01",
+      "to": "scn_demoIntro01",
+      "trigger": "choice:Again",
+      "transition": {
+        "type": "zoom-through",
+        "durationMs": 600,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    }
+  ],
+  "start": "scn_demoIntro01"
+}

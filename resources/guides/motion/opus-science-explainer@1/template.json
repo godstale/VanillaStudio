@@ -1,0 +1,36 @@
+{
+  "id": "opus-science-explainer",
+  "version": 1,
+  "type": "motion",
+  "label": {
+    "ko": "Opus 수식·과학 시각화 해설",
+    "en": "Opus Math & Science Explainer"
+  },
+  "extends": "commercial@1",
+  "mediaIntents": [
+    "motion",
+    "slide",
+    "web"
+  ],
+  "description": {
+    "ko": "수식 유도, 푸리에 에피사이클, 알고리즘·물리 법칙을 3Blue1Brown 스타일의 다이어그램과 그래프 모핑으로 시각화하는 해설 템플릿.",
+    "en": "3Blue1Brown-inspired mathematical & scientific visualization with synchronized waveforms, vector arrows, and step-by-step derivations."
+  },
+  "tags": [
+    "explainer",
+    "science",
+    "math",
+    "fourier",
+    "algorithm",
+    "diagram",
+    "data-viz",
+    "education"
+  ],
+  "banned": [
+    "Unlabeled axes or decorative random sine waves that do not match the formula",
+    "Static textbook walls of text"
+  ],
+  "previewUrl": "https://media.skillry.dev/opus-5-5/miguel07code-091611/original.3b02d95627.webp",
+  "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/miguel07code-091611",
+  "sourceRef": "awesome-opus5-5-videos#miguel07code-091611"
+}

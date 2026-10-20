@@ -1,0 +1,3 @@
+- [ ] Single hero shape persists across the entire timeline without hard DOM unmounts
+- [ ] Spring transitions are pure functions of `useTime()`
+- [ ] Loop boundary (`t = 0` and `t = duration`) is visually continuous

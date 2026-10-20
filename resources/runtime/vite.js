@@ -10949,7 +10949,7 @@ var ZodFirstPartyTypeKind;
 const stringType = ZodString.create;
 const numberType = ZodNumber.create;
 ZodNever.create;
-ZodArray.create;
+const arrayType = ZodArray.create;
 const objectType = ZodObject.create;
 const unionType = ZodUnion.create;
 ZodIntersection.create;
@@ -14187,6 +14187,8 @@ const TokensSchema = objectType({
   version: stringType().optional(),
   name: stringType().optional(),
   colors: recordType(stringType(), stringType()).default({}),
+  /** 분위기 키워드(용어 ID, 선택). 가이드 `visualStyle.mood`와 같은 ID를 쓴다(Technical-Design §4.5). */
+  mood: arrayType(stringType()).optional(),
   typography: recordType(stringType(), recordType(stringType(), unionType([stringType(), numberType()]))).default({}),
   spacing: recordType(stringType(), unionType([stringType(), numberType()])).default({}),
   rounded: recordType(stringType(), stringType()).default({}),
@@ -14211,12 +14213,13 @@ function resolveRefs(value, root, issues, seen = []) {
     }
     return resolveRefs(target, root, issues, [...seen, m[1]]);
   }
+  if (Array.isArray(value)) return value.map((v) => resolveRefs(v, root, issues, seen));
   if (value && typeof value === "object") {
     return Object.fromEntries(Object.entries(value).map(([k2, v]) => [k2, resolveRefs(v, root, issues, seen)]));
   }
   return value;
 }
-function parseDesign(text) {
+function parseDesignTokens(text) {
   const split = splitFrontMatter(text);
   const issues = [];
   if (!split.hasFrontMatter) issues.push("no YAML front matter: tokens unavailable (prose-only DESIGN.md)");
@@ -14225,7 +14228,9 @@ function parseDesign(text) {
   if (!parsed.success) {
     issues.push(...parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`));
   }
-  const tokens = parsed.success ? parsed.data : TokensSchema.parse({});
+  return { tokens: parsed.success ? parsed.data : TokensSchema.parse({}), issues };
+}
+function resolveDesign(tokens, issues = []) {
   const resolved = resolveRefs(tokens, tokens, issues);
   for (const [k2, v] of Object.entries(resolved.colors)) if (!isColor(v)) issues.push(`colors.${k2}: invalid color ${v}`);
   let colors = resolved.colors;
@@ -14235,6 +14240,10 @@ function parseDesign(text) {
     issues.push(e2.message);
   }
   return { tokens: resolved, colors, issues };
+}
+function parseDesign(text) {
+  const { tokens, issues } = parseDesignTokens(text);
+  return resolveDesign(tokens, issues);
 }
 const ID = "virtual:vanilla/design";
 const RESOLVED = "\0" + ID;

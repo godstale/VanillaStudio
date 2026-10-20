@@ -1,18 +1,21 @@
-pub mod agent_host;
 pub mod commands;
-pub mod mcp_server;
 pub mod process;
 pub mod watch;
 
-use commands::agent_commands::*;
 use commands::doctor_commands::*;
 use commands::export_commands::*;
 use commands::fs_commands::*;
-use commands::project_commands::*;
 use commands::process_commands::*;
+use commands::migrate_commands::*;
+use commands::package_commands::*;
 use commands::pty_commands::*;
+use commands::reference_commands::*;
 use commands::search_commands::*;
+use commands::scene_commands::*;
 use commands::shell_commands::*;
+use commands::template_commands::*;
+use commands::trust_commands::*;
+use commands::workspace_commands::*;
 use watch::{start_preview_watch, stop_preview_watch};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -49,6 +52,8 @@ pub fn run() {
             read_project_folder_tree,
             read_text_file,
             write_text_file,
+            write_binary_base64,
+            read_binary_base64,
             create_file,
             create_folder,
             rename_path,
@@ -61,13 +66,16 @@ pub fn run() {
             find_files,
             run_shell,
             doctor_check,
+            extract_reference_frames,
+            create_vsx,
+            inspect_vsx,
+            extract_vsx_scene,
+            extract_vsx_workspace,
+            extract_vsx_templates,
+            read_vsx_text,
+            read_v1_project,
             ffmpeg_download,
             ffmpeg_download_cancel,
-            scaffold_project,
-            checkpoint_status,
-            checkpoint_init,
-            checkpoint_commit,
-            checkpoint_history,
             install_project_deps,
             install_project_deps_cancel,
             start_preview_server,
@@ -78,14 +86,17 @@ pub fn run() {
             pty_write,
             pty_resize,
             pty_kill,
-            install_claude_adapter,
-            install_claude_adapter_cancel,
-            claude_adapter_status,
-            start_agent_session,
-            send_agent_prompt,
-            cancel_agent_prompt,
-            respond_agent_permission,
-            close_agent_session,
+            create_scene,
+            rename_scene,
+            delete_scene,
+            duplicate_scene,
+            read_template_folders,
+            set_workspace_trusted,
+            is_workspace_trusted,
+            inspect_workspace_folder,
+            create_workspace,
+            open_workspace,
+            verify_workspace_path,
             start_export_job,
             cancel_export_job,
         ])

@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "id": "scn_torus0000001",
+  "name": "Torus showcase",
+  "template": "three-scene@1",
+  "brief": {
+    "subject": "Rotating torus knot",
+    "goal": "Show the 3D runtime",
+    "audience": "Developers",
+    "message": "Deterministic 3D",
+    "language": "en"
+  },
+  "type": "3d",
+  "duration": {
+    "seconds": 6.000
+  },
+  "creativeMode": [],
+  "structure": "multi-shot",
+  "adStructure": "",
+  "brandVoice": [],
+  "visualStyle": {
+    "medium": "",
+    "lighting": "",
+    "typography": "",
+    "density": "",
+    "cameraFeeling": "",
+    "mood": ""
+  },
+  "motionVocabulary": {
+    "typography": [],
+    "object": [],
+    "camera": [],
+    "material": [],
+    "transition": []
+  },
+  "beats": [
+    {
+      "id": "spin",
+      "start": 0.000,
+      "end": 6.000,
+      "role": "showcase",
+      "copy": "",
+      "visual": "torus knot rotating",
+      "motion": [],
+      "camera": "static",
+      "transitionOut": "",
+      "notes": ""
+    }
+  ],
+  "copy": {
+    "textFidelity": "exact",
+    "items": []
+  },
+  "identity": {
+    "product": "",
+    "character": "",
+    "mustKeep": []
+  },
+  "endCard": {
+    "holdSeconds": 1.000,
+    "elements": []
+  },
+  "audio": {
+    "voiceOver": null,
+    "soundDesign": null,
+    "music": null
+  },
+  "constraints": {
+    "avoid": [],
+    "noUnspecifiedElements": true
+  },
+  "composition": "one centered object",
+  "materials": [
+    "metallic, medium roughness"
+  ],
+  "lighting": "ambient plus one key light",
+  "cameraPath": "static front camera",
+  "performanceBudget": "one mesh, under 10k triangles",
+  "custom": {},
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "id": "scn_demoOutro01",
+  "name": "Outro",
+  "template": "commercial@1",
+  "brief": {
+    "subject": "",
+    "goal": "",
+    "audience": "",
+    "message": "",
+    "language": "ko"
+  },
+  "type": "motion",
+  "duration": {
+    "seconds": 2.000
+  },
+  "creativeMode": [],
+  "structure": "multi-shot",
+  "adStructure": "",
+  "brandVoice": [],
+  "visualStyle": {
+    "medium": "",
+    "lighting": "",
+    "typography": "",
+    "density": "",
+    "cameraFeeling": "",
+    "mood": ""
+  },
+  "motionVocabulary": {
+    "typography": [],
+    "object": [],
+    "camera": [],
+    "material": [],
+    "transition": []
+  },
+  "beats": [
+    {
+      "id": "thanks",
+      "start": 0.000,
+      "end": 2.000,
+      "role": "cta",
+      "copy": "",
+      "visual": "",
+      "motion": [],
+      "camera": "",
+      "transitionOut": "",
+      "notes": ""
+    }
+  ],
+  "copy": {
+    "textFidelity": "exact",
+    "items": [
+      "Thank you"
+    ]
+  },
+  "identity": {
+    "product": "",
+    "character": "",
+    "mustKeep": []
+  },
+  "endCard": {
+    "holdSeconds": 1.000,
+    "elements": []
+  },
+  "audio": {
+    "voiceOver": null,
+    "soundDesign": null,
+    "music": null
+  },
+  "constraints": {
+    "avoid": [],
+    "noUnspecifiedElements": true
+  },
+  "custom": {},
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

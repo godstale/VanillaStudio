@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "workspaceId": "ws_gangdongforest1",
+  "id": "seq_main",
+  "mode": "linear",
+  "nodes": [
+    {
+      "sceneId": "scn_forestPromo01",
+      "pos": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "edges": [],
+  "start": "scn_forestPromo01"
+}

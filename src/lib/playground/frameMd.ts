@@ -2,7 +2,7 @@
 // projects in the HyperFrames FRAME.MD shape. Tokens always come from
 // DESIGN.md — frame.md carries motion guidance only (Product-Spec §8.1).
 import { invoke as tauriInvoke } from '@tauri-apps/api/core';
-import { projectPath } from '@/lib/pipeline/briefFiles';
+import { projectPath } from '@/lib/workspace/files';
 
 type InvokeFn = (cmd: string, args?: Record<string, unknown>) => Promise<unknown>;
 

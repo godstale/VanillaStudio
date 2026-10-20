@@ -1,0 +1,3 @@
+- Coordinate camera zoom (`1.4x`-`1.8x`) and pan directly with the synthesized SVG cursor position using `useTime()`.
+- Headline typography must use tight tracking (`-0.035em` to `-0.045em`) and reveal via `overflow: hidden` line masks.
+- Never show more than 3 data points on any UI card; abstract secondary text into subtle skeleton bars.

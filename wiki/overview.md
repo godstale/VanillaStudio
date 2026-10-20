@@ -3,10 +3,24 @@ title: 'Overview'
 type: overview
 tags: [overview]
 sources: []
-last_updated: 2026-10-01
+last_updated: 2026-10-18
 ---
 
 ## 현재 상태 (2026-10-01)
+
+- **2026-10-05 v2 리팩토링(Scene 워크스페이스)**: 기획 [[refactor-spec-v2]] v0.3·설계 [[technical-design]] v1.0·계획 [[implementation-plan]] v2.0(V1~V7)·`AGENTS.md` v2 개정 완료, D-022~D-033 Accepted(D-010·D-018 Superseded). **다음: V1 기반 정리(TODO T1.0)**. 브랜치 `docs/v2-refactor-spec`(main 병합·push는 사용자 승인 대기). 아래 P4(v1) 상태는 이력
+- 레거시 제거 계획(T1.2): [[issue-v2-legacy-removal]]
+- PoC R-5(캔버스) 통과: [[poc-r5]]
+- PoC R-1(신 간 전환 합성) 완료: [[poc-r1]]
+- V1 기반 정리 완료(GUI 데모 확인 대기): [[milestone-v1]]
+- V2 Scene CRUD·지침 생성 완료(GUI 확인 대기): [[milestone-v2]]
+- V3 가이드·인스펙터 완료(GUI 확인 대기): [[milestone-v3]]
+- **v2 구현 V1~V7 완료**(GUI·클린 VM·실제 에이전트·서명은 사람 확인 대기): [[milestone-v7]], [[phase-p4-v2]]
+- v1 마이그레이션 출하 게이트 통과: [[issue-v1-migration]]
+- V6 시퀀스·플레이그라운드 완료(GUI 확인 대기): [[milestone-v6]]
+- V5 레퍼런스 분석 완료(GUI·실제 에이전트 데모 확인 대기): [[milestone-v5]]
+- V4 터미널 실행·재생 완료(GUI·실제 에이전트 데모 확인 대기): [[milestone-v4]], [[poc-agent-terminal]]
+- 에이전트 실사용 검증 5건 수정(스캐폴드 초안·템플릿 번들·static copy 문서·플레이어 키·종료 멈춤, 브랜치 `fix/scaffold-playground-5-issues`): [[issue-playground-scaffold-fixes]]
 
 - 개발 단계: **P4 구현 — 자동화 항목 전부 완료 + T7.2 개발-PC 검증 완료(아래)**. 잔여: clean VM 재실행(T7.2 §4)·T7.5(인증서)·main push 승인 대기. 마일스톤 로그: [[milestone-m1]]·[[milestone-m2]]·[[milestone-m3]]·[[milestone-m4]]·[[milestone-m5]]·[[milestone-m6]], 병렬 배치: [[parallel-execution]] (`Docs/Planning/Parallel-Execution.md`)
 - T7.2 개발-PC 실행(2026-10-02, `Docs/Verification/Clean-Install-Checklist.md`): 인스톨러 빌드(MSI+NSIS, 미서명) ✓, 5종 export(출하 번들) ✓ — 실행 중 결함 4건 수정(번들 optional-peer throw·번들 CDP 소켓→pipe 전환·편집PPTX notes 병합) + PowerPoint 실편집 검증 ✓. video MP4(h264·3.0초) ✓

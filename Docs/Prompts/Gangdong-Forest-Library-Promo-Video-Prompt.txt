@@ -1,0 +1,40 @@
+15.000 seconds.
+
+Creative Mode: Visual Metaphor + Kinetic Typography + Editorial Graphic. Structure: Multi-shot, 6 shots, soft organic transitions. Brand voice: warm, curious, calm, quietly confident. Promotional motion graphic for a volunteer ("재능기부") lecture series at the forest library "강동 숲속 도서관". Idea: knowledge grows like a forest. Books become trees, and the history of AI, the principles of LLMs, and vibe coding each sprout as a new branch.
+
+VISUAL STYLE
+Editorial 2.5D paper-cut motion graphic with soft volumetric light, layered paper textures, gentle drop shadows, subtle grain, slow parallax depth. Palette: deep forest green background, warm cream for typography, amber lamplight glow as the main light, and one restrained mint-cyan digital accent used only for AI elements (hairline lines, nodes, cursor). Lighting: warm, low-key dusk-in-the-woods with soft god-rays. High contrast between cream text and dark green. Typography: bold, clean, modern Korean sans-serif, crisp Hangul glyph construction, slightly generous letter spacing, front-facing and flat. Camera: slow, gentle, observant, with small push-ins and parallax drift. Mood: a calm, curious invitation, like opening a book in a quiet forest.
+
+TEXT FIDELITY
+Treat every text string inside quotation marks as an immutable graphic asset. Render it exactly as provided, preserving every Hangul character, spacing, punctuation, capitalization, numeral, and English spelling. No translation, rewriting, spelling correction, character substitution, syllable-block splitting, jamo separation, added or omitted letters, or pseudo-text. One core Korean copy line per shot, large, readable, high contrast, minimal motion blur, no skew. Assemble completed Hangul syllable blocks, never individual jamo.
+
+SHOT 1 — 0.000s–2.400s (Hook, visual-only)
+A dark green paper-layered forest at dusk. Tall tree trunks fill the frame, and each trunk is a vertical stack of cloth-bound book spines in muted greens, creams and ochres. Amber light spills between the trunks. The camera pushes in slowly through the trunks with parallax, foreground trunks sliding past the frame edges, small paper leaves drifting down. At 1.400s one central book spine glows mint-cyan and a thin luminous line travels up the trunk into the canopy, where a few leaves become small glowing nodes. No text. Transition: the nodes expand into the rings of a cut tree trunk (circular match cut).
+
+SHOT 2 — 2.400s–5.100s (AI의 역사)
+A tree cross-section fills the screen, cream paper rings on deep green. The rings double as a timeline: mint-cyan dots appear from the center outward in a calm rhythm, joined by hairline curves, suggesting decades of progress. Display exactly: “AI의 역사” in large cream Hangul at the lower third, entering with one smooth left-to-right mask wipe, holding clearly for at least 1.0s. Transition: the outer ring peels away like paper and unfolds upward into a leaf canopy (object wipe).
+
+SHOT 3 — 5.100s–7.900s (LLM의 원리 이해)
+Deep green canopy space with soft amber backlight. Paper leaves float in mid-air, each carrying a tiny abstract unreadable mark. Mint-cyan hairlines connect the leaves into a network, nodes pulsing in sequence as if one thought passes leaf to leaf and the next leaf is chosen. The camera orbits a few degrees with parallax. The network converges into a glowing sphere of leaves, which opens into a branching tree-like diagram. Display exactly: “LLM의 원리 이해” in cream, centered below the diagram, appearing with a clean graphic snap (scale 92% to 100%, slight overshoot, no blur), holding at least 1.0s. Keep “LLM” in uppercase Latin letters. Transition: a mint-cyan line slides across the frame and becomes a blinking text-cursor line (shape transition).
+
+SHOT 4 — 7.900s–10.600s (바이브 코딩 입문)
+A quiet paper-cut desk by a forest window at dusk: open book at left, soft amber desk lamp, a simple layered-paper laptop silhouette with no readable screen content and no logos. A mint-cyan cursor blinks on the screen. A few abstract code-like bars type themselves in soft rhythm, and from the last bar a small green sprout rises out of the screen, unfurls two leaves, and grows into a small tree that gently sways. Subtle push-in, then steady. Display exactly: “바이브 코딩 입문” in cream Hangul in the upper area, entering with a mask slide-up, holding at least 1.0s. Transition: the tree's leaves scatter to the right, revealing the next shot (depth transition).
+
+SHOT 5 — 10.600s–12.800s (Message)
+A wide, calm forest-library scene: warm lit library windows glowing in the distance among tall book-trees. Three small glowing icons rise above the trees in a row, matching the earlier motifs (tree rings, leaf network, sprouting tree), joined by one thin amber line. Slow pull-back with parallax drift. Display exactly: “재능기부 강좌” in cream Hangul, centered, entering with a gentle tracking expansion from slightly tight to normal spacing while fading in, holding at least 1.0s. Transition: the amber line draws a circle that expands to fill the frame (circular reveal), washing the scene in soft warm light.
+
+SHOT 6 — 12.800s–15.000s (End Card)
+Calm deep green paper field with a soft amber vignette and a few still cream leaves. One simple, elegant book-tree stands in the center, its canopy carrying a single mint-cyan node as the only digital accent. Display exactly, as two stacked lines: “숲에서, AI를 만나다.” as the large main slogan, and below it, smaller, “강동 숲속 도서관”. The slogan appears with a graphic snap by completed syllable blocks in reading order; the second line follows 0.3s later with a soft mask reveal. From 14.000s to exactly 15.000s, hold the final composition steadily. No new elements, text, logos, dates, or details appear.
+
+VOICE-OVER
+A warm, calm, friendly Korean voice, like a thoughtful teacher inviting a neighbor. Natural pacing, about 3–4 Korean syllables per second, gentle lift on the last line.
+From 2.600s say exactly: “AI의 시작부터, LLM의 원리, 바이브 코딩까지.”
+From 12.900s say exactly: “숲에서, AI를 만나다. 강동 숲속 도서관.”
+Pronounce “AI” as “에이아이” and “LLM” as “엘엘엠”.
+
+SOUND DESIGN
+overall_soundscape: quiet forest ambience at low volume (wind in leaves, distant birds), soft paper rustles on unfolds, a soft chime per mint-cyan node, light keyboard ticks in Shot 4, a soft pop on each snap.
+non_diegetic_music: warm minimalist acoustic-electronic blend, about 84 BPM, soft piano and plucked guitar; energy rises gradually through Shot 4, lifts gently in Shot 5, and ends on a soft resolved chord ringing through the end card hold. Keep music beneath the voice-over.
+
+CONSTRAINTS
+Keep the composition minimal and intentional. Add no unrelated text, logos, UI, people, dates, prices, or decorative objects. All glyph marks on leaves, code bars, and screens stay abstract and unreadable. Avoid heavy blur, camera shake, and uncontrolled rotation.

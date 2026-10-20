@@ -303,6 +303,35 @@ pub fn write_text_file(path: String, contents: String, workspace_root: Option<St
     std::fs::write(&verified, contents).map_err(|e| format!("Failed to write {}: {}", verified.display(), e))
 }
 
+/// 바이너리(썸네일 PNG 등)를 base64로 받아 쓴다. 경로 검증은 텍스트 쓰기와 같다.
+#[tauri::command]
+pub fn write_binary_base64(path: String, data: String, workspace_root: Option<String>) -> Result<(), String> {
+    use base64::Engine;
+    let bytes = base64::engine::general_purpose::STANDARD
+        .decode(data.trim())
+        .map_err(|_| "invalid-base64".to_string())?;
+    let verified = resolve_and_verify_workspace_path(&path, workspace_root.as_deref(), false)?;
+    if let Some(parent) = verified.parent() {
+        std::fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+    }
+    std::fs::write(&verified, bytes).map_err(|e| format!("Failed to write {}: {}", verified.display(), e))
+}
+
+/// 파일을 base64로 읽는다. 파일이 없으면 None.
+#[tauri::command]
+pub fn read_binary_base64(path: String, workspace_root: Option<String>) -> Result<Option<String>, String> {
+    use base64::Engine;
+    // 없는 파일도 스코프 검사는 받는다(must_exist=false) — 그 뒤에 None으로 돌려준다.
+    let scoped = resolve_and_verify_workspace_path(&path, workspace_root.as_deref(), false)?;
+    if !scoped.exists() {
+        return Ok(None);
+    }
+    let verified = resolve_and_verify_workspace_path(&path, workspace_root.as_deref(), true)?;
+    std::fs::read(&verified)
+        .map(|b| Some(base64::engine::general_purpose::STANDARD.encode(b)))
+        .map_err(|e| format!("Failed to read {}: {}", verified.display(), e))
+}
+
 #[tauri::command]
 pub fn create_file(path: String, workspace_root: Option<String>) -> Result<(), String> {
     let verified = resolve_and_verify_workspace_path(&path, workspace_root.as_deref(), false)?;
@@ -509,5 +538,27 @@ mod import_tests {
         assert!(import_file(&src, &dest).is_err(), "must not overwrite");
         assert!(import_file(src_dir.path(), &ws.path().join("x")).is_err(), "directories rejected");
         assert!(import_file(&src_dir.path().join("missing"), &ws.path().join("y")).is_err());
+    }
+}
+
+#[cfg(test)]
+mod binary_tests {
+    use super::*;
+
+    #[test]
+    fn binary_round_trip_missing_and_scope() {
+        let ws = tempfile::tempdir().unwrap();
+        let root = ws.path().to_string_lossy().into_owned();
+        let thumb = ws.path().join("scenes/a/.vanilla/thumb.png").to_string_lossy().into_owned();
+
+        assert_eq!(read_binary_base64(thumb.clone(), Some(root.clone())).unwrap(), None);
+        write_binary_base64(thumb.clone(), "QUJD".into(), Some(root.clone())).unwrap();
+        assert_eq!(std::fs::read(&thumb).unwrap(), b"ABC");
+        assert_eq!(read_binary_base64(thumb, Some(root.clone())).unwrap().as_deref(), Some("QUJD"));
+
+        assert!(write_binary_base64(ws.path().join("x.png").to_string_lossy().into_owned(), "!!".into(), Some(root.clone())).is_err(), "bad base64");
+        let outside = tempfile::tempdir().unwrap().path().join("t.png").to_string_lossy().into_owned();
+        assert!(write_binary_base64(outside.clone(), "QUJD".into(), Some(root.clone())).is_err(), "outside workspace");
+        assert!(read_binary_base64(outside, Some(root)).is_err());
     }
 }

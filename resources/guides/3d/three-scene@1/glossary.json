@@ -1,0 +1,2090 @@
+{
+  "version": 1,
+  "terms": [
+    {
+      "category": "creativeMode",
+      "id": "product-hero",
+      "label": {
+        "ko": "프로덕트 히어로",
+        "en": "Product Hero"
+      },
+      "definition": {
+        "ko": "제품 자체를 주인공으로 선명하고 매력적으로 보여 줍니다.",
+        "en": "The product is the star, shown clearly and attractively."
+      },
+      "implementationHint": "Keep the product centered and readable; slow reveal, clean lighting, stable silhouette.",
+      "tags": []
+    },
+    {
+      "category": "creativeMode",
+      "id": "kinetic-typography",
+      "label": {
+        "ko": "키네틱 타이포그래피",
+        "en": "Kinetic Typography"
+      },
+      "definition": {
+        "ko": "문구가 주된 비주얼이며 메시지에 맞춰 움직입니다.",
+        "en": "Text is the main visual and moves with the message."
+      },
+      "implementationHint": "Animate text blocks as graphic objects; each line has one idea; keep exact copy.",
+      "tags": [
+        "text"
+      ]
+    },
+    {
+      "category": "creativeMode",
+      "id": "lifestyle-commercial",
+      "label": {
+        "ko": "라이프스타일 광고",
+        "en": "Lifestyle Commercial"
+      },
+      "definition": {
+        "ko": "일상 장면 속에서 제품을 보여 줍니다.",
+        "en": "Shows the product inside daily-life moments."
+      },
+      "implementationHint": "Build simple scene compositions with the product integrated naturally.",
+      "tags": []
+    },
+    {
+      "category": "creativeMode",
+      "id": "character-led-commercial",
+      "label": {
+        "ko": "캐릭터 중심 광고",
+        "en": "Character-led Commercial"
+      },
+      "definition": {
+        "ko": "캐릭터가 이야기를 이끌고 제품과 상호작용합니다.",
+        "en": "A character drives the story and interacts with the product."
+      },
+      "implementationHint": "Define silhouette, pose timing and gestures explicitly; keep appearance consistent.",
+      "tags": []
+    },
+    {
+      "category": "creativeMode",
+      "id": "cinematic-brand-film",
+      "label": {
+        "ko": "시네마틱 브랜드 필름",
+        "en": "Cinematic Brand Film"
+      },
+      "definition": {
+        "ko": "느리고 감성적인 영화적 언어로 브랜드 아이디어를 전합니다.",
+        "en": "Slow, emotional film language that carries a brand idea."
+      },
+      "implementationHint": "Prefer slow camera and light changes over text; long holds.",
+      "tags": []
+    },
+    {
+      "category": "creativeMode",
+      "id": "premium-product-motion",
+      "label": {
+        "ko": "프리미엄 제품 모션",
+        "en": "Premium Product Motion"
+      },
+      "definition": {
+        "ko": "정제된 고급 제품 움직임과 조명.",
+        "en": "Refined, high-end product movement and lighting."
+      },
+      "implementationHint": "Controlled easing, soft highlights, minimal composition.",
+      "tags": []
+    },
+    {
+      "category": "creativeMode",
+      "id": "soft-3d",
+      "label": {
+        "ko": "소프트 3D",
+        "en": "Soft 3D"
+      },
+      "definition": {
+        "ko": "둥글고 친근한 3D 질감과 부드러운 조명.",
+        "en": "Rounded, friendly 3D look with soft lighting."
+      },
+      "implementationHint": "Rounded geometry, matte materials, soft shadows.",
+      "tags": []
+    },
+    {
+      "category": "creativeMode",
+      "id": "photoreal-cg",
+      "label": {
+        "ko": "포토리얼 CG",
+        "en": "Photoreal CG"
+      },
+      "definition": {
+        "ko": "실사처럼 보이는 CG.",
+        "en": "CG that looks like real photography."
+      },
+      "implementationHint": "Physically plausible materials, lighting and camera.",
+      "tags": []
+    },
+    {
+      "category": "creativeMode",
+      "id": "abstract-experimental-motion",
+      "label": {
+        "ko": "추상·실험 모션",
+        "en": "Abstract / Experimental Motion"
+      },
+      "definition": {
+        "ko": "비구상적 형태와 움직임으로 분위기를 전합니다.",
+        "en": "Non-literal shapes and movement carry the mood."
+      },
+      "implementationHint": "Generative shapes driven by time; no literal objects required.",
+      "tags": []
+    },
+    {
+      "category": "creativeMode",
+      "id": "visual-metaphor",
+      "label": {
+        "ko": "시각적 은유",
+        "en": "Visual Metaphor"
+      },
+      "definition": {
+        "ko": "이미지를 빌려 메시지를 은유합니다.",
+        "en": "An image stands in for the message."
+      },
+      "implementationHint": "One clear metaphor with a clean transformation.",
+      "tags": []
+    },
+    {
+      "category": "creativeMode",
+      "id": "mixed-media-collage",
+      "label": {
+        "ko": "믹스드 미디어·콜라주",
+        "en": "Mixed Media / Collage"
+      },
+      "definition": {
+        "ko": "서로 다른 질감과 매체를 한 화면에 결합합니다.",
+        "en": "Different textures and media combined into one piece."
+      },
+      "implementationHint": "Layer flat cutouts, paper and photo textures with stepped motion.",
+      "tags": []
+    },
+    {
+      "category": "creativeMode",
+      "id": "editorial-graphic",
+      "label": {
+        "ko": "에디토리얼 그래픽",
+        "en": "Editorial Graphic"
+      },
+      "definition": {
+        "ko": "잡지 같은 레이아웃·그리드·타이포.",
+        "en": "Magazine-like layouts, grids and type."
+      },
+      "implementationHint": "Grid-based composition, strong type hierarchy, restrained motion.",
+      "tags": []
+    },
+    {
+      "category": "creativeMode",
+      "id": "infographic-data-motion",
+      "label": {
+        "ko": "인포그래픽·데이터 모션",
+        "en": "Infographic / Data Motion"
+      },
+      "definition": {
+        "ko": "차트·도식의 움직임으로 정보를 전달합니다.",
+        "en": "Information shown through animated charts and diagrams."
+      },
+      "implementationHint": "Animate values with clear easing; label every figure exactly.",
+      "tags": []
+    },
+    {
+      "category": "creativeMode",
+      "id": "ui-tech-product-motion",
+      "label": {
+        "ko": "UI·테크 제품 모션",
+        "en": "UI / Tech Product Motion"
+      },
+      "definition": {
+        "ko": "인터페이스·기기 시연 모션.",
+        "en": "Interface and device demonstrations."
+      },
+      "implementationHint": "Crisp UI elements, snapping transitions, device-accurate proportions.",
+      "tags": []
+    },
+    {
+      "category": "creativeMode",
+      "id": "logo-brand-identity-motion",
+      "label": {
+        "ko": "로고·브랜드 아이덴티티 모션",
+        "en": "Logo / Brand Identity Motion"
+      },
+      "definition": {
+        "ko": "로고 애니메이션·브랜드 시그니처.",
+        "en": "A logo animation or brand signature."
+      },
+      "implementationHint": "Anticipate, build, reveal, settle; hold the final logo.",
+      "tags": []
+    },
+    {
+      "category": "structure",
+      "id": "multi-shot",
+      "label": {
+        "ko": "멀티 샷",
+        "en": "Multi-shot"
+      },
+      "definition": {
+        "ko": "여러 장면을 전환으로 이어 붙입니다.",
+        "en": "Several scenes joined by transitions."
+      },
+      "implementationHint": "One beat per shot; set transitionOut for each beat.",
+      "tags": []
+    },
+    {
+      "category": "structure",
+      "id": "continuous",
+      "label": {
+        "ko": "연속 샷",
+        "en": "Continuous Shot"
+      },
+      "definition": {
+        "ko": "끊김 없는 하나의 카메라·공간 흐름.",
+        "en": "One uninterrupted flow of camera or space."
+      },
+      "implementationHint": "Describe time ranges, not shots; keep object continuity.",
+      "tags": []
+    },
+    {
+      "category": "structure",
+      "id": "hybrid",
+      "label": {
+        "ko": "하이브리드",
+        "en": "Hybrid"
+      },
+      "definition": {
+        "ko": "긴 연속 장면에 일부 명확한 컷을 결합합니다.",
+        "en": "Long continuous passages plus a few clear cuts."
+      },
+      "implementationHint": "Mix continuous ranges with hard cuts where the idea changes.",
+      "tags": []
+    },
+    {
+      "category": "adStructure",
+      "id": "product-performance",
+      "label": {
+        "ko": "제품·성능형",
+        "en": "Product / Performance"
+      },
+      "definition": {
+        "ko": "훅 → 소비자 상황 → 제품 → 정보 → 브랜드 → 엔드카드.",
+        "en": "Hook, situation, product, information, brand, end card."
+      },
+      "implementationHint": "Role order: hook, situation, product, information, brand, end-card.",
+      "tags": []
+    },
+    {
+      "category": "adStructure",
+      "id": "problem-solution",
+      "label": {
+        "ko": "문제–해결형",
+        "en": "Problem–Solution"
+      },
+      "definition": {
+        "ko": "문제 → 긴장 → 제품 → 해결 → 브랜드.",
+        "en": "A problem, tension, then the product resolves it."
+      },
+      "implementationHint": "Role order: problem, tension, product, resolution, brand.",
+      "tags": []
+    },
+    {
+      "category": "adStructure",
+      "id": "lifestyle",
+      "label": {
+        "ko": "라이프스타일형",
+        "en": "Lifestyle"
+      },
+      "definition": {
+        "ko": "순간 → 생활 맥락 → 제품 → 브랜드 감성 → 엔드카드.",
+        "en": "A moment, context, product integration, brand feeling."
+      },
+      "implementationHint": "Role order: moment, context, integration, feeling, end-card.",
+      "tags": []
+    },
+    {
+      "category": "adStructure",
+      "id": "sensory-luxury",
+      "label": {
+        "ko": "감각·럭셔리형",
+        "en": "Sensory / Luxury"
+      },
+      "definition": {
+        "ko": "미스터리 → 질감 디테일 → 제품 공개 → 브랜드 시그니처.",
+        "en": "Mystery, material detail, product reveal, signature."
+      },
+      "implementationHint": "Role order: mystery, detail, reveal, signature.",
+      "tags": []
+    },
+    {
+      "category": "adStructure",
+      "id": "transformation",
+      "label": {
+        "ko": "변형형",
+        "en": "Transformation"
+      },
+      "definition": {
+        "ko": "초기 상태 → 변형 → 제품·메시지 공개 → 해결.",
+        "en": "Initial state, transformation, reveal, resolution."
+      },
+      "implementationHint": "Role order: initial, transformation, reveal, resolution.",
+      "tags": []
+    },
+    {
+      "category": "adStructure",
+      "id": "typography-led",
+      "label": {
+        "ko": "타이포 중심형",
+        "en": "Typography-led"
+      },
+      "definition": {
+        "ko": "훅 카피 → 리듬 카피 → 제품·메시지 → 브랜드 타격.",
+        "en": "Hook copy, rhythmic copy, product or message, brand hit."
+      },
+      "implementationHint": "Role order: hook-copy, rhythm, message, brand-hit.",
+      "tags": []
+    },
+    {
+      "category": "adStructure",
+      "id": "brand-film",
+      "label": {
+        "ko": "브랜드 필름형",
+        "en": "Brand Film"
+      },
+      "definition": {
+        "ko": "감정·아이디어 → 비주얼 전개 → 브랜드 철학 → 로고.",
+        "en": "Emotion or idea, visuals, philosophy, logo."
+      },
+      "implementationHint": "Role order: idea, development, philosophy, logo.",
+      "tags": []
+    },
+    {
+      "category": "adStructure",
+      "id": "character-led",
+      "label": {
+        "ko": "캐릭터 중심형",
+        "en": "Character-led"
+      },
+      "definition": {
+        "ko": "상황 → 행동 → 제품 상호작용 → 반응 → 브랜드.",
+        "en": "Situation, action, product interaction, reaction, brand."
+      },
+      "implementationHint": "Role order: situation, action, interaction, reaction, brand.",
+      "tags": []
+    },
+    {
+      "category": "adStructure",
+      "id": "logo-motion",
+      "label": {
+        "ko": "로고 모션형",
+        "en": "Logo Motion"
+      },
+      "definition": {
+        "ko": "기대 → 구성·변형 → 로고 공개 → 안정.",
+        "en": "Anticipation, build, logo reveal, settle."
+      },
+      "implementationHint": "Role order: anticipation, build, reveal, settle.",
+      "tags": []
+    },
+    {
+      "category": "brandVoice",
+      "id": "bold",
+      "label": {
+        "ko": "대담한",
+        "en": "Bold"
+      },
+      "definition": {
+        "ko": "대담한 어조.",
+        "en": "A bold tone of voice."
+      },
+      "implementationHint": "Write copy with a bold rhythm and word choice.",
+      "tags": []
+    },
+    {
+      "category": "brandVoice",
+      "id": "playful",
+      "label": {
+        "ko": "장난스러운",
+        "en": "Playful"
+      },
+      "definition": {
+        "ko": "장난스러운 어조.",
+        "en": "A playful tone of voice."
+      },
+      "implementationHint": "Write copy with a playful rhythm and word choice.",
+      "tags": []
+    },
+    {
+      "category": "brandVoice",
+      "id": "sophisticated",
+      "label": {
+        "ko": "세련된",
+        "en": "Sophisticated"
+      },
+      "definition": {
+        "ko": "세련된 어조.",
+        "en": "A sophisticated tone of voice."
+      },
+      "implementationHint": "Write copy with a sophisticated rhythm and word choice.",
+      "tags": []
+    },
+    {
+      "category": "brandVoice",
+      "id": "premium",
+      "label": {
+        "ko": "프리미엄",
+        "en": "Premium"
+      },
+      "definition": {
+        "ko": "프리미엄 어조.",
+        "en": "A premium tone of voice."
+      },
+      "implementationHint": "Write copy with a premium rhythm and word choice.",
+      "tags": []
+    },
+    {
+      "category": "brandVoice",
+      "id": "restrained",
+      "label": {
+        "ko": "절제된",
+        "en": "Restrained"
+      },
+      "definition": {
+        "ko": "절제된 어조.",
+        "en": "A restrained tone of voice."
+      },
+      "implementationHint": "Write copy with a restrained rhythm and word choice.",
+      "tags": []
+    },
+    {
+      "category": "brandVoice",
+      "id": "youthful",
+      "label": {
+        "ko": "젊은",
+        "en": "Youthful"
+      },
+      "definition": {
+        "ko": "젊은 어조.",
+        "en": "A youthful tone of voice."
+      },
+      "implementationHint": "Write copy with a youthful rhythm and word choice.",
+      "tags": []
+    },
+    {
+      "category": "brandVoice",
+      "id": "energetic",
+      "label": {
+        "ko": "에너제틱한",
+        "en": "Energetic"
+      },
+      "definition": {
+        "ko": "에너제틱한 어조.",
+        "en": "A energetic tone of voice."
+      },
+      "implementationHint": "Write copy with a energetic rhythm and word choice.",
+      "tags": []
+    },
+    {
+      "category": "brandVoice",
+      "id": "technical",
+      "label": {
+        "ko": "기술적인",
+        "en": "Technical"
+      },
+      "definition": {
+        "ko": "기술적인 어조.",
+        "en": "A technical tone of voice."
+      },
+      "implementationHint": "Write copy with a technical rhythm and word choice.",
+      "tags": []
+    },
+    {
+      "category": "brandVoice",
+      "id": "warm",
+      "label": {
+        "ko": "따뜻한",
+        "en": "Warm"
+      },
+      "definition": {
+        "ko": "따뜻한 어조.",
+        "en": "A warm tone of voice."
+      },
+      "implementationHint": "Write copy with a warm rhythm and word choice.",
+      "tags": []
+    },
+    {
+      "category": "brandVoice",
+      "id": "confident",
+      "label": {
+        "ko": "자신감 있는",
+        "en": "Confident"
+      },
+      "definition": {
+        "ko": "자신감 있는 어조.",
+        "en": "A confident tone of voice."
+      },
+      "implementationHint": "Write copy with a confident rhythm and word choice.",
+      "tags": []
+    },
+    {
+      "category": "brandVoice",
+      "id": "witty",
+      "label": {
+        "ko": "재치 있는",
+        "en": "Witty"
+      },
+      "definition": {
+        "ko": "재치 있는 어조.",
+        "en": "A witty tone of voice."
+      },
+      "implementationHint": "Write copy with a witty rhythm and word choice.",
+      "tags": []
+    },
+    {
+      "category": "brandVoice",
+      "id": "minimal",
+      "label": {
+        "ko": "미니멀한",
+        "en": "Minimal"
+      },
+      "definition": {
+        "ko": "미니멀한 어조.",
+        "en": "A minimal tone of voice."
+      },
+      "implementationHint": "Write copy with a minimal rhythm and word choice.",
+      "tags": []
+    },
+    {
+      "category": "typography",
+      "id": "slide",
+      "label": {
+        "ko": "슬라이드",
+        "en": "Slide"
+      },
+      "definition": {
+        "ko": "문구가 한 축을 따라 미끄러지듯 들어오거나 나갑니다.",
+        "en": "Text glides in or out along an axis."
+      },
+      "implementationHint": "translate with ease-out; 300-600ms; one direction per beat.",
+      "tags": []
+    },
+    {
+      "category": "typography",
+      "id": "pop",
+      "label": {
+        "ko": "팝",
+        "en": "Pop"
+      },
+      "definition": {
+        "ko": "문구가 탄성 있게 빠르게 커지며 나타납니다.",
+        "en": "Text appears with a quick springy scale-in."
+      },
+      "implementationHint": "scale 0.8 to 1 with easeOutBack, 200-350ms.",
+      "tags": []
+    },
+    {
+      "category": "typography",
+      "id": "scale-punch",
+      "label": {
+        "ko": "스케일 펀치",
+        "en": "Scale punch"
+      },
+      "definition": {
+        "ko": "강조를 위해 짧게 크기를 키웠다 되돌립니다.",
+        "en": "A sharp, brief overshoot in size for emphasis."
+      },
+      "implementationHint": "scale 1 to 1.12 to 1 with easeOutBack, 250-400ms.",
+      "tags": []
+    },
+    {
+      "category": "typography",
+      "id": "tracking-expansion",
+      "label": {
+        "ko": "자간 확장",
+        "en": "Tracking expansion"
+      },
+      "definition": {
+        "ko": "자간이 벌어집니다.",
+        "en": "Letter spacing opens up."
+      },
+      "implementationHint": "animate letter-spacing from tight to wide, ease-in-out.",
+      "tags": []
+    },
+    {
+      "category": "typography",
+      "id": "tracking-collapse",
+      "label": {
+        "ko": "자간 수축",
+        "en": "Tracking collapse"
+      },
+      "definition": {
+        "ko": "자간이 좁혀집니다.",
+        "en": "Letter spacing closes in."
+      },
+      "implementationHint": "animate letter-spacing from wide to tight, ease-out.",
+      "tags": []
+    },
+    {
+      "category": "typography",
+      "id": "repetition",
+      "label": {
+        "ko": "반복",
+        "en": "Repetition"
+      },
+      "definition": {
+        "ko": "같은 문구가 리듬감 있게 반복됩니다.",
+        "en": "The same text repeats in rhythm."
+      },
+      "implementationHint": "stagger identical copies at fixed intervals; identical spelling for every copy.",
+      "tags": []
+    },
+    {
+      "category": "typography",
+      "id": "mask-wipe-text",
+      "label": {
+        "ko": "마스크 와이프",
+        "en": "Mask wipe"
+      },
+      "definition": {
+        "ko": "움직이는 마스크로 문구가 드러납니다.",
+        "en": "Text is revealed by a moving mask."
+      },
+      "implementationHint": "clip-path inset animated from 100% to 0%.",
+      "tags": []
+    },
+    {
+      "category": "typography",
+      "id": "crop",
+      "label": {
+        "ko": "크롭",
+        "en": "Crop"
+      },
+      "definition": {
+        "ko": "화면 밖으로 잘린 큰 글자.",
+        "en": "Oversized letters cropped by the frame."
+      },
+      "implementationHint": "scale type beyond the frame; keep key glyphs readable.",
+      "tags": []
+    },
+    {
+      "category": "typography",
+      "id": "stacked-typography",
+      "label": {
+        "ko": "스택 타이포",
+        "en": "Stacked typography"
+      },
+      "definition": {
+        "ko": "여러 줄을 한 덩어리로 촘촘히 쌓습니다.",
+        "en": "Lines stacked tightly as one block."
+      },
+      "implementationHint": "tight line-height, staggered line entrance.",
+      "tags": []
+    },
+    {
+      "category": "typography",
+      "id": "character-assembly",
+      "label": {
+        "ko": "글자 조립",
+        "en": "Character assembly"
+      },
+      "definition": {
+        "ko": "글자가 모여 최종 단어를 이룹니다.",
+        "en": "Characters assemble into the final word."
+      },
+      "implementationHint": "move whole syllable blocks (not jamo) into place, then hold the complete word.",
+      "tags": []
+    },
+    {
+      "category": "typography",
+      "id": "graphic-snap",
+      "label": {
+        "ko": "그래픽 스냅",
+        "en": "Graphic snap"
+      },
+      "definition": {
+        "ko": "문구가 딱 맞게 빠르게 고정됩니다.",
+        "en": "Text locks into place with a hard, quick stop."
+      },
+      "implementationHint": "short linear or ease-out move ending in an abrupt stop; optional 1-frame shake.",
+      "tags": []
+    },
+    {
+      "category": "typography",
+      "id": "outline-ghost",
+      "label": {
+        "ko": "아웃라인 고스트",
+        "en": "Outline ghost"
+      },
+      "definition": {
+        "ko": "속이 빈 윤곽선 잔상이 문구를 따라갑니다.",
+        "en": "An outline echo trails the solid text."
+      },
+      "implementationHint": "duplicate text as stroke-only layer with delayed offset and low opacity.",
+      "tags": []
+    },
+    {
+      "category": "object",
+      "id": "orbit-object",
+      "label": {
+        "ko": "오빗",
+        "en": "Orbit"
+      },
+      "definition": {
+        "ko": "오브젝트가 중심을 돌며 움직입니다.",
+        "en": "An object circles around a center."
+      },
+      "implementationHint": "rotate around a pivot at constant radius; ease-in-out.",
+      "tags": []
+    },
+    {
+      "category": "object",
+      "id": "unfold",
+      "label": {
+        "ko": "펼침",
+        "en": "Unfold"
+      },
+      "definition": {
+        "ko": "접힌 형태가 펼쳐집니다.",
+        "en": "A folded shape opens up."
+      },
+      "implementationHint": "animate hinge rotations in sequence.",
+      "tags": []
+    },
+    {
+      "category": "object",
+      "id": "assemble",
+      "label": {
+        "ko": "조립",
+        "en": "Assemble"
+      },
+      "definition": {
+        "ko": "부품이 모여 하나의 오브젝트가 됩니다.",
+        "en": "Parts come together into one object."
+      },
+      "implementationHint": "move parts from offset positions to final positions with stagger.",
+      "tags": []
+    },
+    {
+      "category": "object",
+      "id": "scatter",
+      "label": {
+        "ko": "흩어짐",
+        "en": "Scatter"
+      },
+      "definition": {
+        "ko": "오브젝트가 조각으로 흩어집니다.",
+        "en": "An object bursts into pieces."
+      },
+      "implementationHint": "pieces move outward with deterministic offsets derived from index.",
+      "tags": []
+    },
+    {
+      "category": "object",
+      "id": "merge",
+      "label": {
+        "ko": "합쳐짐",
+        "en": "Merge"
+      },
+      "definition": {
+        "ko": "분리된 요소가 하나로 합쳐집니다.",
+        "en": "Separate elements join into one."
+      },
+      "implementationHint": "interpolate positions and shapes to a single target.",
+      "tags": []
+    },
+    {
+      "category": "object",
+      "id": "cascade",
+      "label": {
+        "ko": "캐스케이드",
+        "en": "Cascade"
+      },
+      "definition": {
+        "ko": "요소가 차례로 쏟아지듯 이어집니다.",
+        "en": "Elements fall or enter one after another."
+      },
+      "implementationHint": "stagger by index with constant delay.",
+      "tags": []
+    },
+    {
+      "category": "object",
+      "id": "magnetize",
+      "label": {
+        "ko": "자석처럼 끌림",
+        "en": "Magnetize"
+      },
+      "definition": {
+        "ko": "요소가 한 점으로 끌려옵니다.",
+        "en": "Elements are pulled toward a point."
+      },
+      "implementationHint": "ease-in toward the target; speed increases near it.",
+      "tags": []
+    },
+    {
+      "category": "object",
+      "id": "rotate",
+      "label": {
+        "ko": "회전",
+        "en": "Rotate"
+      },
+      "definition": {
+        "ko": "한 축을 기준으로 한 회전.",
+        "en": "Plain rotation about an axis."
+      },
+      "implementationHint": "rotate with ease-in-out; avoid uncontrolled spin.",
+      "tags": []
+    },
+    {
+      "category": "object",
+      "id": "tumble",
+      "label": {
+        "ko": "텀블",
+        "en": "Tumble"
+      },
+      "definition": {
+        "ko": "여러 축으로 구르는 회전.",
+        "en": "Tumbling, multi-axis rotation."
+      },
+      "implementationHint": "rotate on two axes with different periods.",
+      "tags": []
+    },
+    {
+      "category": "object",
+      "id": "elastic-deformation",
+      "label": {
+        "ko": "탄성 변형",
+        "en": "Elastic deformation"
+      },
+      "definition": {
+        "ko": "눌렸다 늘어나는 탄성 반응.",
+        "en": "A squash-and-stretch response."
+      },
+      "implementationHint": "scale x/y inversely with spring easing.",
+      "tags": []
+    },
+    {
+      "category": "object",
+      "id": "compression",
+      "label": {
+        "ko": "압축",
+        "en": "Compression"
+      },
+      "definition": {
+        "ko": "행동 전에 오브젝트가 눌립니다.",
+        "en": "An object compresses before acting."
+      },
+      "implementationHint": "scale down along one axis, then release.",
+      "tags": []
+    },
+    {
+      "category": "object",
+      "id": "expansion",
+      "label": {
+        "ko": "팽창",
+        "en": "Expansion"
+      },
+      "definition": {
+        "ko": "오브젝트가 바깥으로 커집니다.",
+        "en": "An object grows outward."
+      },
+      "implementationHint": "scale up with ease-out.",
+      "tags": []
+    },
+    {
+      "category": "camera",
+      "id": "push-in",
+      "label": {
+        "ko": "푸시인",
+        "en": "Push-in"
+      },
+      "definition": {
+        "ko": "카메라가 피사체로 다가갑니다.",
+        "en": "Camera moves closer to the subject."
+      },
+      "implementationHint": "move camera forward or increase scale slowly; ease-in-out.",
+      "tags": []
+    },
+    {
+      "category": "camera",
+      "id": "pull-back",
+      "label": {
+        "ko": "풀백",
+        "en": "Pull-back"
+      },
+      "definition": {
+        "ko": "카메라가 물러나며 맥락을 드러냅니다.",
+        "en": "Camera moves away to reveal context."
+      },
+      "implementationHint": "move camera backward or decrease scale; ease-out.",
+      "tags": []
+    },
+    {
+      "category": "camera",
+      "id": "dolly",
+      "label": {
+        "ko": "달리",
+        "en": "Dolly"
+      },
+      "definition": {
+        "ko": "카메라가 경로를 따라 이동합니다.",
+        "en": "Camera travels along a path."
+      },
+      "implementationHint": "translate camera along one axis at steady speed.",
+      "tags": []
+    },
+    {
+      "category": "camera",
+      "id": "orbit-camera",
+      "label": {
+        "ko": "오빗 카메라",
+        "en": "Orbit"
+      },
+      "definition": {
+        "ko": "카메라가 피사체를 돕니다.",
+        "en": "Camera circles the subject."
+      },
+      "implementationHint": "rotate camera around the subject at fixed radius.",
+      "tags": []
+    },
+    {
+      "category": "camera",
+      "id": "crane",
+      "label": {
+        "ko": "크레인",
+        "en": "Crane"
+      },
+      "definition": {
+        "ko": "카메라가 수직으로 오르내립니다.",
+        "en": "Camera rises or lowers vertically."
+      },
+      "implementationHint": "translate camera on the Y axis with ease-in-out.",
+      "tags": []
+    },
+    {
+      "category": "camera",
+      "id": "parallax-drift",
+      "label": {
+        "ko": "패럴랙스 드리프트",
+        "en": "Parallax drift"
+      },
+      "definition": {
+        "ko": "레이어가 서로 다른 속도로 흐릅니다.",
+        "en": "Layers drift at different speeds."
+      },
+      "implementationHint": "move layers with depth-proportional offsets.",
+      "tags": []
+    },
+    {
+      "category": "camera",
+      "id": "macro-tracking",
+      "label": {
+        "ko": "매크로 트래킹",
+        "en": "Macro tracking"
+      },
+      "definition": {
+        "ko": "표면을 따라가는 근접 이동.",
+        "en": "Close tracking along a surface."
+      },
+      "implementationHint": "short focal distance, slow lateral move.",
+      "tags": []
+    },
+    {
+      "category": "camera",
+      "id": "rack-focus",
+      "label": {
+        "ko": "랙 포커스",
+        "en": "Rack focus"
+      },
+      "definition": {
+        "ko": "초점이 깊이 사이를 옮겨 갑니다.",
+        "en": "Focus shifts between depths."
+      },
+      "implementationHint": "animate blur amounts of foreground and background inversely.",
+      "tags": []
+    },
+    {
+      "category": "camera",
+      "id": "camera-pass-through",
+      "label": {
+        "ko": "카메라 패스스루",
+        "en": "Camera pass-through"
+      },
+      "definition": {
+        "ko": "카메라가 면이나 오브젝트를 통과합니다.",
+        "en": "Camera moves through a surface or object."
+      },
+      "implementationHint": "move camera through the plane with a cover frame or dissolve.",
+      "tags": []
+    },
+    {
+      "category": "camera",
+      "id": "locked-camera",
+      "label": {
+        "ko": "고정 카메라",
+        "en": "Locked camera"
+      },
+      "definition": {
+        "ko": "고정된 카메라.",
+        "en": "A fixed camera."
+      },
+      "implementationHint": "no camera movement.",
+      "tags": []
+    },
+    {
+      "category": "material",
+      "id": "liquid-morph",
+      "label": {
+        "ko": "액체 변형",
+        "en": "Liquid morph"
+      },
+      "definition": {
+        "ko": "형태가 액체처럼 다른 형태로 흘러갑니다.",
+        "en": "Shape flows like liquid into another."
+      },
+      "implementationHint": "interpolate between signed-distance or path shapes with smooth easing.",
+      "tags": []
+    },
+    {
+      "category": "material",
+      "id": "particle-aggregation",
+      "label": {
+        "ko": "파티클 응집",
+        "en": "Particle aggregation"
+      },
+      "definition": {
+        "ko": "입자가 모여 형태를 이룹니다.",
+        "en": "Particles gather into a form."
+      },
+      "implementationHint": "particle positions from index-seeded start to target; no unseeded randomness.",
+      "tags": []
+    },
+    {
+      "category": "material",
+      "id": "volumetric-dissolve",
+      "label": {
+        "ko": "볼류메트릭 소멸",
+        "en": "Volumetric dissolve"
+      },
+      "definition": {
+        "ko": "형태가 부피감 있게 흩어집니다.",
+        "en": "A form dissolves into volume or smoke."
+      },
+      "implementationHint": "fade with noise threshold driven by t.",
+      "tags": []
+    },
+    {
+      "category": "material",
+      "id": "glass-refraction",
+      "label": {
+        "ko": "유리 굴절",
+        "en": "Glass refraction"
+      },
+      "definition": {
+        "ko": "유리가 뒤 풍경을 굴절시킵니다.",
+        "en": "Glass bends the view behind it."
+      },
+      "implementationHint": "use a refraction material or fake with offset and blur.",
+      "tags": []
+    },
+    {
+      "category": "material",
+      "id": "metallic-extrusion",
+      "label": {
+        "ko": "금속 압출",
+        "en": "Metallic extrusion"
+      },
+      "definition": {
+        "ko": "금속 형태가 표면에서 돌출됩니다.",
+        "en": "Metal shapes extrude from a surface."
+      },
+      "implementationHint": "animate extrusion depth with ease-out; specular highlights.",
+      "tags": []
+    },
+    {
+      "category": "material",
+      "id": "surface-growth",
+      "label": {
+        "ko": "표면 성장",
+        "en": "Surface growth"
+      },
+      "definition": {
+        "ko": "표면 위로 디테일이 자라납니다.",
+        "en": "Detail grows across a surface."
+      },
+      "implementationHint": "reveal pattern by growing mask radius.",
+      "tags": []
+    },
+    {
+      "category": "material",
+      "id": "cloth-reveal",
+      "label": {
+        "ko": "천 걷힘",
+        "en": "Cloth reveal"
+      },
+      "definition": {
+        "ko": "천이 걷히며 제품이 드러납니다.",
+        "en": "A cloth lifts to reveal the product."
+      },
+      "implementationHint": "animate a deformed plane lifting away.",
+      "tags": []
+    },
+    {
+      "category": "material",
+      "id": "fluid-displacement",
+      "label": {
+        "ko": "유체 밀림",
+        "en": "Fluid displacement"
+      },
+      "definition": {
+        "ko": "유체가 요소를 밀어냅니다.",
+        "en": "A fluid pushes things aside."
+      },
+      "implementationHint": "displace positions with a moving wave field.",
+      "tags": []
+    },
+    {
+      "category": "material",
+      "id": "crystalline-formation",
+      "label": {
+        "ko": "결정 형성",
+        "en": "Crystalline formation"
+      },
+      "definition": {
+        "ko": "결정 같은 형태가 자라납니다.",
+        "en": "Crystal-like shapes grow."
+      },
+      "implementationHint": "grow faceted geometry by stepped scale.",
+      "tags": []
+    },
+    {
+      "category": "transition",
+      "id": "hard-cut",
+      "label": {
+        "ko": "하드 컷",
+        "en": "Hard cut"
+      },
+      "definition": {
+        "ko": "즉시 전환.",
+        "en": "An immediate cut."
+      },
+      "implementationHint": "switch scene at the beat boundary; no overlap.",
+      "tags": []
+    },
+    {
+      "category": "transition",
+      "id": "match-cut",
+      "label": {
+        "ko": "매치 컷",
+        "en": "Match cut"
+      },
+      "definition": {
+        "ko": "형태나 움직임이 이어지는 컷.",
+        "en": "A cut that matches shape or motion."
+      },
+      "implementationHint": "align position, scale and motion across the cut.",
+      "tags": []
+    },
+    {
+      "category": "transition",
+      "id": "mask-wipe",
+      "label": {
+        "ko": "마스크 와이프",
+        "en": "Mask wipe"
+      },
+      "definition": {
+        "ko": "마스크가 다음 장면으로 쓸어 넘깁니다.",
+        "en": "A mask shape wipes to the next scene."
+      },
+      "implementationHint": "animate clip-path across the frame.",
+      "tags": []
+    },
+    {
+      "category": "transition",
+      "id": "circular-reveal",
+      "label": {
+        "ko": "원형 리빌",
+        "en": "Circular reveal"
+      },
+      "definition": {
+        "ko": "원이 열리며 다음 장면이 보입니다.",
+        "en": "A circle opens onto the next scene."
+      },
+      "implementationHint": "animate circle clip-path radius from 0.",
+      "tags": []
+    },
+    {
+      "category": "transition",
+      "id": "shape-transition",
+      "label": {
+        "ko": "도형 전환",
+        "en": "Shape transition"
+      },
+      "definition": {
+        "ko": "도형이 확장되며 다음 장면으로.",
+        "en": "A shape expands into the next scene."
+      },
+      "implementationHint": "scale a shape layer to cover the frame.",
+      "tags": []
+    },
+    {
+      "category": "transition",
+      "id": "object-wipe",
+      "label": {
+        "ko": "오브젝트 와이프",
+        "en": "Object wipe"
+      },
+      "definition": {
+        "ko": "움직이는 오브젝트가 화면을 쓸어 넘깁니다.",
+        "en": "A moving object sweeps the frame."
+      },
+      "implementationHint": "move a large object across, switching scene behind it.",
+      "tags": []
+    },
+    {
+      "category": "transition",
+      "id": "depth-transition",
+      "label": {
+        "ko": "깊이 전환",
+        "en": "Depth transition"
+      },
+      "definition": {
+        "ko": "깊이를 통과해 다음 장면으로.",
+        "en": "Move through depth into the next scene."
+      },
+      "implementationHint": "scale up the outgoing layer while fading, then the incoming settles.",
+      "tags": []
+    },
+    {
+      "category": "transition",
+      "id": "environment-morph",
+      "label": {
+        "ko": "환경 모핑",
+        "en": "Environment morph"
+      },
+      "definition": {
+        "ko": "환경이 다음 환경으로 변형됩니다.",
+        "en": "The environment transforms into the next."
+      },
+      "implementationHint": "cross-interpolate colors and shapes of the background.",
+      "tags": []
+    },
+    {
+      "category": "transition",
+      "id": "camera-pass-through-transition",
+      "label": {
+        "ko": "카메라 패스스루 전환",
+        "en": "Camera pass-through"
+      },
+      "definition": {
+        "ko": "오브젝트를 통과해 다음 장면으로.",
+        "en": "Pass through an object into the next scene."
+      },
+      "implementationHint": "move the camera through a surface to reveal the next scene.",
+      "tags": []
+    },
+    {
+      "category": "transition",
+      "id": "crossfade",
+      "label": {
+        "ko": "크로스페이드",
+        "en": "Crossfade"
+      },
+      "definition": {
+        "ko": "한 장면이 다음 장면으로 페이드됩니다.",
+        "en": "One scene fades into the next."
+      },
+      "implementationHint": "opacity ease-in-out over the overlap.",
+      "tags": []
+    },
+    {
+      "category": "transition",
+      "id": "slide-left",
+      "label": {
+        "ko": "슬라이드(왼쪽)",
+        "en": "Slide left"
+      },
+      "definition": {
+        "ko": "다음 장면이 오른쪽에서 밀려 들어옵니다.",
+        "en": "Next scene slides in from the right."
+      },
+      "implementationHint": "translateX with ease-in-out.",
+      "tags": []
+    },
+    {
+      "category": "transition",
+      "id": "slide-right",
+      "label": {
+        "ko": "슬라이드(오른쪽)",
+        "en": "Slide right"
+      },
+      "definition": {
+        "ko": "다음 장면이 왼쪽에서 밀려 들어옵니다.",
+        "en": "Next scene slides in from the left."
+      },
+      "implementationHint": "translateX with ease-in-out, mirrored.",
+      "tags": []
+    },
+    {
+      "category": "transition",
+      "id": "slide-up",
+      "label": {
+        "ko": "슬라이드(위)",
+        "en": "Slide up"
+      },
+      "definition": {
+        "ko": "다음 장면이 아래에서 밀려 올라옵니다.",
+        "en": "Next scene slides in from the bottom."
+      },
+      "implementationHint": "translateY with ease-in-out.",
+      "tags": []
+    },
+    {
+      "category": "transition",
+      "id": "slide-down",
+      "label": {
+        "ko": "슬라이드(아래)",
+        "en": "Slide down"
+      },
+      "definition": {
+        "ko": "다음 장면이 위에서 밀려 내려옵니다.",
+        "en": "Next scene slides in from the top."
+      },
+      "implementationHint": "translateY with ease-in-out, mirrored.",
+      "tags": []
+    },
+    {
+      "category": "transition",
+      "id": "zoom-through",
+      "label": {
+        "ko": "줌 스루",
+        "en": "Zoom through"
+      },
+      "definition": {
+        "ko": "확대하며 다음 장면으로.",
+        "en": "Zoom into the next scene."
+      },
+      "implementationHint": "scale outgoing up and incoming from smaller to 1.",
+      "tags": []
+    },
+    {
+      "category": "composition",
+      "id": "studio-pedestal",
+      "label": {
+        "ko": "스튜디오 받침대",
+        "en": "Studio pedestal"
+      },
+      "definition": {
+        "ko": "깔끔한 받침대 위의 주인공 오브젝트.",
+        "en": "Hero object on a clean pedestal."
+      },
+      "implementationHint": "Cylinder or box pedestal, seamless backdrop, key focus on the hero.",
+      "tags": []
+    },
+    {
+      "category": "composition",
+      "id": "floating-objects",
+      "label": {
+        "ko": "부유 오브젝트",
+        "en": "Floating objects"
+      },
+      "definition": {
+        "ko": "공간에 떠 있는 오브젝트.",
+        "en": "Objects floating in space."
+      },
+      "implementationHint": "Objects with slow analytic bobbing; no ground.",
+      "tags": []
+    },
+    {
+      "category": "composition",
+      "id": "infinite-floor",
+      "label": {
+        "ko": "무한 바닥",
+        "en": "Infinite floor"
+      },
+      "definition": {
+        "ko": "끝없이 이어지는 바닥.",
+        "en": "A seamless floor into the distance."
+      },
+      "implementationHint": "Large plane with fog or gradient fade.",
+      "tags": []
+    },
+    {
+      "category": "composition",
+      "id": "abstract-space",
+      "label": {
+        "ko": "추상 공간",
+        "en": "Abstract space"
+      },
+      "definition": {
+        "ko": "형태로 이루어진 비구상 공간.",
+        "en": "Non-literal space of shapes."
+      },
+      "implementationHint": "Procedural shapes arranged by index.",
+      "tags": []
+    },
+    {
+      "category": "composition",
+      "id": "room-interior",
+      "label": {
+        "ko": "실내 공간",
+        "en": "Room interior"
+      },
+      "definition": {
+        "ko": "단순한 실내 세트.",
+        "en": "A simple interior set."
+      },
+      "implementationHint": "Boxes for walls, floor and furniture; baked-looking lighting.",
+      "tags": []
+    },
+    {
+      "category": "materials",
+      "id": "matte-plastic",
+      "label": {
+        "ko": "무광 플라스틱",
+        "en": "Matte plastic"
+      },
+      "definition": {
+        "ko": "빛 반사가 적은 부드러운 플라스틱.",
+        "en": "Soft, non-reflective plastic."
+      },
+      "implementationHint": "roughness 0.6-0.8, metalness 0.",
+      "tags": []
+    },
+    {
+      "category": "materials",
+      "id": "glossy-plastic",
+      "label": {
+        "ko": "유광 플라스틱",
+        "en": "Glossy plastic"
+      },
+      "definition": {
+        "ko": "광택 있는 플라스틱.",
+        "en": "Shiny plastic."
+      },
+      "implementationHint": "roughness 0.15-0.3, clearcoat optional.",
+      "tags": []
+    },
+    {
+      "category": "materials",
+      "id": "brushed-metal",
+      "label": {
+        "ko": "헤어라인 금속",
+        "en": "Brushed metal"
+      },
+      "definition": {
+        "ko": "결이 있는 금속.",
+        "en": "Metal with directional grain."
+      },
+      "implementationHint": "metalness 1, roughness 0.3-0.5, anisotropy if available.",
+      "tags": []
+    },
+    {
+      "category": "materials",
+      "id": "polished-metal",
+      "label": {
+        "ko": "거울 금속",
+        "en": "Polished metal"
+      },
+      "definition": {
+        "ko": "거울처럼 반사하는 금속.",
+        "en": "Mirror-like metal."
+      },
+      "implementationHint": "metalness 1, roughness 0.05-0.15, needs an environment map.",
+      "tags": []
+    },
+    {
+      "category": "materials",
+      "id": "glass",
+      "label": {
+        "ko": "유리",
+        "en": "Glass"
+      },
+      "definition": {
+        "ko": "투명하게 굴절하는 유리.",
+        "en": "Transparent refracting glass."
+      },
+      "implementationHint": "MeshPhysicalMaterial transmission 1, ior 1.5, thickness set; limit layers.",
+      "tags": []
+    },
+    {
+      "category": "materials",
+      "id": "clay",
+      "label": {
+        "ko": "클레이",
+        "en": "Clay"
+      },
+      "definition": {
+        "ko": "부드러운 클레이 질감.",
+        "en": "Soft matte clay look."
+      },
+      "implementationHint": "roughness 0.9, subtle noise bump.",
+      "tags": []
+    },
+    {
+      "category": "materials",
+      "id": "emissive",
+      "label": {
+        "ko": "발광",
+        "en": "Emissive"
+      },
+      "definition": {
+        "ko": "스스로 빛나는 표면.",
+        "en": "Self-lit surfaces."
+      },
+      "implementationHint": "emissive color from tokens with intensity; pair with bloom.",
+      "tags": []
+    },
+    {
+      "category": "materials",
+      "id": "fabric",
+      "label": {
+        "ko": "직물",
+        "en": "Fabric"
+      },
+      "definition": {
+        "ko": "천 표면.",
+        "en": "Cloth surface."
+      },
+      "implementationHint": "roughness 0.9, sheen, normal map or procedural weave.",
+      "tags": []
+    },
+    {
+      "category": "lighting",
+      "id": "three-point",
+      "label": {
+        "ko": "3점 조명",
+        "en": "Three-point"
+      },
+      "definition": {
+        "ko": "키·필·림 조명.",
+        "en": "Key, fill and rim lights."
+      },
+      "implementationHint": "Key 1.0 at 45 deg, fill 0.3, rim 0.6 from behind.",
+      "tags": []
+    },
+    {
+      "category": "lighting",
+      "id": "soft-studio",
+      "label": {
+        "ko": "소프트 스튜디오",
+        "en": "Soft studio"
+      },
+      "definition": {
+        "ko": "크고 부드러운 광원.",
+        "en": "Large soft light sources."
+      },
+      "implementationHint": "RectAreaLight or HDRI softbox environment; soft shadows.",
+      "tags": []
+    },
+    {
+      "category": "lighting",
+      "id": "dramatic-low-key",
+      "label": {
+        "ko": "로우키",
+        "en": "Dramatic low-key"
+      },
+      "definition": {
+        "ko": "어두운 장면에 강한 하이라이트.",
+        "en": "Dark scene with strong highlights."
+      },
+      "implementationHint": "Low ambient, one strong key, deep shadows.",
+      "tags": []
+    },
+    {
+      "category": "lighting",
+      "id": "hdri-environment",
+      "label": {
+        "ko": "HDRI 환경",
+        "en": "HDRI environment"
+      },
+      "definition": {
+        "ko": "이미지 기반 조명.",
+        "en": "Image-based lighting."
+      },
+      "implementationHint": "Environment map for lighting and reflections; record its source.",
+      "tags": []
+    },
+    {
+      "category": "lighting",
+      "id": "neon-accent",
+      "label": {
+        "ko": "네온 포인트",
+        "en": "Neon accent"
+      },
+      "definition": {
+        "ko": "색이 있는 포인트 조명.",
+        "en": "Colored accent lights."
+      },
+      "implementationHint": "Colored point lights from tokens with bloom.",
+      "tags": []
+    },
+    {
+      "category": "cameraPath",
+      "id": "slow-orbit",
+      "label": {
+        "ko": "느린 오빗",
+        "en": "Slow orbit"
+      },
+      "definition": {
+        "ko": "주인공 주위를 천천히 돕니다.",
+        "en": "Circle around the hero."
+      },
+      "implementationHint": "Camera on a circle at constant radius, ease-in-out.",
+      "tags": []
+    },
+    {
+      "category": "cameraPath",
+      "id": "dolly-in",
+      "label": {
+        "ko": "달리 인",
+        "en": "Dolly in"
+      },
+      "definition": {
+        "ko": "피사체로 다가갑니다.",
+        "en": "Move toward the subject."
+      },
+      "implementationHint": "Camera position lerp toward the subject.",
+      "tags": []
+    },
+    {
+      "category": "cameraPath",
+      "id": "crane-up",
+      "label": {
+        "ko": "크레인 업",
+        "en": "Crane up"
+      },
+      "definition": {
+        "ko": "위로 올라가며 드러냅니다.",
+        "en": "Rise and reveal."
+      },
+      "implementationHint": "Camera Y lerp upward while looking at the subject.",
+      "tags": []
+    },
+    {
+      "category": "cameraPath",
+      "id": "fly-through",
+      "label": {
+        "ko": "플라이스루",
+        "en": "Fly through"
+      },
+      "definition": {
+        "ko": "장면을 통과해 이동합니다.",
+        "en": "Travel through the scene."
+      },
+      "implementationHint": "Camera along a spline with look-ahead.",
+      "tags": []
+    },
+    {
+      "category": "cameraPath",
+      "id": "locked-hero",
+      "label": {
+        "ko": "고정 히어로",
+        "en": "Locked hero"
+      },
+      "definition": {
+        "ko": "고정된 히어로 앵글.",
+        "en": "Fixed hero angle."
+      },
+      "implementationHint": "Static camera; motion comes from the objects.",
+      "tags": []
+    },
+    {
+      "category": "performanceBudget",
+      "id": "mobile-friendly",
+      "label": {
+        "ko": "모바일 친화",
+        "en": "Mobile friendly"
+      },
+      "definition": {
+        "ko": "폰에서도 가볍게.",
+        "en": "Light enough for phones."
+      },
+      "implementationHint": "Under 50k triangles, 1 light, textures at most 1024.",
+      "tags": []
+    },
+    {
+      "category": "performanceBudget",
+      "id": "balanced",
+      "label": {
+        "ko": "균형",
+        "en": "Balanced"
+      },
+      "definition": {
+        "ko": "중급 GPU 기준.",
+        "en": "Mid-range GPU target."
+      },
+      "implementationHint": "Under 100k triangles, up to 3 lights, textures at most 2048.",
+      "tags": []
+    },
+    {
+      "category": "performanceBudget",
+      "id": "high-fidelity",
+      "label": {
+        "ko": "고품질",
+        "en": "High fidelity"
+      },
+      "definition": {
+        "ko": "데스크톱 GPU 기준.",
+        "en": "Desktop GPU target."
+      },
+      "implementationHint": "Under 500k triangles, shadows and post effects allowed; still deterministic.",
+      "tags": []
+    },
+    {
+      "category": "creativeMode",
+      "id": "one-shape-ui-morph",
+      "label": {
+        "ko": "단일 도형 UI 모핑",
+        "en": "One-Shape UI Morph"
+      },
+      "definition": {
+        "ko": "컷 전환 없이 하나의 컨테이너가 크기·곡률·색상을 바꾸며 여러 UI 상태로 연속 변형됩니다.",
+        "en": "One element continuously morphs its size, radius, and color across 8-12 UI states without cuts."
+      },
+      "implementationHint": "Compute width, height, borderRadius, and backgroundColor from closed-form springs inside useTime(); swap inner UI with a short 80ms blur transition.",
+      "tags": [
+        "opus",
+        "ui",
+        "morph",
+        "dribbble",
+        "spring"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-402193/original.9c664f011f.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-402193",
+      "sourceRef": "awesome-opus5-5-videos#twoclipping-402193"
+    },
+    {
+      "category": "creativeMode",
+      "id": "keynote-continuous-launch",
+      "label": {
+        "ko": "키노트 연속 런칭 필름",
+        "en": "Keynote Continuous Launch"
+      },
+      "definition": {
+        "ko": "페이드나 컷 없이 각 장면이 이전 오브젝트에서 자라나듯 이어지는 애플 키노트풍 런칭 영상.",
+        "en": "Apple-keynote launch film in one continuous take where every scene grows out of the previous object."
+      },
+      "implementationHint": "Never crossfade or cut; flood the frame from an expanding button or wordmark, then contract into the next scene.",
+      "tags": [
+        "opus",
+        "keynote",
+        "launch",
+        "apple",
+        "continuous"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-000267/original.87cf7f8c74.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-000267",
+      "sourceRef": "awesome-opus5-5-videos#twoclipping-000267"
+    },
+    {
+      "category": "creativeMode",
+      "id": "kinetic-spoken-manifesto",
+      "label": {
+        "ko": "키네틱 매니페스토 필드",
+        "en": "Kinetic Spoken-Word Manifesto"
+      },
+      "definition": {
+        "ko": "선언문 문장이 물리적 역학장(궤도·자기장·중력)을 재구성하며 주제를 전달합니다.",
+        "en": "Miniature speech staged inside a typographic field where each line reorganizes the frame geometry."
+      },
+      "implementationHint": "Treat word baselines as trajectories or field plates; drive letterform offsets and field lines deterministically from t.",
+      "tags": [
+        "opus",
+        "kinetic",
+        "manifesto",
+        "typography",
+        "poster"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/gdgtify-929495/original.bf87884126.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/gdgtify-929495",
+      "sourceRef": "awesome-opus5-5-videos#gdgtify-929495"
+    },
+    {
+      "category": "creativeMode",
+      "id": "pixel-grid-procedural",
+      "label": {
+        "ko": "절차적 픽셀 그리드 아트",
+        "en": "Procedural Pixel Grid Art"
+      },
+      "definition": {
+        "ko": "외부 이미지 없이 고정 논리 해상도와 정수 좌표 스냅만으로 선명한 16비트 픽셀 애니메이션을 그립니다.",
+        "en": "Procedural pixel art drawn on a fixed logical grid with integer coordinate snapping and palette indexing."
+      },
+      "implementationHint": "Render to a low-res logical canvas (e.g. 160x90) with imageSmoothingEnabled=false and quantize smooth pose parameters to integer pixel coordinates.",
+      "tags": [
+        "opus",
+        "pixel",
+        "canvas",
+        "illustration",
+        "poster"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/zacxbt-944604/original.1fc21723ff.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/zacxbt-944604",
+      "sourceRef": "awesome-opus5-5-videos#zacxbt-944604"
+    },
+    {
+      "category": "adStructure",
+      "id": "beat-grid-120bpm",
+      "label": {
+        "ko": "120 BPM 비트 그리드 진행",
+        "en": "120 BPM Beat-Grid Progression"
+      },
+      "definition": {
+        "ko": "일정한 BPM(예: 0.5초 간격)마다 정확히 하나의 상태 변화나 타이포 타격이 일어나는 리듬 구조.",
+        "en": "Every state change or typographic hit lands strictly on a constant BPM beat grid (e.g. every 0.5s at 120 BPM)."
+      },
+      "implementationHint": "Quantize beat boundaries to multiples of 60/BPM seconds; trigger spring step-responses on exact beat timestamps.",
+      "tags": [
+        "opus",
+        "beat",
+        "rhythm",
+        "music"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/morse-369333/original.519a9f00ee.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/morse-369333",
+      "sourceRef": "awesome-opus5-5-videos#morse-369333"
+    },
+    {
+      "category": "typography",
+      "id": "mask-line-rise",
+      "label": {
+        "ko": "마스크 라인 라이즈",
+        "en": "Mask-Line Rise"
+      },
+      "definition": {
+        "ko": "문구가 보이지 않는 기준선(마스크) 아래에서 위쪽으로 미끄러져 올라오며 선명하게 드러납니다.",
+        "en": "Text rises cleanly out of an invisible horizontal mask line with spring or expoOut easing."
+      },
+      "implementationHint": "Wrap each line in overflow:hidden and animate translateY from 105% to 0% using ease.expoOut.",
+      "tags": [
+        "opus",
+        "mask",
+        "text",
+        "keynote"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/lukasersil-726495/original.2886d94586.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/lukasersil-726495",
+      "sourceRef": "awesome-opus5-5-videos#lukasersil-726495"
+    },
+    {
+      "category": "typography",
+      "id": "variable-weight-beat-pulse",
+      "label": {
+        "ko": "가변 굵기·폭 비트 펄스",
+        "en": "Variable Weight Beat Pulse"
+      },
+      "definition": {
+        "ko": "비트마다 글자의 굵기(font-weight)나 장평이 얇은 상태에서 블랙으로 튕기듯 변화합니다.",
+        "en": "Typography swings from thin to heavy black or wide width on the beat."
+      },
+      "implementationHint": "Interpolate fontWeight (200 to 900) or scaleX on beat intervals using closed-form spring response.",
+      "tags": [
+        "opus",
+        "variable-font",
+        "kinetic",
+        "beat"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/howdevelop-733090/original.c156b8a720.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/howdevelop-733090",
+      "sourceRef": "awesome-opus5-5-videos#howdevelop-733090"
+    },
+    {
+      "category": "typography",
+      "id": "orbital-trajectory-baseline",
+      "label": {
+        "ko": "궤도·역학선 베이스라인",
+        "en": "Orbital Trajectory Baseline"
+      },
+      "definition": {
+        "ko": "문장의 베이스라인이 닫힌 궤도에서 열린 탈출 궤도로 변하며 글자들이 그 궤적을 따라 주행합니다.",
+        "en": "The baseline of a sentence forms a curved orbital path that opens into an escape trajectory."
+      },
+      "implementationHint": "Position characters or words along a parametric curve P(u, t) and rotate each glyph to match the tangent.",
+      "tags": [
+        "opus",
+        "trajectory",
+        "orbit",
+        "svg",
+        "poster"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/_prompts/gdgtify-989608/poster.094984c36d.webp",
+      "actionUrl": "https://x.com/Gdgtify/status/2105669567036989608",
+      "sourceRef": "awesome-opus5-5-videos#gdgtify-989608"
+    },
+    {
+      "category": "object",
+      "id": "closed-form-spring-sum",
+      "label": {
+        "ko": "해석적 다중 스프링 합산",
+        "en": "Closed-Form Spring Sum"
+      },
+      "definition": {
+        "ko": "목표값이 여러 번 바뀔 때 각 변화 시점의 해석적 스프링 응답을 합산해 시간 t의 순수 함수로 물리 모션을 계산합니다.",
+        "en": "Computes multi-target spring motion as the sum of closed-form damped harmonic step responses of time t."
+      },
+      "implementationHint": "For targets changing at t_i by delta_i, sum delta_i * (1 - exp(-zeta*w*(t-t_i)) * cos(w_d*(t-t_i))) for t >= t_i.",
+      "tags": [
+        "opus",
+        "spring",
+        "physics",
+        "deterministic"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-402193/original.9c664f011f.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-402193",
+      "sourceRef": "awesome-opus5-5-videos#twoclipping-402193"
+    },
+    {
+      "category": "object",
+      "id": "edge-staggered-liquid-pill",
+      "label": {
+        "ko": "양 끝단 차등 스프링(리퀴드 필)",
+        "en": "Edge-Staggered Liquid Pill"
+      },
+      "definition": {
+        "ko": "탭 인디케이터나 토글 노브의 앞쪽 끝과 뒤쪽 끝이 서로 다른 강성의 스프링으로 움직여 유체처럼 늘어났다 모입니다.",
+        "en": "Leading and trailing edges of a pill or indicator ride different springs so it stretches like liquid in transit."
+      },
+      "implementationHint": "Animate left and right edges with separate spring stiffnesses (e.g. w_lead=28, w_trail=18) and derive x and width.",
+      "tags": [
+        "opus",
+        "liquid",
+        "ui",
+        "spring",
+        "pill"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/brainextends-606193/original.f7353b2aa2.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/brainextends-606193",
+      "sourceRef": "awesome-opus5-5-videos#brainextends-606193"
+    },
+    {
+      "category": "object",
+      "id": "direct-cursor-choreography",
+      "label": {
+        "ko": "커서 직접 조작 안무",
+        "en": "Direct Cursor Choreography"
+      },
+      "definition": {
+        "ko": "화살표 커서가 클릭·드래그·타이핑으로 모든 UI 변화를 직접 구동하며 드래그 중에는 커서 위치를 따라갑니다.",
+        "en": "An animated cursor drives every UI change with clicks, drags, and elastic over-pull before springing back."
+      },
+      "implementationHint": "Render a crisp SVG cursor layer whose position and click scale are pure functions of t synchronized with UI state transitions.",
+      "tags": [
+        "opus",
+        "cursor",
+        "ui",
+        "interaction"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-000267/original.87cf7f8c74.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-000267",
+      "sourceRef": "awesome-opus5-5-videos#twoclipping-000267"
+    },
+    {
+      "category": "camera",
+      "id": "screen-studio-cursor-zoom",
+      "label": {
+        "ko": "스크린 스튜디오식 커서 추적 줌",
+        "en": "Screen-Studio Cursor Zoom"
+      },
+      "definition": {
+        "ko": "상호작용이 일어나는 UI 지점으로 카메라가 부드럽게 확대·추적하며 커서도 함께 스케일됩니다.",
+        "en": "Camera smoothly zooms and pans to frame the active UI moment while the cursor scales proportionally."
+      },
+      "implementationHint": "Wrap the stage in a camera transform container with scale(s(t)) and translate(tx(t), ty(t)) centered on the active focal widget.",
+      "tags": [
+        "opus",
+        "camera",
+        "zoom",
+        "ui",
+        "screen-studio"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/moritzkremb-466494/original.dc5bd867e2.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/moritzkremb-466494",
+      "sourceRef": "awesome-opus5-5-videos#moritzkremb-466494"
+    },
+    {
+      "category": "material",
+      "id": "iridescent-conic-halo",
+      "label": {
+        "ko": "이리데슨트 코닉 글로우 테두리",
+        "en": "Iridescent Conic Halo"
+      },
+      "definition": {
+        "ko": "입력창이나 히어로 카드 둘레를 회전하는 다색 원추형(conic) 그라데이션 광채가 감쌉니다.",
+        "en": "Apple-Intelligence style rotating conic-gradient halo softly blurred behind an input or hero card."
+      },
+      "implementationHint": "Layer a blurred conic-gradient div behind the card and rotate its angle deterministically with t * 60deg.",
+      "tags": [
+        "opus",
+        "glow",
+        "glass",
+        "ui"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/demonugc-525162/original.eb370273ad.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/demonugc-525162",
+      "sourceRef": "awesome-opus5-5-videos#demonugc-525162"
+    },
+    {
+      "category": "transition",
+      "id": "color-flood-contract",
+      "label": {
+        "ko": "컬러 플러드 수축 전환",
+        "en": "Color Flood & Contract"
+      },
+      "definition": {
+        "ko": "작은 요소(불릿·버튼)의 색상이 화면 전체를 가득 채운 뒤 다음 장면의 오브젝트로 수축해 들어갑니다.",
+        "en": "An accent dot or button floods the entire frame with color and immediately contracts into the next scene hero."
+      },
+      "implementationHint": "Scale a circular or rounded rect accent shape from widget bounds to cover hypot(width,height), swap background, then shrink to target.",
+      "tags": [
+        "opus",
+        "transition",
+        "flood",
+        "keynote"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/brainextends-606193/original.f7353b2aa2.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/brainextends-606193",
+      "sourceRef": "awesome-opus5-5-videos#brainextends-606193"
+    },
+    {
+      "category": "composition",
+      "id": "exploded-cutaway-assembly",
+      "label": {
+        "ko": "절개·분해 조립 뷰(Exploded View)",
+        "en": "Exploded Cutaway Assembly"
+      },
+      "definition": {
+        "ko": "복합 기계·렌즈·엔진의 단면을 절개하고 축을 따라 부품을 분해·결합하며 구조와 광선을 보여줍니다.",
+        "en": "Cutaway 3D mechanical assembly that slides parts apart along an axis with callout labels."
+      },
+      "implementationHint": "Place each part group along an assembly axis and offset position by explodeFactor(t) * partOffset; add 2D projected callout lines.",
+      "tags": [
+        "opus",
+        "3d",
+        "exploded",
+        "product",
+        "explainer"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/bthreeagency-827092/original.353cb53c14.webp",
+      "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/bthreeagency-827092",
+      "sourceRef": "awesome-opus5-5-videos#bthreeagency-827092"
+    },
+    {
+      "category": "materials",
+      "id": "stained-glass-dispersion",
+      "label": {
+        "ko": "스테인드글라스 광학 투과",
+        "en": "Stained-Glass Optical Dispersion"
+      },
+      "definition": {
+        "ko": "색유리 조각을 통과한 빛이 바닥과 공기 중에 다채로운 투영과 볼류메트릭 광선을 만듭니다.",
+        "en": "Colored glass transmission casting vibrant projected patterns and volumetric light shafts onto stone or matte floors."
+      },
+      "implementationHint": "Combine emissive stained-glass cells with angled directional light and floor projection shader driven by t.",
+      "tags": [
+        "opus",
+        "3d",
+        "glass",
+        "shader",
+        "lighting"
+      ],
+      "previewUrl": "https://media.skillry.dev/opus-5-5/_prompts/agioyaz-397647/poster.340f607e45.webp",
+      "actionUrl": "https://x.com/AGIOyaZ/status/2103167623303397647",
+      "sourceRef": "awesome-opus5-5-videos#agioyaz-397647"
+    }
+  ]
+}

@@ -81,8 +81,8 @@
 
 | 목적             | 파일                                                                                       |
 | ---------------- | ------------------------------------------------------------------------------------------ |
-| 화면 구조 파악   | `src/pages/Workspace.tsx`, `src/components/layout/*`                                       |
-| 탭 동작 파악     | `src/components/workspace/CenterWorkspace.tsx`, `src/lib/context/WorkspaceTabsContext.tsx` |
+| 화면 구조 파악   | `src/App.tsx`(라우트), `src/components/layout/AppShell.tsx`(사이드바·슬롯)                  |
+| 워크스페이스 흐름 | `src/components/workspace/Onboarding.tsx`·`Switcher.tsx`, `src/lib/workspace/*`, `src-tauri/src/commands/workspace_commands.rs` |
 | 데이터 흐름 파악 | `src/lib/db/client.ts`, `src/lib/db/repositories/settingsRepo.ts`                          |
 | 문구 추가        | `src/lib/i18n/dictionaries/ko.ts` + `en.ts`                                                |
 | 새 기능 추가     | `Docs/Extension-Guide.md`                                                                  |
@@ -114,7 +114,60 @@
 | `resources/project-template/`, `resources/design/` | 새 프로젝트 스캐폴딩 원본, 기본 DESIGN.md. `tauri.conf.json`의 `bundle.resources`로 번들 |
 | `src-tauri/src/process/` | 프로세스 실행 공통(PATHEXT·fresh PATH·Job Object·타임아웃), FFmpeg 다운로드 |
 | `src-tauri/src/commands/` | 추가: `doctor_commands`, `project_commands`, `process_commands`(앱 소유 프로세스, 고정 argv) |
-| `src/lib/templates/` | `template.json`·`palette.json` zod 스키마·파서·설치 계획(T6.2). `palette.json` 정본은 `src/lib/design/palettes.ts`, `templates/palette.ts`는 별칭 re-export |
 | `src/lib/design/extract.ts`, `harmony.ts` | 팔레트 추출·조화 생성·비교 스냅샷 순수 함수(T6.9) |
 | `resources/skills/` | `vanilla-core` 스킬(T6.1). `tauri.conf.json`의 `bundle.resources`로 번들 |
 | `resources/palettes/` | 내장 팔레트 24종(T6.3). 추가 시 `palettes.ts` 명시 import 1줄 |
+
+### v2 V1 기반 정리 반영분
+
+v1 파이프라인·검수·ACP 에이전트·프로젝트 마법사·탭 셸은 제거했다(`v1-final` 태그로 복구, 계획: `wiki/sources/issue-v2-legacy-removal.md`). 위 표에서 `src/lib/project/`·`src/components/project/`·`shellRegistry.ts` 항목과 `0003_project`의 파이프라인 테이블은 더 이상 없다.
+
+| 위치 | 내용 |
+| --- | --- |
+| `src/lib/workspace/` | `schema.ts`(workspace.json zod·캔버스 프리셋), `file.ts`(읽기·뷰포트 저장), `files.ts`(경로·파일 헬퍼), `api.ts`(Rust 명령 래퍼), `switchGuard.ts`(전환 시 정리할 작업 등록) |
+| `src/lib/json/canonical.ts` | 정규화 직렬화(같은 입력 → 같은 바이트) |
+| `src/lib/migrate/legacy-schema.ts` | v1 `vanilla.json` 읽기 스키마(마이그레이션 입력, V7) |
+| `src/components/layout/AppShell.tsx` | 사이드바(워크스페이스·신·플레이그라운드·설정) + 메인 + 인스펙터·도크 슬롯 |
+| `src/components/canvas/` | `WorkspaceCanvas`(@xyflow/react 빈 캔버스, 뷰포트 복원) |
+| `src/components/workspace/` | `Onboarding`, `Switcher`, `TrustWorkspaceDialog`(+ v1 탭 뷰어 `EditorTab`·`ImageViewerTab`·`CodeViewer`는 V2 이후 재사용 대기) |
+| `src/pages/` | `Workspace`·`Scenes`·`Playground`(빈 화면)·`Settings/*` |
+| `src/lib/db/repositories/workspacesRepo.ts` | 최근 워크스페이스·신뢰(전역 DB `workspaces`) |
+| `src/lib/db/migrations/0005_v2_global.sql`, `0006_v2_project_cleanup.sql` | `workspaces`·`terminal_sessions`, 프로젝트 DB의 v1 테이블 drop |
+| `src-tauri/src/commands/workspace_commands.rs` | 폴더 판별·워크스페이스 생성/열기·스코프 검사 |
+| `resources/workspace-template/` | 새 워크스페이스 스캐폴딩 원본(`AGENTS.md`·`CLAUDE.md`·`DESIGN.md`·`package.json`·`vite.config.ts`…) |
+| `spikes/r5-canvas/` | PoC R-5 캔버스 스파이크 |
+
+### v2 V2·V3 반영분
+
+| 위치 | 내용 |
+| --- | --- |
+| `src/lib/scene/` | `schema.ts`(scene.json zod, static·motion·3d), `files.ts`(신 폴더 입출력·상태 갱신), `status.ts`(상태 파생) |
+| `src/lib/sequence/` | `sequence.json` 스키마·노드 위치·파일 입출력 |
+| `src/lib/guides/` | 가이드 엔진: `markers.ts`(마커 렌더), `template.ts`(템플릿 형식·내장 로더), `merge.ts`(extends 병합 규칙), `resolve.ts`·`catalog.ts`(우선순위 해석), `forms.ts`(인스펙터 폼 정의), `agentsMd.ts`·`guideMd.ts`·`prompts.ts`(생성물), `writeback.ts`(되쓰기 화이트리스트), `templateEditor.ts` |
+| `resources/guides/<type>/<id>@<ver>/` | 내장 가이드 템플릿 3종(`template.json`·`schema.json`·`glossary.json`·`rules.md`·`checklist.md`·`prompts/*`) |
+| `src/components/scene/`·`inspector/`·`guides/` | 신 노드·생성 다이얼로그·캔버스, 인스펙터(개요·가이드·DESIGN·프롬프트), 용어 콤보박스·beats/steps 편집기·템플릿 편집기 |
+| `src-tauri/src/commands/{scene,template}_commands.rs` | 신 폴더 명령, 템플릿 폴더 읽기(읽기 전용·크기 상한·심링크 거부) |
+| 워크스페이스 `guide-templates/` | 사용자 정의 템플릿 저장 위치(우선순위 최상위) |
+
+### v2 V4~V7 반영분
+
+| 위치 | 내용 |
+| --- | --- |
+| `src/lib/agents/`·`src/lib/terminal/`·`src/components/terminal/` | 에이전트 레지스트리(고정 argv)·프롬프트 클립보드 전달·터미널 세션 관리·터미널 도크 |
+| `src-tauri/src/commands/{pty,trust}_commands.rs` | 신뢰된 폴더에서만 PTY 실행(레지스트리 키로만 argv), 신뢰 저장 |
+| `src/lib/scene/` (추가) | `writeback.ts`(완료 판정·스냅샷·diff·되돌림), `thumbnail.ts`, `check.ts`(계약 검사), `revision.ts`(재생성 변경 필드), `references.ts`·`referenceFrames.ts`, `analysisReview.ts`, `saveAsTemplate.ts` |
+| `resources/workspace-template/scripts/check-scene{,-core}.mjs` | `pnpm check:scene`. 코어는 앱과 CLI가 공유(Node 의존 없음) |
+| `src-tauri/src/commands/reference_commands.rs` | 영상 레퍼런스 키프레임·메타(FFmpeg 고정 argv) |
+| `src/lib/design/` (추가) | `analysis.ts`(분석 마커 구간, CRLF 보존), `extends.ts`(워크스페이스 DESIGN.md 상속) |
+| `packages/runtime/src/` (추가) | Bridge v2(`step`·`done`·`choice`·`next`·`prev`)·canvas 주입·`hostedBridge.ts`(신 컴포넌트가 쓰는 호스트 Bridge)·`paramsFiles.ts`(신별 params) |
+| `src/lib/sequence/` (추가) | `validate.ts`(교차 검증), `edit.ts`(엣지 연산), `manager.ts`(재생 상태 머신) |
+| `src/lib/playground/` (추가) | `iframeScene.ts`(신 iframe + Bridge), `sceneTransitions.ts`, `transitions/`(9종 계획 + WAAPI 실행기 + 선언형 `custom`) |
+| `src/components/{playground,canvas,package}/` | `SequencePlayer`, 엣지 편집(`useSequenceEdges`·`EdgeSection`), `.vsx` 공유·가져오기 다이얼로그 |
+| `src/lib/package/` | `manifest.ts`(zod)·`api.ts`·`import.ts`(`.vsx`) |
+| `src-tauri/src/commands/package_commands.rs` | `.vsx` 만들기(허용 목록·결정적 zip)·검사(zip-slip·심링크·해시)·추출(덮어쓰기 없음) |
+| `src/lib/migrate/v1.ts`·`applyV1.ts`, `src-tauri/src/commands/migrate_commands.rs` | v1 프로젝트 읽기(읽기 전용) → 변환 계획 → 적용 |
+| `resources/samples/` | 샘플 워크스페이스 4종(motion·static·3d·시퀀스). JSON은 `src/lib/sequence/sample*.test.ts`가 생성·검사 |
+| `tests/` | `e2e/`(실제 Chrome E2E 스크립트·하네스·목 에이전트), `fixtures/`(v1 샘플·manifest 골든), `repro/`(재현성) |
+| `spikes/r1-transition/` | PoC R-1 전환 합성 스파이크 |
+| `Docs/User-Guide/` | v2 사용자 문서 7종(`legacy/`는 v1 보관) |
+

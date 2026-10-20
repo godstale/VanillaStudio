@@ -1,0 +1,35 @@
+{
+  "id": "opus-kinetic-manifesto",
+  "version": 1,
+  "type": "motion",
+  "label": {
+    "ko": "Opus 키네틱 타이포 매니페스토",
+    "en": "Opus Kinetic Typography Manifesto"
+  },
+  "extends": "commercial@1",
+  "mediaIntents": [
+    "motion",
+    "slide"
+  ],
+  "description": {
+    "ko": "에디토리얼 세리프와 기하학 산세리프의 대비, 가변 웨이트 비트 펄스, 궤도형 텍스트 경로를 결합한 타이포그래피 필름.",
+    "en": "Editorial spoken-word kinetic typography film pairing Instrument Serif italic with geometric sans and orbital trajectories."
+  },
+  "tags": [
+    "kinetic-type",
+    "manifesto",
+    "editorial",
+    "serif",
+    "typography",
+    "quote",
+    "poster"
+  ],
+  "banned": [
+    "Generic centered fade-in subtitles",
+    "More than 7 words visible simultaneously without typographic hierarchy",
+    "Static background without subtle grain or architectural grid lines"
+  ],
+  "previewUrl": "https://media.skillry.dev/opus-5-5/gdgtify-929495/original.bf87884126.webp",
+  "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/gdgtify-929495",
+  "sourceRef": "awesome-opus5-5-videos#gdgtify-929495"
+}

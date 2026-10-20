@@ -1,0 +1,2 @@
+- Render onto a low-resolution logical grid (e.g., `320x180`) scaled to fill the viewport with `image-rendering: pixelated` and `ctx.imageSmoothingEnabled = false`.
+- Drive all sprite frame indices, water reflections, and parallax offsets deterministically from `useTime()`.

@@ -1,0 +1,34 @@
+{
+  "id": "opus-data-explainer-deck",
+  "version": 1,
+  "type": "static",
+  "label": {
+    "ko": "Opus 데이터·멀티스케일 해설 슬라이드",
+    "en": "Opus Data & Multiscale Explainer Deck"
+  },
+  "extends": "web-page@1",
+  "mediaIntents": [
+    "slide",
+    "web"
+  ],
+  "description": {
+    "ko": "단계별 진행마다 다이어그램·차트·스케일 비교 뷰가 전환되며 복잡한 아키텍처나 데이터를 명쾌하게 설명하는 인터랙티브 슬라이드.",
+    "en": "Interactive data storytelling & multiscale comparison deck where each step transforms the live chart or scale diagram."
+  },
+  "tags": [
+    "slide",
+    "data-viz",
+    "explainer",
+    "chart",
+    "scale",
+    "comparison",
+    "steps"
+  ],
+  "banned": [
+    "Static raster chart images instead of live SVG/Canvas data elements",
+    "Time-based auto-advance without user click/key input"
+  ],
+  "previewUrl": "https://media.skillry.dev/opus-5-5/bilimfili1-459762/original.a1f891890a.webp",
+  "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/bilimfili1-459762",
+  "sourceRef": "awesome-opus5-5-videos#bilimfili1-459762"
+}

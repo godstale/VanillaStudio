@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "id": "opus-orbital-coral",
+  "name": "Opus Orbital Coral",
+  "tags": [
+    "dark",
+    "opus",
+    "kinetic",
+    "space",
+    "scientific"
+  ],
+  "scheme": "dark",
+  "colors": {
+    "canvas": "#080D23",
+    "ink": "#FFF4DD",
+    "primary": "#FF654F",
+    "accent": "#6685FF"
+  },
+  "source": "builtin",
+  "license": "MIT",
+  "previewUrl": "https://media.skillry.dev/opus-5-5/_prompts/gdgtify-989608/poster.094984c36d.webp",
+  "actionUrl": "https://x.com/Gdgtify/status/2105669567036989608"
+}

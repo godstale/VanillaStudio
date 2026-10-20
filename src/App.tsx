@@ -1,12 +1,23 @@
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Workspace from '@/pages/Workspace';
+import Storyboard from '@/pages/Storyboard';
+import Scenes from '@/pages/Scenes';
+import Templates from '@/pages/Templates';
+import Playground from '@/pages/Playground';
 import SettingsLayout from '@/pages/Settings/SettingsLayout';
 import SettingsGeneral from '@/pages/Settings/SettingsGeneral';
 import SettingsApp from '@/pages/Settings/SettingsApp';
+import SettingsWorkspace from '@/pages/Settings/SettingsWorkspace';
+import SettingsTemplates from '@/pages/Settings/SettingsTemplates';
+import SettingsAgents from '@/pages/Settings/SettingsAgents';
 import SettingsDoctor from '@/pages/Settings/SettingsDoctor';
+import { AppShell } from '@/components/layout/AppShell';
+import { TrustWorkspaceDialog } from '@/components/workspace/TrustWorkspaceDialog';
 
 import { ThemeProvider } from '@/lib/context/ThemeContext';
 import { SettingsProvider } from '@/lib/context/SettingsContext';
+import { WorkspaceProvider } from '@/lib/context/WorkspaceContext';
+import { TerminalProvider } from '@/components/terminal/TerminalProvider';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { LanguageSelectDialog } from '@/components/language/LanguageSelectDialog';
 
@@ -16,16 +27,31 @@ export default function App() {
       <LanguageProvider>
         <SettingsProvider>
           <HashRouter>
-            <Routes>
-              <Route path="/" element={<Workspace />} />
-              <Route path="/settings" element={<SettingsLayout />}>
-                <Route index element={<SettingsGeneral />} />
-                <Route path="general" element={<SettingsGeneral />} />
-                <Route path="app" element={<SettingsApp />} />
-                <Route path="doctor" element={<SettingsDoctor />} />
-              </Route>
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
+            <WorkspaceProvider>
+              <TerminalProvider>
+              <Routes>
+                <Route path="/" element={<Navigate to="/workspace" replace />} />
+                <Route element={<AppShell />}>
+                  <Route path="/storyboard" element={<Storyboard />} />
+                  <Route path="/workspace" element={<Workspace />} />
+                  <Route path="/scenes" element={<Scenes />} />
+                  <Route path="/templates" element={<Templates />} />
+                  <Route path="/playground" element={<Playground />} />
+                </Route>
+                <Route path="/settings" element={<SettingsLayout />}>
+                  <Route index element={<SettingsGeneral />} />
+                  <Route path="general" element={<SettingsGeneral />} />
+                  <Route path="workspace" element={<SettingsWorkspace />} />
+                  <Route path="templates" element={<SettingsTemplates />} />
+                  <Route path="agents" element={<SettingsAgents />} />
+                  <Route path="app" element={<SettingsApp />} />
+                  <Route path="doctor" element={<SettingsDoctor />} />
+                </Route>
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+              <TrustWorkspaceDialog />
+              </TerminalProvider>
+            </WorkspaceProvider>
             <LanguageSelectDialog />
           </HashRouter>
         </SettingsProvider>

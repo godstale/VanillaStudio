@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "hide": [],
+  "defaults": {
+    "mode": "steps",
+    "steps": [
+      {
+        "id": "step-1",
+        "title": "01 // Thesis & Hook",
+        "copy": "A bold one-sentence thesis statement that frames the presentation.",
+        "layout": "hero-split",
+        "enter": "spring-morph",
+        "advance": "key:ArrowRight"
+      },
+      {
+        "id": "step-2",
+        "title": "02 // The Structural Shift",
+        "copy": "Before vs. After architectural comparison with interactive highlight.",
+        "layout": "bento-grid",
+        "enter": "spring-morph",
+        "advance": "key:ArrowRight"
+      },
+      {
+        "id": "step-3",
+        "title": "03 // Key Metric Proof",
+        "copy": "10x throughput with deterministic frame-accurate rendering.",
+        "layout": "editorial-column",
+        "enter": "slide-x",
+        "advance": "key:ArrowRight"
+      },
+      {
+        "id": "step-4",
+        "title": "04 // Next Steps & Decision",
+        "copy": "Clear action items and roadmap milestones.",
+        "layout": "single-card",
+        "enter": "fade",
+        "advance": "click"
+      }
+    ],
+    "sections": [
+      "hero",
+      "features",
+      "metrics",
+      "cta"
+    ],
+    "layout": "single-card",
+    "breakpoints": [
+      "desktop-first"
+    ],
+    "accessibility": [
+      "keyboard-nav",
+      "reduced-motion",
+      "high-contrast"
+    ]
+  },
+  "fields": []
+}

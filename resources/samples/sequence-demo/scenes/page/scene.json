@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "id": "scn_demoPage001",
+  "name": "Page",
+  "template": "web-page@1",
+  "brief": {
+    "subject": "",
+    "goal": "",
+    "audience": "",
+    "message": "",
+    "language": "ko"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "welcome",
+      "title": "welcome",
+      "copy": "",
+      "layout": "",
+      "enter": "crossfade",
+      "advance": "click"
+    },
+    {
+      "id": "steps",
+      "title": "steps",
+      "copy": "",
+      "layout": "",
+      "enter": "crossfade",
+      "advance": "click"
+    },
+    {
+      "id": "next",
+      "title": "next",
+      "copy": "",
+      "layout": "",
+      "enter": "crossfade",
+      "advance": "click"
+    }
+  ],
+  "sections": [],
+  "layout": "",
+  "breakpoints": [],
+  "accessibility": [],
+  "custom": {},
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

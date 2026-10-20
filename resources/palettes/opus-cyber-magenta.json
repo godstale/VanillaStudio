@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "id": "opus-cyber-magenta",
+  "name": "Opus Cyber Magenta",
+  "tags": [
+    "dark",
+    "opus",
+    "neon",
+    "glitch",
+    "bold"
+  ],
+  "scheme": "dark",
+  "colors": {
+    "canvas": "#0A0A0A",
+    "ink": "#F5F5F5",
+    "primary": "#FF2BD6",
+    "accent": "#B8FF00"
+  },
+  "source": "builtin",
+  "license": "MIT",
+  "previewUrl": "https://media.skillry.dev/opus-5-5/lukasersil-726495/original.2886d94586.webp",
+  "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/lukasersil-726495"
+}

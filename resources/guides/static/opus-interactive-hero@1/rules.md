@@ -1,0 +1,2 @@
+- Include an interactive live preview widget inside the hero section (e.g., switchable state tabs, live command palette filter, or interactive metric toggle) that responds immediately to user clicks.
+- Use monumental headline scale (`clamp(44px, 6vw, 88px)`, tight tracking) paired with clean bento cards styled strictly with `DESIGN.md` tokens.

@@ -42,15 +42,10 @@ const GLOBAL_TABLES = [
   'playground_items',
   'playground_meta',
   'templates',
+  'terminal_sessions',
+  'workspaces',
 ];
-const PROJECT_TABLES = [
-  'agent_sessions',
-  'app_settings',
-  'export_jobs',
-  'pipeline_state',
-  'reviews',
-  'task_runs',
-];
+const PROJECT_TABLES = ['app_settings', 'export_jobs'];
 
 describe('migrations', () => {
   it.each([
@@ -78,6 +73,17 @@ describe('migrations', () => {
     raw.exec('CREATE TABLE items (id TEXT PRIMARY KEY)');
     await runMigrations(db, 'global');
     expect(tables(raw)).not.toContain('items');
+  });
+
+  it('drops v1 pipeline tables from an existing project DB and adds templates_dir', async () => {
+    const { db, raw } = openSqlite();
+    raw.exec('CREATE TABLE pipeline_state (stage TEXT PRIMARY KEY)');
+    raw.exec('CREATE TABLE app_settings (id TEXT PRIMARY KEY, theme TEXT)');
+    await runMigrations(db, 'project');
+    expect(tables(raw)).not.toContain('pipeline_state');
+    const cols = (raw.prepare('PRAGMA table_info(app_settings)').all() as { name: string }[]).map((c) => c.name);
+    expect(cols).toContain('templates_dir');
+    await runMigrations(db, 'project');
   });
 
   it('has no statements that are empty or comments', () => {

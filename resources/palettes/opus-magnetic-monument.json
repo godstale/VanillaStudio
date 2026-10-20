@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "id": "opus-magnetic-monument",
+  "name": "Opus Magnetic Monument",
+  "tags": [
+    "dark",
+    "opus",
+    "kinetic",
+    "editorial",
+    "warm"
+  ],
+  "scheme": "dark",
+  "colors": {
+    "canvas": "#102820",
+    "ink": "#F4E9D5",
+    "primary": "#F2B544",
+    "accent": "#E78636"
+  },
+  "source": "builtin",
+  "license": "MIT",
+  "previewUrl": "https://media.skillry.dev/opus-5-5/iamtanzil-120030/original.31773009f1.webp",
+  "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/iamtanzil-120030"
+}

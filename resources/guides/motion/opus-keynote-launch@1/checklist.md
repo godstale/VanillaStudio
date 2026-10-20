@@ -1,0 +1,3 @@
+- [ ] Synthesized cursor follows curved Bezier path and scales on click
+- [ ] Camera zooms toward active interaction target smoothly
+- [ ] End card holds clearly for at least 0.85s

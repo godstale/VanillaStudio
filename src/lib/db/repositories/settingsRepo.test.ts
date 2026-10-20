@@ -25,6 +25,8 @@ describe('settingsRepo (MemorySqlFallback)', () => {
       language: 'ko',
       trustedWorkspaces: [],
       lastWorkspaceRoot: null,
+      templatesDir: null,
+      terminalAutoPaste: false,
     });
   });
 

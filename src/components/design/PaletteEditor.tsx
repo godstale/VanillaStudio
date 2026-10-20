@@ -17,7 +17,6 @@ import {
   type PaletteFile,
 } from '@/lib/design/palettes';
 import { CORE_ROLES, DERIVED_ROLES, contrastReport, deriveRoles } from '@/lib/design/roles';
-import { checkpointCommit } from '@/lib/project/checkpoint';
 import { cn } from '@/lib/utils';
 
 const errorMessage = (e: unknown) => (e instanceof Error ? e.message : String(e));
@@ -132,7 +131,7 @@ type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 /**
  * Palette editor tab (F-PAL-03): per-role colors, OKLCH sliders for the picked role,
  * locks that survive derived-role recomputation, and a contrast table. Saving writes
- * a project-local user palette (`palettes/<id>.json`) plus a checkpoint, so the result
+ * a project-local user palette (`palettes/<id>.json`), so the result
  * is reusable from the review panel and the templates sidepanel.
  */
 export function PaletteEditor({ paletteId }: { paletteId: string }) {
@@ -228,11 +227,6 @@ export function PaletteEditor({ paletteId }: { paletteId: string }) {
     void (async () => {
       try {
         await saveProjectPalette(root, parsed.palette);
-        try {
-          await checkpointCommit(root, `palette: save ${parsed.palette.id}`);
-        } catch {
-          // The file is the source of truth; a failed checkpoint must not fail the save.
-        }
         setSaveState('saved');
       } catch (e) {
         setSaveState('error');

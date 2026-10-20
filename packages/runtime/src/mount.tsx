@@ -9,6 +9,9 @@ import { App, type DesignProviderComponent } from './AppView';
 import { createAppState } from './appState';
 import { sceneStart, type Composition, type ParamsBySceneId } from './composition';
 import { applyAndSettle, readiness } from './ready';
+import { frameFromSearch, parseFrame, setFrame } from './frame';
+import { hostedSteps } from './steps';
+import { hostedBridge, setHostedBridge } from './hostedBridge';
 
 export interface MountOptions {
   /** File-backed provider (`DesignProvider` from `@vanilla/runtime/design`). */
@@ -54,6 +57,9 @@ export function mountVanilla(composition: Composition, options: MountOptions): (
   const clock = createClock({ mode, duration: composition.clockDuration, autoplay });
   if (carriedTime !== null && mode !== 'render' && initialTime === null) clock.seek(carriedTime);
   carriedTime = null;
+  // 화면 규격: 직접 열 때는 ?w=&h=&fps=, 호스트가 있으면 Bridge init의 canvas가 덮는다(D-030).
+  const searchFrame = frameFromSearch(search);
+  if (searchFrame) setFrame(searchFrame);
   const state = createAppState(options.paramsFiles ?? {});
   const sceneIdAt = () => (composition.layout === 'timeline' ? (sceneAt(composition.segments, clock.getTime())?.segment.id ?? null) : null);
 
@@ -70,7 +76,25 @@ export function mountVanilla(composition: Composition, options: MountOptions): (
   } else if (hostOrigin) {
     const target: BridgeTarget = {
       ...clockTarget(clock),
-      init: (payload) => state.mergeAll(payload.paramsValues),
+      init: (payload) => {
+        state.mergeAll(payload.paramsValues);
+        const frame = payload.canvas && parseFrame(payload.canvas);
+        if (frame) setFrame(frame);
+      },
+      next: () => hostedSteps()?.next(),
+      prev: () => hostedSteps()?.prev(),
+      // v2.1 typed input delegation: re-dispatch inside the scene tree so both the
+      // step controller (advance-respecting, via its window listeners) and the
+      // scene's own shortcut handlers (e.g. notes, fullscreen keys) see the input.
+      // Unrelated keys never advance the page (issue: every key acted as next).
+      input: (raw) => {
+        const peer: { kind: 'click' } | { kind: 'key'; key: string } = raw.kind === 'click' ? { kind: 'click' } : { kind: 'key', key: raw.key };
+        if (peer.kind === 'click') {
+          container.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+        } else {
+          container.dispatchEvent(new KeyboardEvent('keydown', { key: peer.key, bubbles: true, cancelable: true }));
+        }
+      },
       setParams: (id, values) => state.mergeParams(id, values),
       goto(sceneId) {
         const start = sceneStart(composition, sceneId);
@@ -83,7 +107,11 @@ export function mountVanilla(composition: Composition, options: MountOptions): (
     };
     const b = createBridge({ target, hostOrigin, mode, getSceneId: sceneIdAt });
     bridge = b;
-    cleanups.push(reportClock(b, clock, sceneIdAt), () => b.dispose());
+    setHostedBridge(b);
+    cleanups.push(reportClock(b, clock, sceneIdAt), () => {
+      if (hostedBridge() === b) setHostedBridge(null);
+      b.dispose();
+    });
     // Vite listeners cannot be removed, so a torn-down mount must stay quiet.
     reportHmr({ ...b, hmr: (modules) => alive && b.hmr(modules) }, options.hmr);
   }

@@ -1,15 +1,25 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useWorkspaceTabs } from '@/lib/context/WorkspaceTabsContext';
 import { useWorkspace } from '@/lib/context/WorkspaceContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import noticeText from '../../../NOTICE.md?raw';
+import { USER_GUIDES } from './userGuides';
+
+// 패널 크기는 react-resizable-panels가 localStorage에 저장한다. 다음 열람 때 기본값으로 돌아간다.
+function resetPanelLayout() {
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (key.startsWith('react-resizable-panels:')) localStorage.removeItem(key);
+    }
+  } catch {
+    // storage unavailable: nothing to reset
+  }
+}
 
 // Example app-level settings page: layout reset + recent-folder cleanup.
 // Add your own app settings here and persist them via SettingsContext.
 export function SettingsApp() {
   const { t } = useLanguage();
-  const { closeAllTabs } = useWorkspaceTabs();
   const { clearRecentWorkspaces } = useWorkspace();
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -39,22 +49,12 @@ export function SettingsApp() {
           </p>
         </div>
         <ul className="text-xs space-y-1.5" data-testid="user-guide-links">
-          <li className="flex items-center justify-between gap-2">
-            <span>{t('userGuide.gettingStarted')}</span>
-            <code className="text-muted-foreground">Docs/User-Guide/01-getting-started.md</code>
-          </li>
-          <li className="flex items-center justify-between gap-2">
-            <span>{t('userGuide.doctor')}</span>
-            <code className="text-muted-foreground">Docs/User-Guide/02-doctor.md</code>
-          </li>
-          <li className="flex items-center justify-between gap-2">
-            <span>{t('userGuide.pipeline')}</span>
-            <code className="text-muted-foreground">Docs/User-Guide/03-pipeline.md</code>
-          </li>
-          <li className="flex items-center justify-between gap-2">
-            <span>{t('userGuide.exportLimits')}</span>
-            <code className="text-muted-foreground">Docs/User-Guide/04-export-limits.md</code>
-          </li>
+          {USER_GUIDES.map((g) => (
+            <li key={g.file} className="flex items-center justify-between gap-2">
+              <span>{t(g.key)}</span>
+              <code className="text-muted-foreground">Docs/User-Guide/{g.file}</code>
+            </li>
+          ))}
         </ul>
       </div>
 
@@ -72,7 +72,7 @@ export function SettingsApp() {
             variant="outline"
             size="sm"
             onClick={() => {
-              closeAllTabs();
+              resetPanelLayout();
               setNotice(t('settingsApp.resetLayoutDone'));
             }}
           >

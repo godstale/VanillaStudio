@@ -1,0 +1,9 @@
+.scene-node{width:240px;background:#1f2229;border:1px solid #343a46;border-radius:10px;color:#e6e8ec;font:12px system-ui;padding:8px;box-shadow:0 2px 8px #0006}
+.scene-node.sel{border-color:#7aa2ff}
+.scene-node .hd{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+.scene-node .ty{padding:1px 6px;border-radius:4px;font-size:10px;background:#394150}
+.scene-node .ty.motion{background:#5b3f8f}.scene-node .ty.static{background:#2f6b57}.scene-node .ty.\33d{background:#8f5b3f}
+.scene-node .thumb{height:100px;border-radius:6px;background:linear-gradient(135deg,#2a2f3a,#1a1d24);margin-bottom:6px}
+.scene-node .row{display:flex;justify-content:space-between;gap:6px;margin-top:4px}
+.scene-node .badge{background:#2d3340;border-radius:4px;padding:1px 6px}
+.scene-node button{flex:1;background:#2d3340;color:inherit;border:1px solid #3d4452;border-radius:4px;padding:3px}

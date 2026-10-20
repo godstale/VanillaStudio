@@ -1,0 +1,3 @@
+- [ ] All 3D transforms and exploded offsets derive purely from `useTime()`
+- [ ] Zero external network texture/model requests
+- [ ] 2D HUD callouts track 3D sub-assemblies cleanly

@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "hide": [],
+  "defaults": {
+    "duration": {
+      "seconds": 6
+    },
+    "creativeMode": [
+      "one-shape-ui-morph",
+      "ui-choreography"
+    ],
+    "structure": "continuous",
+    "adStructure": "beat-grid-120bpm",
+    "brandVoice": [
+      "confident",
+      "minimal",
+      "technical"
+    ],
+    "visualStyle": {
+      "medium": "High-refresh vector UI stage with conic halo rim",
+      "lighting": "Crisp studio key light with subtle inner specular border",
+      "typography": "Display geometric sans 600 + tabular-nums monospace counters",
+      "density": "Single focal hero (40%+ open negative space)",
+      "cameraFeeling": "Locked orthographic macro stage with subtle spring push",
+      "mood": "Tactile, rhythmic, precision-engineered"
+    },
+    "motionVocabulary": {
+      "typography": [
+        "counter-roll",
+        "variable-weight-beat-pulse"
+      ],
+      "object": [
+        "closed-form-spring-sum",
+        "edge-staggered-liquid-pill"
+      ],
+      "camera": [
+        "push-in"
+      ],
+      "material": [
+        "iridescent-conic-halo",
+        "glass-blur"
+      ],
+      "transition": [
+        "morph",
+        "match-cut"
+      ]
+    },
+    "beats": [
+      {
+        "id": "beat-1",
+        "start": 0,
+        "end": 1.5,
+        "role": "hook",
+        "copy": "Search -> Command",
+        "visual": "Pill search bar expands into command palette with conic halo",
+        "motion": [
+          "closed-form-spring-sum",
+          "iridescent-conic-halo"
+        ],
+        "camera": "push-in",
+        "transitionOut": "morph",
+        "notes": "120BPM beat 1-3"
+      },
+      {
+        "id": "beat-2",
+        "start": 1.5,
+        "end": 3.5,
+        "role": "transform",
+        "copy": "Waveform -> Live Card",
+        "visual": "Command bar compresses into audio waveform then unfolds into metric card",
+        "motion": [
+          "edge-staggered-liquid-pill",
+          "counter-roll"
+        ],
+        "camera": "push-in",
+        "transitionOut": "morph",
+        "notes": "Left/right edges staggered by 28ms"
+      },
+      {
+        "id": "beat-3",
+        "start": 3.5,
+        "end": 6,
+        "role": "loop-resolve",
+        "copy": "Shipped",
+        "visual": "Metric card snaps into completion badge and returns to initial pill geometry at t=6.0s",
+        "motion": [
+          "closed-form-spring-sum",
+          "variable-weight-beat-pulse"
+        ],
+        "camera": "push-in",
+        "transitionOut": "match-cut",
+        "notes": "Frame at t=6.0s matches t=0.0s for seamless loop"
+      }
+    ],
+    "endCard": {
+      "holdSeconds": 0.85,
+      "elements": [
+        "Center pill badge",
+        "Brand mark"
+      ]
+    },
+    "constraints": {
+      "avoid": [
+        "Multiple competing cards",
+        "Text longer than 3 words"
+      ],
+      "noUnspecifiedElements": true
+    }
+  },
+  "fields": []
+}

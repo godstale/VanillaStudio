@@ -1,0 +1,32 @@
+{
+  "id": "opus-narrative-deck",
+  "version": 1,
+  "type": "static",
+  "label": {
+    "ko": "Opus 키노트 내러티브 슬라이드 덱",
+    "en": "Opus Keynote Narrative Slide Deck"
+  },
+  "extends": "web-page@1",
+  "mediaIntents": [
+    "slide"
+  ],
+  "description": {
+    "ko": "키보드 방향키·클릭으로 진행하며 슬라이드 간 공유 요소가 스프링 모핑으로 이어지는 키노트 프레젠테이션 덱.",
+    "en": "Step-driven keynote presentation deck with spring-morphed shared elements, big-stat callouts, and keyboard/click navigation."
+  },
+  "tags": [
+    "slide",
+    "deck",
+    "presentation",
+    "keynote",
+    "pitch-deck",
+    "steps"
+  ],
+  "banned": [
+    "Auto-advancing timers without user input (violates D-032)",
+    "More than 4 bullet points on a single slide step"
+  ],
+  "previewUrl": "https://media.skillry.dev/opus-5-5/techhalla-498547/original.fbdb194d58.webp",
+  "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/techhalla-498547",
+  "sourceRef": "awesome-opus5-5-videos#techhalla-498547"
+}

@@ -21,15 +21,34 @@
 - [[implementation-plan]] — 구현 계획서 v1.0 + TODO (P3)
 - [[golden-samples]] — 골든 샘플 브리프 5종 초안(P5 품질 기준)
 - [[parallel-execution]] — 병렬 실행 가이드: 웨이브·레인·워크트리·세션 프롬프트 (P4 진입점)
+- [[refactor-spec-v2]] — v2 리팩토링 기획서 초안(Scene 워크스페이스, D-022~D-033 Proposed)
+- [[ui-agent-centric]] — 에이전트 중심 UI 개편(시퀀스·신·템플릿·갤러리·코멘트, D-034)
+- [[phase-p4-v2]] — Phase P4(v2) 구현 로그 V1~V7(교훈·지표)
+- [[milestone-v7]] — V7 패키지·마이그레이션·릴리스 마일스톤 로그
+- [[issue-v1-migration]] — v1 프로젝트 마이그레이션 출하 게이트 판정(샘플 3종 재생 통과)
+- [[milestone-v6]] — V6 시퀀스·플레이그라운드 마일스톤 로그(검증·엣지 편집·전환·매니저·재생기·샘플)
+- [[poc-r1]] — PoC R-1: 신 간 전환 합성(두 iframe 오버레이 채택, 60fps, match-cut 제외)
+- [[milestone-v5]] — V5 레퍼런스 분석 마일스톤 로그(등록·키프레임·분석 프롬프트·DESIGN 구간·검토)
+- [[milestone-v4]] — V4 터미널 실행·재생 마일스톤 로그(PTY·클립보드·판정·미리보기·썸네일·check:scene)
+- [[poc-agent-terminal]] — 에이전트 터미널 실행 목 에이전트 검증·지원 매트릭스
+- [[milestone-v3]] — V3 가이드·인스펙터 마일스톤 로그(용어집·템플릿 콘텐츠·폼·사용자 템플릿)
+- [[milestone-v2]] — V2 Scene CRUD·지침 생성 마일스톤 로그
+- [[milestone-v1]] — V1 기반 정리 마일스톤 로그(레거시 제거·워크스페이스·셸·캔버스)
+- [[poc-r5]] — PoC R-5: @xyflow/react 캔버스 스파이크(100노드 60fps, 채택)
+- [[issue-v2-legacy-removal]] — v2 레거시 제거 계획(보존·제거 단위 U1~U6, 사용자 확인 대기)
+- [[issue-playground-scaffold-fixes]] — 실사용 검증 5건 수정(스캐폴드 초안·템플릿 번들·static copy 문서·플레이어 키·종료 멈춤)
 
 ## Planning / Decisions
 
 - [[decisions]] — 결정 기록 색인 (D-001~D-018, 모두 Accepted)
+- [[poster-thumbnail-d039]] — 신 공유 썸네일 `poster.svg` (D-039 Proposed): 자동 캡처 없을 때 폴백, 에이전트 생성 지침
 
 ## Research
 
 - [[research-2026-09-28-agents-rendering]] — 에이전트 연동·HTML 렌더·PPT·라이선스 조사
 - [[research-2026-09-29-design-md-hyperframes]] — DESIGN.md 형식, HyperFrames FRAME.MD 프리셋 12종·카탈로그(템플릿 참고 자료)
+- [[research-2026-10-18-awesome-opus55-videos]] — Opus 5.5 모션 그래픽 703개 분석·분해 프리셋·12종 템플릿·추천 엔진(D-035)
+
 
 ## Domain / Product Concepts
 

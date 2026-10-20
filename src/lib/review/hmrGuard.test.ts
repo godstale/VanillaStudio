@@ -73,7 +73,7 @@ describe('useHmrGuard', () => {
       bridge,
       emit: (paths: string[]) => act(() => onEventRef.current?.({ kind: 'changed', paths })),
       hmr: (modules: string[], at: number) =>
-        act(() => listener?.({ v: 1, type: 'hmr', payload: { modules, at } }) as void),
+        act(() => listener?.({ v: 2, type: 'hmr', payload: { modules, at } }) as void),
       quiet: () => act(() => vi.advanceTimersByTime(HMR_QUIET_MS + 1)),
       cleanup: () => vi.useRealTimers(),
     };

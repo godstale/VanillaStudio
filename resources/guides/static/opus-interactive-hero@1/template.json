@@ -1,0 +1,33 @@
+{
+  "id": "opus-interactive-hero",
+  "version": 1,
+  "type": "static",
+  "label": {
+    "ko": "Opus 인터랙티브 웹·랜딩 히어로",
+    "en": "Opus Interactive Web & Landing Hero"
+  },
+  "extends": "web-page@1",
+  "mediaIntents": [
+    "web"
+  ],
+  "description": {
+    "ko": "모뉴멘털 타이포그래피와 실시간 인터랙티브 UI 프리뷰·벤토 그리드가 결합된 플래그십 SaaS/브랜드 웹 페이지.",
+    "en": "Flagship SaaS & brand landing page combining monumental display typography, interactive live UI preview, and bento grid."
+  },
+  "tags": [
+    "web",
+    "landing-page",
+    "hero",
+    "saas",
+    "bento",
+    "interactive-ui",
+    "editorial"
+  ],
+  "banned": [
+    "Dead placeholder buttons without hover/active micro-interactions",
+    "Generic stock imagery"
+  ],
+  "previewUrl": "https://media.skillry.dev/opus-5-5/twoclipping-496100/original.8f1c352eca.webp",
+  "actionUrl": "https://skillry.dev/ai-videos/opus-5-5/twoclipping-496100",
+  "sourceRef": "awesome-opus5-5-videos#twoclipping-496100"
+}

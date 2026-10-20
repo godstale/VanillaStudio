@@ -1,0 +1,2 @@
+- Build a multi-part procedural Three.js group whose sub-meshes separate along axial vectors as a pure function of `useTime()`.
+- Project 3D sub-mesh world positions to 2D screen coordinates each frame to anchor crisp SVG leader lines and monospace spec labels.
