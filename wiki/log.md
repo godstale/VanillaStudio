@@ -1,3 +1,5 @@
+Ran lint. See lint-report.md for details.
+
 ## [2026-10-18] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
@@ -348,3 +350,6 @@ Ran lint. See lint-report.md for details.
 ## [2026-10-20] feature | Scene shared thumbnail poster.svg (D-039 Proposed)
 - Empty scene/sequence thumbnails were all auto-capture .vanilla/thumb.png (local-only). Added committed poster.svg convention drawn in code by the agent, app fallback display, and AGENTS.md/guide-template instructions. See: [[poster-thumbnail-d039]]
 
+## [2026-10-21] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
