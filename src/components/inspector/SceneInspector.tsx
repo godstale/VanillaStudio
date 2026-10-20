@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { SceneForm } from '@/components/guides/SceneForm';
 import { MarkdownEditor } from '@/components/guides/MarkdownEditor';
 import { DesignSection } from './DesignSection';
+import { HistorySection } from './HistorySection';
 import { INSPECTOR_TABS, type InspectorTab } from './inspectorTabs';
 import { PreviewPanel } from '@/components/scene/PreviewPanel';
 import { CheckPanel } from '@/components/scene/CheckPanel';
@@ -24,7 +25,7 @@ import { cn } from '@/lib/utils';
 const AUTOSAVE_MS = 600;
 const TABS = INSPECTOR_TABS;
 type Tab = InspectorTab;
-const LATER: Tab[] = ['history'];
+const LATER: Tab[] = [];
 
 export interface SceneInspectorProps {
   workspace: { id: string; name: string };
@@ -47,8 +48,6 @@ export interface SceneInspectorProps {
   onRename: (name: string) => Promise<void>;
   /** 미리보기가 새 썸네일을 저장했을 때(노드 갱신용). */
   onThumbnail?: (slug: string, dataUrl: string) => void;
-  /** 레퍼런스 분석 실행(터미널의 에이전트). 없으면 버튼이 꺼진다. */
-  onAnalyze?: (slug: string) => void;
   /** 이 신이 시퀀스의 시작 신인가, 그리고 시작 신으로 지정하는 동작. */
   isStart?: boolean;
   onSetStart?: () => void;
@@ -126,7 +125,7 @@ function useAutosave(onSave: (s: Scene) => Promise<void>) {
 }
 
 /** 노드를 고르면 우측에 열리는 신 편집 패널. 선택이 바뀌면 `key`로 새로 마운트해 쓴다. */
-export function SceneInspector({ workspace, root, slug, scene, template, templateError, canvas, tab: tabProp, onTabChange, onSave, onRename, onThumbnail, onAnalyze, isStart, onSetStart, onSaveAsTemplate }: SceneInspectorProps) {
+export function SceneInspector({ workspace, root, slug, scene, template, templateError, canvas, tab: tabProp, onTabChange, onSave, onRename, onThumbnail, isStart, onSetStart, onSaveAsTemplate }: SceneInspectorProps) {
   const { t, locale } = useLanguage();
   const lang = locale === 'en' ? 'en' : 'ko';
   const [ownTab, setOwnTab] = useState<Tab>('overview');
@@ -368,7 +367,7 @@ export function SceneInspector({ workspace, root, slug, scene, template, templat
 
         {tab === 'design' && <DesignSection root={root} slug={slug} />}
 
-        {tab === 'references' && <References root={root} slug={slug} scene={draft} onChange={(next) => edit(() => next)} onAnalyze={onAnalyze ? () => onAnalyze(slug) : undefined} />}
+        {tab === 'references' && <References root={root} slug={slug} scene={draft} onChange={(next) => edit(() => next)} />}
 
         {tab === 'preview' &&
           (canvas ? (
@@ -378,6 +377,8 @@ export function SceneInspector({ workspace, root, slug, scene, template, templat
           ))}
 
         {tab === 'preview' && <CheckPanel root={root} slug={slug} scene={draft} />}
+
+        {tab === 'history' && <HistorySection root={root} slug={slug} sceneId={draft.id} />}
 
         {tab === 'prompt' && (
           <>

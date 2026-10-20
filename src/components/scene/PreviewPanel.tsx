@@ -84,6 +84,9 @@ function Body({ server, onRetry, root, slug, sceneType, canvas, entry, onThumbna
   });
   const serverUrl = server.phase === 'running' ? server.url : null;
   const isStatic = sceneType === 'static';
+  const notReady = bridge.status !== 'ready';
+  const prevDisabled = notReady || !step || step.index <= 0;
+  const nextDisabled = notReady || done || (step ? step.index >= step.total - 1 : false);
 
   return (
     <div className="relative h-full min-h-0 w-full" data-testid="preview-panel">
@@ -96,35 +99,35 @@ function Body({ server, onRetry, root, slug, sceneType, canvas, entry, onThumbna
         <ScenePreview serverUrl={serverUrl} slug={slug} entry={entry} format={canvas} />
       </div>
 
-      <div className="absolute bottom-4 left-1/2 z-10 flex w-max max-w-[calc(100%-2rem)] -translate-x-1/2 flex-wrap items-center gap-2 rounded-lg border border-border bg-card/95 px-2 py-1.5 text-xs shadow-lg backdrop-blur">
+      {/* 하단 네비게이션 툴박스: 고정 크기, 동작 불가 시 비활성. 상태 문구는 표시하지 않는다. */}
+      <div className="absolute bottom-4 left-1/2 z-10 flex h-12 w-[420px] max-w-[calc(100%-2rem)] -translate-x-1/2 items-center justify-center gap-2 overflow-hidden rounded-lg border border-border bg-card/95 px-2 text-xs shadow-lg backdrop-blur">
         {isStatic ? (
           <>
-            <Button size="sm" variant="outline" aria-label={t('preview.prev')} disabled={bridge.status !== 'ready'} onClick={() => bridge.send({ type: 'prev' })}>
+            <Button size="sm" variant="outline" aria-label={t('preview.prev')} disabled={prevDisabled} onClick={() => bridge.send({ type: 'prev' })}>
               <ChevronLeft className="h-3.5 w-3.5" />
             </Button>
-            <Button size="sm" variant="outline" aria-label={t('preview.next')} disabled={bridge.status !== 'ready'} onClick={() => bridge.send({ type: 'next' })}>
+            <Button size="sm" variant="outline" aria-label={t('preview.next')} disabled={nextDisabled} onClick={() => bridge.send({ type: 'next' })}>
               <ChevronRight className="h-3.5 w-3.5" />
             </Button>
-            <span className="text-muted-foreground" data-testid="preview-step">
-              {done ? t('preview.finished') : step ? t('preview.step', { index: step.index + 1, total: step.total }) : t('preview.hintInput')}
+            <span className="w-20 shrink-0 text-center tabular-nums text-muted-foreground" data-testid="preview-step">
+              {done ? t('preview.finished') : step ? t('preview.step', { index: step.index + 1, total: step.total }) : '—'}
             </span>
           </>
         ) : (
           <>
-            <Button size="sm" variant="outline" disabled={bridge.status !== 'ready'} onClick={() => (bridge.playing ? bridge.pause() : bridge.play())}>
+            <Button size="sm" variant="outline" disabled={notReady} onClick={() => (bridge.playing ? bridge.pause() : bridge.play())}>
               {bridge.playing ? <Pause className="mr-1 h-3.5 w-3.5" /> : <Play className="mr-1 h-3.5 w-3.5" />}
               {bridge.playing ? t('preview.pause') : t('preview.play')}
             </Button>
-            <span className="tabular-nums text-muted-foreground" data-testid="preview-time">
+            <span className="w-28 shrink-0 text-center tabular-nums text-muted-foreground" data-testid="preview-time">
               {time.t.toFixed(2)}s{bridge.ready?.duration ? ` / ${bridge.ready.duration.toFixed(2)}s` : ''}
             </span>
           </>
         )}
-        <Button size="sm" variant="ghost" onClick={() => bridge.reload()} disabled={bridge.status !== 'ready'}>
+        <Button size="sm" variant="ghost" onClick={() => bridge.reload()} disabled={notReady}>
           <RotateCcw className="mr-1 h-3.5 w-3.5" />
           {t('preview.reload')}
         </Button>
-        <span className="ml-auto text-muted-foreground">{bridge.status === 'ready' ? t('preview.connected') : t('preview.connecting')}</span>
       </div>
 
       {bridge.error && (

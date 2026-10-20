@@ -21,9 +21,10 @@ function renderShell(initial: string) {
           <Route element={<AppShell />}>
             <Route path="/storyboard" element={<EmptyScreen title="STORYBOARD-SCREEN" />} />
             <Route path="/workspace" element={<EmptyScreen title="SEQUENCE-SCREEN" />} />
+            <Route path="/workspaces" element={<EmptyScreen title="WORKSPACES-SCREEN" />} />
             <Route path="/scenes" element={<EmptyScreen title="SCENES-SCREEN" />} />
             <Route path="/templates" element={<EmptyScreen title="TEMPLATES-SCREEN" />} />
-            <Route path="/playground" element={<EmptyScreen title="PLAY-SCREEN" />} />
+            <Route path="/play" element={<EmptyScreen title="PLAY-SCREEN" />} />
           </Route>
           <Route path="/settings" element={<div>SETTINGS-SCREEN</div>} />
         </Routes>
@@ -33,7 +34,7 @@ function renderShell(initial: string) {
 }
 
 describe('AppShell', () => {
-  it('shows the five sidebar entries plus settings pinned at the bottom', () => {
+  it('shows the sidebar entries plus settings pinned at the bottom', () => {
     renderShell('/workspace');
     const links = screen.getAllByRole('link');
     expect(links).toHaveLength(6);

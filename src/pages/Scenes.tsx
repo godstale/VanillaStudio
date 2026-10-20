@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { invoke } from '@tauri-apps/api/core';
-import { MessageSquare, SlidersHorizontal, SquareTerminal } from 'lucide-react';
+import { MessageSquare, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FloatingPanel } from '@/components/layout/FloatingPanel';
 import { Onboarding } from '@/components/workspace/Onboarding';
@@ -12,11 +12,7 @@ import { useRunReview } from '@/components/scene/useRunReview';
 import { CommentToolbox } from '@/components/comments/CommentToolbox';
 import { TemplatesProvider } from '@/components/guides/TemplatesContext';
 import { useTemplates } from '@/components/guides/templatesContextValue';
-import { TerminalDock } from '@/components/terminal/TerminalDock';
-import { useSafeTerminals } from '@/components/terminal/terminalContextValue';
-import { promptForAnalysis } from '@/lib/agents/clipboard';
 import { useWorkspace } from '@/lib/context/WorkspaceContext';
-import { createSceneOverride } from '@/lib/design/workspaceDesign';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { listScenes, renameScene, writeScene, type SceneEntry } from '@/lib/scene/files';
 import { loadSceneThumbnail } from '@/lib/scene/thumbnail';
@@ -37,20 +33,31 @@ interface LoadedWorkspace {
   defaultAgent?: string;
 }
 
-/** 신 화면: 왼쪽 신 목록, 가운데 디자인·동작·재생 확인 + 코멘트, 인스펙터·터미널은 플로팅 박스. */
+/** 신 화면: 왼쪽 신 목록, 가운데 디자인·동작·재생 확인 + 코멘트, 인스펙터는 플로팅 박스. */
 function Inner({ root }: { root: string }) {
   const { t } = useLanguage();
   const [params, setParams] = useSearchParams();
   const { catalog, resolve, reload: reloadTemplates } = useTemplates();
-  const terminals = useSafeTerminals();
   const [workspace, setWorkspace] = useState<LoadedWorkspace | null>(null);
   const [entries, setEntries] = useState<SceneEntry[]>([]);
   const [seq, setSeq] = useState<Sequence | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [runError, setRunError] = useState<string | null>(null);
   const [inspectorOpen, setInspectorOpen] = useState(false);
-  const [terminalOpen, setTerminalOpen] = useState(false);
-  const [commentsOpen, setCommentsOpen] = useState(true);
+  // 코멘트는 기본 닫힘. 마지막 상태를 기억한다(뷰어 역할).
+  const [commentsOpen, setCommentsOpen] = useState(() => {
+    try {
+      return localStorage.getItem(`vs_comments_open:${root}`) === '1';
+    } catch {
+      return false;
+    }
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem(`vs_comments_open:${root}`, commentsOpen ? '1' : '0');
+    } catch {
+      // ignore
+    }
+  }, [commentsOpen, root]);
   const [menu, setMenu] = useState<{ x: number; y: number; slug: string } | null>(null);
   const [thumbs, setThumbs] = useState<Record<string, string>>({});
 
@@ -99,38 +106,11 @@ function Inner({ root }: { root: string }) {
   }, [valid, params]);
 
   const workspaceRef = useMemo(() => ({ id: workspace?.id ?? '', name: workspace?.name ?? '' }), [workspace]);
-  const review = useRunReview({ root, workspace: workspaceRef, resolve, terminals, onApplied: () => reload() });
+  const review = useRunReview({ root, workspace: workspaceRef, resolve, terminals: null, onApplied: () => reload() });
 
   const commentScenes = useMemo(
     () => (selected?.scene ? [{ slug: selected.slug, sceneId: selected.scene.id, name: selected.scene.name }] : []),
     [selected],
-  );
-
-  const onAnalyze = useCallback(
-    async (slug: string) => {
-      const scene = entries.find((e) => e.slug === slug)?.scene;
-      if (!scene || !terminals) return;
-      const template = resolve(scene);
-      if (!template) return;
-      setRunError(null);
-      try {
-        await createSceneOverride(root, slug).catch(() => false);
-        await review.begin(slug, scene, { analysis: true });
-        await terminals.runAgent({
-          workspaceId: workspaceRef.id,
-          sceneId: scene.id,
-          sceneSlug: slug,
-          sceneName: scene.name,
-          preferredAgentId: workspace?.defaultAgent,
-          prompt: promptForAnalysis({ workspace: workspaceRef, scene, template }),
-        });
-        setTerminalOpen(true);
-      } catch (e) {
-        const message = e instanceof Error ? e.message : String(e);
-        setRunError(message === 'no-enabled-agent' ? t('scene.noAgent') : t('scene.runFailed', { error: message }));
-      }
-    },
-    [entries, resolve, review, root, terminals, t, workspace, workspaceRef],
   );
 
   const openFolder = useCallback(
@@ -216,11 +196,6 @@ function Inner({ root }: { root: string }) {
           <p className="p-4 text-xs text-muted-foreground">{t('scenes.selectHint')}</p>
         ) : (
           <div className="absolute inset-0">
-            {runError && (
-              <p role="alert" className="absolute left-1/2 top-4 z-10 w-max max-w-[calc(100%-2rem)] -translate-x-1/2 rounded-lg border border-border bg-card/95 px-3 py-1 text-xs text-destructive shadow-lg backdrop-blur">
-                {runError}
-              </p>
-            )}
             {workspace && (
               <PreviewPanel
                 root={root}
@@ -246,10 +221,6 @@ function Inner({ root }: { root: string }) {
             <Button size="sm" variant="outline" onClick={() => setInspectorOpen(true)}>
               <SlidersHorizontal className="mr-1 h-3.5 w-3.5" />
               {t('scenes.openInspector')}
-            </Button>
-            <Button size="sm" variant="outline" onClick={() => setTerminalOpen(true)}>
-              <SquareTerminal className="mr-1 h-3.5 w-3.5" />
-              {t('scenes.terminal')}
             </Button>
             <Button size="sm" variant="outline" onClick={() => setCommentsOpen((v) => !v)} aria-pressed={commentsOpen}>
               <MessageSquare className="mr-1 h-3.5 w-3.5" />
@@ -296,9 +267,6 @@ function Inner({ root }: { root: string }) {
                 </button>
                 <button type="button" role="menuitem" className="block w-full rounded px-2 py-1.5 text-left hover:bg-accent" onClick={() => { openMenuScene(menu.slug); setInspectorOpen(true); setMenu(null); }}>
                   {t('scenes.menu.editGuide')}
-                </button>
-                <button type="button" role="menuitem" className="block w-full rounded px-2 py-1.5 text-left hover:bg-accent" onClick={() => { openMenuScene(menu.slug); setTerminalOpen(true); setMenu(null); }}>
-                  {t('scenes.menu.terminal')}
                 </button>
                 <button type="button" role="menuitem" className="block w-full rounded px-2 py-1.5 text-left hover:bg-accent" onClick={() => { openFolder(menu.slug); setMenu(null); }}>
                   {t('scenes.menu.reveal')}
@@ -359,7 +327,6 @@ function Inner({ root }: { root: string }) {
               });
               reload();
             }}
-            onAnalyze={terminals ? (slug) => void onAnalyze(slug) : undefined}
             isStart={seq?.start === selected.scene.id}
             onSetStart={
               seq
@@ -387,12 +354,6 @@ function Inner({ root }: { root: string }) {
               return { ref: r.template.ref };
             }}
           />
-        </FloatingPanel>
-      )}
-
-      {terminalOpen && (
-        <FloatingPanel title={t('scenes.terminal')} onClose={() => setTerminalOpen(false)} draggable className="bottom-4 left-60" style={{ width: 560, height: 360 }} testId="scene-terminal-float">
-          <div className="h-full min-h-64">{terminals ? <TerminalDock /> : null}</div>
         </FloatingPanel>
       )}
 
