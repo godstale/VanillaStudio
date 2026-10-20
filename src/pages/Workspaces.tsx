@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FolderOpen, FolderClock } from 'lucide-react';
+import { invoke } from '@tauri-apps/api/core';
+import { ExternalLink, FolderClock, FolderOpen, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { EmptyScreen } from '@/components/layout/EmptyScreen';
 import { useWorkspace } from '@/lib/context/WorkspaceContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
-import { listRecentWorkspaces, type WorkspaceRecord } from '@/lib/db/repositories/workspacesRepo';
+import { listRecentWorkspaces, removeWorkspace, type WorkspaceRecord } from '@/lib/db/repositories/workspacesRepo';
 import { tauriWorkspaceApi } from '@/lib/workspace/api';
 import { listScenes } from '@/lib/scene/files';
 import { loadSceneThumbnail } from '@/lib/scene/thumbnail';
@@ -77,6 +78,25 @@ export function Workspaces() {
     }
   };
 
+  const revealCurrent = async () => {
+    if (!workspaceRoot) return;
+    setError(null);
+    try {
+      await invoke('reveal_in_explorer', { path: workspaceRoot, workspaceRoot });
+    } catch {
+      setError(t('workspaces.revealFailed'));
+    }
+  };
+
+  const handleDelete = async (w: WorkspaceRecord) => {
+    try {
+      await removeWorkspace(w.workspaceId);
+    } catch {
+      // 목록에서만 치운다(Switcher와 동일).
+    }
+    setRecent((prev) => prev.filter((r) => r.workspaceId !== w.workspaceId));
+  };
+
   if (!recent) return null;
 
   return (
@@ -98,9 +118,15 @@ export function Workspaces() {
         </p>
       )}
       {workspaceRoot && (
-        <p className="text-xs text-muted-foreground">
-          {t('workspaces.current')}: {workspaceRoot}
-        </p>
+        <div className="flex items-center gap-2">
+          <p className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
+            {t('workspaces.current')}: {workspaceRoot}
+          </p>
+          <Button size="sm" variant="outline" onClick={() => void revealCurrent()}>
+            <ExternalLink className="mr-1 h-3.5 w-3.5" />
+            {t('workspaces.reveal')}
+          </Button>
+        </div>
       )}
       {recent.length === 0 ? (
         <EmptyScreen title={t('switcher.none')}>
@@ -112,7 +138,7 @@ export function Workspaces() {
       ) : (
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5" data-testid="workspace-cards">
           {recent.map((w) => (
-            <li key={w.workspaceId}>
+            <li key={w.workspaceId} className="relative">
               <button
                 type="button"
                 onClick={() => void openPath(w.path)}
@@ -135,6 +161,15 @@ export function Workspaces() {
                   {t('gallery.sceneCount', { count: counts[w.workspaceId] ?? 0 })} · {w.lastOpenedAt.slice(0, 10)}
                   {w.path === workspaceRoot ? ` · ${t('workspaces.currentBadge')}` : ''}
                 </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleDelete(w)}
+                aria-label={`${t('switcher.remove')}: ${w.name}`}
+                title={`${t('switcher.remove')}: ${w.name}`}
+                className="absolute right-4 top-4 rounded-md border border-border bg-card/90 p-1.5 text-muted-foreground shadow-sm hover:bg-accent hover:text-foreground"
+              >
+                <X className="h-3.5 w-3.5" />
               </button>
             </li>
           ))}

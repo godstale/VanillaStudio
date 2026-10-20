@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Boxes, ClipboardList, Folders, LayoutTemplate, Play as PlayIcon, Settings, Workflow, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -24,7 +24,7 @@ const NAV_ITEMS: NavItem[] = [
 
 const SETTINGS_ITEM: NavItem = { to: '/settings', icon: Settings, labelKey: 'shell.nav.settings' };
 
-function NavButton({ to, icon: Icon, labelKey }: NavItem) {
+function NavButton({ to, icon: Icon, labelKey, testId }: NavItem & { testId?: string }) {
   const { t } = useLanguage();
   return (
     <NavLink
@@ -32,6 +32,7 @@ function NavButton({ to, icon: Icon, labelKey }: NavItem) {
       to={to}
       title={t(labelKey)}
       aria-label={t(labelKey)}
+      data-testid={testId}
       className={({ isActive }) =>
         cn(
           'flex h-10 w-10 items-center justify-center rounded-md transition-colors',
@@ -47,7 +48,6 @@ function NavButton({ to, icon: Icon, labelKey }: NavItem) {
 /** 앱 셸: 좌측 사이드바 + 메인 화면. 우측 인스펙서·하단 도크는 두지 않는다(인스펙터는 신 화면의 플로팅 박스). */
 export function AppShell() {
   const { t } = useLanguage();
-  const navigate = useNavigate();
   // 지정된 곳(`data-allow-context`)·텍스트 입력 계열 외에서는 우클릭 메뉴를 모두 막는다.
   useEffect(() => {
     const onContextMenu = (e: MouseEvent) => {
@@ -59,21 +59,27 @@ export function AppShell() {
     window.addEventListener('contextmenu', onContextMenu);
     return () => window.removeEventListener('contextmenu', onContextMenu);
   }, []);
+  // 브라우저 기본 찾기(Ctrl+F / Cmd+F)는 앱 전역에서 막는다.
+  // 허용된 곳(`data-allow-find`)에서만 custom 검색 팝업을 쓴다(추후 구현).
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.defaultPrevented) return;
+      if (!(e.ctrlKey || e.metaKey) || e.altKey || e.shiftKey) return;
+      if (e.key.toLowerCase() !== 'f') return;
+      const el = e.target instanceof Element ? e.target : null;
+      if (el?.closest('[data-allow-find]')) return;
+      e.preventDefault();
+      e.stopPropagation();
+    };
+    window.addEventListener('keydown', onKeyDown, true);
+    return () => window.removeEventListener('keydown', onKeyDown, true);
+  }, []);
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground">
       <TitleBar />
       <div className="flex min-h-0 flex-1">
         <nav aria-label={t('shell.nav.label')} className="flex w-14 shrink-0 flex-col items-center gap-1 border-r border-border bg-sidebar py-2">
-          <button
-            type="button"
-            onClick={() => navigate('/workspaces')}
-            title={t('switcher.title')}
-            aria-label={t('switcher.title')}
-            className="flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-            data-testid="workspace-menu-button"
-          >
-            <Folders className="h-5 w-5" />
-          </button>
+          <NavButton to="/workspaces" icon={Folders} labelKey="switcher.title" testId="workspace-menu-button" />
           {NAV_ITEMS.map((item) => (
             <NavButton key={item.to} {...item} />
           ))}

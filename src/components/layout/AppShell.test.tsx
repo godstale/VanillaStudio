@@ -34,27 +34,35 @@ function renderShell(initial: string) {
 }
 
 describe('AppShell', () => {
-  it('shows the sidebar entries plus settings pinned at the bottom', () => {
+  it('shows the entries (workspaces first) plus settings pinned at the bottom', () => {
     renderShell('/workspace');
     const links = screen.getAllByRole('link');
-    expect(links).toHaveLength(6);
-    expect(links[0].getAttribute('href')).toContain('/storyboard');
-    expect(links[5].getAttribute('href')).toContain('/settings');
+    expect(links).toHaveLength(7);
+    expect(links[0].getAttribute('href')).toContain('/workspaces');
+    expect(links[1].getAttribute('href')).toContain('/storyboard');
+    expect(links[6].getAttribute('href')).toContain('/settings');
     expect(screen.getByText('SEQUENCE-SCREEN')).toBeTruthy();
+  });
+
+  it('marks the workspaces menu as selected on the workspaces screen', () => {
+    renderShell('/workspaces');
+    const menu = screen.getByTestId('workspace-menu-button');
+    expect(menu.getAttribute('aria-current')).toBe('page');
+    expect(screen.getByText('WORKSPACES-SCREEN')).toBeTruthy();
   });
 
   it('navigates between screens from the sidebar', () => {
     renderShell('/workspace');
     const links = screen.getAllByRole('link');
-    fireEvent.click(links[0]);
+    fireEvent.click(links[1]);
     expect(screen.getByText('STORYBOARD-SCREEN')).toBeTruthy();
-    fireEvent.click(links[2]);
-    expect(screen.getByText('SCENES-SCREEN')).toBeTruthy();
     fireEvent.click(links[3]);
-    expect(screen.getByText('TEMPLATES-SCREEN')).toBeTruthy();
+    expect(screen.getByText('SCENES-SCREEN')).toBeTruthy();
     fireEvent.click(links[4]);
-    expect(screen.getByText('PLAY-SCREEN')).toBeTruthy();
+    expect(screen.getByText('TEMPLATES-SCREEN')).toBeTruthy();
     fireEvent.click(links[5]);
+    expect(screen.getByText('PLAY-SCREEN')).toBeTruthy();
+    fireEvent.click(links[6]);
     expect(screen.getByText('SETTINGS-SCREEN')).toBeTruthy();
   });
 
@@ -62,5 +70,20 @@ describe('AppShell', () => {
     renderShell('/workspace');
     // fireEvent는 preventDefault가 불리면 false를 돌려준다.
     expect(fireEvent.contextMenu(screen.getByText('SEQUENCE-SCREEN'))).toBe(false);
+  });
+
+  it('blocks browser find (Ctrl+F / Cmd+F) unless inside [data-allow-find]', () => {
+    renderShell('/workspace');
+    // 기본 영역: 막힌다.
+    expect(fireEvent.keyDown(screen.getByText('SEQUENCE-SCREEN'), { key: 'f', ctrlKey: true })).toBe(false);
+    expect(fireEvent.keyDown(window, { key: 'F', metaKey: true })).toBe(false);
+    // 허용 영역: 통과한다(추후 custom 검색 팝업 자리).
+    const allowed = document.createElement('div');
+    allowed.setAttribute('data-allow-find', '');
+    document.body.appendChild(allowed);
+    expect(fireEvent.keyDown(allowed, { key: 'f', ctrlKey: true })).toBe(true);
+    allowed.remove();
+    // 다른 단축키는 건드리지 않는다.
+    expect(fireEvent.keyDown(screen.getByText('SEQUENCE-SCREEN'), { key: 's', ctrlKey: true })).toBe(true);
   });
 });

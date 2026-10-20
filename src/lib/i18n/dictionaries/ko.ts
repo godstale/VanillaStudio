@@ -222,6 +222,8 @@ const ko = {
   'workspaces.current': '현재 워크스페이스',
   'workspaces.currentBadge': '현재',
   'workspaces.open': '{name} 열기',
+  'workspaces.reveal': '탐색기에서 열기',
+  'workspaces.revealFailed': '탐색기에서 폴더를 열 수 없습니다.',
   'play.fullscreen': '전체화면',
   'play.toolsHint': '아래 플레이어에서 넘기세요 · Alt로 단축키 표시',
   'playground.disabled': '플레이그라운드는 온라인 미구축이라 비활성화되어 있습니다. 시퀀스 재생은 재생 메뉴를 사용하세요.',

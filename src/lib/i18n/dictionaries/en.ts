@@ -224,6 +224,8 @@ const en: Dict = {
   'workspaces.current': 'Current workspace',
   'workspaces.currentBadge': 'current',
   'workspaces.open': 'Open {name}',
+  'workspaces.reveal': 'Reveal in Explorer',
+  'workspaces.revealFailed': 'Could not reveal the folder in Explorer.',
   'play.fullscreen': 'Fullscreen',
   'play.toolsHint': 'Advance in the player below · hold Alt to show shortcuts',
   'playground.disabled': 'The playground is disabled until online browsing ships. Use Play to watch the sequence.',
