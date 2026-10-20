@@ -103,7 +103,7 @@ describe('SequencePlayer', () => {
     await waitFor(() => expect(frameOf('scn_m')).toBeUndefined());
   });
 
-  it('static scene keyboard: keys go to the page as typed input, not as unconditional next', async () => {
+  it('static scene keyboard: keys go to the page as typed input, not as unconditional next (ArrowLeft goes back)', async () => {
     renderPlayer(sequence([edge('scn_s', 'scn_d', 'key:ArrowRight')], ['scn_s', 'scn_d']));
     await waitFor(() => expect(frameOf('scn_s')).toBeTruthy());
     const post = vi.fn();
@@ -112,15 +112,27 @@ describe('SequencePlayer', () => {
     await waitFor(() => expect(frameOf('scn_d')).toBeTruthy());
     fromScene('scn_d', 'ready', ready(2));
     post.mockClear();
-    fireEvent.keyDown(window, { key: 'ArrowLeft' }); // wrong key: typed input, never next
     fireEvent.keyDown(window, { key: 'n' }); // scene shortcut key: typed input, never next
     expect(post.mock.calls.map((c) => c[0])).toEqual([
-      { v: 2, type: 'input', payload: { kind: 'key', key: 'ArrowLeft' } },
       { v: 2, type: 'input', payload: { kind: 'key', key: 'n' } },
     ]);
     expect(frameOf('scn_s')).toBeTruthy(); // the page decides; the host does not leave
     fireEvent.keyDown(window, { key: 'ArrowRight' });
     expect(post.mock.calls.at(-1)?.[0]).toEqual({ v: 2, type: 'input', payload: { kind: 'key', key: 'ArrowRight' } });
+  });
+
+  it('static scene ArrowLeft goes to the previous step, or the previous scene at the first step', async () => {
+    renderPlayer(sequence([edge('scn_s', 'scn_d', 'click')], ['scn_s', 'scn_d']));
+    await waitFor(() => expect(frameOf('scn_s')).toBeTruthy());
+    const post = vi.fn();
+    Object.defineProperty(frameOf('scn_s'), 'contentWindow', { value: { postMessage: post }, configurable: true });
+    fromScene('scn_s', 'ready', ready());
+    await waitFor(() => expect(frameOf('scn_d')).toBeTruthy());
+    fromScene('scn_d', 'ready', ready(2));
+    fromScene('scn_s', 'step', { index: 1, total: 3 });
+    post.mockClear();
+    fireEvent.keyDown(window, { key: 'ArrowLeft' }); // step 1 -> prev message
+    expect(post.mock.calls.at(-1)?.[0]).toEqual({ v: 2, type: 'prev' });
   });
 
   it('choices are shown as buttons and the chosen label wins', async () => {

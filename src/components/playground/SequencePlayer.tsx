@@ -23,6 +23,8 @@ export interface SequencePlayerProps {
   customTransitions?: ReadonlyMap<string, CustomTransition>;
   /** 지정하면 재생 시작 뒤 그 신으로 이동한다(플레이그라운드 플로팅 재생용). */
   initialSceneId?: string | null;
+  /** true면 재생 화면만 보여주고 하단 바·오버레이를 숨긴다(전체화면 녹화 미리보기용). */
+  hideChrome?: boolean;
 }
 
 const EMPTY_CUSTOM: ReadonlyMap<string, CustomTransition> = new Map();
@@ -49,7 +51,7 @@ const fmt = (s: number) => `${s.toFixed(1)}s`;
  * 시퀀스 재생기(F-PLY-01, T6.6). 신 iframe을 겹쳐 두고 시퀀스 매니저가 trigger로 넘긴다.
  * 입력 레이어가 iframe 위를 덮어 클릭을 받는다(신 안의 버튼은 누를 수 없고, 분기는 아래 선택지로 고른다).
  */
-export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostOrigin, canvas, customTransitions = EMPTY_CUSTOM, initialSceneId }: SequencePlayerProps) {
+export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostOrigin, canvas, customTransitions = EMPTY_CUSTOM, initialSceneId, hideChrome = false }: SequencePlayerProps) {
   const { t } = useLanguage();
   const stageRef = useRef<HTMLDivElement | null>(null);
   const hostRef = useRef<HTMLDivElement | null>(null);
@@ -91,17 +93,32 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
   }, []);
 
   // 키보드 입력은 창 전체에서 받는다(입력 레이어에 포커스가 없어도 화살표로 넘길 수 있게).
+  // 슬라이드(정적 신)는 프레젠테이션 겸용이므로 ArrowLeft는 이전 스텝·이전 신으로 되돌린다.
   useEffect(() => {
     if (!manager) return;
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
       if (target && (target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA')) return;
+      if (e.key === 'ArrowLeft') {
+        const s = manager.getState();
+        const cur = s.current ? scenes.get(s.current) : undefined;
+        if (cur?.type === 'static' && (s.status === 'playing' || s.status === 'paused')) {
+          e.preventDefault();
+          if (s.step && s.step.index > 0) manager.back();
+          else if (s.history.length >= 2) void manager.jump(s.history[s.history.length - 2]);
+          else {
+            const at = sequence.nodes.findIndex((n) => n.sceneId === s.current);
+            if (at > 0) void manager.jump(sequence.nodes[at - 1].sceneId);
+          }
+          return;
+        }
+      }
       const input = toInput(e);
       if (input) manager.input(input);
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [manager]);
+  }, [manager, scenes, sequence.nodes]);
 
   const layout = computePreviewLayout({ container: size, format: canvas, zoom: 'fit', deviceWidth: null });
   const current = state?.current ?? null;
@@ -122,6 +139,19 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
   const progress = state && state.duration ? Math.min(1, state.t / state.duration) : 0;
   const busy = state?.status === 'loading' || state?.status === 'transitioning';
 
+  /** 정적 신의 이전 버튼: 스텝이 있으면 한 칸 뒤로, 첫 스텝이면 이전 신으로. */
+  const handlePrev = () => {
+    if (!manager) return;
+    const s = manager.getState();
+    if (s.step && s.step.index > 0) manager.back();
+    else if (s.history.length >= 2) void manager.jump(s.history[s.history.length - 2]);
+    else {
+      const at = sequence.nodes.findIndex((n) => n.sceneId === s.current);
+      if (at > 0) void manager.jump(sequence.nodes[at - 1].sceneId);
+      else manager.back();
+    }
+  };
+
   return (
     <div className="flex h-full min-h-0 flex-col gap-2" data-testid="sequence-player">
       <div ref={hostRef} className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-md bg-muted">
@@ -135,13 +165,13 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
             className="absolute inset-0 z-10 cursor-pointer bg-transparent focus:outline-none"
             onClick={() => manager?.input({ kind: 'click' })}
           />
-          {busy && (
+          {!hideChrome && busy && (
             <div role="status" className="absolute inset-0 z-20 flex items-center justify-center bg-background/60 text-xs">
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               {t(state.status === 'loading' ? 'player.loading' : 'player.transitioning')}
             </div>
           )}
-          {state.status === 'ended' && (
+          {!hideChrome && state.status === 'ended' && (
             <div role="status" className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-2 bg-background/70 text-sm">
               <span>{t('player.ended')}</span>
               <Button size="sm" onClick={() => void manager?.start()}>
@@ -150,7 +180,7 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
               </Button>
             </div>
           )}
-          {state.choices.length > 0 && state.status === 'playing' && (
+          {!hideChrome && state.choices.length > 0 && state.status === 'playing' && (
             <div data-testid="player-choices" className="absolute inset-x-0 bottom-0 z-20 flex flex-wrap justify-center gap-2 bg-background/70 p-2">
               {state.choices.map((label) => (
                 <Button key={label} size="sm" onClick={() => void manager?.choose(label)}>
@@ -162,7 +192,7 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
         </div>
       </div>
 
-      {(state.status === 'error' || startError) && (
+      {!hideChrome && (state.status === 'error' || startError) && (
         <div role="alert" data-testid="player-error" className="flex items-start gap-2 rounded border border-destructive/40 bg-destructive/10 p-2 text-xs text-destructive">
           <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           <span className="min-w-0 flex-1 break-words">{state.error ?? startError}</span>
@@ -174,25 +204,25 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
         </div>
       )}
 
-      <div className="flex flex-wrap items-center gap-2 text-xs">
-        <Button size="sm" variant="outline" aria-label={t('player.restart')} onClick={() => void manager?.start()}>
+      {!hideChrome && (
+      <div className="flex h-10 items-center gap-1 overflow-hidden rounded-lg border border-border bg-card/95 px-2 text-xs shadow-lg backdrop-blur" data-testid="player-bar">
+        <Button size="sm" variant="ghost" className="h-7 w-7 shrink-0 p-0" aria-label={t('player.restart')} onClick={() => void manager?.start()}>
           <SkipBack className="h-3.5 w-3.5" />
         </Button>
         {!isStatic && (
-          <Button size="sm" variant="outline" disabled={state.status !== 'playing' && state.status !== 'paused'} onClick={() => (state.status === 'paused' ? manager?.resume() : manager?.pause())}>
-            {state.status === 'paused' ? <Play className="mr-1 h-3.5 w-3.5" /> : <Pause className="mr-1 h-3.5 w-3.5" />}
-            {t(state.status === 'paused' ? 'player.play' : 'player.pause')}
+          <Button size="sm" variant="ghost" className="h-7 w-7 shrink-0 p-0" aria-label={t(state.status === 'paused' ? 'player.play' : 'player.pause')} disabled={state.status !== 'playing' && state.status !== 'paused'} onClick={() => (state.status === 'paused' ? manager?.resume() : manager?.pause())}>
+            {state.status === 'paused' ? <Play className="h-3.5 w-3.5" /> : <Pause className="h-3.5 w-3.5" />}
           </Button>
         )}
         {isStatic && (
           <>
-            <Button size="sm" variant="outline" aria-label={t('player.prev')} onClick={() => manager?.back()}>
+            <Button size="sm" variant="ghost" className="h-7 w-7 shrink-0 p-0" aria-label={t('player.prev')} onClick={handlePrev}>
               <ChevronLeft className="h-3.5 w-3.5" />
             </Button>
-            <Button size="sm" variant="outline" aria-label={t('player.next')} onClick={() => manager?.stepForward()}>
+            <Button size="sm" variant="ghost" className="h-7 w-7 shrink-0 p-0" aria-label={t('player.next')} onClick={() => manager?.stepForward()}>
               <ChevronRight className="h-3.5 w-3.5" />
             </Button>
-            {state.step && <span data-testid="player-step">{t('player.step', { index: state.step.index + 1, total: state.step.total })}</span>}
+            {state.step && <span data-testid="player-step" className="shrink-0 tabular-nums text-muted-foreground">{t('player.step', { index: state.step.index + 1, total: state.step.total })}</span>}
           </>
         )}
         {state.duration ? (
@@ -206,31 +236,31 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
               aria-label={t('player.seek')}
               disabled={busy}
               onChange={(e) => manager?.seek(Number(e.target.value))}
-              className="min-w-24 flex-1"
+              className="min-w-16 flex-1"
             />
-            <span className="tabular-nums text-muted-foreground" data-testid="player-time">
+            <span className="shrink-0 tabular-nums text-muted-foreground" data-testid="player-time">
               {fmt(state.t)} / {fmt(state.duration)}
             </span>
           </>
         ) : (
-          <span className="flex-1" />
+          <span className="min-w-2 flex-1" />
         )}
-        <span className="text-muted-foreground" data-testid="player-progress" title={`${Math.round(progress * 100)}%`}>
+        <span className="hidden shrink-0 text-muted-foreground sm:inline" data-testid="player-progress" title={`${Math.round(progress * 100)}%`}>
           {idx >= 0 ? t('player.sceneIndex', { index: idx + 1, total: sequence.nodes.length, name: currentRef?.name ?? '' }) : ''}
         </span>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-        <MousePointer2 className="h-3.5 w-3.5" />
-        <span data-testid="player-hints">{hints.length > 0 ? hints.join(' · ') : out.some((e) => e.trigger === 'end') ? t('player.hint.auto') : t('player.hint.none')}</span>
-        <span className="ml-auto flex flex-wrap gap-1">
+        <span className="hidden shrink-0 items-center gap-1 text-muted-foreground md:flex" title={hints.length > 0 ? hints.join(' · ') : undefined}>
+          <MousePointer2 className="h-3.5 w-3.5" />
+          <span data-testid="player-hints" className="max-w-32 truncate">{hints.length > 0 ? hints.join(' · ') : out.some((e) => e.trigger === 'end') ? t('player.hint.auto') : t('player.hint.none')}</span>
+        </span>
+        <span className="ml-auto flex shrink-0 gap-0.5">
           {sequence.nodes.map((n, i) => (
-            <Button key={n.sceneId} size="sm" variant={n.sceneId === current ? 'default' : 'ghost'} aria-label={t('player.jump', { name: scenes.get(n.sceneId)?.name ?? n.sceneId })} onClick={() => void manager?.jump(n.sceneId)}>
+            <Button key={n.sceneId} size="sm" variant={n.sceneId === current ? 'default' : 'ghost'} className="h-6 w-6 p-0 text-[10px]" aria-label={t('player.jump', { name: scenes.get(n.sceneId)?.name ?? n.sceneId })} onClick={() => void manager?.jump(n.sceneId)}>
               {i + 1}
             </Button>
           ))}
         </span>
       </div>
+      )}
     </div>
   );
 }

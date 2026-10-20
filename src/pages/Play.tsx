@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Loader2, Maximize } from 'lucide-react';
+import { Loader2, Maximize, Minimize } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { EmptyScreen } from '@/components/layout/EmptyScreen';
 import { SequencePlayer } from '@/components/playground/SequencePlayer';
@@ -27,14 +27,15 @@ interface Loaded {
 
 /**
  * 재생 메뉴: 프로젝트 결과물을 시간순(또는 사용자 입력 순)으로 탐색한다.
- * 슬라이드형은 PPT 프레젠테이션처럼 쓴다. 프리젠테이션 영역 전체를 플레이 영역으로 쓰고,
- * 타임라인·네비게이션은 하단 플로팅 툴박스로 작게 둔다. 전체화면(F) + Alt 단축키 표시.
+ * 플레이 화면이 전체를 꽉 채운다. 타이틀·전체화면 버튼은 반투명 오버레이,
+ * 하단 네비게이션은 신 화면 툴박스를 확장한 compact 바(SequencePlayer)다.
+ * 전체화면에서는 재생 화면 외에 아무것도 표시하지 않는다.
  */
 export function Play() {
   const { t } = useLanguage();
   const { workspaceRoot } = useWorkspace();
   const [loaded, setLoaded] = useState<Loaded | { root: string; error: string } | null>(null);
-  const [altHeld, setAltHeld] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const stageRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -71,10 +72,15 @@ export function Play() {
     }
   }, []);
 
-  // Alt를 누르면 버튼 위 단축키 배지를 보여준다. F 전체화면, ←/→ 신 이동(플레이어), Space 클릭 진행.
+  useEffect(() => {
+    const onFs = () => setIsFullscreen(document.fullscreenElement != null);
+    document.addEventListener('fullscreenchange', onFs);
+    return () => document.removeEventListener('fullscreenchange', onFs);
+  }, []);
+
+  // F로 전체화면 전환. 입력란에서는 동작하지 않는다.
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === 'Alt') setAltHeld(true);
       if ((e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey) {
         const tag = (e.target as HTMLElement | null)?.tagName;
         if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
@@ -82,15 +88,8 @@ export function Play() {
         toggleFullscreen();
       }
     };
-    const up = (e: KeyboardEvent) => {
-      if (e.key === 'Alt') setAltHeld(false);
-    };
     window.addEventListener('keydown', down);
-    window.addEventListener('keyup', up);
-    return () => {
-      window.removeEventListener('keydown', down);
-      window.removeEventListener('keyup', up);
-    };
+    return () => window.removeEventListener('keydown', down);
   }, [toggleFullscreen]);
 
   if (!workspaceRoot) return <EmptyScreen title={t('shell.nav.play')}>{t('player.noWorkspace')}</EmptyScreen>;
@@ -104,27 +103,9 @@ export function Play() {
   }
 
   const origin = previewOriginOf(serverUrl);
-  const kbd = (s: string) =>
-    altHeld ? (
-      <kbd className="ml-1 rounded border border-border bg-muted px-1 text-[10px] text-muted-foreground">{s}</kbd>
-    ) : null;
 
   return (
     <div ref={stageRef} className="relative flex h-full min-h-0 flex-col bg-black" data-testid="play-stage">
-      <div className="flex items-center gap-2 bg-background px-4 py-2">
-        <h1 className="truncate text-sm font-semibold">{loaded.workspace.name}</h1>
-        <span className="text-xs text-muted-foreground">
-          {t('player.sceneIndex', { index: 1, total: loaded.sequence.nodes.length, name: '' }).replace(/^신 1.*?:/, '').trim() || t(`sequence.mode.${loaded.sequence.mode}`)}
-        </span>
-        <div className="ml-auto flex items-center gap-1">
-          <Button size="sm" variant="outline" onClick={toggleFullscreen} aria-label={t('play.fullscreen')} title="F">
-            <Maximize className="mr-1 h-3.5 w-3.5" />
-            {t('play.fullscreen')}
-            {kbd('F')}
-          </Button>
-        </div>
-      </div>
-
       <div className="relative min-h-0 flex-1">
         {hasErrors(issues) ? (
           <div className="flex h-full flex-col gap-2 overflow-auto bg-background p-4 text-xs">
@@ -155,19 +136,45 @@ export function Play() {
               hostOrigin={window.location.origin}
               canvas={loaded.workspace.canvas}
               customTransitions={loaded.custom}
+              hideChrome={isFullscreen}
             />
           </div>
         )}
 
-        {/* 하단 플로팅 툴박스: 작게, 전체화면에서도 보인다. 네비게이션 단축키 배지는 Alt로 표시. */}
-        <div className="absolute bottom-3 left-1/2 z-20 flex h-10 w-[360px] max-w-[calc(100%-2rem)] -translate-x-1/2 items-center justify-center gap-2 overflow-hidden rounded-lg border border-border bg-card/95 px-2 text-xs shadow-lg backdrop-blur" data-testid="play-float-tools">
-          <span className="text-muted-foreground">{t('play.toolsHint')}</span>
-          {kbd('←/→ · Space')}
-          <Button size="sm" variant="outline" onClick={toggleFullscreen} aria-label={t('play.fullscreen')}>
+        {/* 타이틀 오버레이: 반투명 팝업, 작은 폰트로 타이틀+신 정보. 전체화면에서는 숨긴다. */}
+        {!isFullscreen && (
+          <div className="pointer-events-none absolute left-1/2 top-2 z-20 max-w-[calc(100%-5rem)] -translate-x-1/2 truncate rounded bg-black/50 px-2 py-1 text-center text-[11px] leading-tight text-white">
+            {loaded.workspace.name}
+            <span className="ml-1 opacity-70">
+              {t('player.sceneIndex', { index: 1, total: loaded.sequence.nodes.length, name: '' }).replace(/^신 1.*?:/, '').trim() || t(`sequence.mode.${loaded.sequence.mode}`)}
+            </span>
+          </div>
+        )}
+        {/* 전체화면 오버레이 버튼. 전체화면에서는 숨긴다(녹화 미리보기처럼 부가 요소 없음). */}
+        {!isFullscreen && (
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={toggleFullscreen}
+            aria-label={t('play.fullscreen')}
+            title="F"
+            className="absolute right-2 top-2 z-20 h-7 w-7 bg-black/50 p-0 text-white hover:bg-black/70 hover:text-white"
+          >
             <Maximize className="h-3.5 w-3.5" />
-            {kbd('F')}
           </Button>
-        </div>
+        )}
+        {isFullscreen && (
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={toggleFullscreen}
+            aria-label={t('play.fullscreen')}
+            title="F"
+            className="absolute bottom-2 right-2 z-20 h-7 w-7 bg-black/50 p-0 text-white opacity-0 hover:bg-black/70 hover:text-white hover:opacity-100 focus-visible:opacity-100"
+          >
+            <Minimize className="h-3.5 w-3.5" />
+          </Button>
+        )}
       </div>
     </div>
   );
