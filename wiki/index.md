@@ -41,6 +41,7 @@
 ## Planning / Decisions
 
 - [[decisions]] — 결정 기록 색인 (D-001~D-018, 모두 Accepted)
+- [[poster-thumbnail-d039]] — 신 공유 썸네일 `poster.svg` (D-039 Proposed): 자동 캡처 없을 때 폴백, 에이전트 생성 지침
 
 ## Research
 

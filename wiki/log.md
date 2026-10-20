@@ -14,26 +14,6 @@ Ran lint. See lint-report.md for details.
 
 Ran lint. See lint-report.md for details.
 
-## [2026-10-06] lint | Wiki health check
-
-Ran lint. See lint-report.md for details.
-
-## [2026-10-06] lint | Wiki health check
-
-Ran lint. See lint-report.md for details.
-
-## [2026-10-06] lint | Wiki health check
-
-Ran lint. See lint-report.md for details.
-
-## [2026-10-06] lint | Wiki health check
-
-Ran lint. See lint-report.md for details.
-
-# Wiki Log (append-only)
-
-> 형식: `## [YYYY-MM-DD] <type> | <title>` + 한두 줄. type: ingest · decision · phase · research · poc · milestone · lint · update
-
 ## [2026-09-28] phase | P0 준비 확인
 - 템플릿 원본을 git 기준 커밋(master 65272b8)으로 보존, `docs/planning` 브랜치 생성. → [[phase-p0-setup]]
 
@@ -365,3 +345,6 @@ Ran lint. See lint-report.md for details.
 
 ## [2026-10-18] decision | D-038 플레이그라운드 static 입력 타입 위임(Bridge `input` v2.1)
 - 모든 키가 다음으로 처리되던 문제를 타입 입력 위임으로 수정한 결정. `input` 메시지·합성 디스패치·`stepForward()` 분리·종료 후 복구·런타임 갱신. D-032 확장. → [[decisions]]
+## [2026-10-20] feature | Scene shared thumbnail poster.svg (D-039 Proposed)
+- Empty scene/sequence thumbnails were all auto-capture .vanilla/thumb.png (local-only). Added committed poster.svg convention drawn in code by the agent, app fallback display, and AGENTS.md/guide-template instructions. See: [[poster-thumbnail-d039]]
+

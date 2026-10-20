@@ -96,6 +96,7 @@ Vanilla Studio v2는 **"에이전트가 일하기 좋은 작업 폴더를 만들
 │     ├─ references/         # 사용자가 넣은 영상·이미지 + references.json(URL 포함)
 │     │  └─ analysis/        # 에이전트 분석 결과(reference-analysis.md, 키프레임 등)
 │     ├─ src/                # ★ 에이전트가 작성하는 결과물 코드(index.html + 모듈)
+│     ├─ poster.svg          # 에이전트가 코드로 그리는 공유 썸네일(16:9, 커밋 대상, D-039). 자동 캡처(.vanilla/thumb.png)가 없을 때 대신 표시
 │     ├─ params/             # 사용자 조절값(*.values.json, 사용자 소유 — 덮어쓰기 금지)
 │     └─ .vanilla/           # 앱 상태(썸네일, 실행 이력). 커밋/공유 제외
 ├─ guide-templates/          # (선택) 이 워크스페이스 전용 사용자 정의 가이드 템플릿(§6.5)
