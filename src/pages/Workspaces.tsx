@@ -110,16 +110,17 @@ export function Workspaces() {
           </Button>
         </EmptyScreen>
       ) : (
-        <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3" data-testid="workspace-cards">
+        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5" data-testid="workspace-cards">
           {recent.map((w) => (
             <li key={w.workspaceId}>
               <button
                 type="button"
                 onClick={() => void openPath(w.path)}
                 aria-label={t('workspaces.open', { name: w.name })}
-                className="flex w-full flex-col gap-2 rounded-lg border border-border bg-card p-3 text-left shadow-sm hover:bg-accent"
+                className="flex w-full flex-col gap-2 rounded-lg border border-border bg-card p-2.5 text-left shadow-sm hover:bg-accent"
               >
-                <span className="flex h-28 items-center justify-center overflow-hidden rounded bg-muted text-muted-foreground">
+                {/* 썸네일은 16:9(workspace canvas·poster.svg 기준)이라 aspect-video로 잘림 없이 보여준다. */}
+                <span className="flex aspect-video items-center justify-center overflow-hidden rounded bg-muted text-muted-foreground">
                   {thumbs[w.workspaceId] ? (
                     <img src={thumbs[w.workspaceId]} alt="" className="h-full w-full object-cover" />
                   ) : (
