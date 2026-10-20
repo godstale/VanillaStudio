@@ -1,5 +1,3 @@
-Ran lint. See lint-report.md for details.
-
 ## [2026-10-18] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
@@ -353,3 +351,9 @@ Ran lint. See lint-report.md for details.
 ## [2026-10-21] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
+
+## [2026-10-21] ui | 스토리보드·신·플레이 화면 개편(feat/storyboard-scene-play-vf)
+- 스토리보드: 3대 문서 카드만 유지, MaterialsViewer·AssemblyPipeline 삭제. 시퀀스·디자인 상태 / 신별 설정·디자인 상태 / 수정 이력(work-order+코멘트) / 오류 카드를 추가하고 클릭 시 상세 팝업(Dialog).
+- 신 화면: 하단 툴박스에서 상태 문구 제거, 경고·상태는 하단 반투명 토스트로 4초 표시. 신 이동 시 단계가 `-`로만 남던 버그를 Body key=slug 리마운트 + scene.json 기준 `1/N` 초기 표시로 수정.
+- 플레이 화면: 타이틀 바 제거 → 반투명 오버레이(타이틀+신 정보 작은 폰트) + 오버레이 전체화면 버튼. SequencePlayer 하단을 신 툴박스 확장형 compact 바(h-10)로 축소. 전체화면에서는 `hideChrome`으로 재생 화면만 표시. 슬라이드용 ArrowLeft 이전 스텝·이전 신 이동 지원.
+- 검증: lint·typecheck·vitest 159파일 1185테스트 통과.
