@@ -22,10 +22,10 @@ import { PreviewPanel } from './PreviewPanel';
 
 const CANVAS = { width: 1080, height: 1920, fps: 24 };
 
-function renderPanel(sceneType: 'static' | 'motion' | '3d' = 'motion') {
+function renderPanel(sceneType: 'static' | 'motion' | '3d' = 'motion', stepsTotal?: number | null) {
   return render(
     <LanguageProvider>
-      <PreviewPanel root="/w" slug="intro" sceneType={sceneType} canvas={CANVAS} />
+      <PreviewPanel root="/w" slug="intro" sceneType={sceneType} canvas={CANVAS} stepsTotal={stepsTotal} />
     </LanguageProvider>,
   );
 }
@@ -112,6 +112,12 @@ describe('PreviewPanel', () => {
     fromScene(ready);
     fromScene({ v: 2, type: 'error', payload: { message: 'boom', stack: '', sceneId: null } });
     expect(screen.getByRole('alert').textContent).toContain('boom');
+  });
+
+  it('static with known total shows 1/N immediately after ready (no longer just —)', () => {
+    renderPanel('static', 3);
+    fromScene(ready);
+    expect(screen.getByTestId('preview-step').textContent).toMatch(/1 \/ 3/);
   });
 
   it('sends the workspace canvas with init after ready', () => {

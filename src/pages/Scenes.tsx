@@ -104,6 +104,11 @@ function Inner({ root }: { root: string }) {
     const id = params.get('scene');
     return valid.find((e) => e.scene!.id === id) ?? valid[0];
   }, [valid, params]);
+  const selectedStepsTotal = useMemo(() => {
+    const s = selected?.scene;
+    if (!s || s.type !== 'static') return null;
+    return s.mode === 'steps' ? s.steps.length : 1;
+  }, [selected]);
 
   const workspaceRef = useMemo(() => ({ id: workspace?.id ?? '', name: workspace?.name ?? '' }), [workspace]);
   const review = useRunReview({ root, workspace: workspaceRef, resolve, terminals: null, onApplied: () => reload() });
@@ -203,6 +208,7 @@ function Inner({ root }: { root: string }) {
                 sceneType={selected.scene.type}
                 canvas={workspace.canvas}
                 entry={selected.scene.runtime.entry}
+                stepsTotal={selectedStepsTotal}
                 onThumbnail={(slug, url) => setThumbs((m) => ({ ...m, [slug]: url }))}
               />
             )}
