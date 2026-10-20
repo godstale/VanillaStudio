@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FolderOpen, History } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,7 +12,7 @@ import { canvasFromPreset, type CanvasPreset } from '@/lib/workspace/schema';
 
 type Step =
   | { name: 'pick' }
-  | { name: 'create'; path: string }
+  | { name: 'create'; path: string; hasExistingFiles?: boolean }
   | { name: 'installing'; line: string }
   | { name: 'error'; message: string };
 
@@ -19,9 +20,10 @@ const PRESETS: CanvasPreset[] = ['16:9', '9:16', '1:1', 'custom'];
 
 const baseName = (p: string) => p.replace(/[\\/]+$/, '').split(/[\\/]/).pop() ?? '';
 
-/** 폴더 선택 → 새 워크스페이스 생성 또는 기존 열기. 신뢰 확인은 기존 폴더 열기 시 TrustWorkspaceDialog가 맡는다. */
+/** 폴더 선택 → 새 워크스페이스 초기화(빈 폴더 및 기존 파일이 있는 폴더 모두 지원) 또는 기존 워크스페이스 열기. */
 export function Onboarding({ api = tauriWorkspaceApi }: { api?: WorkspaceApi }) {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const { setWorkspaceRoot, trustWorkspace } = useWorkspace();
   const [step, setStep] = useState<Step>({ name: 'pick' });
   const [name, setName] = useState('');
@@ -40,6 +42,9 @@ export function Onboarding({ api = tauriWorkspaceApi }: { api?: WorkspaceApi }) 
       await touchWorkspace({ workspaceId: kind.workspaceId, path, name: kind.name }).catch(() => undefined);
     }
     setWorkspaceRoot(path);
+    // 새로 만든/열린 워크스페이스는 작업 지시서(스토리보드)부터 시작한다.
+    // 시퀀스 캔버스에 바로 두면 에이전트 시작 전의 빈 화면만 보게 된다.
+    navigate('/storyboard');
   }
 
   async function onPick() {
@@ -50,11 +55,9 @@ export function Onboarding({ api = tauriWorkspaceApi }: { api?: WorkspaceApi }) 
       const kind = await api.inspectFolder(path);
       if (kind.kind === 'workspace') {
         await enter(path);
-      } else if (kind.kind === 'empty') {
-        setName(baseName(path));
-        setStep({ name: 'create', path });
       } else {
-        setStep({ name: 'error', message: t('onboarding.notEmpty') });
+        setName(baseName(path) || 'workspace');
+        setStep({ name: 'create', path, hasExistingFiles: kind.kind === 'other' });
       }
     } catch (e) {
       fail(e);
@@ -69,12 +72,23 @@ export function Onboarding({ api = tauriWorkspaceApi }: { api?: WorkspaceApi }) 
       const canvas = canvasFromPreset(preset, fps, preset === 'custom' ? custom : undefined);
       await api.createWorkspace(path, name.trim(), canvas);
       trustWorkspace(path);
+      const kind = await api.openWorkspace(path);
+      if (kind.kind === 'workspace') {
+        await touchWorkspace({ workspaceId: kind.workspaceId, path, name: kind.name }).catch(() => undefined);
+      }
+      try {
+        localStorage.setItem('wt_current_workspace_root', path);
+      } catch {
+        // ignore
+      }
       if (install) {
         setStep({ name: 'installing', line: '' });
         // 설치 실패는 워크스페이스 생성을 되돌리지 않는다. 사용자가 나중에 다시 실행할 수 있다.
         await api.installDeps(path, (line) => setStep({ name: 'installing', line })).catch(() => null);
       }
-      await enter(path);
+      setWorkspaceRoot(path);
+      // 생성 직후에는 시퀀스가 아니라 스토리보드의 "작업 지시서 작성 & 에이전트 시작"으로 보낸다.
+      navigate('/storyboard');
     } catch (e) {
       fail(e);
     } finally {
@@ -115,6 +129,14 @@ export function Onboarding({ api = tauriWorkspaceApi }: { api?: WorkspaceApi }) 
           }}
         >
           <p className="break-all text-xs text-muted-foreground">{step.path}</p>
+          <p className="rounded-md border border-border bg-muted/30 p-2 text-xs text-muted-foreground">
+            {t('onboarding.initFilesHint')}
+          </p>
+          {step.hasExistingFiles && (
+            <p className="rounded-md border border-border bg-accent/40 p-2 text-xs text-foreground" data-testid="onboarding-preserve-notice">
+              {t('onboarding.preserveExisting')}
+            </p>
+          )}
           <label className="flex flex-col gap-1 text-sm">
             {t('onboarding.name')}
             <Input value={name} onChange={(e) => setName(e.target.value)} autoFocus />

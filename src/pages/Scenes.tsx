@@ -19,13 +19,15 @@ import { useWorkspace } from '@/lib/context/WorkspaceContext';
 import { createSceneOverride } from '@/lib/design/workspaceDesign';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { listScenes, renameScene, writeScene, type SceneEntry } from '@/lib/scene/files';
-import { loadThumbnail } from '@/lib/scene/thumbnail';
+import { loadSceneThumbnail } from '@/lib/scene/thumbnail';
 import { readSequence, writeSequence } from '@/lib/sequence/file';
 import { setStart, checkSavable } from '@/lib/sequence/edit';
 import type { Sequence } from '@/lib/sequence/schema';
 import { saveSceneAsTemplate } from '@/lib/scene/saveAsTemplate';
+import { changedFields } from '@/lib/guides/writeback';
 import { readWorkspace } from '@/lib/workspace/file';
 import { projectPath } from '@/lib/workspace/files';
+import { recordStudioChange } from '@/lib/workspace/workOrder';
 import { cn } from '@/lib/utils';
 
 interface LoadedWorkspace {
@@ -81,7 +83,7 @@ function Inner({ root }: { root: string }) {
     let cancelled = false;
     for (const e of entries) {
       if (thumbs[e.slug] || !e.scene) continue;
-      loadThumbnail(root, e.slug)
+      loadSceneThumbnail(root, e.slug)
         .then((url) => url && !cancelled && setThumbs((m) => (m[e.slug] ? m : { ...m, [e.slug]: url })))
         .catch(() => undefined);
     }
@@ -169,7 +171,7 @@ function Inner({ root }: { root: string }) {
     );
   }
 
-  // 오른쪽 콘텐츠 패널은 신 미리보기가 전부 쓰고, 조작 버튼·코멘트는 플로팅 패널로 띄운다.
+  // 오른쪽 콘텐츠 영역은 신 스크린이 전부 차지하고, 제목·조작 버튼·코멘트는 플로팅으로 띄운다.
   return (
     <div className="relative flex h-full min-h-0" onClick={() => setMenu(null)}>
       <aside aria-label={t('scenes.list')} className="flex w-56 shrink-0 flex-col border-r border-border bg-card/40">
@@ -209,39 +211,38 @@ function Inner({ root }: { root: string }) {
         {valid.length === 0 && <p className="p-3 text-xs text-muted-foreground">{t('scenes.empty')}</p>}
       </aside>
 
-      <div className="relative min-w-0 flex-1 overflow-auto p-4">
+      <div className="relative min-w-0 flex-1 overflow-hidden">
         {!selected?.scene ? (
-          <p className="text-xs text-muted-foreground">{t('scenes.selectHint')}</p>
+          <p className="p-4 text-xs text-muted-foreground">{t('scenes.selectHint')}</p>
         ) : (
-          <div className="flex w-full flex-col gap-4">
-            <div className="flex flex-wrap items-baseline gap-2 pr-40">
-              <h1 className="text-base font-semibold">{selected.scene.name}</h1>
-              <span className="text-xs text-muted-foreground">
-                {t(`scene.type.${selected.scene.type}`)} · {t(`scene.status.${selected.scene.status}`)}
-              </span>
-            </div>
+          <div className="absolute inset-0">
             {runError && (
-              <p role="alert" className="rounded bg-destructive/10 px-3 py-1 text-xs text-destructive">
+              <p role="alert" className="absolute left-1/2 top-4 z-10 w-max max-w-[calc(100%-2rem)] -translate-x-1/2 rounded-lg border border-border bg-card/95 px-3 py-1 text-xs text-destructive shadow-lg backdrop-blur">
                 {runError}
               </p>
             )}
-            <section aria-label={t('scenes.playback')}>
-              {workspace && (
-                <PreviewPanel
-                  root={root}
-                  slug={selected.slug}
-                  sceneType={selected.scene.type}
-                  canvas={workspace.canvas}
-                  entry={selected.scene.runtime.entry}
-                  onThumbnail={(slug, url) => setThumbs((m) => ({ ...m, [slug]: url }))}
-                />
-              )}
-            </section>
+            {workspace && (
+              <PreviewPanel
+                root={root}
+                slug={selected.slug}
+                sceneType={selected.scene.type}
+                canvas={workspace.canvas}
+                entry={selected.scene.runtime.entry}
+                onThumbnail={(slug, url) => setThumbs((m) => ({ ...m, [slug]: url }))}
+              />
+            )}
           </div>
         )}
 
         {selected?.scene && (
-          <div className="absolute right-4 top-4 flex gap-1 rounded-lg border border-border bg-card/95 p-1 shadow-lg backdrop-blur">
+          <>
+            <div className="absolute left-4 top-4 z-10 flex max-w-[calc(100%-24rem)] flex-wrap items-baseline gap-2 rounded-lg border border-border bg-card/95 px-3 py-1.5 shadow-lg backdrop-blur">
+              <h1 className="truncate text-base font-semibold">{selected.scene.name}</h1>
+              <span className="shrink-0 text-xs text-muted-foreground">
+                {t(`scene.type.${selected.scene.type}`)} · {t(`scene.status.${selected.scene.status}`)}
+              </span>
+            </div>
+            <div className="absolute right-4 top-4 z-10 flex gap-1 rounded-lg border border-border bg-card/95 p-1 shadow-lg backdrop-blur">
             <Button size="sm" variant="outline" onClick={() => setInspectorOpen(true)}>
               <SlidersHorizontal className="mr-1 h-3.5 w-3.5" />
               {t('scenes.openInspector')}
@@ -254,7 +255,8 @@ function Inner({ root }: { root: string }) {
               <MessageSquare className="mr-1 h-3.5 w-3.5" />
               {t('comments.title')}
             </Button>
-          </div>
+            </div>
+          </>
         )}
       </div>
 
@@ -331,11 +333,30 @@ function Inner({ root }: { root: string }) {
             templateError={catalog.get(selected.scene.template)?.error}
             canvas={workspace.canvas}
             onSave={async (scene) => {
+              const prev = selected.scene!;
+              const fields = changedFields(prev, scene);
               await writeScene(root, selected.slug, workspaceRef, scene, resolve);
+              if (fields.length > 0) {
+                void recordStudioChange(root, {
+                  scope: 'scene',
+                  targetId: scene.id,
+                  targetName: `scenes/${selected.slug} (${scene.name})`,
+                  summary: '인스펙터에서 신 가이드/파라미터 설정 수정',
+                  fields,
+                });
+              }
               reload();
             }}
             onRename={async (name) => {
-              await renameScene(root, workspaceRef, selected.slug, name, resolve);
+              const prevName = selected.scene!.name;
+              const res = await renameScene(root, workspaceRef, selected.slug, name, resolve);
+              void recordStudioChange(root, {
+                scope: 'scene',
+                targetId: res.scene.id,
+                targetName: `scenes/${res.slug} (${res.scene.name})`,
+                summary: `신 이름 변경: "${prevName}" → "${res.scene.name}"`,
+                fields: ['name'],
+              });
               reload();
             }}
             onAnalyze={terminals ? (slug) => void onAnalyze(slug) : undefined}
@@ -347,6 +368,13 @@ function Inner({ root }: { root: string }) {
                     if (!checkSavable(next)) {
                       setSeq(next);
                       void writeSequence(root, next).catch(() => undefined);
+                      void recordStudioChange(root, {
+                        scope: 'sequence',
+                        targetId: next.id,
+                        targetName: 'sequence.json',
+                        summary: `시퀀스 시작 신을 "${selected.scene!.name}"(${selected.scene!.id})로 변경`,
+                        fields: ['start'],
+                      });
                     }
                   }
                 : undefined

@@ -46,7 +46,7 @@ export function ScenePreview({ serverUrl, slug, entry, format, zoom = 'fit' }: S
   }, [attach, registerFrame, src]);
 
   return (
-    <div ref={hostRef} data-testid="preview-host" className="relative flex h-64 w-full items-center justify-center overflow-hidden rounded-md bg-muted">
+    <div ref={hostRef} data-testid="preview-host" className="relative flex h-full min-h-0 w-full items-center justify-center overflow-hidden bg-muted">
       {src && (
         <div data-testid="preview-box" className="shrink-0 overflow-hidden shadow-lg" style={{ width: layout.box.width, height: layout.box.height }}>
           <iframe

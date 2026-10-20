@@ -207,6 +207,7 @@ const ko = {
   'onboarding.installing': '의존성 설치 중…',
   'switcher.title': '워크스페이스 전환',
   'switcher.recent': '최근 워크스페이스',
+  'switcher.remove': '목록에서 삭제',
   'switcher.none': '최근 항목이 없습니다.',
   'switcher.new': '새로 만들기 / 다른 폴더 열기',
   'switcher.openFailed': '워크스페이스를 열 수 없습니다. 폴더가 이동되었거나 삭제되었을 수 있습니다.',

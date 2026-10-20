@@ -12,7 +12,7 @@ import { TemplatesProvider } from '@/components/guides/TemplatesContext';
 import { useTemplates } from '@/components/guides/templatesContextValue';
 import { useSafeTerminals } from '@/components/terminal/terminalContextValue';
 import { groupChanges, outsideWrites } from '@/lib/scene/status';
-import { loadThumbnail } from '@/lib/scene/thumbnail';
+import { loadSceneThumbnail } from '@/lib/scene/thumbnail';
 import { readSequence, writeSequence } from '@/lib/sequence/file';
 import { addNode, moveNodes, reconcile, removeNode, type Sequence } from '@/lib/sequence/schema';
 import { checkSavable, setMode } from '@/lib/sequence/edit';
@@ -23,6 +23,7 @@ import { useSequenceEdges, type SceneInfo } from './useSequenceEdges';
 import { ExportDialog, ImportDialog } from '@/components/package/PackageDialogs';
 import { usedTemplateDirs } from '@/lib/package/manifest';
 import { projectPath } from '@/lib/workspace/files';
+import { recordStudioChange } from '@/lib/workspace/workOrder';
 import { NewSceneDialog, type NewSceneValues } from './NewSceneDialog';
 import { CommentToolbox } from '@/components/comments/CommentToolbox';
 import { SceneNode, type SceneFlowNode } from './SceneNode';
@@ -161,7 +162,7 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
     let cancelled = false;
     for (const e of entries) {
       if (thumbs[e.slug] || !e.scene) continue;
-      loadThumbnail(root, e.slug)
+      loadSceneThumbnail(root, e.slug)
         .then((url) => url && !cancelled && setThumbs((m) => (m[e.slug] ? m : { ...m, [e.slug]: url })))
         .catch(() => undefined);
     }
@@ -214,11 +215,17 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
 
   async function onCreate(values: NewSceneValues) {
     const pos = dialog ?? { x: 0, y: 0 };
-    const { scene } = await createScene(root, workspace, values);
+    const { slug, scene } = await createScene(root, workspace, values);
     const added = addNode(sequence.current ?? (await readSequence(root, workspace.id)), scene.id, pos);
     sequence.current = added;
     setSeq(added);
     await writeSequence(root, added);
+    void recordStudioChange(root, {
+      scope: 'scene',
+      targetId: scene.id,
+      targetName: `scenes/${slug} (${scene.name})`,
+      summary: `새 신 생성: "${scene.name}" [type=${scene.type}, template=${scene.template}]`,
+    });
     apply(await fetchAll());
   }
 
@@ -232,14 +239,22 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
     if (!selectedEntry?.scene) return;
     setDeleteError(null);
     try {
-      await deleteScene(root, selectedEntry.slug);
+      const removedScene = selectedEntry.scene;
+      const removedSlug = selectedEntry.slug;
+      await deleteScene(root, removedSlug);
       const current = sequence.current;
       if (current) {
-        const next = removeNode(current, selectedEntry.scene.id);
+        const next = removeNode(current, removedScene.id);
         sequence.current = next;
         setSeq(next);
         await writeSequence(root, next);
       }
+      void recordStudioChange(root, {
+        scope: 'scene',
+        targetId: removedScene.id,
+        targetName: `scenes/${removedSlug} (${removedScene.name})`,
+        summary: `신 삭제(휴지통 이동): "${removedScene.name}" (${removedScene.id})`,
+      });
       setConfirmDelete(false);
       apply(await fetchAll());
     } catch (e) {
@@ -266,6 +281,13 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
       sequence.current = next;
       setSeq(next);
       void writeSequence(root, next).catch((e: unknown) => setSeqError(e instanceof Error ? e.message : String(e)));
+      void recordStudioChange(root, {
+        scope: 'sequence',
+        targetId: next.id,
+        targetName: 'sequence.json',
+        summary: `시퀀스 연결/전환 설정 변경 (mode=${next.mode}, nodes=${next.nodes.length}, edges=${next.edges.length})`,
+        fields: ['mode', 'edges', 'start'],
+      });
       return true;
     },
     [root],

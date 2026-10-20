@@ -30,7 +30,7 @@ function ServerStatus({ state, onRetry }: { state: PreviewServerState; onRetry: 
   if (state.phase === 'failed') {
     const notInstalled = state.error === 'not-installed';
     return (
-      <div role="alert" className="flex flex-col items-start gap-2 rounded-md border border-border p-3 text-xs">
+      <div role="alert" className="flex flex-col items-start gap-2 rounded-lg border border-border bg-card/95 p-3 text-xs shadow-lg backdrop-blur">
         <p className="flex items-center gap-1 text-destructive">
           <AlertTriangle className="h-3.5 w-3.5" />
           {notInstalled ? t('preview.notInstalled') : t('preview.serverFailed')}
@@ -44,7 +44,7 @@ function ServerStatus({ state, onRetry }: { state: PreviewServerState; onRetry: 
     );
   }
   return (
-    <p role="status" className="flex items-center gap-2 text-xs text-muted-foreground">
+    <p role="status" className="flex items-center gap-2 rounded-lg border border-border bg-card/95 px-3 py-1.5 text-xs text-muted-foreground shadow-lg backdrop-blur">
       <Loader2 className="h-3.5 w-3.5 animate-spin" />
       {t(state.phase === 'restarting' ? 'preview.restarting' : 'preview.starting')}
     </p>
@@ -86,11 +86,17 @@ function Body({ server, onRetry, root, slug, sceneType, canvas, entry, onThumbna
   const isStatic = sceneType === 'static';
 
   return (
-    <div className="flex flex-col gap-2" data-testid="preview-panel">
-      <ServerStatus state={server} onRetry={onRetry} />
-      <ScenePreview serverUrl={serverUrl} slug={slug} entry={entry} format={canvas} />
+    <div className="relative h-full min-h-0 w-full" data-testid="preview-panel">
+      {server.phase !== 'running' && (
+        <div className="absolute left-1/2 top-4 z-10 w-max max-w-[calc(100%-2rem)] -translate-x-1/2">
+          <ServerStatus state={server} onRetry={onRetry} />
+        </div>
+      )}
+      <div className="absolute inset-0">
+        <ScenePreview serverUrl={serverUrl} slug={slug} entry={entry} format={canvas} />
+      </div>
 
-      <div className="flex flex-wrap items-center gap-2 text-xs">
+      <div className="absolute bottom-4 left-1/2 z-10 flex w-max max-w-[calc(100%-2rem)] -translate-x-1/2 flex-wrap items-center gap-2 rounded-lg border border-border bg-card/95 px-2 py-1.5 text-xs shadow-lg backdrop-blur">
         {isStatic ? (
           <>
             <Button size="sm" variant="outline" aria-label={t('preview.prev')} disabled={bridge.status !== 'ready'} onClick={() => bridge.send({ type: 'prev' })}>
@@ -122,7 +128,7 @@ function Body({ server, onRetry, root, slug, sceneType, canvas, entry, onThumbna
       </div>
 
       {bridge.error && (
-        <p role="alert" className="rounded bg-destructive/10 p-2 text-xs text-destructive">
+        <p role="alert" className="absolute bottom-20 left-1/2 z-10 w-max max-w-[calc(100%-2rem)] -translate-x-1/2 rounded-lg border border-destructive/30 bg-card/95 p-2 text-xs text-destructive shadow-lg backdrop-blur">
           {t('preview.sceneError', { message: bridge.error.message })}
         </p>
       )}

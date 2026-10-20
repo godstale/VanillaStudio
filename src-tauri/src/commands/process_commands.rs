@@ -27,7 +27,7 @@ impl OwnedJob {
     }
     pub fn argv(self) -> &'static [&'static str] {
         match self {
-            OwnedJob::ProjectDeps => &["install", "--reporter=append-only"],
+            OwnedJob::ProjectDeps => &["install", "--ignore-workspace", "--reporter=append-only"],
         }
     }
 }
@@ -124,7 +124,7 @@ fn project_dir(dir: &str) -> Result<PathBuf, String> {
     if get_active_workspace_internal().is_none() {
         return Err("no-workspace".into());
     }
-    resolve_and_verify_workspace_path(dir, None, true)
+    resolve_and_verify_workspace_path(dir, None, true).map(|p| plain_path(&p))
 }
 
 /// `pnpm install` in `project_dir`. The caller must have obtained user consent (wizard, once per
@@ -206,8 +206,8 @@ pub fn preview_argv(runner: &Path, root: &Path) -> Vec<String> {
     vec![runner.to_string_lossy().into_owned(), "--root".into(), root.to_string_lossy().into_owned()]
 }
 
-/// `\\?\C:\x` breaks some Node tooling; hand Node the plain form.
-fn plain_path(p: &Path) -> PathBuf {
+/// `\\?\C:\x` breaks some Node and cmd.exe tooling; hand child processes the plain form.
+pub fn plain_path(p: &Path) -> PathBuf {
     let s = p.to_string_lossy();
     match s.strip_prefix(r"\\?\") {
         Some(rest) if !rest.starts_with(r"UNC\") => PathBuf::from(rest),
@@ -614,7 +614,7 @@ mod tests {
     #[test]
     fn argv_is_fixed_and_allowlisted() {
         assert_eq!(OwnedJob::ProjectDeps.program(), "pnpm");
-        assert_eq!(OwnedJob::ProjectDeps.argv(), ["install", "--reporter=append-only"]);
+        assert_eq!(OwnedJob::ProjectDeps.argv(), ["install", "--ignore-workspace", "--reporter=append-only"]);
     }
 
     #[test]
@@ -667,7 +667,7 @@ mod tests {
         assert_eq!(code, Some(3));
         let ev = events.lock().unwrap();
         assert!(matches!(ev.first(), Some(InstallEvent::Started { .. })));
-        assert!(ev.contains(&InstallEvent::Log { stream: "stdout", line: "args=install \"--reporter=append-only\"".into() }));
+        assert!(ev.contains(&InstallEvent::Log { stream: "stdout", line: "args=install --ignore-workspace \"--reporter=append-only\"".into() }));
         assert!(ev.contains(&InstallEvent::Log { stream: "stderr", line: "oops ".into() }));
         assert_eq!(ev.last(), Some(&InstallEvent::Done { exit_code: Some(3) }));
     }

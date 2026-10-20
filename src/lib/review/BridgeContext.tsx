@@ -109,13 +109,15 @@ function BridgeInner({ previewOrigin, initialParamsValues, canvas, children }: B
           timeListeners.current.forEach((l) => l());
           break;
         case 'error':
-          setError(msg.payload);
           if (msg.payload.message.startsWith('capture:')) {
+            // 캡처 실패(예: DOM 전용 신)는 신 오류가 아니다. 요청한 쪽에만 알린다.
             for (const [id, p] of pending.current) {
               clearTimeout(p.timer);
               p.reject(new Error(msg.payload.message));
               pending.current.delete(id);
             }
+          } else {
+            setError(msg.payload);
           }
           break;
         case 'captured': {

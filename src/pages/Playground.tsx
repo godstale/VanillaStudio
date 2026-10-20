@@ -11,7 +11,7 @@ import { loadCustomTransitions, type CustomTransition } from '@/lib/playground/t
 import { previewOriginOf } from '@/lib/review/bridgeProtocol';
 import { usePreviewServer } from '@/lib/review/previewServer';
 import { listScenes } from '@/lib/scene/files';
-import { loadThumbnail } from '@/lib/scene/thumbnail';
+import { loadSceneThumbnail } from '@/lib/scene/thumbnail';
 import { readSequence } from '@/lib/sequence/file';
 import type { Sequence } from '@/lib/sequence/schema';
 import { hasErrors, validateSequence } from '@/lib/sequence/validate';
@@ -67,7 +67,7 @@ export function Playground() {
     let cancelled = false;
     for (const [, s] of ready.scenes) {
       if (thumbs[s.slug]) continue;
-      loadThumbnail(ready.root, s.slug)
+      loadSceneThumbnail(ready.root, s.slug)
         .then((url) => url && !cancelled && setThumbs((m) => (m[s.slug] ? m : { ...m, [s.slug]: url })))
         .catch(() => undefined);
     }

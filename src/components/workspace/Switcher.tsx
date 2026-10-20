@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FolderPlus, Folders } from 'lucide-react';
+import { FolderPlus, Folders, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -70,6 +70,17 @@ export function Switcher({ api = tauriWorkspaceApi }: { api?: WorkspaceApi }) {
     else void perform(target);
   }
 
+  async function handleRemove(w: WorkspaceRecord, e: React.SyntheticEvent) {
+    e.stopPropagation();
+    e.preventDefault();
+    try {
+      await removeWorkspace(w.workspaceId);
+    } catch {
+      // 목록에서만 치운다.
+    }
+    setRecent((prev) => prev.filter((r) => r.workspaceId !== w.workspaceId));
+  }
+
   async function confirm() {
     if (!pending) return;
     const { target } = pending;
@@ -90,11 +101,33 @@ export function Switcher({ api = tauriWorkspaceApi }: { api?: WorkspaceApi }) {
           <DropdownMenuLabel>{t('switcher.recent')}</DropdownMenuLabel>
           {recent.length === 0 && <div className="px-2 py-1.5 text-xs text-muted-foreground">{t('switcher.none')}</div>}
           {recent.map((w) => (
-            <DropdownMenuItem key={w.workspaceId} onSelect={() => request({ kind: 'open', path: w.path })}>
-              <div className="min-w-0">
+            <DropdownMenuItem
+              key={w.workspaceId}
+              onSelect={(e) => {
+                if ((e.target as HTMLElement).closest('[data-delete]')) {
+                  e.preventDefault();
+                  return;
+                }
+                request({ kind: 'open', path: w.path });
+              }}
+              className="pr-1"
+            >
+              <div className="min-w-0 flex-1">
                 <div className="truncate text-sm">{w.name}</div>
                 <div className="truncate text-[11px] text-muted-foreground">{w.path}</div>
               </div>
+              <button
+                type="button"
+                data-delete
+                aria-label={`${t('switcher.remove')}: ${w.name}`}
+                title={`${t('switcher.remove')}: ${w.name}`}
+                onClick={(e) => void handleRemove(w, e)}
+                onKeyDown={(e) => e.stopPropagation()}
+                onPointerDown={(e) => e.stopPropagation()}
+                className="shrink-0 rounded-sm p-1.5 text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <X className="h-4 w-4" />
+              </button>
             </DropdownMenuItem>
           ))}
           <DropdownMenuSeparator />

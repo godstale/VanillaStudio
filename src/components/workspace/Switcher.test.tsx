@@ -77,4 +77,16 @@ describe('Switcher', () => {
     await waitFor(() => expect(repo.removeWorkspace).toHaveBeenCalledWith('a'));
     expect(ctx.setWorkspaceRoot).not.toHaveBeenCalled();
   });
+
+  it('removes a recent entry via the delete icon without switching', async () => {
+    const a = api();
+    open(a);
+    const del = await screen.findByRole('button', { name: /N-a/ });
+    fireEvent.click(del);
+    await waitFor(() => expect(repo.removeWorkspace).toHaveBeenCalledWith('a'));
+    expect(ctx.setWorkspaceRoot).not.toHaveBeenCalled();
+    expect(a.openWorkspace).not.toHaveBeenCalled();
+    await waitFor(() => expect(screen.queryByText('N-a')).toBeNull());
+    expect(screen.getByText('N-b')).toBeTruthy();
+  });
 });

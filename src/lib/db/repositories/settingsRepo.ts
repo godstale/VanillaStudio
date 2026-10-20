@@ -112,7 +112,21 @@ export async function getSettings(
   return globalSettings;
 }
 
-export async function updateSettings(
+let settingsWriteQueue: Promise<unknown> = Promise.resolve();
+
+export function updateSettings(
+  updates: Partial<Omit<AppSettings, 'id'>>,
+  dbOverride?: SqlDatabase,
+): Promise<AppSettings> {
+  const next = settingsWriteQueue.then(
+    () => updateSettingsInternal(updates, dbOverride),
+    () => updateSettingsInternal(updates, dbOverride),
+  );
+  settingsWriteQueue = next.catch(() => undefined);
+  return next;
+}
+
+async function updateSettingsInternal(
   updates: Partial<Omit<AppSettings, 'id'>>,
   dbOverride?: SqlDatabase,
 ): Promise<AppSettings> {

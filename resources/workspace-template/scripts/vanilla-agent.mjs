@@ -848,15 +848,19 @@ function cmdTemplates(args) {
   const opusCatalog = readJsonOrNull(path.join(RESOURCES_DIR, 'opus', 'opus-catalog.json'));
   if (opusCatalog?.decomposedPresets) {
     const presets = opusCatalog.decomposedPresets.filter((p) => {
-      if (type && !p.sceneTypes.includes(type)) return false;
-      if (intent && !p.mediaIntents.includes(intent)) return false;
+      const types = p.targetTypes ?? p.sceneTypes ?? [];
+      const intents = p.mediaIntents ?? [];
+      if (type && !types.includes(type)) return false;
+      if (intent && !intents.includes(intent)) return false;
       if (q && !JSON.stringify(p).toLowerCase().includes(q)) return false;
       return true;
     });
     console.log(`\n=== Opus Decomposed Presets (${presets.length}) ===`);
     for (const p of presets) {
-      console.log(`- ${p.id} [${p.category}, types=${p.sceneTypes.join('/')}]: ${p.name.ko} (${p.name.en})`);
-      console.log(`    ${p.description.ko}`);
+      const types = p.targetTypes ?? p.sceneTypes ?? [];
+      const label = p.label ?? p.name ?? {};
+      console.log(`- ${p.id} [${p.category}, types=${types.join('/')}]: ${label.ko} (${label.en})`);
+      console.log(`    ${p.description?.ko ?? ''}`);
       if (p.previewUrl) console.log(`    Preview Image: ${p.previewUrl}`);
       if (p.actionUrl) console.log(`    Live Demo URL: ${p.actionUrl}`);
     }

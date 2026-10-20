@@ -209,6 +209,7 @@ const en: Dict = {
   'onboarding.installing': 'Installing dependencies…',
   'switcher.title': 'Switch workspace',
   'switcher.recent': 'Recent workspaces',
+  'switcher.remove': 'Remove from list',
   'switcher.none': 'No recent workspaces.',
   'switcher.new': 'New / open another folder',
   'switcher.openFailed': 'Cannot open the workspace. The folder may have been moved or deleted.',

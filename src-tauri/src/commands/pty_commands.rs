@@ -68,7 +68,7 @@ impl PtySession {
         argv.extend(args.iter().map(|s| s.to_string()));
         let mut cmd = CommandBuilder::new(&argv[0]);
         cmd.args(&argv[1..]);
-        cmd.cwd(cwd);
+        cmd.cwd(crate::commands::process_commands::plain_path(cwd));
         let child = pair.slave.spawn_command(cmd).map_err(|e| e.to_string())?;
         drop(pair.slave);
         let mut reader = pair.master.try_clone_reader().map_err(|e| e.to_string())?;

@@ -189,7 +189,8 @@ pub fn base_command(exe: &Path, args: &[&str], opts: &RunOptions) -> Command {
         cmd.env("PATH", p);
     }
     if let Some(d) = &opts.cwd {
-        cmd.current_dir(d);
+        let plain = crate::commands::process_commands::plain_path(d);
+        cmd.current_dir(plain);
     }
     for (k, v) in &opts.env {
         cmd.env(k, v);

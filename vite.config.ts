@@ -23,6 +23,7 @@ export default defineConfig({
         '**/*.sqlite*',
         '**/logs/**',
         '**/spikes/**',
+        '**/tests/**',
       ],
     },
   },
@@ -30,7 +31,7 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     passWithNoTests: true,
-    // spikes/ are throwaway PoCs with their own toolchain and cwd-relative fixtures.
-    exclude: [...configDefaults.exclude, 'spikes/**'],
+    // spikes/ and tests/ are throwaway PoCs or local trial workspaces with their own toolchain.
+    exclude: [...configDefaults.exclude, 'spikes/**', 'tests/**'],
   },
 });
