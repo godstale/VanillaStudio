@@ -1,3 +1,4 @@
 - [ ] Advances only on user input (Arrow keys / click) per D-032
 - [ ] Steps driven by `useSteps(STEPS, null, setIndex)` with `steps[].advance` triggers (host receives `step`/`done`)
 - [ ] Slide transitions use smooth spring-morph or slide-x choreography
+- [ ] `poster.svg` exists: 16:9 code-drawn SVG using only `DESIGN.md` tokens, cover-step title/copy consistent with `scene.json`

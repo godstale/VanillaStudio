@@ -88,6 +88,7 @@ export function agentsMdSections({ workspace, scene, template }: GuideContext): 
         '- No network or CDN dependencies at runtime. Bundle what you need.',
         '- Every external resource (font, texture, icon, audio) is recorded in `../../CREDITS.md` with source and open license.',
         '- Canvas size and fps come from `../../workspace.json`; never hard-code them.',
+        '- Also create `poster.svg` in this folder: a 16:9 code-drawn SVG thumbnail shown on the scene card and sequence screen when no auto-captured preview exists. Draw it with shapes and text using only `DESIGN.md` tokens — no generative image or video AI, no pixels copied from references, no external files. Keep its title and copy consistent with `scene.json`.',
       ].join('\n'),
     },
     {

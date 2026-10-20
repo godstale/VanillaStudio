@@ -49,6 +49,14 @@ describe('agents.md', () => {
     expect(readSection(renderAgentsMd(null, ctxFor(mk('static'))), 'contract')).toContain('only on user input');
   });
 
+  it('contract asks for a code-drawn poster.svg thumbnail on every type', () => {
+    for (const type of ['static', 'motion', '3d'] as const) {
+      const contract = readSection(renderAgentsMd(null, ctxFor(mk(type))), 'contract')!;
+      expect(contract).toContain('`poster.svg`');
+      expect(contract).toContain('no generative image');
+    }
+  });
+
   it('keeps user text outside the markers on re-render and is deterministic', () => {
     const ctx = ctxFor(mk('motion'));
     const first = renderAgentsMd(null, ctx);
