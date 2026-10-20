@@ -2,7 +2,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { projectPath } from '@/lib/workspace/files';
 
 // 신 썸네일(T4.8): 미리보기 Bridge의 `capture`가 돌려준 PNG를 `.vanilla/thumb.png`에 둔다. 앱 상태 파일이라 커밋·공유 제외.
-// `poster.svg`: 에이전트가 코드로 그리는 공유 썸네일(커밋 대상, D-034). thumb.png이 없을 때 대신 표시한다.
+// `poster.svg`: 에이전트가 코드로 그리는 공유 썸네일(커밋 대상, D-039). thumb.png이 없을 때 대신 표시한다.
 
 const PNG_PREFIX = 'data:image/png;base64,';
 
