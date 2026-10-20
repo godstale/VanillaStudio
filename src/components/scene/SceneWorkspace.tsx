@@ -267,7 +267,21 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
     () => entries.flatMap((e) => (e.scene ? [{ slug: e.slug, sceneId: e.scene.id, name: e.scene.name }] : [])),
     [entries],
   );
-  const [commentsOpen, setCommentsOpen] = useState(true);
+  // 코멘트 플로팅 박스: 기본 닫힘, 마지막 상태 기억(뷰어 역할).
+  const [commentsOpen, setCommentsOpen] = useState(() => {
+    try {
+      return localStorage.getItem(`vs_seq_comments_open:${root}`) === '1';
+    } catch {
+      return false;
+    }
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem(`vs_seq_comments_open:${root}`, commentsOpen ? '1' : '0');
+    } catch {
+      // ignore
+    }
+  }, [commentsOpen, root]);
   // 코멘트 플로팅 박스는 헤더 드래그로 옮길 수 있다.
   const [commentOffset, setCommentOffset] = useState({ x: 0, y: 0 });
   const commentDrag = useRef<{ startX: number; startY: number; baseX: number; baseY: number } | null>(null);
@@ -326,10 +340,6 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
         onViewChange={onViewChange}
         onNodesChange={onNodesChange}
         onNodeDragStop={onNodeDragStop}
-        onPaneContextMenu={(e) => {
-          e.preventDefault();
-          setDialog(rf.screenToFlowPosition({ x: e.clientX, y: e.clientY }));
-        }}
       >
         <Panel position="top-left" className="flex items-center gap-2">
           <Button size="sm" onClick={() => setDialog(centerPos())} aria-label={t('scene.add')}>

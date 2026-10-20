@@ -22,10 +22,10 @@ import { PreviewPanel } from './PreviewPanel';
 
 const CANVAS = { width: 1080, height: 1920, fps: 24 };
 
-function renderPanel(sceneType: 'static' | 'motion' | '3d' = 'motion') {
+function renderPanel(sceneType: 'static' | 'motion' | '3d' = 'motion', stepsTotal?: number | null) {
   return render(
     <LanguageProvider>
-      <PreviewPanel root="/w" slug="intro" sceneType={sceneType} canvas={CANVAS} />
+      <PreviewPanel root="/w" slug="intro" sceneType={sceneType} canvas={CANVAS} stepsTotal={stepsTotal} />
     </LanguageProvider>,
   );
 }
@@ -59,11 +59,14 @@ describe('PreviewPanel', () => {
     expect(frame.getAttribute('sandbox')).toBe('allow-scripts allow-same-origin');
   });
 
-  it('shows connecting until the scene says ready, then connected with the duration', () => {
+  it('disables nav buttons until ready and shows step state without status text', () => {
     renderPanel();
-    expect(screen.getByText(/연결 중|Connecting/)).toBeTruthy();
+    // 준비 전에는 동작 불가 버튼이 비활성이다. 상태 문구는 표시하지 않는다.
+    expect(screen.queryByText(/연결 중|Connecting/)).toBeNull();
+    expect(screen.queryByText(/미리보기 연결됨|Preview connected/)).toBeNull();
+    expect((screen.getByRole('button', { name: /^재생$|^Play$/ }) as HTMLButtonElement).disabled).toBe(true);
     fromScene(ready);
-    expect(screen.getByText(/미리보기 연결됨|Preview connected/)).toBeTruthy();
+    expect((screen.getByRole('button', { name: /^재생$|^Play$/ }) as HTMLButtonElement).disabled).toBe(false);
     expect(screen.getByTestId('preview-time').textContent).toContain('3.00s');
   });
 
@@ -77,23 +80,48 @@ describe('PreviewPanel', () => {
     expect(screen.queryByRole('button', { name: /^재생$|^Play$/ })).toBeNull();
   });
 
-  it('static: shows step progress and the finished state from the page', () => {
+  it('static: shows step progress; the finished notice goes to the toast, not the toolbox', () => {
     renderPanel('static');
     fromScene(ready);
-    expect(screen.getByTestId('preview-step').textContent).toMatch(/클릭하거나|Click the page/);
+    // 초기에는 안내 문구 대신 자리 표시만 보인다.
+    expect(screen.getByTestId('preview-step').textContent).toBe('—');
     fromScene({ v: 2, type: 'step', payload: { index: 1, total: 3 } });
     expect(screen.getByTestId('preview-step').textContent).toMatch(/2 \/ 3/);
     fromScene({ v: 2, type: 'done', payload: {} });
-    expect(screen.getByTestId('preview-step').textContent).toMatch(/마지막 단계|last step/);
+    // 툴박스는 고정 크기 유지: 완료 후에도 단계 숫자만 보인다.
+    expect(screen.getByTestId('preview-step').textContent).toMatch(/2 \/ 3/);
+    expect(screen.getByTestId('preview-step').textContent).not.toMatch(/마지막 단계|last step/i);
+    // 완료 안내는 하단 토스트로 보여준다.
+    expect(screen.getByRole('status').textContent).toMatch(/마지막 단계|last step/i);
+  });
+
+  it('static: next locks on the last step and unlocks when stepping back', () => {
+    renderPanel('static');
+    fromScene(ready);
+    fromScene({ v: 2, type: 'step', payload: { index: 2, total: 4 } });
+    const next = screen.getByRole('button', { name: /다음 단계|Next step/ }) as HTMLButtonElement;
+    const prev = screen.getByRole('button', { name: /이전 단계|Previous step/ }) as HTMLButtonElement;
+    // 3/4에서는 다음 버튼은 동작한다.
+    expect(next.disabled).toBe(false);
+    // 마지막 단계(4/4)에서는 다음을 막는다. 완료(done)는 신 안의 입력으로 보고된다.
+    fromScene({ v: 2, type: 'step', payload: { index: 3, total: 4 } });
+    expect(next.disabled).toBe(true);
+    expect(prev.disabled).toBe(false);
+    // 뒤로 가면(step 수신) 다음이 다시 활성화된다.
+    fromScene({ v: 2, type: 'step', payload: { index: 2, total: 4 } });
+    expect(next.disabled).toBe(false);
+    expect(screen.getByTestId('preview-step').textContent).toMatch(/3 \/ 4/);
   });
 
   it('next/prev are sent to the scene as bridge messages', () => {
     renderPanel('static');
     fromScene(ready);
+    fromScene({ v: 2, type: 'step', payload: { index: 1, total: 3 } });
     const frame = screen.getByTitle(/신 미리보기|Scene preview/) as HTMLIFrameElement;
     const post = vi.fn();
     Object.defineProperty(frame, 'contentWindow', { value: { postMessage: post }, configurable: true });
     fireEvent.load(frame);
+    // 초기(prev 비활성) 상태가 아니라 step 수신 뒤에는 둘 다 동작한다.
     fireEvent.click(screen.getByRole('button', { name: /다음 단계|Next step/ }));
     fireEvent.click(screen.getByRole('button', { name: /이전 단계|Previous step/ }));
     expect(post.mock.calls.map((c) => c[0].type)).toEqual(['next', 'prev']);
@@ -106,6 +134,12 @@ describe('PreviewPanel', () => {
     fromScene(ready);
     fromScene({ v: 2, type: 'error', payload: { message: 'boom', stack: '', sceneId: null } });
     expect(screen.getByRole('alert').textContent).toContain('boom');
+  });
+
+  it('static with known total shows 1/N immediately after ready (no longer just —)', () => {
+    renderPanel('static', 3);
+    fromScene(ready);
+    expect(screen.getByTestId('preview-step').textContent).toMatch(/1 \/ 3/);
   });
 
   it('sends the workspace canvas with init after ready', () => {

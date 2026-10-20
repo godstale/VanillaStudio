@@ -74,7 +74,7 @@ describe('SequencePlayer', () => {
     await waitFor(() => expect(frameOf('scn_d')).toBeTruthy());
     fromScene('scn_d', 'ready', ready(2));
     fromScene('scn_m', 'time', { t: 4, sceneId: null });
-    await waitFor(() => expect(screen.getByTestId('player-progress').textContent).toMatch(/3 \/ 3.*Globe/));
+    await waitFor(() => expect(screen.getByTestId('player-progress').textContent).toBe('3 / 3'));
     expect(frameOf('scn_m')).toBeUndefined(); // old scene disposed
     expect(frameOf('scn_d').style.opacity).toBe('1');
   });
@@ -85,7 +85,6 @@ describe('SequencePlayer', () => {
     fromScene('scn_m', 'ready', ready(4));
     await waitFor(() => expect(frameOf('scn_d')).toBeTruthy());
     fromScene('scn_d', 'ready', ready(2));
-    expect(screen.getByTestId('player-hints').textContent).toMatch(/클릭|Click/);
     fireEvent.click(screen.getByTestId('player-input'));
     await waitFor(() => expect(frameOf('scn_m')).toBeUndefined());
   });
@@ -96,14 +95,13 @@ describe('SequencePlayer', () => {
     fromScene('scn_m', 'ready', ready(4));
     await waitFor(() => expect(frameOf('scn_d')).toBeTruthy());
     fromScene('scn_d', 'ready', ready(2));
-    expect(screen.getByTestId('player-hints').textContent).toMatch(/ArrowRight/);
     fireEvent.keyDown(window, { key: 'Enter' });
     expect(frameOf('scn_m')).toBeTruthy();
     fireEvent.keyDown(window, { key: 'ArrowRight' });
     await waitFor(() => expect(frameOf('scn_m')).toBeUndefined());
   });
 
-  it('static scene keyboard: keys go to the page as typed input, not as unconditional next', async () => {
+  it('static scene keyboard: keys go to the page as typed input, not as unconditional next (ArrowLeft goes back)', async () => {
     renderPlayer(sequence([edge('scn_s', 'scn_d', 'key:ArrowRight')], ['scn_s', 'scn_d']));
     await waitFor(() => expect(frameOf('scn_s')).toBeTruthy());
     const post = vi.fn();
@@ -112,10 +110,8 @@ describe('SequencePlayer', () => {
     await waitFor(() => expect(frameOf('scn_d')).toBeTruthy());
     fromScene('scn_d', 'ready', ready(2));
     post.mockClear();
-    fireEvent.keyDown(window, { key: 'ArrowLeft' }); // wrong key: typed input, never next
     fireEvent.keyDown(window, { key: 'n' }); // scene shortcut key: typed input, never next
     expect(post.mock.calls.map((c) => c[0])).toEqual([
-      { v: 2, type: 'input', payload: { kind: 'key', key: 'ArrowLeft' } },
       { v: 2, type: 'input', payload: { kind: 'key', key: 'n' } },
     ]);
     expect(frameOf('scn_s')).toBeTruthy(); // the page decides; the host does not leave
@@ -123,12 +119,25 @@ describe('SequencePlayer', () => {
     expect(post.mock.calls.at(-1)?.[0]).toEqual({ v: 2, type: 'input', payload: { kind: 'key', key: 'ArrowRight' } });
   });
 
+  it('static scene ArrowLeft goes to the previous step, or the previous scene at the first step', async () => {
+    renderPlayer(sequence([edge('scn_s', 'scn_d', 'click')], ['scn_s', 'scn_d']));
+    await waitFor(() => expect(frameOf('scn_s')).toBeTruthy());
+    const post = vi.fn();
+    Object.defineProperty(frameOf('scn_s'), 'contentWindow', { value: { postMessage: post }, configurable: true });
+    fromScene('scn_s', 'ready', ready());
+    await waitFor(() => expect(frameOf('scn_d')).toBeTruthy());
+    fromScene('scn_d', 'ready', ready(2));
+    fromScene('scn_s', 'step', { index: 1, total: 3 });
+    post.mockClear();
+    fireEvent.keyDown(window, { key: 'ArrowLeft' }); // step 1 -> prev message
+    expect(post.mock.calls.at(-1)?.[0]).toEqual({ v: 2, type: 'prev' });
+  });
+
   it('choices are shown as buttons and the chosen label wins', async () => {
     renderPlayer(sequence([edge('scn_m', 'scn_d', 'choice:Globe'), edge('scn_m', 'scn_s', 'choice:Page')]));
     await waitFor(() => expect(frameOf('scn_m')).toBeTruthy());
     fromScene('scn_m', 'ready', ready(4));
     await waitFor(() => expect(screen.getByTestId('player-choices')).toBeTruthy());
-    expect(screen.getByTestId('player-hints').textContent).toMatch(/선택지|option/);
     await waitFor(() => expect(frameOf('scn_s')).toBeTruthy());
     fromScene('scn_s', 'ready', ready());
     fireEvent.click(screen.getByRole('button', { name: 'Page' }));
@@ -193,13 +202,51 @@ describe('SequencePlayer', () => {
     expect(frames()).toHaveLength(0);
   });
 
-  it('jump buttons go straight to a scene', async () => {
+  it('the nav bar shows only the scene position without names, hints, or jump buttons', async () => {
     renderPlayer(sequence([edge('scn_m', 'scn_d', 'end')]));
     await waitFor(() => expect(frameOf('scn_m')).toBeTruthy());
     fromScene('scn_m', 'ready', ready(4));
-    fireEvent.click(screen.getByRole('button', { name: /Globe/ }));
     await waitFor(() => expect(frameOf('scn_d')).toBeTruthy());
     fromScene('scn_d', 'ready', ready(2));
-    await waitFor(() => expect(screen.getByTestId('player-progress').textContent).toMatch(/3 \/ 3/));
+    await waitFor(() => expect(screen.getByTestId('player-progress').textContent).toBe('1 / 3'));
+    expect(screen.queryByTestId('player-hints')).toBeNull();
+    expect(screen.queryByRole('button', { name: /Globe/ })).toBeNull();
+  });
+
+  it('right-click on next opens the scene jump popup and jumps on select', async () => {
+    renderPlayer(sequence([edge('scn_s', 'scn_d', 'click')], ['scn_s', 'scn_d']));
+    await waitFor(() => expect(frameOf('scn_s')).toBeTruthy());
+    fromScene('scn_s', 'ready', ready());
+    await waitFor(() => expect(frameOf('scn_d')).toBeTruthy());
+    fromScene('scn_d', 'ready', ready(2));
+    fromScene('scn_s', 'step', { index: 0, total: 3 });
+    const next = screen.getByRole('button', { name: /다음 단계|Next step/ });
+    fireEvent.contextMenu(next);
+    const menu = await screen.findByTestId('player-jump-menu');
+    expect(menu.textContent).toContain('Page');
+    expect(menu.textContent).toContain('Globe');
+    fireEvent.click(screen.getByRole('menuitem', { name: /Globe/ }));
+    await waitFor(() => expect(frameOf('scn_d')).toBeTruthy());
+    fromScene('scn_d', 'ready', ready(2));
+    await waitFor(() => expect(frameOf('scn_d').style.opacity).toBe('1'));
+    expect(screen.queryByTestId('player-jump-menu')).toBeNull();
+  });
+
+  it('long-press on next opens the jump popup without stepping', async () => {
+    renderPlayer(sequence([edge('scn_s', 'scn_d', 'click')], ['scn_s', 'scn_d']));
+    await waitFor(() => expect(frameOf('scn_s')).toBeTruthy());
+    const post = vi.fn();
+    Object.defineProperty(frameOf('scn_s'), 'contentWindow', { value: { postMessage: post }, configurable: true });
+    fromScene('scn_s', 'ready', ready());
+    await waitFor(() => expect(frameOf('scn_d')).toBeTruthy());
+    fromScene('scn_d', 'ready', ready(2));
+    fromScene('scn_s', 'step', { index: 0, total: 3 });
+    const next = screen.getByRole('button', { name: /다음 단계|Next step/ });
+    post.mockClear();
+    fireEvent.pointerDown(next);
+    expect(await screen.findByTestId('player-jump-menu', undefined, { timeout: 2000 })).toBeTruthy();
+    // 길게 누른 뒤의 click은 스텝 이동이 아니라 무시된다.
+    fireEvent.click(next);
+    expect(post.mock.calls.some((c) => c[0].type === 'next')).toBe(false);
   });
 });

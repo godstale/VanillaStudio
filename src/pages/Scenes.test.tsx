@@ -29,6 +29,11 @@ vi.mock('@/lib/sequence/file', () => ({
 }));
 
 function renderScenes(initial: string) {
+  try {
+    localStorage.clear();
+  } catch {
+    // ignore
+  }
   return render(
     <LanguageProvider>
       <MemoryRouter initialEntries={[initial]}>
@@ -41,11 +46,14 @@ function renderScenes(initial: string) {
 }
 
 describe('Scenes', () => {
-  it('lists scenes and shows the first with playback and comments', async () => {
+  it('lists scenes and shows the first with playback; comments open on demand', async () => {
     renderScenes('/scenes');
     expect((await screen.findAllByText('Alpha')).length).toBeGreaterThan(0);
     expect(screen.getAllByText('Beta').length).toBeGreaterThan(0);
     expect(await screen.findByTestId('preview-panel')).toBeTruthy();
+    // 코멘트는 기본 닫힘(뷰어 역할). 버튼을 눌러야 열린다.
+    expect(screen.queryByTestId('comment-toolbox')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: /코멘트|Comments/ }));
     expect(await screen.findByTestId('comment-toolbox')).toBeTruthy();
   });
 
@@ -57,21 +65,19 @@ describe('Scenes', () => {
     expect(await screen.findByTestId('scene-inspector')).toBeTruthy();
   });
 
-  it('shows a context menu on right-click with open and guide actions', async () => {
+  it('does nothing on right-click (no context menu)', async () => {
     renderScenes('/scenes');
     await screen.findAllByText('Alpha');
     const item = screen.getByRole('button', { name: /Alpha[\s\S]*모션|Alpha[\s\S]*Motion/ });
     fireEvent.contextMenu(item);
-    const menu = await screen.findByTestId('scene-context-menu');
-    expect(menu).toBeTruthy();
-    expect(screen.getByRole('menuitem', { name: /신 열기|Open scene/ })).toBeTruthy();
-    fireEvent.click(screen.getByRole('menuitem', { name: /가이드 편집|Edit guide/ }));
-    expect(await screen.findByTestId('scene-inspector-float')).toBeTruthy();
+    expect(screen.queryByTestId('scene-context-menu')).toBeNull();
   });
 
   it('comments live in a draggable floating panel', async () => {
     renderScenes('/scenes');
     await screen.findAllByText('Alpha');
+    expect(screen.queryByTestId('scene-comments-float')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: /코멘트|Comments/ }));
     expect(await screen.findByTestId('scene-comments-float')).toBeTruthy();
     expect(await screen.findByTestId('comment-toolbox')).toBeTruthy();
   });

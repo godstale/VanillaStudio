@@ -135,9 +135,11 @@ describe('SceneWorkspace', () => {
     await waitFor(() => expect(seen).toContain('scn_AAA'));
   });
 
-  it('shows the comment toolbox overlay', async () => {
+  it('shows the comment toolbox overlay on demand (default closed)', async () => {
     renderWs();
     await screen.findAllByTestId('scene-node');
+    expect(screen.queryByTestId('comment-toolbox')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: /코멘트|Comments/ }));
     expect(await screen.findByTestId('comment-toolbox')).toBeTruthy();
   });
 });
