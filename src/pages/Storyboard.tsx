@@ -172,6 +172,8 @@ export function Storyboard() {
         changes={loaded.changes}
         comments={loaded.comments}
         loadErrors={loaded.loadErrors}
+        selectedTemplate={file.visualDirection.selectedTemplate}
+        selectedTaxonomy={file.visualDirection.selectedTaxonomy}
       />
     </div>
   );

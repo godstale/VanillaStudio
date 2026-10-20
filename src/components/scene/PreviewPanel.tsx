@@ -52,8 +52,17 @@ function Body({ server, onRetry, root, slug, sceneType, canvas, entry, stepsTota
   };
 
   useBridgeEvents((e) => {
-    if (e.type === 'step') setStep(e.payload);
-    if (e.type === 'done') setDone(true);
+    if (e.type === 'step') {
+      // 스텝 보고는 "어느 단계에 있다"는 뜻이므로 완료 상태를 푼다.
+      // (완료 뒤 prev로 돌아오면 done만 true로 남아 다음 버튼이 영원히 막히는 버그 방지)
+      setStep(e.payload);
+      setDone(false);
+    }
+    if (e.type === 'done') {
+      setDone(true);
+      // 완료 안내는 툴박스가 아닌 하단 토스트로 보여준다(툴박스는 고정 크기 유지).
+      flash(t('preview.finished'), 'status');
+    }
     if (e.type === 'ready') {
       setStep(null);
       setDone(false);
@@ -99,15 +108,15 @@ function Body({ server, onRetry, root, slug, sceneType, canvas, entry, stepsTota
   const isStatic = sceneType === 'static';
   const notReady = bridge.status !== 'ready';
   const prevDisabled = notReady || !step || step.index <= 0;
-  const nextDisabled = notReady || done || (step ? step.index >= step.total - 1 : false);
+  // 마지막 단계에서는 다음을 막는다. 완료(done)는 신 안에서 직접 입력(클릭·키)할 때 보고된다(D-032).
+  // 툴박스 next는 스텝 이동용이라 마지막 단계에서 누르면 advance 검사를 우회하게 된다.
+  const nextDisabled = notReady || done || (step ? step.index >= step.total - 1 : (stepsTotal != null && stepsTotal <= 1));
   const serverFailed = server.phase === 'failed';
-  const stepLabel = done
-    ? t('preview.finished')
-    : step
-      ? t('preview.step', { index: step.index + 1, total: step.total })
-      : stepsTotal != null && isStatic && !notReady
-        ? t('preview.step', { index: 1, total: stepsTotal })
-        : '—';
+  const stepLabel = step
+    ? t('preview.step', { index: step.index + 1, total: step.total })
+    : stepsTotal != null && isStatic && !notReady
+      ? t('preview.step', { index: 1, total: stepsTotal })
+      : '—';
 
   return (
     <div className="relative h-full min-h-0 w-full" data-testid="preview-panel">
@@ -119,19 +128,19 @@ function Body({ server, onRetry, root, slug, sceneType, canvas, entry, stepsTota
       <div className="absolute bottom-4 left-1/2 z-10 flex h-12 w-[420px] max-w-[calc(100%-2rem)] -translate-x-1/2 items-center justify-center gap-2 overflow-hidden rounded-lg border border-border bg-card/95 px-2 text-xs shadow-lg backdrop-blur">
         {isStatic ? (
           <>
-            <Button size="sm" variant="outline" aria-label={t('preview.prev')} disabled={prevDisabled} onClick={() => bridge.send({ type: 'prev' })}>
+            <Button size="sm" variant="outline" aria-label={t('preview.prev')} disabled={prevDisabled} onClick={() => bridge.send({ type: 'prev' })} className="border-foreground/25 text-foreground disabled:cursor-not-allowed disabled:border-border disabled:bg-muted/60 disabled:text-muted-foreground disabled:opacity-40">
               <ChevronLeft className="h-3.5 w-3.5" />
             </Button>
-            <Button size="sm" variant="outline" aria-label={t('preview.next')} disabled={nextDisabled} onClick={() => bridge.send({ type: 'next' })}>
+            <Button size="sm" variant="outline" aria-label={t('preview.next')} disabled={nextDisabled} onClick={() => bridge.send({ type: 'next' })} className="border-foreground/25 text-foreground disabled:cursor-not-allowed disabled:border-border disabled:bg-muted/60 disabled:text-muted-foreground disabled:opacity-40">
               <ChevronRight className="h-3.5 w-3.5" />
             </Button>
-            <span className="w-20 shrink-0 text-center tabular-nums text-muted-foreground" data-testid="preview-step">
+            <span className="w-20 shrink-0 whitespace-nowrap text-center tabular-nums text-muted-foreground" data-testid="preview-step">
               {stepLabel}
             </span>
           </>
         ) : (
           <>
-            <Button size="sm" variant="outline" disabled={notReady} onClick={() => (bridge.playing ? bridge.pause() : bridge.play())}>
+            <Button size="sm" variant="outline" disabled={notReady} onClick={() => (bridge.playing ? bridge.pause() : bridge.play())} className="border-foreground/25 text-foreground disabled:cursor-not-allowed disabled:border-border disabled:bg-muted/60 disabled:text-muted-foreground disabled:opacity-40">
               {bridge.playing ? <Pause className="mr-1 h-3.5 w-3.5" /> : <Play className="mr-1 h-3.5 w-3.5" />}
               {bridge.playing ? t('preview.pause') : t('preview.play')}
             </Button>
@@ -140,7 +149,7 @@ function Body({ server, onRetry, root, slug, sceneType, canvas, entry, stepsTota
             </span>
           </>
         )}
-        <Button size="sm" variant="ghost" onClick={() => bridge.reload()} disabled={notReady}>
+        <Button size="sm" variant="ghost" onClick={() => bridge.reload()} disabled={notReady} className="disabled:cursor-not-allowed disabled:opacity-40">
           <RotateCcw className="mr-1 h-3.5 w-3.5" />
           {t('preview.reload')}
         </Button>

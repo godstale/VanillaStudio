@@ -340,10 +340,6 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
         onViewChange={onViewChange}
         onNodesChange={onNodesChange}
         onNodeDragStop={onNodeDragStop}
-        onPaneContextMenu={(e) => {
-          e.preventDefault();
-          setDialog(rf.screenToFlowPosition({ x: e.clientX, y: e.clientY }));
-        }}
       >
         <Panel position="top-left" className="flex items-center gap-2">
           <Button size="sm" onClick={() => setDialog(centerPos())} aria-label={t('scene.add')}>

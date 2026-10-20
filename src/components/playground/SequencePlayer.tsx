@@ -1,12 +1,11 @@
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
-import { AlertTriangle, ChevronLeft, ChevronRight, Loader2, MousePointer2, Pause, Play, RotateCcw, SkipBack } from 'lucide-react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { AlertTriangle, ChevronLeft, ChevronRight, Loader2, Pause, Play, RotateCcw, SkipBack } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { IframeSceneHost, type SceneSource } from '@/lib/playground/iframeScene';
 import { createTransitionRunner } from '@/lib/playground/sceneTransitions';
 import type { CustomTransition } from '@/lib/playground/transitions/custom';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { computePreviewLayout } from '@/lib/review/previewLayout';
-import { triggerKind } from '@/lib/sequence/edit';
 import { createSequenceManager, type ManagerState, type SequenceManager, type UserInput } from '@/lib/sequence/manager';
 import type { Sequence } from '@/lib/sequence/schema';
 import type { SceneRef } from '@/lib/sequence/validate';
@@ -47,6 +46,9 @@ function useManagerState(manager: SequenceManager | null): ManagerState | null {
 
 const fmt = (s: number) => `${s.toFixed(1)}s`;
 
+/** `[>]` 길게 누르기로 신 점프 팝업을 여는 시간(ms). */
+const JUMP_LONG_PRESS_MS = 500;
+
 /**
  * 시퀀스 재생기(F-PLY-01, T6.6). 신 iframe을 겹쳐 두고 시퀀스 매니저가 trigger로 넘긴다.
  * 입력 레이어가 iframe 위를 덮어 클릭을 받는다(신 안의 버튼은 누를 수 없고, 분기는 아래 선택지로 고른다).
@@ -59,6 +61,22 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
   const [size, setSize] = useState({ width: 640, height: 360 });
   const [startError, setStartError] = useState<string | null>(null);
   const state = useManagerState(manager) ?? IDLE; // 매니저는 스테이지가 그려진 뒤 효과에서 만들어지므로 그 전에도 틀은 그린다
+  /** 신 점프 팝업 위치(화면 좌표). null이면 닫힘. */
+  const [jumpMenu, setJumpMenu] = useState<{ x: number; y: number } | null>(null);
+  const pressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** 길게 누르기로 팝업을 열었으면 뒤따르는 click을 무시한다. */
+  const suppressNextClick = useRef(false);
+
+  useEffect(() => () => {
+    if (pressTimer.current) clearTimeout(pressTimer.current);
+  }, []);
+
+  const cancelPress = () => {
+    if (pressTimer.current) {
+      clearTimeout(pressTimer.current);
+      pressTimer.current = null;
+    }
+  };
 
   // 시퀀스·서버가 바뀌면 매니저를 새로 만든다. 이전 것은 정리한다(iframe·타이머).
   useEffect(() => {
@@ -120,23 +138,11 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
     return () => window.removeEventListener('keydown', onKey);
   }, [manager, scenes, sequence.nodes]);
 
-  const layout = computePreviewLayout({ container: size, format: canvas, zoom: 'fit', deviceWidth: null });
+  const layout = computePreviewLayout({ container: size, format: canvas, zoom: 'fit', deviceWidth: null, padding: 0 });
   const current = state?.current ?? null;
   const currentRef = current ? scenes.get(current) : undefined;
   const isStatic = currentRef?.type === 'static';
-  const out = useMemo(() => (current ? sequence.edges.filter((e) => e.from === current) : []), [sequence, current]);
-  const hints = useMemo(() => {
-    const list: string[] = [];
-    for (const e of out) {
-      const k = triggerKind(e.trigger);
-      if (k === 'click') list.push(t('player.hint.click'));
-      else if (k === 'key') list.push(t('player.hint.key', { key: e.trigger.slice('key:'.length) }));
-      else if (k === 'timeout') list.push(t('player.hint.timeout', { seconds: e.trigger.slice('timeout:'.length, -1) }));
-    }
-    return [...new Set(list)];
-  }, [out, t]);
   const idx = current ? sequence.nodes.findIndex((n) => n.sceneId === current) : -1;
-  const progress = state && state.duration ? Math.min(1, state.t / state.duration) : 0;
   const busy = state?.status === 'loading' || state?.status === 'transitioning';
 
   /** 정적 신의 이전 버튼: 스텝이 있으면 한 칸 뒤로, 첫 스텝이면 이전 신으로. */
@@ -153,9 +159,10 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-2" data-testid="sequence-player">
-      <div ref={hostRef} className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-md bg-muted">
-        <div className="relative shrink-0 overflow-hidden bg-background shadow-lg" style={{ width: layout.box.width, height: layout.box.height }}>
+    <div className="relative h-full min-h-0 overflow-hidden bg-black" data-testid="sequence-player">
+      <div ref={hostRef} className="relative h-full min-h-0 w-full overflow-hidden bg-black">
+        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="relative shrink-0 overflow-hidden bg-black" style={{ width: layout.box.width, height: layout.box.height }}>
           {/* 신 iframe은 이 요소 안에 쌓인다. 캔버스 크기로 그린 뒤 맞춰 줄인다. */}
           <div ref={stageRef} data-testid="player-stage" className="absolute left-0 top-0 origin-top-left" style={{ width: layout.frame.width, height: layout.frame.height, transform: `scale(${layout.scale})` }} />
           <button
@@ -190,10 +197,11 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
             </div>
           )}
         </div>
+        </div>
       </div>
 
       {!hideChrome && (state.status === 'error' || startError) && (
-        <div role="alert" data-testid="player-error" className="flex items-start gap-2 rounded border border-destructive/40 bg-destructive/10 p-2 text-xs text-destructive">
+        <div role="alert" data-testid="player-error" className="absolute left-1/2 top-2 z-30 flex max-w-[calc(100%-1rem)] -translate-x-1/2 items-start gap-2 rounded-lg border border-destructive/40 bg-black/70 p-2 text-xs text-destructive backdrop-blur">
           <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           <span className="min-w-0 flex-1 break-words">{state.error ?? startError}</span>
           {!startError && (
@@ -205,22 +213,54 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
       )}
 
       {!hideChrome && (
-      <div className="flex h-10 items-center gap-1 overflow-hidden rounded-lg border border-border bg-card/95 px-2 text-xs shadow-lg backdrop-blur" data-testid="player-bar">
-        <Button size="sm" variant="ghost" className="h-7 w-7 shrink-0 p-0" aria-label={t('player.restart')} onClick={() => void manager?.start()}>
-          <SkipBack className="h-3.5 w-3.5" />
+      <div className="absolute bottom-2 left-1/2 z-30 flex h-8 w-[420px] max-w-[calc(100%-2rem)] -translate-x-1/2 items-center gap-0.5 overflow-hidden rounded-lg border border-border bg-card/95 px-1.5 text-[11px] text-foreground shadow-lg backdrop-blur" data-testid="player-bar">
+        <Button size="sm" variant="ghost" className="h-6 w-6 shrink-0 p-0" aria-label={t('player.restart')} onClick={() => void manager?.start()}>
+          <SkipBack className="h-3 w-3" />
         </Button>
         {!isStatic && (
-          <Button size="sm" variant="ghost" className="h-7 w-7 shrink-0 p-0" aria-label={t(state.status === 'paused' ? 'player.play' : 'player.pause')} disabled={state.status !== 'playing' && state.status !== 'paused'} onClick={() => (state.status === 'paused' ? manager?.resume() : manager?.pause())}>
-            {state.status === 'paused' ? <Play className="h-3.5 w-3.5" /> : <Pause className="h-3.5 w-3.5" />}
+          <Button size="sm" variant="ghost" className="h-6 w-6 shrink-0 p-0" aria-label={t(state.status === 'paused' ? 'player.play' : 'player.pause')} disabled={state.status !== 'playing' && state.status !== 'paused'} onClick={() => (state.status === 'paused' ? manager?.resume() : manager?.pause())}>
+            {state.status === 'paused' ? <Play className="h-3 w-3" /> : <Pause className="h-3 w-3" />}
           </Button>
         )}
         {isStatic && (
           <>
-            <Button size="sm" variant="ghost" className="h-7 w-7 shrink-0 p-0" aria-label={t('player.prev')} onClick={handlePrev}>
-              <ChevronLeft className="h-3.5 w-3.5" />
+            <Button size="sm" variant="ghost" className="h-6 w-6 shrink-0 p-0" aria-label={t('player.prev')} onClick={handlePrev}>
+              <ChevronLeft className="h-3 w-3" />
             </Button>
-            <Button size="sm" variant="ghost" className="h-7 w-7 shrink-0 p-0" aria-label={t('player.next')} onClick={() => manager?.stepForward()}>
-              <ChevronRight className="h-3.5 w-3.5" />
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-6 w-6 shrink-0 p-0"
+              aria-label={t('player.next')}
+              aria-haspopup="menu"
+              onPointerDown={(e) => {
+                if (e.pointerType === 'mouse' && e.button !== 0) return;
+                const rect = e.currentTarget.getBoundingClientRect();
+                cancelPress();
+                pressTimer.current = setTimeout(() => {
+                  pressTimer.current = null;
+                  suppressNextClick.current = true;
+                  setJumpMenu({ x: rect.left + rect.width / 2, y: rect.top });
+                }, JUMP_LONG_PRESS_MS);
+              }}
+              onPointerUp={cancelPress}
+              onPointerLeave={cancelPress}
+              onPointerCancel={cancelPress}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                cancelPress();
+                setJumpMenu({ x: e.clientX, y: e.clientY });
+              }}
+              onClick={() => {
+                if (suppressNextClick.current) {
+                  suppressNextClick.current = false;
+                  return;
+                }
+                manager?.stepForward();
+              }}
+            >
+              <ChevronRight className="h-3 w-3" />
             </Button>
             {state.step && <span data-testid="player-step" className="shrink-0 tabular-nums text-muted-foreground">{t('player.step', { index: state.step.index + 1, total: state.step.total })}</span>}
           </>
@@ -236,7 +276,7 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
               aria-label={t('player.seek')}
               disabled={busy}
               onChange={(e) => manager?.seek(Number(e.target.value))}
-              className="min-w-16 flex-1"
+              className="min-w-16 flex-1 accent-primary"
             />
             <span className="shrink-0 tabular-nums text-muted-foreground" data-testid="player-time">
               {fmt(state.t)} / {fmt(state.duration)}
@@ -245,21 +285,58 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
         ) : (
           <span className="min-w-2 flex-1" />
         )}
-        <span className="hidden shrink-0 text-muted-foreground sm:inline" data-testid="player-progress" title={`${Math.round(progress * 100)}%`}>
-          {idx >= 0 ? t('player.sceneIndex', { index: idx + 1, total: sequence.nodes.length, name: currentRef?.name ?? '' }) : ''}
-        </span>
-        <span className="hidden shrink-0 items-center gap-1 text-muted-foreground md:flex" title={hints.length > 0 ? hints.join(' · ') : undefined}>
-          <MousePointer2 className="h-3.5 w-3.5" />
-          <span data-testid="player-hints" className="max-w-32 truncate">{hints.length > 0 ? hints.join(' · ') : out.some((e) => e.trigger === 'end') ? t('player.hint.auto') : t('player.hint.none')}</span>
-        </span>
-        <span className="ml-auto flex shrink-0 gap-0.5">
-          {sequence.nodes.map((n, i) => (
-            <Button key={n.sceneId} size="sm" variant={n.sceneId === current ? 'default' : 'ghost'} className="h-6 w-6 p-0 text-[10px]" aria-label={t('player.jump', { name: scenes.get(n.sceneId)?.name ?? n.sceneId })} onClick={() => void manager?.jump(n.sceneId)}>
-              {i + 1}
-            </Button>
-          ))}
+        <span className="shrink-0 tabular-nums text-muted-foreground" data-testid="player-progress">
+          {idx >= 0 ? t('player.position', { index: idx + 1, total: sequence.nodes.length }) : ''}
         </span>
       </div>
+      )}
+      {!hideChrome && jumpMenu && (
+        <>
+          <button
+            type="button"
+            aria-label={t('float.close')}
+            data-testid="player-jump-backdrop"
+            className="fixed inset-0 z-40 cursor-default bg-transparent"
+            onClick={() => setJumpMenu(null)}
+            onContextMenu={(e) => e.preventDefault()}
+          />
+          <div
+            role="menu"
+            aria-label={t('player.jumpTitle')}
+            data-testid="player-jump-menu"
+            className="fixed z-50 w-52 overflow-hidden rounded-lg border border-white/10 bg-black/90 text-xs text-white shadow-xl backdrop-blur"
+            style={{
+              left: Math.min(Math.max(jumpMenu.x, 112), window.innerWidth - 112),
+              top: Math.max(jumpMenu.y - 8, 8),
+              transform: 'translate(-50%, -100%)',
+            }}
+            onContextMenu={(e) => e.preventDefault()}
+          >
+            <p className="border-b border-white/10 px-2 py-1.5 text-[11px] text-white/60">{t('player.jumpTitle')}</p>
+            <ul className="max-h-56 overflow-auto p-1">
+              {sequence.nodes.map((n, i) => {
+                const active = n.sceneId === current;
+                return (
+                  <li key={n.sceneId}>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      aria-label={t('player.jump', { name: scenes.get(n.sceneId)?.name ?? n.sceneId })}
+                      onClick={() => {
+                        setJumpMenu(null);
+                        void manager?.jump(n.sceneId);
+                      }}
+                      className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-left hover:bg-white/15 ${active ? 'bg-white/10' : ''}`}
+                    >
+                      <span className="w-6 shrink-0 tabular-nums text-white/50">{i + 1}</span>
+                      <span className="min-w-0 flex-1 truncate">{scenes.get(n.sceneId)?.name ?? n.sceneId}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </>
       )}
     </div>
   );

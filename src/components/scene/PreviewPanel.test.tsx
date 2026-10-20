@@ -80,7 +80,7 @@ describe('PreviewPanel', () => {
     expect(screen.queryByRole('button', { name: /^재생$|^Play$/ })).toBeNull();
   });
 
-  it('static: shows step progress and the finished state from the page', () => {
+  it('static: shows step progress; the finished notice goes to the toast, not the toolbox', () => {
     renderPanel('static');
     fromScene(ready);
     // 초기에는 안내 문구 대신 자리 표시만 보인다.
@@ -88,7 +88,29 @@ describe('PreviewPanel', () => {
     fromScene({ v: 2, type: 'step', payload: { index: 1, total: 3 } });
     expect(screen.getByTestId('preview-step').textContent).toMatch(/2 \/ 3/);
     fromScene({ v: 2, type: 'done', payload: {} });
-    expect(screen.getByTestId('preview-step').textContent).toMatch(/마지막 단계|last step/);
+    // 툴박스는 고정 크기 유지: 완료 후에도 단계 숫자만 보인다.
+    expect(screen.getByTestId('preview-step').textContent).toMatch(/2 \/ 3/);
+    expect(screen.getByTestId('preview-step').textContent).not.toMatch(/마지막 단계|last step/i);
+    // 완료 안내는 하단 토스트로 보여준다.
+    expect(screen.getByRole('status').textContent).toMatch(/마지막 단계|last step/i);
+  });
+
+  it('static: next locks on the last step and unlocks when stepping back', () => {
+    renderPanel('static');
+    fromScene(ready);
+    fromScene({ v: 2, type: 'step', payload: { index: 2, total: 4 } });
+    const next = screen.getByRole('button', { name: /다음 단계|Next step/ }) as HTMLButtonElement;
+    const prev = screen.getByRole('button', { name: /이전 단계|Previous step/ }) as HTMLButtonElement;
+    // 3/4에서는 다음 버튼은 동작한다.
+    expect(next.disabled).toBe(false);
+    // 마지막 단계(4/4)에서는 다음을 막는다. 완료(done)는 신 안의 입력으로 보고된다.
+    fromScene({ v: 2, type: 'step', payload: { index: 3, total: 4 } });
+    expect(next.disabled).toBe(true);
+    expect(prev.disabled).toBe(false);
+    // 뒤로 가면(step 수신) 다음이 다시 활성화된다.
+    fromScene({ v: 2, type: 'step', payload: { index: 2, total: 4 } });
+    expect(next.disabled).toBe(false);
+    expect(screen.getByTestId('preview-step').textContent).toMatch(/3 \/ 4/);
   });
 
   it('next/prev are sent to the scene as bridge messages', () => {

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { invoke } from '@tauri-apps/api/core';
 import { MessageSquare, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FloatingPanel } from '@/components/layout/FloatingPanel';
@@ -22,7 +21,6 @@ import type { Sequence } from '@/lib/sequence/schema';
 import { saveSceneAsTemplate } from '@/lib/scene/saveAsTemplate';
 import { changedFields } from '@/lib/guides/writeback';
 import { readWorkspace } from '@/lib/workspace/file';
-import { projectPath } from '@/lib/workspace/files';
 import { recordStudioChange } from '@/lib/workspace/workOrder';
 import { cn } from '@/lib/utils';
 
@@ -58,7 +56,6 @@ function Inner({ root }: { root: string }) {
       // ignore
     }
   }, [commentsOpen, root]);
-  const [menu, setMenu] = useState<{ x: number; y: number; slug: string } | null>(null);
   const [thumbs, setThumbs] = useState<Record<string, string>>({});
 
   const fetchAll = useCallback(async () => {
@@ -118,36 +115,6 @@ function Inner({ root }: { root: string }) {
     [selected],
   );
 
-  const openFolder = useCallback(
-    (slug: string) => {
-      void invoke('reveal_in_explorer', { path: projectPath(root, `scenes/${slug}`), workspaceRoot: root }).catch(() => undefined);
-    },
-    [root],
-  );
-
-  const setStartScene = useCallback(
-    (sceneId: string) => {
-      setSeq((prev) => {
-        if (!prev) return prev;
-        const next = setStart(prev, sceneId);
-        if (!checkSavable(next)) {
-          void writeSequence(root, next).catch(() => undefined);
-          return next;
-        }
-        return prev;
-      });
-    },
-    [root],
-  );
-
-  const openMenuScene = useCallback(
-    (slug: string) => {
-      const id = entries.find((e) => e.slug === slug)?.scene?.id;
-      if (id) setParams({ scene: id });
-    },
-    [entries, setParams],
-  );
-
   if (error) {
     return (
       <p role="alert" className="p-8 text-sm text-destructive">
@@ -158,10 +125,10 @@ function Inner({ root }: { root: string }) {
 
   // 오른쪽 콘텐츠 영역은 신 스크린이 전부 차지하고, 제목·조작 버튼·코멘트는 플로팅으로 띄운다.
   return (
-    <div className="relative flex h-full min-h-0" onClick={() => setMenu(null)}>
+    <div className="relative flex h-full min-h-0">
       <aside aria-label={t('scenes.list')} className="flex w-56 shrink-0 flex-col border-r border-border bg-card/40">
         <h2 className="border-b border-border px-3 py-2 text-xs font-semibold text-muted-foreground">{t('scenes.list')}</h2>
-        <ul className="min-h-0 flex-1 space-y-1 overflow-auto p-2" data-allow-context>
+        <ul className="min-h-0 flex-1 space-y-1 overflow-auto p-2">
           {valid.map((e) => {
             const active = e.scene!.id === selected?.scene?.id;
             return (
@@ -169,11 +136,6 @@ function Inner({ root }: { root: string }) {
                 <button
                   type="button"
                   onClick={() => setParams({ scene: e.scene!.id })}
-                  onContextMenu={(ev) => {
-                    ev.preventDefault();
-                    ev.stopPropagation();
-                    setMenu({ x: ev.clientX, y: ev.clientY, slug: e.slug });
-                  }}
                   aria-current={active}
                   className={cn('flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-xs hover:bg-accent', active && 'bg-accent')}
                 >
@@ -250,42 +212,6 @@ function Inner({ root }: { root: string }) {
             <CommentToolbox root={root} scenes={commentScenes} defaultSlug={selected.slug} />
           </div>
         </FloatingPanel>
-      )}
-
-      {menu && (
-        <div
-          role="menu"
-          data-allow-context
-          data-testid="scene-context-menu"
-          className="fixed z-50 w-48 rounded-md border border-border bg-card p-1 text-xs shadow-xl"
-          style={{ left: menu.x, top: menu.y }}
-          onClick={(e) => e.stopPropagation()}
-          onContextMenu={(e) => e.preventDefault()}
-        >
-          {(() => {
-            const entry = entries.find((e) => e.slug === menu.slug);
-            const id = entry?.scene?.id;
-            if (!id) return null;
-            return (
-              <>
-                <button type="button" role="menuitem" className="block w-full rounded px-2 py-1.5 text-left hover:bg-accent" onClick={() => { openMenuScene(menu.slug); setMenu(null); }}>
-                  {t('scenes.menu.open')}
-                </button>
-                <button type="button" role="menuitem" className="block w-full rounded px-2 py-1.5 text-left hover:bg-accent" onClick={() => { openMenuScene(menu.slug); setInspectorOpen(true); setMenu(null); }}>
-                  {t('scenes.menu.editGuide')}
-                </button>
-                <button type="button" role="menuitem" className="block w-full rounded px-2 py-1.5 text-left hover:bg-accent" onClick={() => { openFolder(menu.slug); setMenu(null); }}>
-                  {t('scenes.menu.reveal')}
-                </button>
-                {seq && (
-                  <button type="button" role="menuitem" className="block w-full rounded px-2 py-1.5 text-left hover:bg-accent disabled:opacity-50" disabled={seq.start === id} onClick={() => { setStartScene(id); setMenu(null); }}>
-                    {t('scenes.menu.setStart')}
-                  </button>
-                )}
-              </>
-            );
-          })()}
-        </div>
       )}
 
       {inspectorOpen && selected?.scene && workspace && (

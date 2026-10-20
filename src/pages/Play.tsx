@@ -105,8 +105,8 @@ export function Play() {
   const origin = previewOriginOf(serverUrl);
 
   return (
-    <div ref={stageRef} className="relative flex h-full min-h-0 flex-col bg-black" data-testid="play-stage">
-      <div className="relative min-h-0 flex-1">
+    <div ref={stageRef} className="relative h-full min-h-0 overflow-hidden bg-black" data-testid="play-stage">
+      <div className="relative h-full min-h-0 overflow-hidden">
         {hasErrors(issues) ? (
           <div className="flex h-full flex-col gap-2 overflow-auto bg-background p-4 text-xs">
             <p className="text-muted-foreground">{t('player.fixFirst')}</p>
