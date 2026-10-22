@@ -366,3 +366,11 @@ Ran lint. See lint-report.md for details.
 ## [2026-10-22] lint | Wiki health check
 
 Ran lint (orphans 0, broken links 0). See lint-report.md for details.
+
+## [2026-10-22] fix | Standalone play: `end` trigger for timed scenes
+
+`play/host.ts`가 `ready`를 늦은 구독자에게 재생하도록 수정(템플릿·Day02 v2 워크스페이스 동일 적용). Day02 v2에 15초 인트로 모션 신(S00, 코드 합성 배경음) 추가 중 발견. See: [[standalone-play]]
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint (orphans 0, broken links 0). See lint-report.md for details.

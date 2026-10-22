@@ -48,6 +48,8 @@ export class SameOriginScene implements SceneDriver {
   private readonly listeners = new Set<(e: SceneEvent) => void>();
   private loadPromise: Promise<void> | null = null;
   private readySeen = false;
+  /** Latest `ready`, replayed to late subscribers: the navigator subscribes only after load() resolved. */
+  private lastReady: SceneEvent | null = null;
   private disposed = false;
   private rejectLoad: ((e: Error) => void) | null = null;
 
@@ -121,7 +123,8 @@ export class SameOriginScene implements SceneDriver {
         // HMR remounts report ready again: re-inject canvas every time.
         this.send('init', { mode: 'preview', paramsValues: {}, canvas: this.canvas });
         const duration = typeof body['duration'] === 'number' ? (body['duration'] as number) : undefined;
-        this.emit({ type: 'ready', duration });
+        this.lastReady = { type: 'ready', duration };
+        this.emit(this.lastReady);
         return;
       }
       case 'time': {
@@ -182,6 +185,7 @@ export class SameOriginScene implements SceneDriver {
 
   subscribe(listener: (e: SceneEvent) => void): () => void {
     this.listeners.add(listener);
+    if (this.lastReady) listener(this.lastReady);
     return () => this.listeners.delete(listener);
   }
 
