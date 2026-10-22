@@ -357,3 +357,20 @@ Ran lint. See lint-report.md for details.
 - 신 화면: 하단 툴박스에서 상태 문구 제거, 경고·상태는 하단 반투명 토스트로 4초 표시. 신 이동 시 단계가 `-`로만 남던 버그를 Body key=slug 리마운트 + scene.json 기준 `1/N` 초기 표시로 수정.
 - 플레이 화면: 타이틀 바 제거 → 반투명 오버레이(타이틀+신 정보 작은 폰트) + 오버레이 전체화면 버튼. SequencePlayer 하단을 신 툴박스 확장형 compact 바(h-10)로 축소. 전체화면에서는 `hideChrome`으로 재생 화면만 표시. 슬라이드용 ArrowLeft 이전 스텝·이전 신 이동 지원.
 - 검증: lint·typecheck·vitest 159파일 1185테스트 통과.
+
+## [2026-10-22] standalone-play | 워크스페이스 자체 빌드·발표(D-040, feat/standalone-play)
+- 템플릿에 발표 화면(play.html+play/)·멀티 엔트리 빌드·play/preview 스크립트 추가, 루트 리다이렉트로 pnpm dev URL이 바로 재생 화면. Bridge v2 호스트+내비게이터, 전환은 컷/페이드 단순화.
+- 검증: 5종 tsc·Day02_v2 vite build/preview+curl·컴파일 실행 테스트 10건·check:scene 23신 PASS·eslint clean. 기존 5종 tests/LLM_and_Vibe_Coding* 백필(로컬 전용).
+- 결정 D-040 Accepted, 설계서 v1.2. See: [[standalone-play]]
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint (orphans 0, broken links 0). See lint-report.md for details.
+
+## [2026-10-22] fix | Standalone play: `end` trigger for timed scenes
+
+`play/host.ts`가 `ready`를 늦은 구독자에게 재생하도록 수정(템플릿·Day02 v2 워크스페이스 동일 적용). Day02 v2에 15초 인트로 모션 신(S00, 코드 합성 배경음) 추가 중 발견. See: [[standalone-play]]
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint (orphans 0, broken links 0). See lint-report.md for details.

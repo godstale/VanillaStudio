@@ -77,7 +77,15 @@ pnpm vanilla sync-guides [<slug>]                                # Re-render GUI
 pnpm vanilla work-order                                          # View open user changes & comments from WORK_ORDER.md
 pnpm vanilla resolve <id|--all>                                  # Mark a work-order item (chg_*) or comment (cmt_*) as done
 pnpm check:scene                                                 # Verify runtime determinism & token contract across scenes
+pnpm play                                                        # Standalone presentation screen (opens play.html in the browser)
+pnpm preview                                                     # Serve the production build (dist/play.html) for a final check
 ```
+
+## Standalone Play (no Vanilla Studio needed)
+
+- `play.html` is the presentation screen: scene list, progress, choices, fullscreen, `#/play/<sceneId>` deep links. The workspace root (`/` and `pnpm dev`) redirects to it, so the dev server URL is playable as-is.
+- `pnpm build` bundles `play.html` + every scene entry, so `dist/` runs on any static server (`pnpm preview`).
+- The player speaks the same Bridge protocol as the Studio play screen (typed `input`, `step`/`done`), but transitions are simplified to cut/fade.
 
 ## Runtime Summary (`@vanilla/runtime`)
 
