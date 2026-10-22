@@ -11,7 +11,7 @@ const SAVE_DEBOUNCE_MS = 400;
 
 export function Workspace() {
   const { t } = useLanguage();
-  const { workspaceRoot } = useWorkspace();
+  const { workspaceRoot, isTrusted } = useWorkspace();
   const [result, setResult] = useState<{ root: string; ws?: WorkspaceFile; error?: string } | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -68,6 +68,7 @@ export function Workspace() {
       root={workspaceRoot}
       workspace={{ id: result.ws.workspaceId, name: result.ws.name }}
       initialView={result.ws.view}
+      canvas={isTrusted ? result.ws.canvas : undefined}
       onViewChange={onViewChange}
     />
   );

@@ -10,6 +10,7 @@ import { createAppState } from './appState';
 import { sceneStart, type Composition, type ParamsBySceneId } from './composition';
 import { applyAndSettle, readiness } from './ready';
 import { frameFromSearch, parseFrame, setFrame } from './frame';
+import { captureDom } from './domCapture';
 import { hostedSteps } from './steps';
 import { hostedBridge, setHostedBridge } from './hostedBridge';
 
@@ -24,10 +25,10 @@ export interface MountOptions {
   hmr?: Parameters<typeof reportHmr>[1];
 }
 
-/** PNG of the first canvas at the current time. DOM-only scenes cannot be captured from inside the page. */
+/** PNG of the first canvas at the current time; DOM-only scenes are rasterized from the page itself. */
 function captureCanvas(clock: Clock, scale: number): Promise<string> {
   const canvas = document.querySelector('canvas');
-  if (!canvas) return Promise.reject(new Error('capture: no <canvas> in the scene (DOM-only frames are captured by the host)'));
+  if (!canvas) return captureDom(scale);
   // Draw and read in the same task: without preserveDrawingBuffer the buffer is cleared after compositing.
   clock.redraw();
   if (scale === 1) return Promise.resolve(canvas.toDataURL('image/png'));

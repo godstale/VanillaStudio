@@ -116,6 +116,7 @@
 | M6 추가 JS: `@fontsource` 3종 | OFL-1.1 (T7.4 확인) | 사용 가능 |
 | T7.2 추가 JS(export-worker): `proxy-agent` 8.x(선택적 peer `proxy-agent` 실의존 승격) | MIT | 사용 가능. `@puppeteer/browsers`의 프록시 지원이 번들에서 `Could not resolve` throw가 되지 않도록 실의존으로 포함. 네이티브 optional peer `kerberos`는 번들 불가 → stub alias(Negotiate 프록시 인증만 미지원) |
 | `@google/design.md` CLI 라이선스 표기 | package에 `license` 필드 없음(T7.4 확인, 표의 Apache-2.0은 명세 기준) | 버전 고정 사용, 배포 전 법률 검토 시 재확인 |
+| 창 상태 복원: Rust crate `tauri-plugin-window-state` 2.x | MIT 또는 Apache-2.0 | 사용 가능(크기·위치·최대화만 저장) |
 | 내장 팔레트 | 자체 제작(CC0로 배포) | 외부 팔레트 사이트의 색 조합을 그대로 가져오지 않음 |
 
 ### 2.10 디자인 시스템 표준화·팔레트 (RQ15·RQ16) — 위험도: 중

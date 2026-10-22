@@ -434,3 +434,11 @@ Ran lint. See lint-report.md for details.
 ## [2026-10-22] fix | 미리보기 서버 시작 시 의존성 자동 설치
 
 압축 파일로 불러오거나 node_modules가 없는 워크스페이스는 `usePreviewServer`가 `not-installed`를 받으면 고정 argv `pnpm install`(D-012)을 실행하고 서버를 다시 시작한다. 신뢰된 폴더에서만 동작한다(projectDir는 신뢰 후 설정).
+
+## [2026-10-22] fix | 창 상태 복원, DOM 신 썸네일 캡처·자동 생성
+
+`tauri-plugin-window-state`로 창 크기·위치·최대화를 복원한다. 런타임 `capture`가 `<canvas>`가 없는 신(모션 그래픽·정적)에서 실패해 썸네일이 비던 문제를 `domCapture`(SVG foreignObject 래스터화)로 해결했다. 코드가 있는 신(generated·needs-revision)에 썸네일이 없으면 워크스페이스를 열 때 `ThumbnailGenerator`가 숨은 미리보기로 하나씩 캡처해 `.vanilla/thumb.png`에 저장한다. 미리보기 서버는 사용자 수를 세어 마지막 사용자가 떠날 때만 멈춘다.
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.

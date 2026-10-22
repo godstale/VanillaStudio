@@ -27,6 +27,7 @@ import { recordStudioChange } from '@/lib/workspace/workOrder';
 import { NewSceneDialog, type NewSceneValues } from './NewSceneDialog';
 import { CommentToolbox } from '@/components/comments/CommentToolbox';
 import { SceneNode, type SceneFlowNode } from './SceneNode';
+import { ThumbnailGenerator } from './ThumbnailGenerator';
 
 const nodeTypes = { scene: SceneNode };
 
@@ -34,6 +35,8 @@ export interface SceneWorkspaceProps {
   root: string;
   workspace: WorkspaceRef;
   initialView?: Viewport;
+  /** workspace.json.canvas. 신뢰한 워크스페이스에서만 넘기며, 있으면 썸네일이 없는 신의 썸네일을 자동으로 만든다(프리뷰 서버를 띄운다). */
+  canvas?: { width: number; height: number; fps: number };
   onViewChange?: (view: Viewport) => void;
 }
 
@@ -71,7 +74,7 @@ function buildNodes(loaded: Loaded, onOpenFolder: (slug: string) => void, onPlay
   });
 }
 
-function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: SceneWorkspaceProps) {
+function Inner({ root, workspace: workspaceProp, initialView, canvas, onViewChange }: SceneWorkspaceProps) {
   // 부모가 매 렌더 새 객체를 넘겨도 콜백·효과가 다시 만들어지지 않게 값으로 고정한다.
   const workspace = useMemo(() => ({ id: workspaceProp.id, name: workspaceProp.name }), [workspaceProp.id, workspaceProp.name]);
   const { t } = useLanguage();
@@ -89,6 +92,9 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
   const entriesRef = useRef<SceneEntry[]>([]);
   const [outside, setOutside] = useState<string[]>([]);
   const [thumbs, setThumbs] = useState<Record<string, string>>({});
+  // 저장된 썸네일을 찾아봤는데 없던 신 / 자동 생성을 이미 시도한 신(실패해도 다시 돌지 않는다).
+  const [unthumbed, setUnthumbed] = useState<ReadonlySet<string>>(new Set());
+  const [tried, setTried] = useState<ReadonlySet<string>>(new Set());
   const terminals = useSafeTerminals();
   const sessionsRef = useRef(terminals?.sessions);
   useEffect(() => {
@@ -163,13 +169,28 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
     for (const e of entries) {
       if (thumbs[e.slug] || !e.scene) continue;
       loadSceneThumbnail(root, e.slug)
-        .then((url) => url && !cancelled && setThumbs((m) => (m[e.slug] ? m : { ...m, [e.slug]: url })))
+        .then((url) => {
+          if (cancelled) return;
+          if (url) setThumbs((m) => (m[e.slug] ? m : { ...m, [e.slug]: url }));
+          else setUnthumbed((s) => (s.has(e.slug) ? s : new Set(s).add(e.slug)));
+        })
         .catch(() => undefined);
     }
     return () => {
       cancelled = true;
     };
   }, [entries, root, thumbs]);
+
+  // 코드가 있는 신(generated·needs-revision) 중 썸네일이 없는 신은 자동으로 만든다(모션·3D·정적 공통).
+  const thumbTargets = useMemo(
+    () =>
+      canvas
+        ? entries.flatMap((e) => (e.scene && (e.scene.status === 'generated' || e.scene.status === 'needs-revision') && unthumbed.has(e.slug) && !thumbs[e.slug] && !tried.has(e.slug) ? [{ slug: e.slug, sceneType: e.scene.type, entry: e.scene.runtime.entry }] : []))
+        : [],
+    [entries, unthumbed, thumbs, tried, canvas],
+  );
+  const onThumbSaved = useCallback((slug: string, url: string) => setThumbs((m) => ({ ...m, [slug]: url })), []);
+  const onThumbSettled = useCallback((slug: string) => setTried((s) => (s.has(slug) ? s : new Set(s).add(slug))), []);
 
   const startId = seq?.start ?? null;
   const viewNodes = useMemo(() => nodes.map((n) => ({ ...n, data: { ...n.data, thumbnail: thumbs[n.data.slug] ?? n.data.thumbnail, isStart: n.id === startId } })), [nodes, thumbs, startId]);
@@ -500,6 +521,7 @@ function Inner({ root, workspace: workspaceProp, initialView, onViewChange }: Sc
         }}
         onImported={() => reloadRef.current()}
       />
+      {canvas && thumbTargets.length > 0 && <ThumbnailGenerator root={root} canvas={canvas} targets={thumbTargets} onThumbnail={onThumbSaved} onSettled={onThumbSettled} />}
       <NewSceneDialog open={dialog !== null} onOpenChange={(o) => !o && setDialog(null)} onCreate={onCreate} />
     </>
   );

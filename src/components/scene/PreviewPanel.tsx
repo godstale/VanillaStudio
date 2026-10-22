@@ -6,8 +6,8 @@ import { useBridge, useBridgeEvents, useBridgeTime } from '@/lib/review/bridgeCo
 import { previewOriginOf } from '@/lib/review/bridgeProtocol';
 import { usePreviewServer, type PreviewServerState } from '@/lib/review/previewServer';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
-import { saveThumbnail } from '@/lib/scene/thumbnail';
 import { ScenePreview } from './Preview';
+import { useThumbnailCapture } from './useThumbnailCapture';
 
 export interface PreviewPanelProps {
   /** 워크스페이스 폴더(프리뷰 서버의 루트). */
@@ -23,8 +23,6 @@ export interface PreviewPanelProps {
   onThumbnail?: (slug: string, dataUrl: string) => void;
 }
 
-const THUMB_SCALE = 0.25;
-const THUMB_SETTLE_MS = 400;
 const TOAST_MS = 4000;
 
 function Body({ server, onRetry, root, slug, sceneType, canvas, entry, stepsTotal, onThumbnail }: { server: PreviewServerState; onRetry: () => void } & PreviewPanelProps) {
@@ -35,13 +33,11 @@ function Body({ server, onRetry, root, slug, sceneType, canvas, entry, stepsTota
   const [done, setDone] = useState(false);
   // 경고·상태 토스트: 툴박스가 아니라 화면 하단 반투명 문자열로 잠시 보여준다.
   const [toast, setToast] = useState<{ msg: string; role: 'alert' | 'status' } | null>(null);
-  const thumbTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     return () => {
       if (toastTimer.current) clearTimeout(toastTimer.current);
-      if (thumbTimer.current) clearTimeout(thumbTimer.current);
     };
   }, []);
 
@@ -66,24 +62,10 @@ function Body({ server, onRetry, root, slug, sceneType, canvas, entry, stepsTota
     if (e.type === 'ready') {
       setStep(null);
       setDone(false);
-      if (!onThumbnail) return;
-      // 다시 준비될 때(HMR·새로고침)마다 최신 모습으로 갱신한다. 첫 프레임이 비는 신이 많아 길이의 30% 지점에서 찍는다.
-      if (thumbTimer.current) clearTimeout(thumbTimer.current);
-      const at = sceneType !== 'static' && e.payload.duration ? e.payload.duration * 0.3 : null;
-      if (at !== null) bridge.seek(at);
-      thumbTimer.current = setTimeout(() => {
-        bridge
-          .capture(THUMB_SCALE)
-          .then(async (c) => {
-            if (await saveThumbnail(root, slug, c.dataUrl)) onThumbnail(slug, c.dataUrl);
-          })
-          .catch(() => undefined) // 썸네일은 부가 기능이다. 실패해도 미리보기는 계속 쓴다.
-          .finally(() => {
-            if (at !== null) bridge.seek(0);
-          });
-      }, THUMB_SETTLE_MS);
     }
   });
+
+  useThumbnailCapture({ root, slug, sceneType, onThumbnail });
 
   // 브릿지 오류는 토스트로 잠시 보여준다(외부 브릿지 상태 → 로컬 토스트 동기화).
   useEffect(() => {
