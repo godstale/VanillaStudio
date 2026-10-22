@@ -234,3 +234,20 @@ export default defineScene({
 2. `vite.config.ts`를 템플릿 최신본으로 교체 (멀티 엔트리 + `base: './'`).
 3. `index.html`을 템플릿 최신본으로 교체 (`play.html` 리다이렉트, `{{workspaceName}}`은 실제 이름으로).
 4. `tsconfig.json`: `include`에 `"play"` 추가, `compilerOptions`에 `"resolveJsonModule": true`, `"types": ["vite/client"]` 추가.
+
+---
+
+## 8. 수업 배포용 zip 만들기 (`pnpm pack`)
+
+다른 PC에 워크스페이스를 전달할 때는 폴더를 그대로 압축하지 마세요
+(`node_modules/`·`dist/`가 들어가면 용량이 크고 PC마다 꼬입니다).
+워크스페이스 루트에서 `pnpm pack`을 실행하면 옆 폴더에 `<workspace>.zip`이 만들어집니다
+(출력 변경: `node scripts/pack-workspace.mjs --out <file.zip>`, Win/Mac/Linux 공용, 의존성 없음).
+
+- 포함: `pnpm-lock.yaml`(재현 설치용) + `pnpm-workspace.yaml`(`minimumReleaseAge: 0`).
+  pnpm v11+ 기본 24시간 게이트를 끄므로 받는 쪽은 추가 옵션 없이 `pnpm install`만 하면 됩니다
+  (갓 발행된 전이 패키지 `caniuse-lite`가 있어도 통과).
+- 제외: `node_modules/`·`dist/`·`.vanilla/`·`.git/`·로그·`.env*`·심링크.
+- 받는 쪽 순서: 압축 풀기 → `pnpm install` → `pnpm dev`.
+- 기존 폴더는 Studio에서 다시 열면 `pack` 스크립트·`pnpm-workspace.yaml`이 자동 보충됩니다.
+  `package.json` scripts에 `"pack": "node scripts/pack-workspace.mjs"` 한 줄만 직접 추가하세요.

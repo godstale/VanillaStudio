@@ -9,7 +9,8 @@
     "preview": "vite preview --open play.html",
     "build": "vite build",
     "check:scene": "node scripts/check-scene.mjs",
-    "vanilla": "node scripts/vanilla-agent.mjs"
+    "vanilla": "node scripts/vanilla-agent.mjs",
+    "pack": "node scripts/pack-workspace.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^9.8.1",

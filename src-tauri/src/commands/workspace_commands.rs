@@ -364,8 +364,11 @@ mod tests {
             "VANILLA_GUIDE.md",
             "WORK_ORDER.md",
             "sequence.json",
+            "package.json",
+            "pnpm-workspace.yaml",
             ".vanilla/work-order.json",
             "scripts/vanilla-agent.mjs",
+            "scripts/pack-workspace.mjs",
             "vite.config.ts",
             ".gitignore",
             "CREDITS.md",
@@ -373,6 +376,8 @@ mod tests {
         ] {
             assert!(d.path().join(f).is_file(), "{f}");
         }
+        let policy = fs::read_to_string(d.path().join("pnpm-workspace.yaml")).unwrap();
+        assert!(policy.contains("minimumReleaseAge: 0"), "pnpm-workspace.yaml must disable the release-age gate (D-041)");
         assert!(d.path().join("scenes").is_dir(), "scenes/");
         assert!(d.path().join(".vanilla/resources/guides").is_dir(), ".vanilla/resources/guides");
         assert!(d.path().join(".vanilla/resources/opus/opus-catalog.json").is_file(), ".vanilla/resources/opus/opus-catalog.json");
