@@ -1,7 +1,3 @@
-## [2026-10-22] lint | Wiki health check
-
-Ran lint. See lint-report.md for details.
-
 ## [2026-10-18] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
@@ -394,3 +390,11 @@ Ran lint. See lint-report.md for details.
 ## [2026-10-22] lint | Wiki health check
 
 Ran lint (74 pages, no structural issues). See lint-report.md for details.
+
+## [2026-10-22] fix | dist rename, rooted zip, ASCII path guard (D-042)
+
+- `pnpm pack`은 내장 tarball 명령이라 `pnpm dist`로 개명, zip 최상위는 `package.json` name. 한글 경로 `require` 세그폴트(3221225477) 이분 완료 — 상류/환경 문제라 `guard:path`+영문 경로 안내로 대응. See: [[issue-dist-pack-pnpm-policy]], [[decisions]]
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint (no structural issues). See lint-report.md for details.

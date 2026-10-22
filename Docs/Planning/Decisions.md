@@ -296,7 +296,17 @@
 - **맥락**: 배포 워크스페이스(`tests/LLM_and_Vibe_Coding_Day02_v2`)를 폴더째 압축해 다른 PC에서 `pnpm install`했더니 `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`(`caniuse-lite@1.0.30001818`, 발행 3시간 전)으로 실패했다. 원인은 ① pnpm v11 기본 24시간 게이트(`minimumReleaseAge: 1440`, 수일 간격으로 갱신되는 전이 DB 패키지에 상시 노출) + 배포 PC(pnpm 10, 무검사)로 만든 lock이 신선 버전을 물고 있던 것, ② `node_modules/`·`dist/`·`.vanilla/`를 포함한 채 압축한 것. 받는 쪽 네트워크 차단 경고도 겹쳐 있었다.
 - **결정**:
   - `workspace-template/pnpm-workspace.yaml`에 `minimumReleaseAge: 0`을 둔다(수업 배포 워크스페이스는 추가 플래그 없는 설치가 보안 게이트보다 우선). 직접 의존성에는 영향 없고 해결 버전의 허용 연령만 바꾼다. `open_workspace`가 기존 폴더에도 비파괴 보충한다.
-  - `workspace-template/scripts/pack-workspace.mjs`(`pnpm pack`, Node 내장만·Win/Mac/Linux)를 둔다. `node_modules/`·`dist/`·`.vanilla/`·`.git/`·로그·`.env*`·심링크 제외, `pnpm-lock.yaml` 포함, `pnpm-workspace.yaml` 미존재 시 자동 생성. 직접 손으로 짠 미니 zip 라이터(deflate via `node:zlib`)라 의존성이 없다.
+  - `workspace-template/scripts/pack-workspace.mjs`(`pnpm dist`, Node 내장만·Win/Mac/Linux)를 둔다. `node_modules/`·`dist/`·`.vanilla/`·`.git/`·로그·`.env*`·심링크 제외, `pnpm-lock.yaml` 포함, `pnpm-workspace.yaml` 미존재 시 자동 생성. 직접 손으로 짠 미니 zip 라이터(deflate via `node:zlib`)라 의존성이 없다. zip 최상위 폴더는 `package.json` `name`(산출물명과 일치, `--root`로 변경 가능)이며, 스크립트명은 pnpm 내장 `pack`(tarball·`package/` 고정)과 충돌하므로 `dist`로 한다.
   - 받는 쪽 순서 고정: 압축 풀기 → `pnpm install` → `pnpm dev` (템플릿 `AGENTS.md`·`VANILLA_GUIDE.md` §8에 문서화).
 - **근거**: D-023(파일이 진실 공급원 — lock 포함 배포로 재현 설치), D-012(고정 argv — 앱 소유 프로세스 변경 없음, 스크립트는 사용자 실행).
 - **영향**: `Technical-Design.md` §8.2(워크스페이스 파일 표)·§9(템플릿 구조) 개정(v1.3). 데이터 계약 변경 없음(`scene.json`·`sequence.json`·Bridge 스키마 불변). 검증: 추출본 `pnpm install` 통과 + zip 엔트리 검사(금지어 0) + vitest 4건 + Rust 스캐폴드 단언. → [[issue-dist-pack-pnpm-policy]]
+
+## D-042 배포 워크스페이스의 영문 경로 요구·가드·`dist` 개명 — Accepted (2026-10-22)
+
+- **맥락**: D-041 후속 검증에서 2건이 더 나왔다. ① 템플릿 `package.json`에 둔 `"pack"` 스크립트는 실행되지 않는다 — `pnpm pack`은 내장 tarball 명령이라 스크립트를 가린다(확인: `package/` 고정 tarball 생성). ② 수업 PC 경로(`C:\Workspace\강의\...`)에서 `pnpm play`가 exit 3221225477로 죽는다. 이분 결과: 한글 포함 경로의 파일을 `require`·`import`하면 Node 22.13.0 자체가 세그폴트한다(사소한 파일·절대경로·파일 경유 인자 모두 재현, `fs`·`vm`·자식 프로세스 spawn은 정상). esbuild·Vite 문제가 아니라 환경/상류 문제라 코드로 우회할 수 없다.
+- **결정**:
+  - 배포 스크립트명을 `dist`로 개명한다(`pnpm dist`, 내장 명령과 충돌 없음 확인). zip 최상위 폴더는 `package.json` `name`(산출물명과 일치, `--root` 변경·`--flat` 해제 가능).
+  - 템플릿 `package.json`의 `dev`·`play`·`preview`·`build`·`check:scene`·`vanilla` 앞에 `pnpm guard:path &&`를 둔다. 가드는 파일 로드 없는 인라인 `node -e`라 한글 경로에서도 죽지 않고 영문 경로 이전 안내 후 exit 1로 멈춘다. `dist`(pack)는 패킹 전용이라 가드를 달지 않는다(배포자는 영문 경로에서 실행).
+  - 받는 쪽 순서를 "영문 경로에 압축 풀기 → `pnpm install` → `pnpm dev`"로 고정하고 템플릿 `AGENTS.md`·`VANILLA_GUIDE.md` §8에 명시한다.
+- **근거**: D-023(파일이 진실 공급원), D-041(무개입 설치) 확장. `pnpm pack` 섀도잉은 pnpm 내장 명령 우선 규칙 때문이다.
+- **영향**: `Technical-Design.md` 개정(v1.4). 신규 워크스페이스에만 적용되고 기존 폴더의 `package.json`은 사용자 소유라 Studio가 덮지 않는다(가이드를 보고 직접 합치기). 검증: 한글 경로 `pnpm play` 가드 메시지+exit 1 확인, 영문 경로 200 확인, vitest 6건. → [[issue-dist-pack-pnpm-policy]]

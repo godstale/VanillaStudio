@@ -1,6 +1,6 @@
 # Vanilla Studio 기술 설계서 (Technical Design)
 
-- 문서 버전: **v1.3 (수업 배포 zip·무개입 설치, 2026-10-22)** — D-041 반영(템플릿 `pnpm-workspace.yaml` + `pack-workspace.mjs`). v1.2(standalone play, 2026-10-22)는 git 이력에 있다.
+- 문서 버전: **v1.4 (배포 가드·`dist` 개명, 2026-10-22)** — D-042 반영(ASCII 경로 요구·`guard:path`·`pnpm dist`·zip 최상위 산출물명). v1.3(D-041)은 git 이력에 있다.
 - 선행 문서: `Docs/Planning/Refactor-Spec-v2.md`(무엇을 만드는가), `Docs/Planning/Decisions.md`(D-022~D-033)
 - 템플릿 공통 아키텍처(`Docs/Architecture.md`)는 **템플릿 원본으로 유지**하고, 이 문서가 Vanilla Studio 고유 설계의 진실 공급원이다. 충돌 시 이 문서가 우선한다.
 - ⚠️ 표시 항목은 PoC(`Feasibility-Risks.md`)로 확정해야 하는 가정이다.
@@ -396,7 +396,7 @@ render 모드와 HyperFrames seek의 연결, 준비 대기 신호는 S1에서 �
 | `WORK_ORDER.md` · `.vanilla/work-order.json` | `src/lib/workspace/workOrder.ts` | 바닐라 스튜디오 UI 변경사항(시퀀스·신·가이드·파라미터·팔레트)과 신별 코멘트를 집계한 통합 작업 지시서(D-036) |
 | `VANILLA_GUIDE.md` · `.vanilla/resources/` | (초기화 시 복사) | 스튜디오 동작 가이드·스키마·파라미터 역할 및 내장 템플릿·프리셋·팔레트 오프라인 카탈로그(D-036) |
 | `scripts/vanilla-agent.mjs` | (초기화 시 복사) | `pnpm vanilla <cmd>` 에이전트 연동 CLI 브리지(`status`·`templates`·`inspect-template`·`scaffold-scene`·`sync-guides`·`work-order`·`resolve`, D-036) |
-| `scripts/pack-workspace.mjs` + `pack-workspace.d.mts` | (초기화 시 복사) | `pnpm pack` 수업 배포용 zip(Node 내장만, D-041). `node_modules/`·`dist/`·`.vanilla/`·`.git/`·로그·`.env*` 제외, `pnpm-lock.yaml` 포함 |
+| `scripts/pack-workspace.mjs` + `pack-workspace.d.mts` | (초기화 시 복사) | `pnpm dist` 수업 배포용 zip(Node 내장만, D-041). `node_modules/`·`dist/`·`.vanilla/`·`.git/`·로그·`.env*` 제외, `pnpm-lock.yaml` 포함, 최상위 폴더는 `package.json` `name` |
 | `pnpm-workspace.yaml` | (초기화 시 복사) | `minimumReleaseAge: 0` — pnpm v11+ 24시간 게이트 해제, 받는 쪽 무개입 `pnpm install`(D-041) |
 | `guide-templates/*/template.json` | `src/lib/guides/templateSchema.ts` | `{id, version, type, extends, label}` |
 | `manifest.json`(.vsx 내부) | `src/lib/package/manifest.ts` | 파일별 SHA-256, 앱·스키마 버전, 사용 템플릿 목록 |
@@ -439,7 +439,7 @@ src-tauri/src/commands/
 src-tauri/src/{process,watch.rs}     # 보존
 resources/
   runtime/                     # @vanilla/runtime 소스(워크스페이스에 설치)
-  workspace-template/          # 워크스페이스 스캐폴딩 원본(workspace.json·AGENTS.md·CLAUDE.md·DESIGN.md·package.json·pnpm-workspace.yaml(D-041)·vite.config.ts·play.html·play/·scripts/pack-workspace.mjs(D-041))
+  workspace-template/          # 워크스페이스 스캐폴딩 원본(workspace.json·AGENTS.md·CLAUDE.md·DESIGN.md·package.json·pnpm-workspace.yaml(D-041)·vite.config.ts·play.html·play/·scripts/pack-workspace.mjs(D-041, `pnpm dist`)·`guard:path` ASCII 경로 가드(D-042))
   guides/<type>/<id>@<ver>/    # 내장 가이드 템플릿(motion/commercial-v1, static/web-page-v1, 3d/three-scene-v1)
   glossary/                    # 용어집(템플릿이 참조)
   palettes/*.json              # 보존
