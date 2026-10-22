@@ -275,7 +275,7 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
       )}
 
       {!hideChrome && (
-      <div className="absolute bottom-2 left-1/2 z-30 flex h-8 w-[520px] max-w-[calc(100%-2rem)] -translate-x-1/2 items-center gap-0.5 overflow-hidden rounded-lg border border-border bg-card/95 px-1.5 text-[11px] text-foreground shadow-lg backdrop-blur" data-testid="player-bar">
+      <div className="absolute bottom-2 left-1/2 z-30 flex h-8 w-max max-w-[calc(100%-2rem)] -translate-x-1/2 items-center gap-1 overflow-hidden rounded-lg border border-border bg-card/95 px-1.5 text-[11px] text-foreground shadow-lg backdrop-blur" data-testid="player-bar">
         <Button size="sm" variant="ghost" className="h-6 w-6 shrink-0 p-0" aria-label={t('player.restart')} onClick={() => void manager?.start()}>
           <SkipBack className="h-3 w-3" />
         </Button>
@@ -361,7 +361,7 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
             </Button>
           </>
         )}
-        {state.duration ? (
+        {state.duration && (
           <>
             <input
               type="range"
@@ -372,16 +372,14 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
               aria-label={t('player.seek')}
               disabled={busy}
               onChange={(e) => manager?.seek(Number(e.target.value))}
-              className="min-w-16 flex-1 accent-primary"
+              className="w-40 accent-primary"
             />
             <span className="shrink-0 tabular-nums text-muted-foreground" data-testid="player-time">
               {fmt(state.t)} / {fmt(state.duration)}
             </span>
           </>
-        ) : (
-          <span className="min-w-2 flex-1" />
         )}
-        <span className="shrink-0 tabular-nums text-muted-foreground" data-testid="player-progress">
+        <span className="ml-1 shrink-0 tabular-nums text-muted-foreground" data-testid="player-progress">
           {idx >= 0 ? t('player.position', { index: idx + 1, total: sequence.nodes.length }) : ''}
         </span>
       </div>
