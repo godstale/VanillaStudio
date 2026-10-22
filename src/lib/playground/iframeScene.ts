@@ -184,6 +184,10 @@ export class IframeScene implements SceneHandle {
     this.send(input.kind === 'click' ? { type: 'input', payload: { kind: 'click' } } : { type: 'input', payload: { kind: 'key', key: input.key } });
   }
 
+  setParams(sceneId: string, values: Record<string, unknown>): void {
+    this.send({ type: 'setParams', payload: { sceneId, values } });
+  }
+
   subscribe(listener: (e: SceneEvent) => void): () => void {
     return this.on(listener);
   }

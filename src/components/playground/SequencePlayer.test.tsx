@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, within, waitFor } from '@testing-library/react';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { addNode, newSequence, type Sequence } from '@/lib/sequence/schema';
 import { SequencePlayer } from './SequencePlayer';
@@ -87,6 +87,21 @@ describe('SequencePlayer', () => {
     fromScene('scn_d', 'ready', ready(2));
     fireEvent.click(screen.getByTestId('player-input'));
     await waitFor(() => expect(frameOf('scn_m')).toBeUndefined());
+  });
+
+  it('clicking the video toggles pause/play when the scene has no click edge', async () => {
+    renderPlayer(sequence([edge('scn_m', 'scn_d', 'end')]));
+    await waitFor(() => expect(frameOf('scn_m')).toBeTruthy());
+    const post = vi.fn();
+    Object.defineProperty(frameOf('scn_m'), 'contentWindow', { value: { postMessage: post }, configurable: true });
+    fromScene('scn_m', 'ready', ready(4));
+    await waitFor(() => expect(frameOf('scn_d')).toBeTruthy());
+    fromScene('scn_d', 'ready', ready(2));
+    post.mockClear();
+    fireEvent.click(screen.getByTestId('player-input'));
+    expect(post.mock.calls.some((c) => c[0].type === 'pause')).toBe(true);
+    fireEvent.click(screen.getByTestId('player-input'));
+    expect(post.mock.calls.some((c) => c[0].type === 'play')).toBe(true);
   });
 
   it('keyboard: the matching key moves on, other keys and typing in inputs do not', async () => {
@@ -191,10 +206,11 @@ describe('SequencePlayer', () => {
     const post = vi.fn();
     Object.defineProperty(frameOf('scn_m'), 'contentWindow', { value: { postMessage: post }, configurable: true });
     fromScene('scn_m', 'ready', ready(4));
-    await waitFor(() => expect(screen.getByRole('button', { name: /일시정지|Pause/ })).toBeTruthy());
-    fireEvent.click(screen.getByRole('button', { name: /일시정지|Pause/ }));
+    const bar = () => within(screen.getByTestId('player-bar'));
+    await waitFor(() => expect(bar().getByRole('button', { name: /일시정지|Pause/ })).toBeTruthy());
+    fireEvent.click(bar().getByRole('button', { name: /일시정지|Pause/ }));
     expect(post.mock.calls.some((c) => c[0].type === 'pause')).toBe(true);
-    fireEvent.click(screen.getByRole('button', { name: /재생|Play/ }));
+    fireEvent.click(bar().getByRole('button', { name: /재생|Play/ }));
     fireEvent.change(screen.getByLabelText(/시크|Seek/), { target: { value: '2.5' } });
     expect(post.mock.calls.some((c) => c[0].type === 'seek' && c[0].payload.t === 2.5)).toBe(true);
   });

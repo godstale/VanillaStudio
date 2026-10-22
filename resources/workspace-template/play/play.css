@@ -200,6 +200,17 @@ body,
   accent-color: #2f6fed;
 }
 
+.vp-vol {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.vp-vol-slider {
+  width: 90px;
+  accent-color: #2f6fed;
+}
+
 .vp-help-wrap {
   position: fixed;
   inset: 0;
