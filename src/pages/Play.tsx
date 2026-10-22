@@ -121,7 +121,7 @@ export function Play() {
         ) : !serverUrl || !origin ? (
           <p role="status" className="flex h-full items-center justify-center gap-2 text-xs text-muted-foreground">
             <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            {t('preview.starting')}
+            {t(server.phase === 'installing' ? 'preview.installing' : 'preview.starting')}
             <button type="button" className="underline" onClick={retry}>
               {t('preview.retry')}
             </button>
