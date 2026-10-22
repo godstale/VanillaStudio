@@ -42,6 +42,7 @@ const STR = {
   volume: '음량',
   mute: '음소거',
   unmute: '음소거 해제',
+  startGate: '클릭하여 시작',
 } as const;
 
 function hashSceneId(): string | null {
@@ -91,6 +92,9 @@ export function Player() {
       return false;
     }
   });
+  // Browsers keep audio locked until the user interacts with the page; wait for the first gesture so
+  // the first scene's music is not silently dropped.
+  const [gated, setGated] = useState(() => !(typeof navigator !== 'undefined' && navigator.userActivation?.hasBeenActive));
   const state = useNavigatorState(nav);
 
   useEffect(() => {
@@ -133,14 +137,29 @@ export function Player() {
       },
     });
     setNav(n);
-    const initial = hashSceneId();
-    if (initial && MANIFEST.order.includes(initial)) void n.jump(initial);
-    else void n.start();
     return () => {
       n.dispose();
       setNav(null);
     };
   }, []);
+
+  useEffect(() => {
+    if (!nav || gated) return;
+    const initial = hashSceneId();
+    if (initial && MANIFEST.order.includes(initial)) void nav.jump(initial);
+    else void nav.start();
+  }, [nav, gated]);
+
+  useEffect(() => {
+    if (!gated) return;
+    const open = () => setGated(false);
+    window.addEventListener('pointerdown', open, true);
+    window.addEventListener('keydown', open, true);
+    return () => {
+      window.removeEventListener('pointerdown', open, true);
+      window.removeEventListener('keydown', open, true);
+    };
+  }, [gated]);
 
   const current = state.current ? MANIFEST.scenes.get(state.current) : undefined;
   const currentId = state.current;
@@ -264,6 +283,13 @@ export function Player() {
               className="vp-input"
               onClick={handleStageClick}
             />
+            {gated && (
+              <div role="status" className="vp-overlay">
+                <button type="button" className="vp-btn vp-btn-primary" onClick={() => setGated(false)}>
+                  {STR.startGate}
+                </button>
+              </div>
+            )}
             {busy && (
               <div role="status" className="vp-overlay">
                 {STR.loading}
