@@ -39,6 +39,9 @@
 - [[issue-playground-scaffold-fixes]] — 실사용 검증 5건 수정(스캐폴드 초안·템플릿 번들·static copy 문서·플레이어 키·종료 멈춤)
 - [[standalone-play]] — Standalone Play 자체 빌드·발표(D-040): play.html+play/·멀티 엔트리 빌드·Bridge 호스트
 - [[issue-paused-arrow-advance]] — 일시정지 후 → 진행 무시 수정(매니저 입력 허용·슬라이더 키 가드)
+- [[issue-dist-pack-pnpm-policy]] — 수업 배포 zip 설치·실행 실패 수정(D-041: `pnpm dist`·`minimumReleaseAge: 0`, D-042: `pack` 섀도잉·한글 경로 가드)
+- [[issue-workspace-history-archive]] — 히스토리 기록 누락(온보딩에만 있던 touchWorkspace → WorkspaceContext 일원화)·"현재" 배지·워크스페이스 zip 압축/불러오기(D-045)
+- [[issue-korean-path-ascii-launcher]] — 한글 경로 Node 세그폴트 이분·`ascii-cwd` 런처(D-043·D-044: node 스크립트 junction 실행·vite는 시도 후 크래시 시에만 영문 경로 안내·`allowBuilds` 생략)
 
 ## Planning / Decisions
 

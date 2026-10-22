@@ -12,4 +12,5 @@ pub mod template_commands;
 pub mod trust_commands;
 pub mod reference_commands;
 pub mod package_commands;
+pub mod workspace_archive;
 pub mod migrate_commands;

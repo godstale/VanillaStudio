@@ -113,7 +113,14 @@ export function Switcher({ api = tauriWorkspaceApi }: { api?: WorkspaceApi }) {
               className="pr-1"
             >
               <div className="min-w-0 flex-1">
-                <div className="truncate text-sm">{w.name}</div>
+                <div className="flex items-center gap-1.5 text-sm">
+                  <span className="truncate">{w.name}</span>
+                  {w.path === workspaceRoot && (
+                    <span className="shrink-0 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-medium text-primary-foreground">
+                      {t('workspaces.currentBadge')}
+                    </span>
+                  )}
+                </div>
                 <div className="truncate text-[11px] text-muted-foreground">{w.path}</div>
               </div>
               <button

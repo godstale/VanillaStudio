@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FolderOpen, History } from 'lucide-react';
+import { FolderOpen, History, PackageOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useWorkspace } from '@/lib/context/WorkspaceContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { touchWorkspace } from '@/lib/db/repositories/workspacesRepo';
 import { tauriWorkspaceApi, type WorkspaceApi } from '@/lib/workspace/api';
+import { useWorkspaceArchive } from '@/lib/workspace/useWorkspaceArchive';
 import { MigrateV1Dialog } from './MigrateV1Dialog';
 import { canvasFromPreset, type CanvasPreset } from '@/lib/workspace/schema';
 
@@ -33,6 +34,8 @@ export function Onboarding({ api = tauriWorkspaceApi }: { api?: WorkspaceApi }) 
   const [install, setInstall] = useState(true);
   const [busy, setBusy] = useState(false);
   const [migrateOpen, setMigrateOpen] = useState(false);
+
+  const archive = useWorkspaceArchive(null, (dest) => enter(dest));
 
   const fail = (e: unknown) => setStep({ name: 'error', message: e instanceof Error ? e.message : String(e) });
 
@@ -115,6 +118,15 @@ export function Onboarding({ api = tauriWorkspaceApi }: { api?: WorkspaceApi }) 
             <FolderOpen className="mr-2 h-4 w-4" />
             {t('onboarding.pick')}
           </Button>
+          <Button variant="outline" onClick={() => void archive.importZip()} disabled={busy || archive.busy} className="self-start">
+            <PackageOpen className="mr-2 h-4 w-4" />
+            {t('archive.import')}
+          </Button>
+          {archive.error && (
+            <p role="alert" className="text-sm text-destructive">
+              {archive.error}
+            </p>
+          )}
           <Button variant="outline" onClick={() => setMigrateOpen(true)} disabled={busy} className="self-start">
             <History className="mr-2 h-4 w-4" />
             {t('migrate.open')}

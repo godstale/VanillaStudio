@@ -77,9 +77,35 @@ pnpm vanilla sync-guides [<slug>]                                # Re-render GUI
 pnpm vanilla work-order                                          # View open user changes & comments from WORK_ORDER.md
 pnpm vanilla resolve <id|--all>                                  # Mark a work-order item (chg_*) or comment (cmt_*) as done
 pnpm check:scene                                                 # Verify runtime determinism & token contract across scenes
+pnpm dist                                                        # Build a class-distribution zip (node_modules/dist/.vanilla excluded)
 pnpm play                                                        # Standalone presentation screen (opens play.html in the browser)
 pnpm preview                                                     # Serve the production build (dist/play.html) for a final check
 ```
+
+## Class Distribution (zip for other PCs)
+
+- Run `pnpm dist` in the workspace root. It writes `<project-name>.zip` next to the folder
+  (override with `node scripts/pack-workspace.mjs --out <file.zip> --root <folder>`).
+  NOTE: `pnpm pack` is pnpm's built-in tarball command (`package/` top folder) and shadows
+  scripts — always use `pnpm dist` (or `pnpm run dist`).
+- The zip excludes machine-specific output (`node_modules/`, `.vanilla/`, `.git/` at any depth; root `dist/`;
+  logs, `.env*`) and includes `pnpm-lock.yaml` + `pnpm-workspace.yaml`
+  (`minimumReleaseAge: 0`) so the recipient runs plain `pnpm install` with no extra flags,
+  even on pnpm v11+ with a freshly published transitive package (e.g. `caniuse-lite`).
+  The `Ignored build scripts: esbuild` notice is harmless: esbuild's postinstall is a
+  validation-only script and the platform binary comes from the `@esbuild/<platform>`
+  optional dependency. Do NOT `pnpm approve-builds` esbuild on a 한글 path —
+  its script crashes there (D-043).
+- Recipient steps: unzip anywhere → `pnpm install` → `pnpm play`.
+  All `pnpm dev|play|build|preview|check:scene|vanilla` commands run through
+  `scripts/ascii-cwd.mjs`. Pure-JS commands (`check:scene`, `vanilla`, `pnpm install`
+  itself) work on non-ASCII paths such as 한글: the launcher re-runs them from an
+  ASCII junction alias when needed (`pnpm dist` runs in place; it needs no alias).
+  `vite` commands (`dev`, `play`, `build`, `preview`) run in place on any path.
+  Node's loader crashes (exit 3221225477) only for certain non-ASCII characters
+  (e.g. 한글 `숲` crashes, `강의` works; upstream bug, D-043/D-044). If that happens
+  the launcher prints a move-to-ASCII-path message — move the folder to an
+  ASCII-only path (e.g. `C:/class/my-work`) and run again.
 
 ## Standalone Play (no Vanilla Studio needed)
 

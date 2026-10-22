@@ -382,3 +382,51 @@ Ran lint (orphans 0, broken links 0). See lint-report.md for details.
 ## [2026-10-22] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
+
+## [2026-10-22] fix | 수업 배포 zip·무개입 설치 (D-041)
+
+- 배포 zip 압축본의 다른-PC `pnpm install` 실패(ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION, caniuse-lite 발행 3시간 전)를 템플릿 차원에서 수정. `pnpm-workspace.yaml`(minimumReleaseAge: 0) + `pnpm pack`(Node 내장 zip, node_modules/dist/.vanilla/.git 제외) + AGENTS·VANILLA_GUIDE §8 문서화 + vitest/Rust 단언. 브랜치 fix/workspace-dist-pack. See: [[issue-dist-pack-pnpm-policy]], [[decisions]]
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint (74 pages, no structural issues). See lint-report.md for details.
+
+## [2026-10-22] fix | dist rename, rooted zip, ASCII path guard (D-042)
+
+- `pnpm pack`은 내장 tarball 명령이라 `pnpm dist`로 개명, zip 최상위는 `package.json` name. 한글 경로 `require` 세그폴트(3221225477) 이분 완료 — 상류/환경 문제라 `guard:path`+영문 경로 안내로 대응. See: [[issue-dist-pack-pnpm-policy]], [[decisions]]
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint (no structural issues). See lint-report.md for details.
+
+## [2026-10-22] fix | Korean path partial support via ascii-cwd launcher (D-043)
+
+- 한글 지원 요구에 D-042 전면 차단을 부분 지원으로 전환. 이분: 특정 한글 음절(숲 등) 포함 경로를 밟을 때 Node 22.13 리졸버/로더 네이티브 크래시, junction·subst·--preserve-symlinks 무용(실경로 정규화), esbuild postinstall은 검증용이라 생략 안전·승인 시 오히려 한글 설치 붕괴. scripts/ascii-cwd.mjs(코어만): node 스크립트는 junction 별칭 실행(한글 check:scene PASS 확인), vite는 영문 안내 exit 1. guard:path 삭제, pnpm-workspace.yaml allowBuilds 생략, Rust 스캐폴드 단언 갱신. 검증: 한글 install exit 0·영문 build 성공·vitest·cargo. See: [[issue-korean-path-ascii-launcher]], [[decisions]]
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-10-22] fix | vite attempt-then-advise, nested exclusions, play docs (D-044)
+
+- 한글 경로 vite 사전 차단을 시도 후 크래시(exit 3221225477) 시에만 안내로 변경(`강의` 정상·`숲` 크래시 실측). zip 제외 디렉터리를 전 깊이로 확장(신별 `.vanilla` 썸네일 제외), 직접 실행 판정 realpath 비교, 받는 쪽 안내 `pnpm play`로 통일, `VANILLA_GUIDE.md` §8 제목·`dist` 런처 문구 정정. wiki decisions 표에 D-043 누락분 보충.
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-10-22] fix | 워크스페이스 히스토리 기록 일원화·zip 압축/불러오기 (D-045)
+
+- 히스토리 기록을 WorkspaceContext로 일원화, "현재" 배지 추가. `workspace_archive.rs`(압축/복원)와 워크스페이스 화면·온보딩 UI 추가. Day01_v2 `play/`를 템플릿과 동기화(음량 조절). [[issue-workspace-history-archive]]
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.

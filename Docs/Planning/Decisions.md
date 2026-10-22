@@ -290,3 +290,57 @@
   - 기존 5종 `tests/LLM_and_Vibe_Coding*` 워크스페이스에 동일 파일을 백필한다(로컬 전용·gitignore, 커밋 대상 아님).
 - **근거**: D-023(파일이 진실 공급원 — 시퀀스·신 JSON을 빌드 시점에 번들), D-032(타입 입력 위임), D-038(Bridge `input` v2.1). 구 런타임(`input` 이전) 신은 클릭·키 위임이 무시되므로 `‹` `›` 단계 버튼(레거시 `next`/`prev`)으로 폴백한다.
 - **영향**: `Technical-Design.md` §2.2(신 런타임 행)·§4.2(standalone play 항)·§9(템플릿 구조) 개정(v1.2). `VANILLA_GUIDE.md` §7·템플릿 `AGENTS.md`에 `play`/`preview` 문서화. 데이터 계약 변경 없음(`scene.json`·`sequence.json`·Bridge 스키마 불변).
+
+## D-041 수업 배포용 zip·무개입 설치(plain `pnpm install`) — Accepted (2026-10-22)
+
+- **맥락**: 배포 워크스페이스(`tests/LLM_and_Vibe_Coding_Day02_v2`)를 폴더째 압축해 다른 PC에서 `pnpm install`했더니 `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`(`caniuse-lite@1.0.30001818`, 발행 3시간 전)으로 실패했다. 원인은 ① pnpm v11 기본 24시간 게이트(`minimumReleaseAge: 1440`, 수일 간격으로 갱신되는 전이 DB 패키지에 상시 노출) + 배포 PC(pnpm 10, 무검사)로 만든 lock이 신선 버전을 물고 있던 것, ② `node_modules/`·`dist/`·`.vanilla/`를 포함한 채 압축한 것. 받는 쪽 네트워크 차단 경고도 겹쳐 있었다.
+- **결정**:
+  - `workspace-template/pnpm-workspace.yaml`에 `minimumReleaseAge: 0`을 둔다(수업 배포 워크스페이스는 추가 플래그 없는 설치가 보안 게이트보다 우선). 직접 의존성에는 영향 없고 해결 버전의 허용 연령만 바꾼다. `open_workspace`가 기존 폴더에도 비파괴 보충한다.
+  - `workspace-template/scripts/pack-workspace.mjs`(`pnpm dist`, Node 내장만·Win/Mac/Linux)를 둔다. `node_modules/`·`dist/`·`.vanilla/`·`.git/`·로그·`.env*`·심링크 제외, `pnpm-lock.yaml` 포함, `pnpm-workspace.yaml` 미존재 시 자동 생성. 직접 손으로 짠 미니 zip 라이터(deflate via `node:zlib`)라 의존성이 없다. zip 최상위 폴더는 `package.json` `name`(산출물명과 일치, `--root`로 변경 가능)이며, 스크립트명은 pnpm 내장 `pack`(tarball·`package/` 고정)과 충돌하므로 `dist`로 한다.
+  - 받는 쪽 순서 고정: 압축 풀기 → `pnpm install` → `pnpm dev` (템플릿 `AGENTS.md`·`VANILLA_GUIDE.md` §8에 문서화).
+- **근거**: D-023(파일이 진실 공급원 — lock 포함 배포로 재현 설치), D-012(고정 argv — 앱 소유 프로세스 변경 없음, 스크립트는 사용자 실행).
+- **영향**: `Technical-Design.md` §8.2(워크스페이스 파일 표)·§9(템플릿 구조) 개정(v1.3). 데이터 계약 변경 없음(`scene.json`·`sequence.json`·Bridge 스키마 불변). 검증: 추출본 `pnpm install` 통과 + zip 엔트리 검사(금지어 0) + vitest 4건 + Rust 스캐폴드 단언. → [[issue-dist-pack-pnpm-policy]]
+
+## D-042 배포 워크스페이스의 영문 경로 요구·가드·`dist` 개명 — Accepted (2026-10-22)
+
+- **맥락**: D-041 후속 검증에서 2건이 더 나왔다. ① 템플릿 `package.json`에 둔 `"pack"` 스크립트는 실행되지 않는다 — `pnpm pack`은 내장 tarball 명령이라 스크립트를 가린다(확인: `package/` 고정 tarball 생성). ② 수업 PC 경로(`C:\Workspace\강의\...`)에서 `pnpm play`가 exit 3221225477로 죽는다. 이분 결과: 한글 포함 경로의 파일을 `require`·`import`하면 Node 22.13.0 자체가 세그폴트한다(사소한 파일·절대경로·파일 경유 인자 모두 재현, `fs`·`vm`·자식 프로세스 spawn은 정상). esbuild·Vite 문제가 아니라 환경/상류 문제라 코드로 우회할 수 없다.
+- **결정**:
+  - 배포 스크립트명을 `dist`로 개명한다(`pnpm dist`, 내장 명령과 충돌 없음 확인). zip 최상위 폴더는 `package.json` `name`(산출물명과 일치, `--root` 변경·`--flat` 해제 가능).
+  - 템플릿 `package.json`의 `dev`·`play`·`preview`·`build`·`check:scene`·`vanilla` 앞에 `pnpm guard:path &&`를 둔다. 가드는 파일 로드 없는 인라인 `node -e`라 한글 경로에서도 죽지 않고 영문 경로 이전 안내 후 exit 1로 멈춘다. `dist`(pack)는 패킹 전용이라 가드를 달지 않는다(배포자는 영문 경로에서 실행).
+  - 받는 쪽 순서를 "영문 경로에 압축 풀기 → `pnpm install` → `pnpm dev`"로 고정하고 템플릿 `AGENTS.md`·`VANILLA_GUIDE.md` §8에 명시한다.
+- **근거**: D-023(파일이 진실 공급원), D-041(무개입 설치) 확장. `pnpm pack` 섀도잉은 pnpm 내장 명령 우선 규칙 때문이다.
+- **영향**: `Technical-Design.md` 개정(v1.4). 신규 워크스페이스에만 적용되고 기존 폴더의 `package.json`은 사용자 소유라 Studio가 덮지 않는다(가이드를 보고 직접 합치기). 검증: 한글 경로 `pnpm play` 가드 메시지+exit 1 확인, 영문 경로 200 확인, vitest 6건. → [[issue-dist-pack-pnpm-policy]]
+
+## D-043 배포 워크스페이스의 한글 경로 부분 지원(ascii-cwd 런처) — Accepted (2026-10-22)
+
+- **맥락**: D-042는 한글 경로를 `guard:path`로 전면 차단했다. 수업 PC 경로(`C:\Workspace\강의\...`)가 고정이라 사용자가 한글 지원을 요청했다. 재측정 결과 D-042의 "한글 경로면 전부 세그폴트"는 과도한 일반화였다:
+  - `require`/`import`·`fs`·자식 프로세스·ESM 엔트리 로드·junction 생성은 한글 경로에서도 정상이다.
+  - 죽는 것은 Node 22.13.0 리졸버/로더 네이티브 코드가 특정 한글 음절(예 `숲`; `가`/`관`/`글`/`검`은 정상)을 포함한 경로를 밟을 때다(exit 3221225477). 로컬 파일 `require`, 네이티브 `.node` `dlopen`, pnpm 심링크·3단 체인·`exports` 맵 해결까지는 재현되지 않고, vite 그래프·zod 등 실제 패키지 로드에서 재현된다. junction·subst·`--preserve-symlinks`는 해결을 한글 실경로로 정규화하므로 vite에는 소용없다.
+  - `esbuild` postinstall(`node install.js`)은 검증용이라 생략해도 플랫폼 바이너리(`@esbuild/<platform>` optional dep)가 있어 vite가 동작한다. 반대로 `allowBuilds: { esbuild: true }`로 사전 승인하면 한글 경로에서 postinstall이 죽고 `pnpm install`이 exit 1 + `.bin` 미생성 상태로 끝난다.
+- **결정**:
+  - `scripts/ascii-cwd.mjs`(코어 모듈만) 런처를 둔다. ASCII cwd면 그대로 실행, 비ASCII cwd(Windows)면 `node` 스크립트 명령(`check:scene`·`vanilla`·`dist`)은 `%TEMP%/vanilla-ws-<hash>` junction 별칭에서 재실행하고, `vite` 명령(`dev`·`play`·`build`·`preview`)은 영문 경로 이전 안내 후 exit 1로 멈춘다(세그폴트 대신 명확한 메시지).
+  - 템플릿 `package.json`의 6종 스크립트를 `node scripts/ascii-cwd.mjs <cmd>`로 교체하고 `guard:path`를 삭제한다. `dist`는 그대로 둔다.
+  - 템플릿 `pnpm-workspace.yaml`에 `allowBuilds`를 두지 않는다(생략이 곧 스킵 + exit 0; 승인 시 한글 설치가 깨진다). 받는 쪽 `pnpm approve-builds` 불필요, `Ignored build scripts` 경고는 무시해도 된다.
+  - 기존 폴더의 `package.json`은 사용자 소유라 Studio가 덮지 않는다(D-042 정책 유지). `.mjs`는 open 시 보충되므로 런처 파일만 자동 배포되고, 스크립트 교체는 가이드(`VANILLA_GUIDE.md`)를 보고 직접 합치기.
+- **근거**: D-023(파일이 진실 공급원), D-041(무개입 설치: 받는 쪽 `pnpm install` exit 0 확인), D-022(에이전트 중립: 런처는 고정 argv 전달뿐).
+- **영향**: `Technical-Design.md` 개정(v1.5), 템플릿 `AGENTS.md`·`VANILLA_GUIDE.md` 분배 문구 개정, `workspace_commands.rs` 스캐폴드 단언(신규 `ascii-cwd.mjs` + `allowBuilds` 금지) 갱신, vitest 4건 추가/수정. 검증: 한글 경로 `pnpm install` exit 0 + `pnpm check:scene` PASS + `pnpm build` 안내 메시지 exit 1, 영문 경로 `pnpm build` 성공, vitest·cargo test 통과. → [[issue-dist-pack-pnpm-policy]], [[issue-korean-path-ascii-launcher]]
+
+## D-044 한글 경로에서 vite 시도 후 크래시 시에만 안내 — Accepted (2026-10-22)
+
+- **맥락**: D-043은 비ASCII cwd면 vite 명령(`dev`·`play`·`build`·`preview`)을 실행도 하지 않고 막았다. 재검증 결과 크래시는 음절별이다 — `C:\...\강의\...`에서는 `vite build`·dev 서버(`/play.html` 200)가 정상이고, `숲` 경로에서만 exit 3221225477로 죽는다. 전면 차단은 수업 PC 경로(`C:\Workspace\강의\...`)에서 멀쩡히 되는 `pnpm play`까지 막았다. D-043의 "음절 목록으로 분기하지 말고 비ASCII 전체 차단"은 목록 분기를 하지 말라는 뜻이었고, 실행 후 종료 코드로 판정하는 방식은 그 위험이 없다.
+- **결정**:
+  - `ascii-cwd.mjs`는 vite 명령을 비ASCII cwd에서도 그대로 실행한다. 종료 코드가 3221225477(STATUS_ACCESS_VIOLATION)일 때만 영문 경로 이전 안내를 출력하고 같은 코드로 종료한다. node 스크립트 명령은 D-043대로 junction 별칭에서 실행한다.
+  - `pack-workspace.mjs`의 제외 디렉터리 `node_modules`·`.vanilla`·`.git`을 최상위뿐 아니라 어느 깊이에서든 제외한다(`.gitignore` 의미와 일치, 신별 `scenes/<slug>/.vanilla/` 썸네일이 zip에 섞이던 문제 해결). `dist`는 루트 빌드 산출물만 제외한다.
+  - `ascii-cwd.mjs`·`pack-workspace.mjs`의 직접 실행 판정을 `realpath` 비교로 바꿔 심링크 실행 시 조용히 exit 0 하지 않게 한다.
+  - 받는 쪽 안내를 `pnpm install` → `pnpm play`로 통일한다(`AGENTS.md`·`VANILLA_GUIDE.md` §8·pack 완료 메시지).
+- **근거**: D-043 측정(음절 의존 크래시), D-041(무개입 설치).
+- **영향**: `Technical-Design.md` 개정(v1.6), 템플릿 `AGENTS.md`·`VANILLA_GUIDE.md` 문구 개정. 데이터 계약 변경 없음. 검증: `강의` 경로 `pnpm build` exit 0, `숲` 경로 안내 메시지 + exit 3221225477, zip에 중첩 `.vanilla` 0건(464→434 파일), vitest 31건. → [[issue-korean-path-ascii-launcher]]
+
+## D-045 워크스페이스 히스토리 일원화 기록·zip 압축/불러오기 — Accepted (2026-10-22)
+
+- **맥락**: 워크스페이스 A→B를 열어도 히스토리가 비어 보였다. 히스토리(`workspaces` 테이블) 기록(`touchWorkspace`)이 온보딩 경로에만 있어 워크스페이스 화면 카드·폴더 열기·전환 팝업으로 연 워크스페이스는 기록되지 않았다. 또 앱에서 워크스페이스를 폴더째 압축/복원할 방법이 없었다(`pnpm dist`는 CLI 전용, `.vsx`는 신·시퀀스 공유용).
+- **결정**:
+  - 기록은 `WorkspaceContext`가 `workspaceRoot` 확정 시 한 곳에서 한다(`inspect_workspace_folder` 결과로 `touchWorkspace`). 현재 워크스페이스 카드에는 "현재" 배지를 붙인다(워크스페이스 화면·전환 팝업).
+  - Rust `workspace_archive.rs`: `pack_workspace_zip`(`pnpm dist`와 같은 제외 규칙·최상위 폴더 = `package.json` `name`·`pnpm-workspace.yaml` 없으면 항목으로만 추가)·`unpack_workspace_zip`(zip-slip·절대 경로·심링크·암호화 거부, 빈 폴더에만 풀기, 덮어쓰기 금지, `workspace.json` 검증, 실패 시 만든 것만 정리). 최상위 폴더가 있으면 벗겨 낸다.
+  - UI: 워크스페이스 화면 헤더(압축/불러오기)와 온보딩(불러오기). 불러온 폴더는 신뢰 자동 부여 없이 열어 신뢰 확인을 받는다. `pnpm install`은 자동 실행하지 않는다(외부 파일의 lifecycle 스크립트).
+- **영향**: 데이터 계약 변경 없음. `Technical-Design.md` 개정(v1.7). 검증: vitest(기록·배지), `cargo test workspace_archive` 4건(제외 규칙·왕복·거부·flat zip). → [[issue-workspace-history-archive]]

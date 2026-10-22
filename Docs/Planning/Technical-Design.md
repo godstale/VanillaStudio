@@ -1,6 +1,6 @@
 # Vanilla Studio 기술 설계서 (Technical Design)
 
-- 문서 버전: **v1.2 (standalone play, 2026-10-22)** — D-040 반영(워크스페이스 자체 빌드·발표). v1.1(에이전트 중심 UI, 2026-10-17)은 git 이력에 남아 있다.
+- 문서 버전: **v1.7 (워크스페이스 히스토리 일원화 기록·zip 압축/불러오기, 2026-10-22)** — D-045 반영. v1.6(D-044)은 git 이력에 있다. 앱 명령 `pack_workspace_zip`·`unpack_workspace_zip`(`src-tauri/src/commands/workspace_archive.rs`)은 `pnpm dist`와 같은 제외 규칙으로 폴더째 압축하고, 복원은 빈 폴더에만 풀며 zip-slip·심링크·암호화 항목을 거부한다. 히스토리 기록은 `WorkspaceContext`에서만 한다.
 - 선행 문서: `Docs/Planning/Refactor-Spec-v2.md`(무엇을 만드는가), `Docs/Planning/Decisions.md`(D-022~D-033)
 - 템플릿 공통 아키텍처(`Docs/Architecture.md`)는 **템플릿 원본으로 유지**하고, 이 문서가 Vanilla Studio 고유 설계의 진실 공급원이다. 충돌 시 이 문서가 우선한다.
 - ⚠️ 표시 항목은 PoC(`Feasibility-Risks.md`)로 확정해야 하는 가정이다.
@@ -396,6 +396,8 @@ render 모드와 HyperFrames seek의 연결, 준비 대기 신호는 S1에서 �
 | `WORK_ORDER.md` · `.vanilla/work-order.json` | `src/lib/workspace/workOrder.ts` | 바닐라 스튜디오 UI 변경사항(시퀀스·신·가이드·파라미터·팔레트)과 신별 코멘트를 집계한 통합 작업 지시서(D-036) |
 | `VANILLA_GUIDE.md` · `.vanilla/resources/` | (초기화 시 복사) | 스튜디오 동작 가이드·스키마·파라미터 역할 및 내장 템플릿·프리셋·팔레트 오프라인 카탈로그(D-036) |
 | `scripts/vanilla-agent.mjs` | (초기화 시 복사) | `pnpm vanilla <cmd>` 에이전트 연동 CLI 브리지(`status`·`templates`·`inspect-template`·`scaffold-scene`·`sync-guides`·`work-order`·`resolve`, D-036) |
+| `scripts/pack-workspace.mjs` + `pack-workspace.d.mts` | (초기화 시 복사) | `pnpm dist` 수업 배포용 zip(Node 내장만, D-041). `node_modules/`·`.vanilla/`·`.git/`(어느 깊이든)·루트 `dist/`·로그·`.env*` 제외, `pnpm-lock.yaml` 포함, 최상위 폴더는 `package.json` `name` |
+| `pnpm-workspace.yaml` | (초기화 시 복사) | `minimumReleaseAge: 0` — pnpm v11+ 24시간 게이트 해제, 받는 쪽 무개입 `pnpm install`(D-041) |
 | `guide-templates/*/template.json` | `src/lib/guides/templateSchema.ts` | `{id, version, type, extends, label}` |
 | `manifest.json`(.vsx 내부) | `src/lib/package/manifest.ts` | 파일별 SHA-256, 앱·스키마 버전, 사용 템플릿 목록 |
 
@@ -437,7 +439,7 @@ src-tauri/src/commands/
 src-tauri/src/{process,watch.rs}     # 보존
 resources/
   runtime/                     # @vanilla/runtime 소스(워크스페이스에 설치)
-  workspace-template/          # 워크스페이스 스캐폴딩 원본(workspace.json·AGENTS.md·CLAUDE.md·DESIGN.md·package.json·vite.config.ts·play.html·play/)
+  workspace-template/          # 워크스페이스 스캐폴딩 원본(workspace.json·AGENTS.md·CLAUDE.md·DESIGN.md·package.json·pnpm-workspace.yaml(D-041, `allowBuilds` 생략 — D-043)·vite.config.ts·play.html·play/·scripts/pack-workspace.mjs(D-041, `pnpm dist`)·scripts/ascii-cwd.mjs(D-043·D-044: 비ASCII cwd에서 node 스크립트는 junction 별칭 실행, vite는 그대로 실행하고 exit 3221225477일 때만 영문 경로 안내))
   guides/<type>/<id>@<ver>/    # 내장 가이드 템플릿(motion/commercial-v1, static/web-page-v1, 3d/three-scene-v1)
   glossary/                    # 용어집(템플릿이 참조)
   palettes/*.json              # 보존

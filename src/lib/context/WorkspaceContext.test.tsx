@@ -6,6 +6,13 @@ vi.mock('@tauri-apps/api/core', () => ({
   invoke: vi.fn().mockResolvedValue(undefined),
 }));
 
+const repo = vi.hoisted(() => ({
+  touchWorkspace: vi.fn(async () => undefined),
+  getWorkspaceByPath: vi.fn(async () => null),
+}));
+vi.mock('@/lib/db/repositories/workspacesRepo', () => repo);
+
+import { invoke } from '@tauri-apps/api/core';
 import { WorkspaceProvider, useWorkspace } from './WorkspaceContext';
 
 const wrapper = ({ children }: { children: ReactNode }) => (
@@ -38,5 +45,22 @@ describe('WorkspaceProvider trust', () => {
     act(() => result.current.setWorkspaceRoot('/p/other'));
     await waitFor(() => expect(result.current.trustModalOpen).toBe(true));
     expect(result.current.isTrusted).toBe(false);
+  });
+});
+
+describe('WorkspaceProvider history', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('records every opened workspace in the history, whichever screen opened it', async () => {
+    vi.mocked(invoke).mockImplementation(async (cmd: string, args?: unknown) => {
+      if (cmd !== 'inspect_workspace_folder') return undefined;
+      const path = (args as { path: string }).path;
+      return { kind: 'workspace', workspaceId: `id:${path}`, name: path.slice(-1).toUpperCase() };
+    });
+    const { result } = renderHook(useWorkspace, { wrapper });
+    act(() => result.current.setWorkspaceRoot('/w/a'));
+    await waitFor(() => expect(repo.touchWorkspace).toHaveBeenCalledWith({ workspaceId: 'id:/w/a', path: '/w/a', name: 'A' }));
+    act(() => result.current.setWorkspaceRoot('/w/b'));
+    await waitFor(() => expect(repo.touchWorkspace).toHaveBeenCalledWith({ workspaceId: 'id:/w/b', path: '/w/b', name: 'B' }));
   });
 });
