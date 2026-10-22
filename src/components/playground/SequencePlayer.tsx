@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { AlertTriangle, ChevronLeft, ChevronRight, Loader2, Pause, Play, RotateCcw, SkipBack } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { AlertTriangle, ChevronLeft, ChevronRight, Eraser, Loader2, Pause, Pencil, Play, RotateCcw, SkipBack, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { AnnotationLayer, type AnnotTool } from './AnnotationLayer';
+import { ERASER_RADIUS, PEN_COLOR, PEN_WIDTH, type AnnotPoint, type AnnotStroke, eraseStrokes } from '@/lib/playground/annotations';
 import { IframeSceneHost, type SceneSource } from '@/lib/playground/iframeScene';
 import { createTransitionRunner } from '@/lib/playground/sceneTransitions';
 import type { CustomTransition } from '@/lib/playground/transitions/custom';
@@ -145,6 +147,53 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
   const idx = current ? sequence.nodes.findIndex((n) => n.sceneId === current) : -1;
   const busy = state?.status === 'loading' || state?.status === 'transitioning';
 
+  /** 슬라이드 발표용 필기: 정적 신에서만, 신별 메모리 보관(파일에 저장 안 함). */
+  const [annotSel, setAnnotSel] = useState<{ scene: string | null; tool: 'off' | AnnotTool }>({ scene: null, tool: 'off' });
+  const [annotByScene, setAnnotByScene] = useState<Readonly<Record<string, AnnotStroke[]>>>({});
+  const annotId = useRef(1);
+  // 신이 바뀌면 필기 모드를 끈다(다음 클릭이 진행으로 동작하도록). 렌더 중 이전 값과 비교해 조정한다.
+  if (annotSel.scene !== current) {
+    setAnnotSel({ scene: current, tool: 'off' });
+  }
+  const annotTool = isStatic && annotSel.scene === current ? annotSel.tool : 'off';
+  const annotating = isStatic && annotTool !== 'off';
+  const annotStrokes = current ? (annotByScene[current] ?? []) : [];
+
+  const toggleAnnotTool = useCallback(
+    (tool: AnnotTool) => {
+      setAnnotSel((prev) => (prev.scene === current && prev.tool === tool ? { scene: current, tool: 'off' } : { scene: current, tool }));
+    },
+    [current],
+  );
+
+  const handleStrokeEnd = useCallback(
+    (points: AnnotPoint[]) => {
+      if (!current) return;
+      const id = annotId.current;
+      annotId.current += 1;
+      const stroke: AnnotStroke = { id, color: PEN_COLOR, width: PEN_WIDTH, points };
+      setAnnotByScene((prev) => ({ ...prev, [current]: [...(prev[current] ?? []), stroke] }));
+    },
+    [current],
+  );
+
+  const handleEraseAt = useCallback(
+    (point: AnnotPoint) => {
+      if (!current) return;
+      setAnnotByScene((prev) => {
+        const next = eraseStrokes(prev[current] ?? [], point, ERASER_RADIUS);
+        if (next.length === (prev[current] ?? []).length) return prev;
+        return { ...prev, [current]: next };
+      });
+    },
+    [current],
+  );
+
+  const handleClearAnnot = useCallback(() => {
+    if (!current) return;
+    setAnnotByScene((prev) => (prev[current]?.length ? { ...prev, [current]: [] } : prev));
+  }, [current]);
+
   /** 정적 신의 이전 버튼: 스텝이 있으면 한 칸 뒤로, 첫 스텝이면 이전 신으로. */
   const handlePrev = () => {
     if (!manager) return;
@@ -169,9 +218,22 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
             type="button"
             aria-label={t('player.input')}
             data-testid="player-input"
-            className="absolute inset-0 z-10 cursor-pointer bg-transparent focus:outline-none"
-            onClick={() => manager?.input({ kind: 'click' })}
+            disabled={annotating}
+            className={`absolute inset-0 z-10 bg-transparent focus:outline-none ${annotating ? 'pointer-events-none' : 'cursor-pointer'}`}
+            onClick={() => {
+              if (!annotating) manager?.input({ kind: 'click' });
+            }}
           />
+          {isStatic && (
+            <AnnotationLayer
+              canvas={canvas}
+              strokes={annotStrokes}
+              active={annotating}
+              tool={annotTool === 'off' ? 'pen' : annotTool}
+              onStrokeEnd={handleStrokeEnd}
+              onEraseAt={handleEraseAt}
+            />
+          )}
           {!hideChrome && busy && (
             <div role="status" className="absolute inset-0 z-20 flex items-center justify-center bg-background/60 text-xs">
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -213,7 +275,7 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
       )}
 
       {!hideChrome && (
-      <div className="absolute bottom-2 left-1/2 z-30 flex h-8 w-[420px] max-w-[calc(100%-2rem)] -translate-x-1/2 items-center gap-0.5 overflow-hidden rounded-lg border border-border bg-card/95 px-1.5 text-[11px] text-foreground shadow-lg backdrop-blur" data-testid="player-bar">
+      <div className="absolute bottom-2 left-1/2 z-30 flex h-8 w-max max-w-[calc(100%-2rem)] -translate-x-1/2 items-center gap-1 overflow-hidden rounded-lg border border-border bg-card/95 px-1.5 text-[11px] text-foreground shadow-lg backdrop-blur" data-testid="player-bar">
         <Button size="sm" variant="ghost" className="h-6 w-6 shrink-0 p-0" aria-label={t('player.restart')} onClick={() => void manager?.start()}>
           <SkipBack className="h-3 w-3" />
         </Button>
@@ -263,9 +325,43 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
               <ChevronRight className="h-3 w-3" />
             </Button>
             {state.step && <span data-testid="player-step" className="shrink-0 tabular-nums text-muted-foreground">{t('player.step', { index: state.step.index + 1, total: state.step.total })}</span>}
+            <span aria-hidden className="mx-0.5 h-4 w-px shrink-0 bg-border" />
+            <Button
+              size="sm"
+              variant="ghost"
+              className={`h-6 w-6 shrink-0 p-0 ${annotTool === 'pen' ? 'bg-primary/20 text-primary' : ''}`}
+              aria-label={t('player.draw')}
+              aria-pressed={annotTool === 'pen'}
+              title={t('player.draw')}
+              onClick={() => toggleAnnotTool('pen')}
+            >
+              <Pencil className="h-3 w-3" />
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              className={`h-6 w-6 shrink-0 p-0 ${annotTool === 'eraser' ? 'bg-primary/20 text-primary' : ''}`}
+              aria-label={t('player.erase')}
+              aria-pressed={annotTool === 'eraser'}
+              title={t('player.erase')}
+              onClick={() => toggleAnnotTool('eraser')}
+            >
+              <Eraser className="h-3 w-3" />
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-6 w-6 shrink-0 p-0"
+              aria-label={t('player.clearDraw')}
+              title={t('player.clearDraw')}
+              disabled={annotStrokes.length === 0}
+              onClick={handleClearAnnot}
+            >
+              <Trash2 className="h-3 w-3" />
+            </Button>
           </>
         )}
-        {state.duration ? (
+        {state.duration && (
           <>
             <input
               type="range"
@@ -276,16 +372,14 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
               aria-label={t('player.seek')}
               disabled={busy}
               onChange={(e) => manager?.seek(Number(e.target.value))}
-              className="min-w-16 flex-1 accent-primary"
+              className="w-40 accent-primary"
             />
             <span className="shrink-0 tabular-nums text-muted-foreground" data-testid="player-time">
               {fmt(state.t)} / {fmt(state.duration)}
             </span>
           </>
-        ) : (
-          <span className="min-w-2 flex-1" />
         )}
-        <span className="shrink-0 tabular-nums text-muted-foreground" data-testid="player-progress">
+        <span className="ml-1 shrink-0 tabular-nums text-muted-foreground" data-testid="player-progress">
           {idx >= 0 ? t('player.position', { index: idx + 1, total: sequence.nodes.length }) : ''}
         </span>
       </div>
