@@ -39,6 +39,16 @@ function toInput(e: KeyboardEvent): UserInput | null {
   return { kind: 'key', key: e.key };
 }
 
+/** 글자 입력란(텍스트·검색·URL 등)에 포커스가 있으면 키를 가로채지 않는다. range 슬라이더·버튼은 제외. */
+function isTextInput(target: HTMLElement | null): boolean {
+  if (!target) return false;
+  if (target.tagName === 'SELECT' || target.tagName === 'TEXTAREA') return true;
+  if (target.isContentEditable) return true;
+  if (target.tagName !== 'INPUT') return false;
+  const type = (target as HTMLInputElement).type;
+  return type !== 'range' && type !== 'checkbox' && type !== 'radio' && type !== 'button' && type !== 'submit' && type !== 'color' && type !== 'file';
+}
+
 function useManagerState(manager: SequenceManager | null): ManagerState | null {
   return useSyncExternalStore(
     (cb) => (manager ? manager.subscribe(cb) : () => undefined),
@@ -114,11 +124,13 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
 
   // 키보드 입력은 창 전체에서 받는다(입력 레이어에 포커스가 없어도 화살표로 넘길 수 있게).
   // 슬라이드(정적 신)는 프레젠테이션 겸용이므로 ArrowLeft는 이전 스텝·이전 신으로 되돌린다.
+  // 시크·음량 슬라이더(input[type=range])에 포커스가 있어도 화살표는 신 이동으로 쓴다(슬라이더 조절과 충돌하므로 preventDefault).
   useEffect(() => {
     if (!manager) return;
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
-      if (target && (target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA')) return;
+      if (isTextInput(target)) return;
+      if (target?.tagName === 'INPUT' && (target as HTMLInputElement).type === 'range' && (e.key.startsWith('Arrow') || e.key === ' ')) e.preventDefault();
       if (e.key === 'ArrowLeft') {
         const s = manager.getState();
         const cur = s.current ? scenes.get(s.current) : undefined;

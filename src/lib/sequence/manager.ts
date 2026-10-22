@@ -327,11 +327,11 @@ export function createSequenceManager(options: ManagerOptions) {
       set({ t });
     },
 
-    /** 사용자 입력(클릭·키). static 신은 타입 입력으로 위임하고(advance와 맞을 때만 진행), motion·3d는 엣지를 평가한다. */
+    /** 사용자 입력(클릭·키). static 신은 타입 입력으로 위임하고(advance와 맞을 때만 진행), motion·3d는 엣지를 평가한다.
+     *  일시정지 중에도 입력을 받는다: 영상 신을 멈춘 뒤 →를 눌러도 다음 신으로 넘어간다. */
     input(input: UserInput): void {
       const cur = state.current;
       if (cur === null || (state.status !== 'playing' && state.status !== 'paused')) return;
-      if (state.status === 'paused') return;
       const h = handles.get(cur);
       if (typeOf(cur) === 'static') {
         lastInput = input;

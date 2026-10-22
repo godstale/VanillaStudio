@@ -195,6 +195,16 @@ describe('click and key triggers', () => {
     expect(manager.getState().current).toBe('scn_d');
   });
 
+  it('a paused motion scene still advances on the matching key (e.g. after clicking the stage)', async () => {
+    const { manager } = build([edge('scn_m', 'scn_d', 'key:ArrowRight')]);
+    await manager.start();
+    manager.pause();
+    expect(manager.getState().status).toBe('paused');
+    manager.input({ kind: 'key', key: 'ArrowRight' });
+    await flush();
+    expect(manager.getState()).toMatchObject({ status: 'playing', current: 'scn_d' });
+  });
+
   it('a static scene gets the typed input first (step move); only the last step lets it leave', async () => {
     const { manager, host } = build([edge('scn_s', 'scn_d', 'click')], { ids: ['scn_s', 'scn_d'] });
     await manager.start();

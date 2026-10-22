@@ -55,6 +55,16 @@ function useNavigatorState(nav: PlayNavigator | null): NavigatorState {
 
 const fmtTime = (s: number): string => `${s.toFixed(1)}s`;
 
+/** Text entry focus keeps its keys; range sliders and buttons don't swallow arrows. */
+function isTextInput(target: HTMLElement | null): boolean {
+  if (!target) return false;
+  if (target.tagName === 'SELECT' || target.tagName === 'TEXTAREA') return true;
+  if (target.isContentEditable) return true;
+  if (target.tagName !== 'INPUT') return false;
+  const type = (target as HTMLInputElement).type;
+  return type !== 'range' && type !== 'checkbox' && type !== 'radio' && type !== 'button' && type !== 'submit' && type !== 'color' && type !== 'file';
+}
+
 export function Player() {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -132,11 +142,13 @@ export function Player() {
 
   // Keyboard: ArrowLeft steps back (Studio parity), everything else is typed
   // input — the scene matches it against its own advance rules and shortcuts.
+  // Range sliders (seek/volume) don't swallow arrows: they still navigate scenes.
   useEffect(() => {
     if (!nav) return;
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
-      if (target && (target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA')) return;
+      if (isTextInput(target)) return;
+      if (target?.tagName === 'INPUT' && (target as HTMLInputElement).type === 'range' && (e.key.startsWith('Arrow') || e.key === ' ')) e.preventDefault();
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (e.key === 'ArrowLeft') {
         e.preventDefault();

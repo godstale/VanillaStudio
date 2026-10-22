@@ -374,3 +374,11 @@ Ran lint (orphans 0, broken links 0). See lint-report.md for details.
 ## [2026-10-22] lint | Wiki health check
 
 Ran lint (orphans 0, broken links 0). See lint-report.md for details.
+
+## [2026-10-22] paused-arrow-advance | 일시정지 후 화살표 진행 무시 수정
+
+- 영상 신에서 화면 클릭(일시정지 토글) 뒤나 시크/음량 슬라이더 포커스 상태에서는 → 키가 무시됐다. 매니저·내비게이터 input()이 일시정지 중에도 입력을 받도록 하고, 키 가드는 글자 입력란만 건너뛴다. 브랜치 feat/arrow-advance-after-pause. See: [[issue-paused-arrow-advance]]
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
