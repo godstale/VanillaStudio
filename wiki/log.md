@@ -414,3 +414,19 @@ Ran lint. See lint-report.md for details.
 ## [2026-10-22] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
+
+## [2026-10-22] fix | 워크스페이스 히스토리 기록 일원화·zip 압축/불러오기 (D-045)
+
+- 히스토리 기록을 WorkspaceContext로 일원화, "현재" 배지 추가. `workspace_archive.rs`(압축/복원)와 워크스페이스 화면·온보딩 UI 추가. Day01_v2 `play/`를 템플릿과 동기화(음량 조절). [[issue-workspace-history-archive]]
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.

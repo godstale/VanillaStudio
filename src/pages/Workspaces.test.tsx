@@ -59,6 +59,14 @@ describe('Workspaces', () => {
     expect(await screen.findByText('WORKSPACE-SCREEN')).toBeTruthy();
   });
 
+  it('tags only the current workspace card', async () => {
+    renderWorkspaces();
+    await screen.findByText('Alpha');
+    const badges = screen.getAllByTestId('workspace-current-badge');
+    expect(badges).toHaveLength(1);
+    expect(badges[0].closest('li')?.textContent).toContain('Current');
+  });
+
   it('deletes a history card without opening it', async () => {
     renderWorkspaces();
     await screen.findByText('Alpha');

@@ -137,12 +137,19 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         if (candidateRoot) {
           let validWorkspace = true;
           try {
-            const inspected = await invoke<{ kind?: string } | undefined>(
-              'inspect_workspace_folder',
-              { path: candidateRoot },
-            );
+            const inspected = await invoke<
+              { kind?: string; workspaceId?: string; name?: string } | undefined
+            >('inspect_workspace_folder', { path: candidateRoot });
             if (inspected && typeof inspected === 'object' && 'kind' in inspected) {
               validWorkspace = inspected.kind === 'workspace';
+              // 어떤 경로로 열었든(온보딩·전환·목록 카드·시작 복원) 히스토리에 기록한다.
+              if (validWorkspace && inspected.workspaceId && inspected.name) {
+                await touchWorkspace({
+                  workspaceId: inspected.workspaceId,
+                  path: candidateRoot,
+                  name: inspected.name,
+                }).catch(() => undefined);
+              }
             }
           } catch {
             // In Tauri, inspect_workspace_folder throws if the directory no longer exists.

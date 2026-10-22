@@ -58,6 +58,7 @@ last_updated: 2026-10-22
 | D-042 | 배포 워크스페이스의 영문 경로 요구·가드·`dist` 개명 | Accepted (2026-10-22) | [[issue-dist-pack-pnpm-policy]] |
 | D-043 | 배포 워크스페이스의 한글 경로 부분 지원(ascii-cwd 런처) | Accepted (2026-10-22) | [[issue-korean-path-ascii-launcher]] |
 | D-044 | 한글 경로에서 vite 시도 후 크래시 시에만 안내 | Accepted (2026-10-22) | [[issue-korean-path-ascii-launcher]] |
+| D-045 | 워크스페이스 히스토리 일원화 기록·zip 압축/불러오기 | Accepted (2026-10-22) | [[issue-workspace-history-archive]] |
 
 ## Connections
 

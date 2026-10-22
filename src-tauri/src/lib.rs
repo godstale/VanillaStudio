@@ -16,6 +16,7 @@ use commands::shell_commands::*;
 use commands::template_commands::*;
 use commands::trust_commands::*;
 use commands::workspace_commands::*;
+use commands::workspace_archive::*;
 use watch::{start_preview_watch, stop_preview_watch};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -68,6 +69,8 @@ pub fn run() {
             doctor_check,
             extract_reference_frames,
             create_vsx,
+            pack_workspace_zip,
+            unpack_workspace_zip,
             inspect_vsx,
             extract_vsx_scene,
             extract_vsx_workspace,

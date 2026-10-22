@@ -335,3 +335,12 @@
   - 받는 쪽 안내를 `pnpm install` → `pnpm play`로 통일한다(`AGENTS.md`·`VANILLA_GUIDE.md` §8·pack 완료 메시지).
 - **근거**: D-043 측정(음절 의존 크래시), D-041(무개입 설치).
 - **영향**: `Technical-Design.md` 개정(v1.6), 템플릿 `AGENTS.md`·`VANILLA_GUIDE.md` 문구 개정. 데이터 계약 변경 없음. 검증: `강의` 경로 `pnpm build` exit 0, `숲` 경로 안내 메시지 + exit 3221225477, zip에 중첩 `.vanilla` 0건(464→434 파일), vitest 31건. → [[issue-korean-path-ascii-launcher]]
+
+## D-045 워크스페이스 히스토리 일원화 기록·zip 압축/불러오기 — Accepted (2026-10-22)
+
+- **맥락**: 워크스페이스 A→B를 열어도 히스토리가 비어 보였다. 히스토리(`workspaces` 테이블) 기록(`touchWorkspace`)이 온보딩 경로에만 있어 워크스페이스 화면 카드·폴더 열기·전환 팝업으로 연 워크스페이스는 기록되지 않았다. 또 앱에서 워크스페이스를 폴더째 압축/복원할 방법이 없었다(`pnpm dist`는 CLI 전용, `.vsx`는 신·시퀀스 공유용).
+- **결정**:
+  - 기록은 `WorkspaceContext`가 `workspaceRoot` 확정 시 한 곳에서 한다(`inspect_workspace_folder` 결과로 `touchWorkspace`). 현재 워크스페이스 카드에는 "현재" 배지를 붙인다(워크스페이스 화면·전환 팝업).
+  - Rust `workspace_archive.rs`: `pack_workspace_zip`(`pnpm dist`와 같은 제외 규칙·최상위 폴더 = `package.json` `name`·`pnpm-workspace.yaml` 없으면 항목으로만 추가)·`unpack_workspace_zip`(zip-slip·절대 경로·심링크·암호화 거부, 빈 폴더에만 풀기, 덮어쓰기 금지, `workspace.json` 검증, 실패 시 만든 것만 정리). 최상위 폴더가 있으면 벗겨 낸다.
+  - UI: 워크스페이스 화면 헤더(압축/불러오기)와 온보딩(불러오기). 불러온 폴더는 신뢰 자동 부여 없이 열어 신뢰 확인을 받는다. `pnpm install`은 자동 실행하지 않는다(외부 파일의 lifecycle 스크립트).
+- **영향**: 데이터 계약 변경 없음. `Technical-Design.md` 개정(v1.7). 검증: vitest(기록·배지), `cargo test workspace_archive` 4건(제외 규칙·왕복·거부·flat zip). → [[issue-workspace-history-archive]]
