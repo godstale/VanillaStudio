@@ -442,3 +442,7 @@ Ran lint. See lint-report.md for details.
 ## [2026-10-22] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
+
+## [2026-10-22] fix | 프리뷰 서버가 pnpm 가상 스토어 밖 파일을 403으로 막던 문제
+
+워크스페이스가 다른 pnpm 워크스페이스(앱 저장소 `tests/`) 안에 있으면 pnpm이 의존성을 상위 `node_modules/.pnpm`에 링크해, Vite `server.fs.allow` 밖이라 폰트 등이 403이 되고 신이 `A network error occurred.`를 보고했다. `vite-runner.mjs`가 프로젝트 의존성이 가리키는 `.pnpm` 스토어를 `fs.allow`에 추가한다(사용자 파일 `vite.config.ts` 수정 없음).
