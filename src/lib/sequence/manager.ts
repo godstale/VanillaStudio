@@ -43,6 +43,8 @@ export interface SceneHandle {
   input(input: UserInput): void;
   subscribe(listener: (e: SceneEvent) => void): () => void;
   dispose(): void;
+  /** 미리보기 오디오 오버라이드(선택): 없으면 무시한다. */
+  setParams?(sceneId: string, values: Record<string, unknown>): void;
 }
 
 export interface SceneHost {
@@ -122,6 +124,23 @@ export function createSequenceManager(options: ManagerOptions) {
   /** 마지막 사용자 입력: 위임한 입력이 `done`을 만들었을 때 어떤 엣지를 탈지 정한다. */
   let lastInput: UserInput | null = null;
   let generation = 0; // 비동기 작업(로드·전환)이 오래된 것인지 가린다
+  /** 플레이어 크롬 오디오: 신의 `volume`·`music` 파라미터 오버라이드로 전달(파일을 건드리지 않는다). */
+  let audioVolume = 0.8;
+  let audioMuted = false;
+
+  const audioValues = (): Record<string, unknown> => ({
+    volume: audioMuted ? 0 : audioVolume,
+    music: !audioMuted,
+    muted: audioMuted,
+  });
+
+  const applyAudio = (id: string) => {
+    try {
+      handles.get(id)?.setParams?.(id, audioValues());
+    } catch {
+      // 구 핸들(setParams 없음): 오디오 조절 없이 무시한다.
+    }
+  };
 
   const set = (patch: Partial<ManagerState>) => {
     state = { ...state, ...patch };
@@ -238,6 +257,7 @@ export function createSequenceManager(options: ManagerOptions) {
     lastInput = null;
     set({ status: 'playing', current: edge.to, next: null, step: null, t: 0, duration: null, choices: choicesOf(edge.to), history: [...state.history, edge.to] });
     bind(edge.to);
+    applyAudio(edge.to);
     armTimeouts(edge.to);
     preloadNeighbours(edge.to);
   }
@@ -266,6 +286,7 @@ export function createSequenceManager(options: ManagerOptions) {
     if (mine !== generation) return;
     bind(startId);
     h.start();
+    applyAudio(startId);
     set({ status: 'playing' });
     armTimeouts(startId);
     preloadNeighbours(startId);
@@ -356,6 +377,18 @@ export function createSequenceManager(options: ManagerOptions) {
 
     /** 분기 라벨을 고른다(`choice` 오버레이 클릭). */
     choose: (label: string): Promise<void> => chooseLabel(label),
+
+    /** 플레이어 크롬 오디오: 저장된 뒤 현재 신에 즉시 전달하고, 다음 신에도 적용된다. */
+    setAudio(volume: number, muted: boolean): void {
+      audioVolume = Math.min(1, Math.max(0, volume));
+      audioMuted = muted;
+      const cur = state.current;
+      if (cur !== null && (state.status === 'playing' || state.status === 'paused')) applyAudio(cur);
+    },
+
+    getAudio(): { volume: number; muted: boolean } {
+      return { volume: audioVolume, muted: audioMuted };
+    },
 
     /** 모든 신과 타이머를 정리한다. */
     dispose(): void {

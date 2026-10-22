@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { AlertTriangle, ChevronLeft, ChevronRight, Eraser, Loader2, Pause, Pencil, Play, RotateCcw, SkipBack, Trash2 } from 'lucide-react';
+import { AlertTriangle, ChevronLeft, ChevronRight, Eraser, Loader2, Pause, Pencil, Play, RotateCcw, SkipBack, Trash2, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AnnotationLayer, type AnnotTool } from './AnnotationLayer';
 import { ERASER_RADIUS, PEN_COLOR, PEN_WIDTH, type AnnotPoint, type AnnotStroke, eraseStrokes } from '@/lib/playground/annotations';
@@ -158,6 +158,43 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
   const isStatic = currentRef?.type === 'static';
   const idx = current ? sequence.nodes.findIndex((n) => n.sceneId === current) : -1;
   const busy = state?.status === 'loading' || state?.status === 'transitioning';
+  /** 클릭 분기가 없는 영상 신의 화면 클릭은 재생/일시정지 전환으로 쓴다. */
+  const hasClickEdge = current ? sequence.edges.some((e) => e.from === current && e.trigger === 'click') : false;
+
+  /** 하단 바 오디오(pnpm play/preview와 같은 스타일): 신 `volume`·`music` 파라미터 오버라이드. */
+  const [volume, setVolume] = useState(() => {
+    try {
+      const raw = window.localStorage.getItem('vp-volume');
+      const v = raw === null ? NaN : Number(raw);
+      return Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : 0.8;
+    } catch {
+      return 0.8;
+    }
+  });
+  const [muted, setMuted] = useState(() => {
+    try {
+      return window.localStorage.getItem('vp-muted') === '1';
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem('vp-volume', String(volume));
+    } catch {
+      // private mode: ignore
+    }
+    manager?.setAudio(volume, muted);
+  }, [manager, volume, muted]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem('vp-muted', muted ? '1' : '0');
+    } catch {
+      // private mode: ignore
+    }
+  }, [muted]);
 
   /** 슬라이드 발표용 필기: 정적 신에서만, 신별 메모리 보관(파일에 저장 안 함). */
   const [annotSel, setAnnotSel] = useState<{ scene: string | null; tool: 'off' | AnnotTool }>({ scene: null, tool: 'off' });
@@ -206,6 +243,14 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
     setAnnotByScene((prev) => (prev[current]?.length ? { ...prev, [current]: [] } : prev));
   }, [current]);
 
+  /** 클릭 분기가 없는 영상 신의 화면 클릭은 재생/일시정지 전환으로 쓴다. */
+  const handleStageClick = () => {
+    if (!manager || annotating) return;
+    if (isStatic || hasClickEdge) manager.input({ kind: 'click' });
+    else if (state?.status === 'paused') manager.resume();
+    else if (state?.status === 'playing') manager.pause();
+  };
+
   /** 정적 신의 이전 버튼: 스텝이 있으면 한 칸 뒤로, 첫 스텝이면 이전 신으로. */
   const handlePrev = () => {
     if (!manager) return;
@@ -228,13 +273,11 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
           <div ref={stageRef} data-testid="player-stage" className="absolute left-0 top-0 origin-top-left" style={{ width: layout.frame.width, height: layout.frame.height, transform: `scale(${layout.scale})` }} />
           <button
             type="button"
-            aria-label={t('player.input')}
+            aria-label={t(isStatic || hasClickEdge ? 'player.input' : state?.status === 'paused' ? 'player.play' : 'player.pause')}
             data-testid="player-input"
             disabled={annotating}
             className={`absolute inset-0 z-10 bg-transparent focus:outline-none ${annotating ? 'pointer-events-none' : 'cursor-pointer'}`}
-            onClick={() => {
-              if (!annotating) manager?.input({ kind: 'click' });
-            }}
+            onClick={handleStageClick}
           />
           {isStatic && (
             <AnnotationLayer
@@ -391,6 +434,37 @@ export function SequencePlayer({ sequence, workspaceId, scenes, serverUrl, hostO
             </span>
           </>
         )}
+        <span aria-hidden className="mx-0.5 h-4 w-px shrink-0 bg-border" />
+        <span className="flex shrink-0 items-center gap-1">
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-6 w-6 shrink-0 p-0"
+            aria-label={t(muted ? 'player.unmute' : 'player.mute')}
+            title={t(muted ? 'player.unmute' : 'player.mute')}
+            aria-pressed={muted}
+            data-testid="player-mute"
+            onClick={() => setMuted((m) => !m)}
+          >
+            {muted || volume === 0 ? <VolumeX className="h-3 w-3" /> : <Volume2 className="h-3 w-3" />}
+          </Button>
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.05}
+            value={muted ? 0 : volume}
+            aria-label={t('player.volume')}
+            data-testid="player-volume"
+            onChange={(e) => {
+              const v = Number(e.target.value);
+              setVolume(v);
+              if (v > 0 && muted) setMuted(false);
+              if (v === 0) setMuted(true);
+            }}
+            className="w-20 accent-primary"
+          />
+        </span>
         <span className="ml-1 shrink-0 tabular-nums text-muted-foreground" data-testid="player-progress">
           {idx >= 0 ? t('player.position', { index: idx + 1, total: sequence.nodes.length }) : ''}
         </span>

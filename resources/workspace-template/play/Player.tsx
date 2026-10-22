@@ -39,6 +39,9 @@ const STR = {
   ended: '시퀀스가 끝났습니다.',
   empty: '재생할 신이 없습니다. sequence.json에 노드를 추가하세요.',
   loading: '신을 불러오는 중…',
+  volume: '음량',
+  mute: '음소거',
+  unmute: '음소거 해제',
 } as const;
 
 function hashSceneId(): string | null {
@@ -72,6 +75,22 @@ export function Player() {
   const [nav, setNav] = useState<PlayNavigator | null>(null);
   const [showHelp, setShowHelp] = useState(false);
   const [box, setBox] = useState({ width: 960, height: 540 });
+  const [volume, setVolume] = useState(() => {
+    try {
+      const raw = window.localStorage.getItem('vp-volume');
+      const v = raw === null ? NaN : Number(raw);
+      return Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : 0.8;
+    } catch {
+      return 0.8;
+    }
+  });
+  const [muted, setMuted] = useState(() => {
+    try {
+      return window.localStorage.getItem('vp-muted') === '1';
+    } catch {
+      return false;
+    }
+  });
   const state = useNavigatorState(nav);
 
   useEffect(() => {
@@ -128,6 +147,32 @@ export function Player() {
   const isStatic = current?.type === 'static';
   const busy = state.status === 'loading';
   const empty = MANIFEST.order.length === 0;
+  /** 클릭 분기가 없는 영상 신의 화면 클릭은 재생/일시정지 전환으로 쓴다. */
+  const hasClickEdge = currentId ? MANIFEST.sequence.edges.some((e) => e.from === currentId && e.trigger === 'click') : false;
+
+  // Player chrome audio: persisted locally, forwarded as preview param overrides.
+  useEffect(() => {
+    try {
+      window.localStorage.setItem('vp-volume', String(volume));
+    } catch {
+      // private mode: ignore
+    }
+    nav?.setAudio(volume, muted);
+  }, [nav, volume, muted]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem('vp-muted', muted ? '1' : '0');
+    } catch {
+      // private mode: ignore
+    }
+  }, [muted]);
+
+  const handleStageClick = () => {
+    if (isStatic || hasClickEdge) nav?.input({ kind: 'click' });
+    else if (state.status === 'paused') nav?.resume();
+    else if (state.status === 'playing') nav?.pause();
+  };
 
   // Deep link: keep the hash on the current scene (replace, no history spam).
   useEffect(() => {
@@ -217,7 +262,7 @@ export function Player() {
               type="button"
               aria-label="scene input"
               className="vp-input"
-              onClick={() => nav?.input({ kind: 'click' })}
+              onClick={handleStageClick}
             />
             {busy && (
               <div role="status" className="vp-overlay">
@@ -335,6 +380,34 @@ export function Player() {
           >
             ››
           </button>
+          <span className="vp-vol">
+            <button
+              type="button"
+              className="vp-btn"
+              aria-label={muted ? STR.unmute : STR.mute}
+              title={muted ? STR.unmute : STR.mute}
+              aria-pressed={muted}
+              onClick={() => setMuted((m) => !m)}
+            >
+              {muted ? '🔇' : volume === 0 ? '🔈' : volume < 0.5 ? '🔉' : '🔊'}
+            </button>
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.05}
+              value={muted ? 0 : volume}
+              aria-label={STR.volume}
+              title={STR.volume}
+              className="vp-vol-slider"
+              onChange={(e) => {
+                const v = Number(e.target.value);
+                setVolume(v);
+                if (v > 0 && muted) setMuted(false);
+                if (v === 0) setMuted(true);
+              }}
+            />
+          </span>
           <span className="vp-current" title={current?.name ?? ''}>
             {current?.name ?? ''}
           </span>
@@ -350,6 +423,8 @@ export function Player() {
               <li>→ · Space · Enter: 다음 단계 · ←: 이전 단계/이전 신 · F11 대신 ⛶ 버튼으로 전체화면을 씁니다.</li>
               <li>‹ › 버튼은 단계를, ‹‹ ›› 버튼과 상단 목록은 신을 직접 옮깁니다. 주소 `#/play/&lt;sceneId&gt;`로 특정 신을 바로 열 수 있습니다.</li>
               <li>분기(choice) 신에서는 화면 아래 선택지를 고릅니다.</li>
+              <li>영상 신에서는 화면을 클릭하면 재생·일시정지가 바뀝니다(클릭 분기가 있는 신은 제외).</li>
+              <li>하단 바의 🔊 버튼·슬라이더로 음량과 음소거를 조절합니다 (신 오디오에 적용, 설정은 브라우저에 저장).</li>
               <li>구 런타임(구 Bridge) 신에서는 클릭·키 위임이 무시될 수 있습니다. 그때는 ‹ › 단계 버튼을 쓰세요.</li>
               <li>전환 연출은 끊김 없는 컷/페이드로 단순화됩니다. 스튜디오의 전환 합성과 동일하지 않습니다.</li>
             </ul>

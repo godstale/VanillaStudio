@@ -82,6 +82,24 @@ export function createNavigator(options: NavigatorOptions) {
   /** Last typed input, used to pick the edge when a static scene reports done. */
   let lastInput: UserInput | null = null;
   let generation = 0;
+  /** Player chrome audio: forwarded as preview param overrides (never touches files). */
+  let audioVolume = 0.8;
+  let audioMuted = false;
+
+  const audioValues = (): Record<string, unknown> => ({
+    volume: audioMuted ? 0 : audioVolume,
+    music: !audioMuted,
+    muted: audioMuted,
+  });
+
+  const applyAudio = (id: string, handle: SceneDriver | null) => {
+    if (!handle || state.current !== id) return;
+    try {
+      handle.setParams(id, audioValues());
+    } catch {
+      // Old drivers without setParams: ignore (no audio control).
+    }
+  };
 
   const set = (patch: Partial<NavigatorState>) => {
     state = { ...state, ...patch };
@@ -184,6 +202,7 @@ export function createNavigator(options: NavigatorOptions) {
     set({ status: 'playing', current: edge.to, index, step: null, t: 0, duration: null, choices: choicesOf(edge.to) });
     bind(edge.to, incoming);
     if (typeOf(edge.to) !== 'static') incoming.start();
+    applyAudio(edge.to, incoming);
     armTimeouts(edge.to);
   }
 
@@ -209,6 +228,7 @@ export function createNavigator(options: NavigatorOptions) {
     driver = handle;
     bind(sceneId, handle);
     if (typeOf(sceneId) !== 'static') handle.start();
+    applyAudio(sceneId, handle);
     set({ status: 'playing' });
     armTimeouts(sceneId);
   }
@@ -305,6 +325,18 @@ export function createNavigator(options: NavigatorOptions) {
     },
 
     choose: (label: string): Promise<void> => chooseLabel(label),
+
+    /** Player chrome audio: persisted by the UI, forwarded as param overrides. */
+    setAudio(volume: number, muted: boolean): void {
+      audioVolume = Math.min(1, Math.max(0, volume));
+      audioMuted = muted;
+      const cur = state.current;
+      if (cur !== null && (state.status === 'playing' || state.status === 'paused')) applyAudio(cur, driver);
+    },
+
+    getAudio(): { volume: number; muted: boolean } {
+      return { volume: audioVolume, muted: audioMuted };
+    },
 
     dispose(): void {
       generation += 1;

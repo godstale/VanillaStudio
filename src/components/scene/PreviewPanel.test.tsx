@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import type { PreviewServerState } from '@/lib/review/previewServer';
 
@@ -64,15 +64,16 @@ describe('PreviewPanel', () => {
     // 준비 전에는 동작 불가 버튼이 비활성이다. 상태 문구는 표시하지 않는다.
     expect(screen.queryByText(/연결 중|Connecting/)).toBeNull();
     expect(screen.queryByText(/미리보기 연결됨|Preview connected/)).toBeNull();
-    expect((screen.getByRole('button', { name: /^재생$|^Play$/ }) as HTMLButtonElement).disabled).toBe(true);
+    const bar = () => within(screen.getByTestId('preview-bar'));
+    expect((bar().getByRole('button', { name: /^재생$|^Play$/ }) as HTMLButtonElement).disabled).toBe(true);
     fromScene(ready);
-    expect((screen.getByRole('button', { name: /^재생$|^Play$/ }) as HTMLButtonElement).disabled).toBe(false);
+    expect((bar().getByRole('button', { name: /^재생$|^Play$/ }) as HTMLButtonElement).disabled).toBe(false);
     expect(screen.getByTestId('preview-time').textContent).toContain('3.00s');
   });
 
   it('motion scenes get play/pause; static scenes get previous/next and step progress', () => {
     const { unmount } = renderPanel('motion');
-    expect(screen.getByRole('button', { name: /^재생$|^Play$/ })).toBeTruthy();
+    expect(within(screen.getByTestId('preview-bar')).getByRole('button', { name: /^재생$|^Play$/ })).toBeTruthy();
     expect(screen.queryByRole('button', { name: /다음 단계|Next step/ })).toBeNull();
     unmount();
     renderPanel('static');
@@ -134,6 +135,31 @@ describe('PreviewPanel', () => {
     fromScene(ready);
     fromScene({ v: 2, type: 'error', payload: { message: 'boom', stack: '', sceneId: null } });
     expect(screen.getByRole('alert').textContent).toContain('boom');
+  });
+
+  it('motion: shows a seek slider when the duration is known and drives the scene', () => {
+    renderPanel();
+    fromScene(ready);
+    const seek = screen.getByTestId('preview-seek') as HTMLInputElement;
+    expect(seek.max).toBe('3');
+    const frame = screen.getByTitle(/신 미리보기|Scene preview/) as HTMLIFrameElement;
+    const post = vi.fn();
+    Object.defineProperty(frame, 'contentWindow', { value: { postMessage: post }, configurable: true });
+    fireEvent.load(frame);
+    fireEvent.change(seek, { target: { value: '1.5' } });
+    expect(post.mock.calls.some((c) => c[0].type === 'seek' && c[0].payload.t === 1.5)).toBe(true);
+  });
+
+  it('motion: clicking the stage toggles pause/play', () => {
+    renderPanel();
+    fromScene(ready);
+    const frame = screen.getByTitle(/신 미리보기|Scene preview/) as HTMLIFrameElement;
+    const post = vi.fn();
+    Object.defineProperty(frame, 'contentWindow', { value: { postMessage: post }, configurable: true });
+    fireEvent.load(frame);
+    post.mockClear();
+    fireEvent.click(screen.getByTestId('preview-stage-toggle'));
+    expect(post.mock.calls.some((c) => c[0].type === 'play')).toBe(true);
   });
 
   it('static with known total shows 1/N immediately after ready (no longer just —)', () => {

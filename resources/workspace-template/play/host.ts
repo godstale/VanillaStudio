@@ -25,6 +25,7 @@ export interface SceneDriver {
   next(): void;
   prev(): void;
   input(input: UserInput): void;
+  setParams(sceneId: string, values: Record<string, unknown>): void;
   subscribe(listener: (e: SceneEvent) => void): () => void;
   dispose(): void;
 }
@@ -181,6 +182,10 @@ export class SameOriginScene implements SceneDriver {
 
   input(input: UserInput): void {
     this.send('input', input.kind === 'click' ? { kind: 'click' } : { kind: 'key', key: input.key });
+  }
+
+  setParams(sceneId: string, values: Record<string, unknown>): void {
+    this.send('setParams', { sceneId, values });
   }
 
   subscribe(listener: (e: SceneEvent) => void): () => void {
