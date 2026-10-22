@@ -1,7 +1,75 @@
 # 코드 구조 (Project Structure)
 
-> 새 에이전트·개발자가 이 템플릿을 5분 안에 파악하기 위한 디렉터리 가이드입니다.
-> 전체 설계 원칙은 `Docs/Architecture.md`, 확장 절차는 `Docs/Extension-Guide.md`를 참고하세요.
+> **문서 버전 v2.0 (2026-10-22)**. **Part A**는 Vanilla Studio v2의 현재 디렉터리 구조, **Part B**는 앱이 시작한 기반 템플릿 트리(이력)다.
+> 설계 원칙은 `Docs/Architecture.md`·`Docs/Planning/Technical-Design.md` §9, 확장 절차는 `Docs/Extension-Guide.md`.
+
+# Part A. 현재 구조 (v2)
+
+```
+.
+├── AGENTS.md / CLAUDE.md          # 작업 지침 (CLAUDE.md는 AGENTS.md import)
+├── README.md · DESIGN.md · BRANDING.md · NOTICE.md
+├── package.json · pnpm-workspace.yaml   # pnpm 워크스페이스 (루트 + packages/*)
+├── design/                        # 앱 UI 토큰(tokens.json → theme.css, 대비 검증), 브랜드 자산
+├── src/
+│   ├── App.tsx · main.tsx         # HashRouter + Provider 조합
+│   ├── pages/                     # Storyboard · Workspace(시퀀스 캔버스) · Workspaces · Scenes · Templates
+│   │   │                          # · Play · Playground · Settings/(general·workspace·templates·agents·app·doctor)
+│   ├── components/
+│   │   ├── layout/                # AppShell(사이드바·슬롯), TitleBar, FloatingPanel
+│   │   ├── workspace/             # Onboarding, Switcher, TrustWorkspaceDialog, MigrateV1Dialog
+│   │   ├── canvas/                # WorkspaceCanvas (@xyflow/react)
+│   │   ├── scene/                 # SceneWorkspace, SceneNode, Preview, CheckPanel, 썸네일(useThumbnailCapture)
+│   │   ├── inspector/             # SceneInspector, EdgeSection, References, DesignSection
+│   │   ├── guides/                # SceneForm, TermCombobox, TemplateEditor, Beats/StepsEditor
+│   │   ├── terminal/              # TerminalDock, TerminalProvider (xterm + PTY)
+│   │   ├── playground/            # SequencePlayer, PlayerTab, AnnotationLayer
+│   │   ├── design/ · comments/ · storyboard/ · doctor/ · package/ · export/(보존) · ui/(shadcn)
+│   └── lib/
+│       ├── workspace/             # workspace.json 스키마·열기/생성·히스토리·zip(archive)·작업 지시서
+│       ├── scene/                 # scene.json 스키마·검사·참조·코멘트·썸네일·frameScore
+│       ├── sequence/              # sequence.json 스키마·검증·편집·재생 매니저
+│       ├── guides/                # 가이드 엔진(템플릿 해석·렌더·마커·용어집·프롬프트)
+│       ├── agents/                # 에이전트 레지스트리·클립보드
+│       ├── design/                # DESIGN.md 파서·재작성·팔레트·대비
+│       ├── playground/ · review/  # 시퀀스 재생·전환 / Bridge·프리뷰 서버·타임라인
+│       ├── package/ · migrate/    # .vsx / v1 마이그레이션
+│       ├── terminal/ · storyboard/ · json/(canonical) · db/ · context/ · i18n/ · types/
+├── src-tauri/src/
+│   ├── lib.rs · main.rs · watch.rs
+│   ├── commands/                  # workspace·scene·template·reference·pty·process·package·doctor·trust·migrate
+│   │                              # + workspace_archive(zip) + fs·search·shell(템플릿 기반)
+│   └── process/                   # 프로세스 실행 공통(PATHEXT·Job Object·타임아웃), FFmpeg 다운로드
+├── packages/
+│   ├── runtime/                   # @vanilla/runtime (defineScene·useTime·Bridge·토큰 Vite 플러그인·ESLint 룰)
+│   └── export-worker/             # export 워커 (코드 보존, v2.0 범위 밖)
+├── resources/
+│   ├── workspace-template/        # 워크스페이스 스캐폴딩 원본 (workspace.json·AGENTS.md·play/·scripts/…)
+│   ├── guides/{static,motion,3d}/ # 내장 가이드 템플릿 <id>@<ver>/
+│   ├── runtime/ · palettes/ · samples/ · skills/ · workers/ · design/
+├── tests/e2e/                     # CDP E2E (scene-preview·sequence-playback·samples-playback·v1-migration)
+├── Docs/                          # Planning/ · Playbook/ · User-Guide/ · Verification/ · Architecture · Extension-Guide
+└── wiki/                          # 지식베이스 (index·overview·log, sources/entities/concepts/syntheses)
+```
+
+## 어디를 먼저 읽을까 (v2)
+
+| 목적 | 파일 |
+| --- | --- |
+| 화면·라우트 | `src/App.tsx`, `src/components/layout/AppShell.tsx` |
+| 워크스페이스 열기·히스토리·zip | `src/lib/context/WorkspaceContext.tsx`, `src/lib/workspace/*`, `src-tauri/src/commands/workspace_commands.rs`, `workspace_archive.rs` |
+| 신 생성·스키마·가이드 | `src/lib/scene/schema.ts`, `src/lib/guides/*`, `resources/guides/` |
+| 시퀀스 검증·재생 | `src/lib/sequence/validate.ts`, `manager.ts`, `src/lib/playground/` |
+| 에이전트 실행 | `src/lib/agents/registry.ts`, `src-tauri/src/commands/pty_commands.rs` |
+| 미리보기·Bridge | `src/lib/review/`, `packages/runtime/` |
+| 문구 추가 | `src/lib/i18n/dictionaries/ko.ts` + `en.ts` |
+| 새 기능 추가 | `Docs/Extension-Guide.md` |
+
+---
+
+# Part B. 기반 템플릿 트리 (이력)
+
+> 아래 트리는 앱이 시작한 템플릿 원본이다. 탭 시스템·사이드패널·`collections`·`extensions`·`WorkspaceTabsContext` 등은 v2에서 제거되었다. 현재 구조는 Part A를 따른다.
 
 ```
 .
