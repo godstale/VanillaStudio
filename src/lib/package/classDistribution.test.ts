@@ -1,4 +1,4 @@
-import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -104,14 +104,17 @@ describe('class-distribution pack (D-041)', () => {
 
   it('template ships the policy file and dist script wiring', () => {
     const tpl = join(__dirname, '../../../resources/workspace-template');
-    expect(readFileSync(join(tpl, 'pnpm-workspace.yaml'), 'utf8')).toContain('minimumReleaseAge: 0');
+    const policy = readFileSync(join(tpl, 'pnpm-workspace.yaml'), 'utf8');
+    expect(policy).toContain('minimumReleaseAge: 0');
+    expect(policy).not.toMatch(/allowBuilds:/);
     const pkg = JSON.parse(readFileSync(join(tpl, 'package.json'), 'utf8')) as { scripts: Record<string, string> };
     expect(pkg.scripts.dist).toBe('node scripts/pack-workspace.mjs');
     expect(pkg.scripts.pack).toBeUndefined();
-    expect(pkg.scripts['guard:path']).toMatch(/^node -e /);
+    expect(pkg.scripts['guard:path']).toBeUndefined();
     for (const cmd of ['dev', 'play', 'preview', 'build', 'check:scene', 'vanilla']) {
-      expect(pkg.scripts[cmd].startsWith('pnpm guard:path && ')).toBe(true);
+      expect(pkg.scripts[cmd].startsWith('node scripts/ascii-cwd.mjs ')).toBe(true);
     }
+    expect(existsSync(join(tpl, 'scripts', 'ascii-cwd.mjs'))).toBe(true);
   });
 
   it('resolves the zip top folder from package.json name', () => {

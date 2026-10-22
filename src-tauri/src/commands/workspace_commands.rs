@@ -369,6 +369,7 @@ mod tests {
             ".vanilla/work-order.json",
             "scripts/vanilla-agent.mjs",
             "scripts/pack-workspace.mjs",
+            "scripts/ascii-cwd.mjs",
             "vite.config.ts",
             ".gitignore",
             "CREDITS.md",
@@ -378,6 +379,8 @@ mod tests {
         }
         let policy = fs::read_to_string(d.path().join("pnpm-workspace.yaml")).unwrap();
         assert!(policy.contains("minimumReleaseAge: 0"), "pnpm-workspace.yaml must disable the release-age gate (D-041)");
+        let has_builds_key = policy.lines().any(|l| !l.trim_start().starts_with('#') && l.contains("allowBuilds"));
+        assert!(!has_builds_key, "pnpm-workspace.yaml must not pre-approve build scripts: esbuild's postinstall crashes on non-ASCII cwd and aborts bin linking (D-043)");
         assert!(d.path().join("scenes").is_dir(), "scenes/");
         assert!(d.path().join(".vanilla/resources/guides").is_dir(), ".vanilla/resources/guides");
         assert!(d.path().join(".vanilla/resources/opus/opus-catalog.json").is_file(), ".vanilla/resources/opus/opus-catalog.json");

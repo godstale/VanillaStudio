@@ -4,13 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "guard:path": "node -e \"if(/[^\\x00-\\x7F]/.test(process.cwd())){console.error('[vanilla] Non-ASCII path: move this folder to an ASCII-only path and run again (e.g. C:/class/my-work).');process.exit(1)}\"",
-    "dev": "pnpm guard:path && vite",
-    "play": "pnpm guard:path && vite --open play.html",
-    "preview": "pnpm guard:path && vite preview --open play.html",
-    "build": "pnpm guard:path && vite build",
-    "check:scene": "pnpm guard:path && node scripts/check-scene.mjs",
-    "vanilla": "pnpm guard:path && node scripts/vanilla-agent.mjs",
+    "dev": "node scripts/ascii-cwd.mjs vite",
+    "play": "node scripts/ascii-cwd.mjs vite --open play.html",
+    "preview": "node scripts/ascii-cwd.mjs vite preview --open play.html",
+    "build": "node scripts/ascii-cwd.mjs vite build",
+    "check:scene": "node scripts/ascii-cwd.mjs node scripts/check-scene.mjs",
+    "vanilla": "node scripts/ascii-cwd.mjs node scripts/vanilla-agent.mjs",
     "dist": "node scripts/pack-workspace.mjs"
   },
   "dependencies": {

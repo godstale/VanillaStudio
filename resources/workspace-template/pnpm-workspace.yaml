@@ -6,3 +6,9 @@
 # `pnpm install`, so the age gate is disabled here. No direct dependency is
 # affected: this only controls how young a resolved version may be.
 minimumReleaseAge: 0
+# NOTE (D-043): no `allowBuilds` entry on purpose. esbuild's postinstall is a
+# validation-only script and crashes under a non-ASCII cwd (exit 3221225477);
+# pre-approving it (`esbuild: true`) would break `pnpm install` on 한글 paths
+# (postinstall failure aborts bin linking). The platform binary comes from the
+# `@esbuild/<platform>` optional dependency, so skipping the script is safe and
+# `pnpm install` exits 0 with only an "Ignored build scripts" notice.
