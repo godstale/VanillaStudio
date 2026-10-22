@@ -406,3 +406,11 @@ Ran lint (no structural issues). See lint-report.md for details.
 ## [2026-10-22] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
+
+## [2026-10-22] fix | vite attempt-then-advise, nested exclusions, play docs (D-044)
+
+- 한글 경로 vite 사전 차단을 시도 후 크래시(exit 3221225477) 시에만 안내로 변경(`강의` 정상·`숲` 크래시 실측). zip 제외 디렉터리를 전 깊이로 확장(신별 `.vanilla` 썸네일 제외), 직접 실행 판정 realpath 비교, 받는 쪽 안내 `pnpm play`로 통일, `VANILLA_GUIDE.md` §8 제목·`dist` 런처 문구 정정. wiki decisions 표에 D-043 누락분 보충.
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.

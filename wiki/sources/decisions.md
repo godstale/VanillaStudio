@@ -56,6 +56,8 @@ last_updated: 2026-10-22
 | D-040 | 워크스페이스 자체 빌드·발표(Standalone Play) | Accepted (2026-10-22) | [[standalone-play]] |
 | D-041 | 수업 배포용 zip·무개입 설치(`pnpm dist`·`minimumReleaseAge: 0`) | Accepted (2026-10-22) | [[issue-dist-pack-pnpm-policy]] |
 | D-042 | 배포 워크스페이스의 영문 경로 요구·가드·`dist` 개명 | Accepted (2026-10-22) | [[issue-dist-pack-pnpm-policy]] |
+| D-043 | 배포 워크스페이스의 한글 경로 부분 지원(ascii-cwd 런처) | Accepted (2026-10-22) | [[issue-korean-path-ascii-launcher]] |
+| D-044 | 한글 경로에서 vite 시도 후 크래시 시에만 안내 | Accepted (2026-10-22) | [[issue-korean-path-ascii-launcher]] |
 
 ## Connections
 

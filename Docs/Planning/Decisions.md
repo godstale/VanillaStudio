@@ -324,3 +324,14 @@
   - 기존 폴더의 `package.json`은 사용자 소유라 Studio가 덮지 않는다(D-042 정책 유지). `.mjs`는 open 시 보충되므로 런처 파일만 자동 배포되고, 스크립트 교체는 가이드(`VANILLA_GUIDE.md`)를 보고 직접 합치기.
 - **근거**: D-023(파일이 진실 공급원), D-041(무개입 설치: 받는 쪽 `pnpm install` exit 0 확인), D-022(에이전트 중립: 런처는 고정 argv 전달뿐).
 - **영향**: `Technical-Design.md` 개정(v1.5), 템플릿 `AGENTS.md`·`VANILLA_GUIDE.md` 분배 문구 개정, `workspace_commands.rs` 스캐폴드 단언(신규 `ascii-cwd.mjs` + `allowBuilds` 금지) 갱신, vitest 4건 추가/수정. 검증: 한글 경로 `pnpm install` exit 0 + `pnpm check:scene` PASS + `pnpm build` 안내 메시지 exit 1, 영문 경로 `pnpm build` 성공, vitest·cargo test 통과. → [[issue-dist-pack-pnpm-policy]], [[issue-korean-path-ascii-launcher]]
+
+## D-044 한글 경로에서 vite 시도 후 크래시 시에만 안내 — Accepted (2026-10-22)
+
+- **맥락**: D-043은 비ASCII cwd면 vite 명령(`dev`·`play`·`build`·`preview`)을 실행도 하지 않고 막았다. 재검증 결과 크래시는 음절별이다 — `C:\...\강의\...`에서는 `vite build`·dev 서버(`/play.html` 200)가 정상이고, `숲` 경로에서만 exit 3221225477로 죽는다. 전면 차단은 수업 PC 경로(`C:\Workspace\강의\...`)에서 멀쩡히 되는 `pnpm play`까지 막았다. D-043의 "음절 목록으로 분기하지 말고 비ASCII 전체 차단"은 목록 분기를 하지 말라는 뜻이었고, 실행 후 종료 코드로 판정하는 방식은 그 위험이 없다.
+- **결정**:
+  - `ascii-cwd.mjs`는 vite 명령을 비ASCII cwd에서도 그대로 실행한다. 종료 코드가 3221225477(STATUS_ACCESS_VIOLATION)일 때만 영문 경로 이전 안내를 출력하고 같은 코드로 종료한다. node 스크립트 명령은 D-043대로 junction 별칭에서 실행한다.
+  - `pack-workspace.mjs`의 제외 디렉터리 `node_modules`·`.vanilla`·`.git`을 최상위뿐 아니라 어느 깊이에서든 제외한다(`.gitignore` 의미와 일치, 신별 `scenes/<slug>/.vanilla/` 썸네일이 zip에 섞이던 문제 해결). `dist`는 루트 빌드 산출물만 제외한다.
+  - `ascii-cwd.mjs`·`pack-workspace.mjs`의 직접 실행 판정을 `realpath` 비교로 바꿔 심링크 실행 시 조용히 exit 0 하지 않게 한다.
+  - 받는 쪽 안내를 `pnpm install` → `pnpm play`로 통일한다(`AGENTS.md`·`VANILLA_GUIDE.md` §8·pack 완료 메시지).
+- **근거**: D-043 측정(음절 의존 크래시), D-041(무개입 설치).
+- **영향**: `Technical-Design.md` 개정(v1.6), 템플릿 `AGENTS.md`·`VANILLA_GUIDE.md` 문구 개정. 데이터 계약 변경 없음. 검증: `강의` 경로 `pnpm build` exit 0, `숲` 경로 안내 메시지 + exit 3221225477, zip에 중첩 `.vanilla` 0건(464→434 파일), vitest 31건. → [[issue-korean-path-ascii-launcher]]
