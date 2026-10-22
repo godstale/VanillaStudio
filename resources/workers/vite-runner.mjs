@@ -5,7 +5,7 @@
 // The process exits non-zero when the server stops unexpectedly so the app can restart it.
 import { createRequire } from 'node:module';
 import { createServer as createNetServer } from 'node:net';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, realpathSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -57,7 +57,42 @@ async function loadVite(root) {
 }
 
 const { root, port: wanted } = parseArgs(process.argv.slice(2));
-const { createServer } = await loadVite(root);
+const { createServer, searchForWorkspaceRoot } = await loadVite(root);
+
+/**
+ * pnpm links the project's packages into a virtual store that may sit outside the project (e.g. the workspace
+ * lives inside another pnpm workspace). Vite answers 403 for files outside `server.fs.allow`, which breaks
+ * fonts and assets of installed packages, so the stores the project's own dependencies resolve to are allowed too.
+ */
+function dependencyStores(projectRoot) {
+  const stores = new Set();
+  const nm = path.join(projectRoot, 'node_modules');
+  const visit = (dir) => {
+    let names = [];
+    try {
+      names = readdirSync(dir);
+    } catch {
+      return;
+    }
+    for (const name of names) {
+      if (name.startsWith('.')) continue;
+      const full = path.join(dir, name);
+      if (name.startsWith('@')) {
+        visit(full);
+        continue;
+      }
+      try {
+        const real = realpathSync(full).split(path.sep).join('/');
+        const i = real.lastIndexOf('/node_modules/.pnpm/');
+        if (i >= 0) stores.add(path.normalize(real.slice(0, i) + '/node_modules/.pnpm'));
+      } catch {
+        // dangling link: nothing to allow
+      }
+    }
+  };
+  visit(nm);
+  return [...stores];
+}
 
 let server = null;
 for (let attempt = 0; attempt < 8 && !server; attempt++) {
@@ -67,7 +102,7 @@ for (let attempt = 0; attempt < 8 && !server; attempt++) {
       root,
       logLevel: 'warn',
       clearScreen: false,
-      server: { host: HOST, port, strictPort: true, open: false },
+      server: { host: HOST, port, strictPort: true, open: false, fs: { allow: [searchForWorkspaceRoot(root), ...dependencyStores(root)] } },
     });
     await s.listen();
     server = s;

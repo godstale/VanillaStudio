@@ -23,6 +23,16 @@ use watch::{start_preview_watch, stop_preview_watch};
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
+        // 창 크기·위치·최대화만 기억한다. 장식(decorations)은 설정 파일이 정하므로 복원하지 않는다.
+        .plugin(
+            tauri_plugin_window_state::Builder::default()
+                .with_state_flags(
+                    tauri_plugin_window_state::StateFlags::SIZE
+                        | tauri_plugin_window_state::StateFlags::POSITION
+                        | tauri_plugin_window_state::StateFlags::MAXIMIZED,
+                )
+                .build(),
+        )
         .plugin(tauri_plugin_sql::Builder::default().build())
         .plugin(
             tauri_plugin_log::Builder::default()

@@ -1,9 +1,95 @@
-# 아키텍처 설계서 (템플릿)
+# 아키텍처 개요 (Vanilla Studio v2 + 기반 템플릿)
 
-> 이 문서는 이 템플릿으로 시작하는 모든 프로젝트가 공통으로 참조하는
-> **단일 진실 공급원(Source of Truth)**입니다. 특정 프로젝트의 도메인 요구사항이
-> 이 문서와 충돌하면, 프로젝트의 설계 문서를 새로 작성하고 이 파일은 템플릿
-> 원본으로 유지하십시오.
+> **문서 버전 v2.0 (2026-10-22)**. 이 문서의 **Part A**는 Vanilla Studio v2의 현재 아키텍처 개요이며, 상세·계약은
+> `Docs/Planning/Technical-Design.md`가 진실 공급원이다(충돌 시 그쪽 우선). **Part B(§0 이하)**는 앱이 올라선
+> Tauri 워크스페이스 **기반 템플릿**의 구조로, 앱 셸·테마·i18n·SQLite·파일 명령에는 여전히 유효하지만
+> 탭 시스템·`collections`·`extensions` 예제 등 일부는 v2에서 제거되었다(각 절에 표시).
+
+---
+
+# Part A. Vanilla Studio v2 아키텍처
+
+## A.1 한눈에 보기
+
+```
+┌──────────────────────── Vanilla Studio (Tauri 2 앱) ────────────────────────┐
+│ WebView (React 19)                                                           │
+│  사이드바(스토리보드·시퀀스·신·템플릿·플레이·설정) · 시퀀스 캔버스(@xyflow/react)   │
+│  신 인스펙터/코멘트 · 하단 터미널 도크(xterm) · 플레이그라운드                   │
+│  └ <iframe src="http://127.0.0.1:<port>/<scene>/"> 신 미리보기 ◀─ Bridge v2 ─┐ │
+│ ───────────── invoke / Channel ─────────────                                │ │
+│ Rust Core                                                                   │ │
+│  workspace/scene/template/reference_commands : 스캐폴딩·파일 I/O(스코프 강제)  │ │
+│  pty_commands (portable-pty)  : 에이전트 CLI를 고정 argv로 실행                │ │
+│  process_commands/process/    : 프리뷰 서버(Vite)·pnpm install·ffmpeg         │ │
+│  package_commands · workspace_archive : .vsx 패키지, 워크스페이스 zip          │ │
+│  doctor_commands · trust_commands · migrate_commands · watch.rs              │ │
+│  SQLite 전역 DB: 최근 워크스페이스·설정·터미널 세션                              │ │
+└──────────────┬─────────────────────────────────┬────────────────────────────┘
+        PTY (cwd = 신 폴더)                spawn (Node 22+)
+        ┌──────▼──────┐                 ┌─────────▼──────────┐
+        │ Agent CLI   │ ← AGENTS.md 등   │ Vite dev server    │
+        │ claude/codex│    파일로 지침     │ 워크스페이스 루트 서빙 │
+        └─────────────┘                 └────────────────────┘
+```
+
+## A.2 설계 원칙
+
+1. **앱은 에이전트를 조종하지 않는다**(D-022): 지침 파일·프롬프트 생성 + PTY 실행 + 클립보드 전달뿐. 권한·셸 확인은 CLI가 담당. 에이전트 차이는 `src/lib/agents/` 레지스트리가 흡수.
+2. **파일이 진실 공급원**(D-023): 워크스페이스·신·시퀀스 내용은 파일, 전역 SQLite는 앱 상태(최근 워크스페이스·설정·터미널 세션)만. 직렬화는 `src/lib/json/canonical.ts`만 사용.
+3. **생성물과 사용자 소유물 분리**: `GUIDE.md`·신 `AGENTS.md`·`prompts/*`는 `scene.json`에서 렌더(마커 구간만 갱신), `src/`·`params/`·`DESIGN.md` 본문은 사용자·에이전트 소유.
+4. **결정적 런타임**(D-011·D-024): `motion`·`3d` 신은 `useTime()`의 순수 함수. 같은 `t` → 같은 프레임.
+5. **워크스페이스 = 시퀀스 1개**(D-029), 화면 규격은 `workspace.json.canvas`에만(D-030).
+6. **생성형 AI 배제**(D-006), 외부 리소스는 오픈 라이선스 + `CREDITS.md`.
+
+## A.3 데이터 계층
+
+| 위치 | 내용 | 스키마/코드 |
+| --- | --- | --- |
+| `workspace.json` | `workspaceId`·이름·캔버스 규격·기본 에이전트·뷰포트 | `src/lib/workspace/schema.ts` |
+| `sequence.json` | 신 노드·전환 엣지·시작 신 (static 발신 엣지는 사용자 입력 trigger만) | `src/lib/sequence/schema.ts`, `validate.ts` |
+| `scenes/<slug>/scene.json` | 공통 + 타입별(`static`·`motion`·`3d`) 구조화 데이터, 용어는 glossary ID | `src/lib/scene/schema.ts` |
+| `scenes/<slug>/` 기타 | `GUIDE.md`·`AGENTS.md`·`prompts/`·`src/`·`params/`·`references/`·`comments.json`·`.vanilla/`(썸네일·이력) | `src/lib/guides/`, `src/lib/scene/` |
+| 루트 생성물 | `DESIGN.md`·`WORK_ORDER.md`·`VANILLA_GUIDE.md`·`scripts/`(`vanilla-agent`·`ascii-cwd`·`pack-workspace`) | `resources/workspace-template/` |
+| 전역 SQLite | `app_settings`·`workspaces`·`agents`·`terminal_sessions`·`doctor_cache` | `src/lib/db/migrations/0005_v2_global.sql` 외 |
+| `.vsx` | 해시 매니페스트 zip (신/시퀀스 공유) | `src/lib/package/`, `package_commands.rs` |
+
+## A.4 주요 모듈 지도
+
+| 영역 | 프런트(`src/`) | Rust(`src-tauri/src/`) |
+| --- | --- | --- |
+| 워크스페이스·온보딩·히스토리·zip | `lib/workspace/`, `components/workspace/`, `lib/context/WorkspaceContext.tsx` | `commands/workspace_commands.rs`, `workspace_archive.rs`, `trust_commands.rs` |
+| 신·가이드·인스펙터 | `lib/scene/`, `lib/guides/`, `components/scene·guides·inspector/` | `commands/scene_commands.rs`, `template_commands.rs` |
+| 시퀀스·캔버스·플레이그라운드 | `lib/sequence/`, `lib/playground/`, `components/canvas·playground/` | — |
+| 에이전트·터미널 | `lib/agents/`, `lib/terminal/`, `components/terminal/` | `commands/pty_commands.rs` |
+| 프리뷰·Bridge·계약 검사 | `lib/review/`(Bridge·프리뷰 서버), `lib/scene/check.ts` | `commands/process_commands.rs`, `process/`, `watch.rs` |
+| 레퍼런스 분석 | `lib/scene/references.ts`, `referenceFrames.ts` | `commands/reference_commands.rs`, `process/ffmpeg.rs` |
+| 디자인 토큰·팔레트 | `lib/design/`, `components/design/` | — |
+| 패키지·마이그레이션 | `lib/package/`, `lib/migrate/` | `commands/package_commands.rs`, `migrate_commands.rs` |
+| Doctor | `components/doctor/` | `commands/doctor_commands.rs` |
+| 신 런타임 | `packages/runtime/` (`resources/runtime/`에 번들 사본) | — |
+
+## A.5 실행 흐름 요약
+
+1. **신 생성**: 인스펙터 → `scene_commands` 스캐폴딩 → `scene.json` 저장(canonical) → 가이드 엔진이 `GUIDE.md`·`AGENTS.md`·프롬프트 렌더(마커 구간만).
+2. **에이전트 실행**: 레지스트리 argv를 `pty_commands`가 신 폴더 cwd로 실행 → 프롬프트는 클립보드(브래킷/플레인 붙여넣기 모드) → 에이전트가 `src/`·`params/` 작성.
+3. **미리보기**: `process_commands`가 워크스페이스 루트에서 Vite를 띄움(`node_modules` 없으면 자동 `pnpm install`) → 신 iframe(별도 origin, Tauri IPC 권한 없음)이 Bridge v2로 `ready`/`time`/`capture` 교환 → 썸네일은 여러 시점을 캡처해 점수가 가장 높은 프레임 저장.
+4. **시퀀스 재생**: `manager.ts` 상태 머신이 `SceneHandle`·`TransitionRunner`를 주입받아 trigger(`end`·`timeout`·`click`·`key`·`choice`)를 평가하고 두 iframe 오버레이로 전환 합성.
+5. **공유**: `.vsx`(신/시퀀스) 또는 워크스페이스 zip. 가져올 때 zip-slip·절대 경로·심링크·암호화 항목 거부, 빈 폴더에만 복원, 신뢰 확인 후 열기.
+
+## A.6 보안 요약
+
+파일 명령은 워크스페이스 스코프 안에서만(심링크 canonicalize 후 재검사) · 앱이 실행하는 프로세스는 고정 argv뿐(D-012) · 신뢰 확인 전에는 에이전트·프리뷰 서버 미시작 · 미리보기 iframe 격리 · 외부 콘텐츠(`.vsx`·템플릿·레퍼런스)는 신뢰할 수 없는 데이터. 표는 `Technical-Design.md` §10.
+
+## A.7 한글 경로 제약 (D-043·D-044)
+
+Node 22.13 리졸버가 특정 한글 음절 경로에서 크래시(exit 3221225477)한다. 워크스페이스 스크립트는 `scripts/ascii-cwd.mjs` 런처가 비ASCII cwd에서 junction 별칭으로 실행하고, vite 명령은 그대로 실행하다 해당 종료 코드일 때만 영문 경로 이전 안내를 출력한다.
+
+---
+
+# Part B. 기반 템플릿 구조 (원본)
+
+> 아래는 Vanilla Studio가 시작한 Tauri 워크스페이스 템플릿의 구조다. v2에서 **탭 시스템(§1.3)·사이드패널(§1.1~1.2)·`collections`/`extensions` 예제(§3.3)는 제거**되었고, 앱 셸은 `AppShell`(사이드바 + 라우트 + 플로팅 인스펙터/터미널)로 대체되었다. 폴더 스코프·테마·i18n·SQLite·Tauri 파일 명령은 그대로 유효하다.
 
 ## 0. 한눈에 보는 요약
 

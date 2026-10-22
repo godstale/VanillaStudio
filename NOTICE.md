@@ -26,6 +26,7 @@ license unless a row says otherwise.
 | `zod` | MIT | Data-contract validation (`scene.json`, `sequence.json`, `.vsx` manifest, Bridge messages) |
 | `yaml`, `culori` | ISC / MIT | `DESIGN.md` parsing and color math |
 | `notify` (Rust) | CC0-1.0 | Watching scene folders for changes |
+| `tauri-plugin-window-state` (Rust) | MIT OR Apache-2.0 | Remembering window size, position and maximized state |
 | `zip`, `sha2`, `hex` (Rust) | MIT or Apache-2.0 | `.vsx` packages (deterministic zip, SHA-256 manifest) and FFmpeg download verification |
 | Fonts (`@fontsource-variable/geist`, `@fontsource-variable/jetbrains-mono`, `@fontsource/ibm-plex-sans-kr`) | OFL-1.1 | App UI (see section 3) |
 

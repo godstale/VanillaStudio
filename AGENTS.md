@@ -17,7 +17,7 @@
 | 6a | `Docs/Planning/Implementation-Plan.md`, `Docs/Planning/TODO.md` | v2 구현 계획(마일스톤 V1~V7)과 작업 목록(v1 M1~M7 이력은 `legacy/`). **구현 작업은 TODO 항목 단위로 진행하고 체크한다**. TODO 맨 위 "▶ 진입점"이 다음 작업이다 |
 | 6b | `Docs/Planning/Parallel-Execution.md` | 여러 세션 병렬 실행: 웨이브·레인 배치, 소유 경로, 공유 파일 규칙, 세션 시작 프롬프트, 완료 보고 형식 |
 | 7 | `Docs/Playbook/README.md` | 개발 단계(P0~P7)별 할 일·산출물 |
-| 8 | `Docs/Architecture.md`, `Docs/Project-Structure.md`, `Docs/Extension-Guide.md` | 기반 템플릿 구조(원본 유지). 충돌 시 `Technical-Design.md` 우선 |
+| 8 | `Docs/Architecture.md`, `Docs/Project-Structure.md`, `Docs/Extension-Guide.md` | v2 아키텍처 개요(Part A)와 기반 템플릿 구조(Part B). 충돌 시 `Technical-Design.md` 우선 |
 | 9 | `DESIGN.md`, `BRANDING.md` | 앱 UI 디자인 토큰·브랜딩 |
 
 ## 1. 프로젝트 개요

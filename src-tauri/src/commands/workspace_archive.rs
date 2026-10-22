@@ -251,10 +251,20 @@ pub fn pack_workspace_zip(workspace_root: String, out_path: String) -> Result<Ar
     pack_workspace(&root, Path::new(&out_path))
 }
 
-/// 워크스페이스 zip을 사용자가 고른 빈 폴더에 푼다. 풀린 폴더를 여는 것은 호출한 쪽이 한다(신뢰 확인은 열 때 받는다).
+/// zip이 있는 폴더 안에 `<zip 이름>` 폴더(있으면 ` (2)`…)를 새로 만들어 푼다. 풀린 폴더(`report.path`)를 여는 것은 호출한 쪽이 한다(신뢰 확인은 열 때 받는다).
 #[tauri::command]
-pub fn unpack_workspace_zip(zip_path: String, dest_dir: String) -> Result<ArchiveReport, String> {
-    unpack_workspace(Path::new(&zip_path), Path::new(&dest_dir))
+pub fn unpack_workspace_zip(zip_path: String) -> Result<ArchiveReport, String> {
+    let zip = Path::new(&zip_path);
+    let parent = zip.parent().ok_or("invalid-zip-path")?;
+    let stem = zip.file_stem().map(|s| s.to_string_lossy().into_owned()).filter(|s| !s.is_empty()).unwrap_or_else(|| "workspace".into());
+    let mut dest = parent.join(&stem);
+    for n in 2.. {
+        if !dest.exists() {
+            break;
+        }
+        dest = parent.join(format!("{stem} ({n})"));
+    }
+    unpack_workspace(zip, &dest)
 }
 
 #[cfg(test)]

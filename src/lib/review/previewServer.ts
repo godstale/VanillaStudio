@@ -63,6 +63,9 @@ export function enqueueDirJob<T>(dir: string, job: () => Promise<T>): Promise<T>
   return run;
 }
 
+// 같은 폴더의 서버를 여러 곳(미리보기 패널·썸네일 생성기)이 쓸 수 있으므로 마지막 사용자가 떠날 때만 멈춘다.
+const owners = new Map<string, number>();
+
 export interface UsePreviewServerOptions {
   api?: PreviewApi;
   onLog?: (e: Extract<PreviewEvent, { kind: 'log' }>) => void;
@@ -87,6 +90,7 @@ export function usePreviewServer(
   useEffect(() => {
     if (!projectDir) return;
     let alive = true;
+    owners.set(projectDir, (owners.get(projectDir) ?? 0) + 1);
     const onEvent = (e: PreviewEvent) => {
       if (!alive) return;
       if (e.kind === 'log') onLog?.(e);
@@ -111,6 +115,12 @@ export function usePreviewServer(
     );
     return () => {
       alive = false;
+      const left = (owners.get(projectDir) ?? 1) - 1;
+      if (left > 0) {
+        owners.set(projectDir, left);
+        return;
+      }
+      owners.delete(projectDir);
       void enqueueDirJob(projectDir, () => api.stop(projectDir)).catch(() => undefined);
     };
     // onLog is read once per start on purpose.

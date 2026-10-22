@@ -3,11 +3,12 @@ title: 'Overview'
 type: overview
 tags: [overview]
 sources: []
-last_updated: 2026-10-18
+last_updated: 2026-10-22
 ---
 
-## 현재 상태 (2026-10-01)
+## 현재 상태 (2026-10-22)
 
+- **2026-10-22 문서 정비**: `README.md`·`Docs/Architecture.md`(Part A v2)·`Docs/Project-Structure.md`(Part A v2)를 v2 기준으로 개정. 최신 결정 D-045까지 Accepted
 - **2026-10-05 v2 리팩토링(Scene 워크스페이스)**: 기획 [[refactor-spec-v2]] v0.3·설계 [[technical-design]] v1.0·계획 [[implementation-plan]] v2.0(V1~V7)·`AGENTS.md` v2 개정 완료, D-022~D-033 Accepted(D-010·D-018 Superseded). **다음: V1 기반 정리(TODO T1.0)**. 브랜치 `docs/v2-refactor-spec`(main 병합·push는 사용자 승인 대기). 아래 P4(v1) 상태는 이력
 - 레거시 제거 계획(T1.2): [[issue-v2-legacy-removal]]
 - PoC R-5(캔버스) 통과: [[poc-r5]]

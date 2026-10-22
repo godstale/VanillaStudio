@@ -434,3 +434,23 @@ Ran lint. See lint-report.md for details.
 ## [2026-10-22] fix | 미리보기 서버 시작 시 의존성 자동 설치
 
 압축 파일로 불러오거나 node_modules가 없는 워크스페이스는 `usePreviewServer`가 `not-installed`를 받으면 고정 argv `pnpm install`(D-012)을 실행하고 서버를 다시 시작한다. 신뢰된 폴더에서만 동작한다(projectDir는 신뢰 후 설정).
+
+## [2026-10-22] fix | 창 상태 복원, DOM 신 썸네일 캡처·자동 생성
+
+`tauri-plugin-window-state`로 창 크기·위치·최대화를 복원한다. 런타임 `capture`가 `<canvas>`가 없는 신(모션 그래픽·정적)에서 실패해 썸네일이 비던 문제를 `domCapture`(SVG foreignObject 래스터화)로 해결했다. 코드가 있는 신(generated·needs-revision)에 썸네일이 없으면 워크스페이스를 열 때 `ThumbnailGenerator`가 숨은 미리보기로 하나씩 캡처해 `.vanilla/thumb.png`에 저장한다. 미리보기 서버는 사용자 수를 세어 마지막 사용자가 떠날 때만 멈춘다.
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-10-22] fix | 프리뷰 서버가 pnpm 가상 스토어 밖 파일을 403으로 막던 문제
+
+워크스페이스가 다른 pnpm 워크스페이스(앱 저장소 `tests/`) 안에 있으면 pnpm이 의존성을 상위 `node_modules/.pnpm`에 링크해, Vite `server.fs.allow` 밖이라 폰트 등이 403이 되고 신이 `A network error occurred.`를 보고했다. `vite-runner.mjs`가 프로젝트 의존성이 가리키는 `.pnpm` 스토어를 `fs.allow`에 추가한다(사용자 파일 `vite.config.ts` 수정 없음).
+
+## [2026-10-22] docs | README·아키텍처·코드 구조 문서를 v2 기준으로 개정
+
+`README.md`를 v2 앱 소개(핵심 개념·사용 흐름·기능·스택·구조·명령·문서 맵)로 재작성했다. `Docs/Architecture.md`는 Part A(v2 아키텍처 개요)를 추가하고 템플릿 내용을 Part B로 격하했으며, `Docs/Project-Structure.md`는 현재 트리(Part A)를 추가했다. `AGENTS.md` §0 표 8번 설명을 맞췄다. 썸네일 프레임 선택(`frameScore`)·워크스페이스 zip 보강 코드가 함께 커밋된다.
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
