@@ -1,6 +1,6 @@
 # Vanilla Studio 기술 설계서 (Technical Design)
 
-- 문서 버전: **v1.4 (배포 가드·`dist` 개명, 2026-10-22)** — D-042 반영(ASCII 경로 요구·`guard:path`·`pnpm dist`·zip 최상위 산출물명). v1.3(D-041)은 git 이력에 있다.
+- 문서 버전: **v1.5 (한글 경로 부분 지원·`ascii-cwd` 런처, 2026-10-22)** — D-043 반영(런처·junction 별칭·vite 영문 요구 유지·`allowBuilds` 생략). v1.4(D-042)는 git 이력에 있다.
 - 선행 문서: `Docs/Planning/Refactor-Spec-v2.md`(무엇을 만드는가), `Docs/Planning/Decisions.md`(D-022~D-033)
 - 템플릿 공통 아키텍처(`Docs/Architecture.md`)는 **템플릿 원본으로 유지**하고, 이 문서가 Vanilla Studio 고유 설계의 진실 공급원이다. 충돌 시 이 문서가 우선한다.
 - ⚠️ 표시 항목은 PoC(`Feasibility-Risks.md`)로 확정해야 하는 가정이다.
@@ -439,7 +439,7 @@ src-tauri/src/commands/
 src-tauri/src/{process,watch.rs}     # 보존
 resources/
   runtime/                     # @vanilla/runtime 소스(워크스페이스에 설치)
-  workspace-template/          # 워크스페이스 스캐폴딩 원본(workspace.json·AGENTS.md·CLAUDE.md·DESIGN.md·package.json·pnpm-workspace.yaml(D-041)·vite.config.ts·play.html·play/·scripts/pack-workspace.mjs(D-041, `pnpm dist`)·`guard:path` ASCII 경로 가드(D-042))
+  workspace-template/          # 워크스페이스 스캐폴딩 원본(workspace.json·AGENTS.md·CLAUDE.md·DESIGN.md·package.json·pnpm-workspace.yaml(D-041, `allowBuilds` 생략 — D-043)·vite.config.ts·play.html·play/·scripts/pack-workspace.mjs(D-041, `pnpm dist`)·scripts/ascii-cwd.mjs(D-043: 비ASCII cwd에서 node 스크립트는 junction 별칭 실행, vite는 영문 경로 안내))
   guides/<type>/<id>@<ver>/    # 내장 가이드 템플릿(motion/commercial-v1, static/web-page-v1, 3d/three-scene-v1)
   glossary/                    # 용어집(템플릿이 참조)
   palettes/*.json              # 보존

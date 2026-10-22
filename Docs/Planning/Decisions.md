@@ -310,3 +310,17 @@
   - 받는 쪽 순서를 "영문 경로에 압축 풀기 → `pnpm install` → `pnpm dev`"로 고정하고 템플릿 `AGENTS.md`·`VANILLA_GUIDE.md` §8에 명시한다.
 - **근거**: D-023(파일이 진실 공급원), D-041(무개입 설치) 확장. `pnpm pack` 섀도잉은 pnpm 내장 명령 우선 규칙 때문이다.
 - **영향**: `Technical-Design.md` 개정(v1.4). 신규 워크스페이스에만 적용되고 기존 폴더의 `package.json`은 사용자 소유라 Studio가 덮지 않는다(가이드를 보고 직접 합치기). 검증: 한글 경로 `pnpm play` 가드 메시지+exit 1 확인, 영문 경로 200 확인, vitest 6건. → [[issue-dist-pack-pnpm-policy]]
+
+## D-043 배포 워크스페이스의 한글 경로 부분 지원(ascii-cwd 런처) — Accepted (2026-10-22)
+
+- **맥락**: D-042는 한글 경로를 `guard:path`로 전면 차단했다. 수업 PC 경로(`C:\Workspace\강의\...`)가 고정이라 사용자가 한글 지원을 요청했다. 재측정 결과 D-042의 "한글 경로면 전부 세그폴트"는 과도한 일반화였다:
+  - `require`/`import`·`fs`·자식 프로세스·ESM 엔트리 로드·junction 생성은 한글 경로에서도 정상이다.
+  - 죽는 것은 Node 22.13.0 리졸버/로더 네이티브 코드가 특정 한글 음절(예 `숲`; `가`/`관`/`글`/`검`은 정상)을 포함한 경로를 밟을 때다(exit 3221225477). 로컬 파일 `require`, 네이티브 `.node` `dlopen`, pnpm 심링크·3단 체인·`exports` 맵 해결까지는 재현되지 않고, vite 그래프·zod 등 실제 패키지 로드에서 재현된다. junction·subst·`--preserve-symlinks`는 해결을 한글 실경로로 정규화하므로 vite에는 소용없다.
+  - `esbuild` postinstall(`node install.js`)은 검증용이라 생략해도 플랫폼 바이너리(`@esbuild/<platform>` optional dep)가 있어 vite가 동작한다. 반대로 `allowBuilds: { esbuild: true }`로 사전 승인하면 한글 경로에서 postinstall이 죽고 `pnpm install`이 exit 1 + `.bin` 미생성 상태로 끝난다.
+- **결정**:
+  - `scripts/ascii-cwd.mjs`(코어 모듈만) 런처를 둔다. ASCII cwd면 그대로 실행, 비ASCII cwd(Windows)면 `node` 스크립트 명령(`check:scene`·`vanilla`·`dist`)은 `%TEMP%/vanilla-ws-<hash>` junction 별칭에서 재실행하고, `vite` 명령(`dev`·`play`·`build`·`preview`)은 영문 경로 이전 안내 후 exit 1로 멈춘다(세그폴트 대신 명확한 메시지).
+  - 템플릿 `package.json`의 6종 스크립트를 `node scripts/ascii-cwd.mjs <cmd>`로 교체하고 `guard:path`를 삭제한다. `dist`는 그대로 둔다.
+  - 템플릿 `pnpm-workspace.yaml`에 `allowBuilds`를 두지 않는다(생략이 곧 스킵 + exit 0; 승인 시 한글 설치가 깨진다). 받는 쪽 `pnpm approve-builds` 불필요, `Ignored build scripts` 경고는 무시해도 된다.
+  - 기존 폴더의 `package.json`은 사용자 소유라 Studio가 덮지 않는다(D-042 정책 유지). `.mjs`는 open 시 보충되므로 런처 파일만 자동 배포되고, 스크립트 교체는 가이드(`VANILLA_GUIDE.md`)를 보고 직접 합치기.
+- **근거**: D-023(파일이 진실 공급원), D-041(무개입 설치: 받는 쪽 `pnpm install` exit 0 확인), D-022(에이전트 중립: 런처는 고정 argv 전달뿐).
+- **영향**: `Technical-Design.md` 개정(v1.5), 템플릿 `AGENTS.md`·`VANILLA_GUIDE.md` 분배 문구 개정, `workspace_commands.rs` 스캐폴드 단언(신규 `ascii-cwd.mjs` + `allowBuilds` 금지) 갱신, vitest 4건 추가/수정. 검증: 한글 경로 `pnpm install` exit 0 + `pnpm check:scene` PASS + `pnpm build` 안내 메시지 exit 1, 영문 경로 `pnpm build` 성공, vitest·cargo test 통과. → [[issue-dist-pack-pnpm-policy]], [[issue-korean-path-ascii-launcher]]

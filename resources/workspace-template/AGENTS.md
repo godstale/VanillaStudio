@@ -92,10 +92,20 @@ pnpm preview                                                     # Serve the pro
   logs, `.env*`) and includes `pnpm-lock.yaml` + `pnpm-workspace.yaml`
   (`minimumReleaseAge: 0`) so the recipient runs plain `pnpm install` with no extra flags,
   even on pnpm v11+ with a freshly published transitive package (e.g. `caniuse-lite`).
-- Recipient steps: unzip **to an ASCII-only path (no Korean or other non-ASCII characters —
-  Node/Vite crashes with exit 3221225477 otherwise)** → `pnpm install` → `pnpm dev`.
-  All `pnpm dev|play|build|preview|check:scene|vanilla` commands start with `guard:path`,
-  which stops with this message on a non-ASCII path instead of crashing.
+  The `Ignored build scripts: esbuild` notice is harmless: esbuild's postinstall is a
+  validation-only script and the platform binary comes from the `@esbuild/<platform>`
+  optional dependency. Do NOT `pnpm approve-builds` esbuild on a 한글 path —
+  its script crashes there (D-043).
+- Recipient steps: unzip anywhere → `pnpm install` → `pnpm dev`.
+  All `pnpm dev|play|build|preview|check:scene|vanilla` commands run through
+  `scripts/ascii-cwd.mjs`. Pure-JS commands (`check:scene`, `vanilla`, `dist`,
+  `pnpm install` itself) work on non-ASCII paths such as 한글: the launcher
+  re-runs them from an ASCII junction alias when needed.
+  `vite` commands (`dev`, `play`, `build`, `preview`) still need an ASCII-only
+  path on Windows: Node's resolver/loader crashes with exit 3221225477 on
+  certain non-ASCII characters (e.g. 한글 `숲`, upstream bug, D-043) and no
+  aliasing works around it. On such a path the launcher stops with a
+  move-to-ASCII-path message instead of a raw segfault.
 
 ## Standalone Play (no Vanilla Studio needed)
 

@@ -249,6 +249,6 @@ export default defineScene({
   pnpm v11+ 기본 24시간 게이트를 끄므로 받는 쪽은 추가 옵션 없이 `pnpm install`만 하면 됩니다
   (갓 발행된 전이 패키지 `caniuse-lite`가 있어도 통과).
 - 제외: `node_modules/`·`dist/`·`.vanilla/`·`.git/`·로그·`.env*`·심링크.
-- 받는 쪽 순서: **영문 경로에** 압축 풀기(한글 경로에서는 Node/Vite가 exit 3221225477로 죽는다) → `pnpm install` → `pnpm dev`.
-- 기존 폴더는 Studio에서 다시 열면 `dist` 스크립트·`pnpm-workspace.yaml`·`pack-workspace.mjs`가 자동 보충됩니다.
-  `package.json` scripts는 사용자 소유라 직접 합치세요: `"guard:path"` 추가 + `dev`·`play`·`preview`·`build`·`check:scene`·`vanilla` 앞에 `"pnpm guard:path && "` 추가 + `"dist": "node scripts/pack-workspace.mjs"` 추가.
+- 받는 쪽 순서: 압축 풀기(한글 경로 포함 가능, D-043) → `pnpm install` → `pnpm dev`.
+- 기존 폴더는 Studio에서 다시 열면 `dist` 스크립트·`pnpm-workspace.yaml`·`pack-workspace.mjs`·`ascii-cwd.mjs`가 자동 보충됩니다.
+  `package.json` scripts는 사용자 소유라 직접 합치세요: `"guard:path"` 항목 삭제 + `dev`·`play`·`preview`·`build`·`check:scene`·`vanilla`를 `"node scripts/ascii-cwd.mjs <기존 명령>"` 형태로 교체(예: `"dev": "node scripts/ascii-cwd.mjs vite"`, `"check:scene": "node scripts/ascii-cwd.mjs node scripts/check-scene.mjs"`) + `"dist": "node scripts/pack-workspace.mjs"` 추가.

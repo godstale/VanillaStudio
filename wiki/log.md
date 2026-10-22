@@ -398,3 +398,11 @@ Ran lint (74 pages, no structural issues). See lint-report.md for details.
 ## [2026-10-22] lint | Wiki health check
 
 Ran lint (no structural issues). See lint-report.md for details.
+
+## [2026-10-22] fix | Korean path partial support via ascii-cwd launcher (D-043)
+
+- 한글 지원 요구에 D-042 전면 차단을 부분 지원으로 전환. 이분: 특정 한글 음절(숲 등) 포함 경로를 밟을 때 Node 22.13 리졸버/로더 네이티브 크래시, junction·subst·--preserve-symlinks 무용(실경로 정규화), esbuild postinstall은 검증용이라 생략 안전·승인 시 오히려 한글 설치 붕괴. scripts/ascii-cwd.mjs(코어만): node 스크립트는 junction 별칭 실행(한글 check:scene PASS 확인), vite는 영문 안내 exit 1. guard:path 삭제, pnpm-workspace.yaml allowBuilds 생략, Rust 스캐폴드 단언 갱신. 검증: 한글 install exit 0·영문 build 성공·vitest·cargo. See: [[issue-korean-path-ascii-launcher]], [[decisions]]
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.

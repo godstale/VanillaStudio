@@ -51,6 +51,7 @@ last_updated: 2026-10-22
 - 폴더째 압축 금지 — 반드시 `pnpm dist` (또는 제외 목록: `node_modules dist .vanilla .git *.log .env*`).
 - 워크스페이스 경로는 반드시 ASCII-only. 한글 경로의 파일 `require`·`import`는
   Node 자체가 세그폴트한다(상류/환경 문제, 코드 우회 불가).
+  → D-043에서 부분 완화: node 스크립트는 `ascii-cwd` 런처로 한글 경로 동작, vite는 여전히 영문 경로 필요. See: [[issue-korean-path-ascii-launcher]]
 
 ## Connections
 
