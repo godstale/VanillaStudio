@@ -2,6 +2,7 @@
 // module only names the project.
 import { useEffect, useState } from 'react';
 import { Channel, invoke } from '@tauri-apps/api/core';
+import { installProjectDeps } from '@/components/doctor/installApi';
 
 export type PreviewEvent =
   | { kind: 'listening'; port: number; url: string }
@@ -17,6 +18,8 @@ export interface PreviewInfo {
 export interface PreviewApi {
   start(projectDir: string, onEvent: (e: PreviewEvent) => void): Promise<PreviewInfo>;
   stop(projectDir: string): Promise<void>;
+  /** Fixed `pnpm install` job; resolves with the exit code. Omitted: a missing install stays a failure. */
+  install?(projectDir: string): Promise<number | null>;
 }
 
 export const tauriPreviewApi: PreviewApi = {
@@ -26,11 +29,13 @@ export const tauriPreviewApi: PreviewApi = {
     return invoke<PreviewInfo>('start_preview_server', { projectDir, onEvent: channel });
   },
   stop: (projectDir) => invoke<void>('stop_preview_server', { projectDir }),
+  install: (projectDir) => installProjectDeps(projectDir, () => undefined),
 };
 
 export type PreviewServerState =
   | { phase: 'idle' }
   | { phase: 'starting' }
+  | { phase: 'installing' }
   | { phase: 'running'; url: string }
   | { phase: 'restarting' }
   | { phase: 'failed'; error: string };
@@ -87,7 +92,20 @@ export function usePreviewServer(
       if (e.kind === 'log') onLog?.(e);
       setState((s) => reduceServerState(s, e));
     };
-    enqueueDirJob(projectDir, () => api.start(projectDir, onEvent)).then(
+    // Unzipped/cloned workspaces have no node_modules: install once (the folder is already trusted), then retry.
+    const startOrInstall = async (): Promise<PreviewInfo> => {
+      try {
+        return await api.start(projectDir, onEvent);
+      } catch (err) {
+        if (!String(err).includes('not-installed') || !api.install) throw err;
+      }
+      if (alive) setState({ phase: 'installing' });
+      const exitCode = await api.install!(projectDir);
+      if (exitCode !== 0) throw new Error(`install-failed:${exitCode ?? 'killed'}`);
+      if (alive) setState({ phase: 'starting' });
+      return api.start(projectDir, onEvent);
+    };
+    enqueueDirJob(projectDir, startOrInstall).then(
       (info) => alive && setState((s) => (s.phase === 'running' ? s : { phase: 'running', url: info.url })),
       (err: unknown) => alive && setState({ phase: 'failed', error: String(err) }),
     );

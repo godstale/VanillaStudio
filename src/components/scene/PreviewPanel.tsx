@@ -94,9 +94,10 @@ function Body({ server, onRetry, root, slug, sceneType, canvas, entry, stepsTota
 
   // 서버 상태(시작 중·실패)도 툴박스가 아닌 하단 토스트로 보여준다.
   useEffect(() => {
-    if (server.phase === 'starting' || server.phase === 'restarting') {
+    if (server.phase === 'starting' || server.phase === 'restarting' || server.phase === 'installing') {
+      const key = server.phase === 'restarting' ? 'preview.restarting' : server.phase === 'installing' ? 'preview.installing' : 'preview.starting';
       // eslint-disable-next-line react-hooks/set-state-in-effect -- external server phase needs local transient copy
-      flash(t(server.phase === 'restarting' ? 'preview.restarting' : 'preview.starting'), 'status');
+      flash(t(key), 'status');
     } else if (server.phase === 'failed') {
       const notInstalled = server.error === 'not-installed';
       flash(notInstalled ? t('preview.notInstalled') : `${t('preview.serverFailed')}${server.error && !notInstalled ? ` (${server.error})` : ''}`, 'alert');

@@ -430,3 +430,7 @@ Ran lint. See lint-report.md for details.
 ## [2026-10-22] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
+
+## [2026-10-22] fix | 미리보기 서버 시작 시 의존성 자동 설치
+
+압축 파일로 불러오거나 node_modules가 없는 워크스페이스는 `usePreviewServer`가 `not-installed`를 받으면 고정 argv `pnpm install`(D-012)을 실행하고 서버를 다시 시작한다. 신뢰된 폴더에서만 동작한다(projectDir는 신뢰 후 설정).
