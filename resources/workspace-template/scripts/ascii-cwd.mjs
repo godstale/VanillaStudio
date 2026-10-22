@@ -6,18 +6,20 @@
 // The crash is inside Node's resolver/loader native code: no in-JS workaround
 // exists, and alias tricks (junction, subst, --preserve-symlinks) do not help
 // because resolution canonicalizes to the Korean real path anyway.
-// What the launcher does when cwd is non-ASCII (Windows only):
-// - pure-JS workspace scripts (`node scripts/*.mjs`: check:scene, vanilla-agent,
-//   pack-workspace) run from an ASCII junction alias pointing at the workspace
-//   (same files, ASCII cwd) — verified working on 한글 paths;
-// - `vite` (dev/play/build/preview) cannot run: it exits here with the
-//   move-to-ASCII-path message instead of a raw segfault.
+// The crash depends on the syllables in the path (`강의` works, `숲` crashes), so
+// what the launcher does when cwd is non-ASCII (Windows only) is:
+// - pure-JS workspace scripts (`node scripts/*.mjs`: check:scene, vanilla-agent)
+//   run from an ASCII junction alias pointing at the workspace (same files,
+//   ASCII cwd) — verified working on 한글 paths;
+// - `vite` (dev/play/build/preview) runs in place; only when it dies with the
+//   access-violation exit code does the launcher print the move-to-ASCII-path
+//   message (D-044) instead of leaving a bare segfault.
 //
 // This file uses core modules only (`node:fs/os/path/crypto/child_process`),
 // which resolve fine under a non-ASCII cwd, so the launcher itself never crashes.
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { lstatSync, mkdirSync, readlinkSync, symlinkSync } from 'node:fs';
+import { lstatSync, mkdirSync, readlinkSync, realpathSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, parse, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -89,26 +91,37 @@ export function needsVite(cmd, rest) {
   return `${cmd} ${rest[0] ?? ''}`.includes('vite');
 }
 
+/** Windows STATUS_ACCESS_VIOLATION — the exit code of the upstream Node loader crash. */
+export const ACCESS_VIOLATION = 3221225477;
+
+export function isAccessViolation(status) {
+  return status === ACCESS_VIOLATION || status === ACCESS_VIOLATION - 2 ** 32;
+}
+
 function asciiAdvice(cwd) {
-  console.error('[vanilla] Non-ASCII path: Vite cannot run here (upstream Node crash, exit 3221225477).');
+  console.error('[vanilla] Node crashed on this non-ASCII path (upstream loader bug, exit 3221225477).');
   console.error(`Move this folder to an ASCII-only path and run again (e.g. C:/class/my-work). Cwd: ${cwd}`);
   console.error('Pure-JS commands (pnpm check:scene, pnpm vanilla, pnpm dist) work on this path.');
 }
 
-const isMain = process.argv[1] === fileURLToPath(import.meta.url);
-if (isMain) {
+function isMainModule() {
+  try {
+    return realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url));
+  } catch {
+    return false;
+  }
+}
+
+if (isMainModule()) {
   const [, , cmd, ...rest] = process.argv;
   if (!cmd) {
     console.error('Usage: node scripts/ascii-cwd.mjs <cmd> [args...]');
     process.exit(2);
   }
   const cwd = process.cwd();
+  const nonAscii = process.platform === 'win32' && !isAscii(cwd);
   let runCwd = cwd;
-  if (process.platform === 'win32' && !isAscii(cwd)) {
-    if (needsVite(cmd, rest)) {
-      asciiAdvice(cwd);
-      process.exit(1);
-    }
+  if (nonAscii && !needsVite(cmd, rest)) {
     const alias = ensureAsciiAlias(cwd);
     if (!alias) {
       asciiAdvice(cwd);
@@ -117,5 +130,6 @@ if (isMain) {
     runCwd = alias;
   }
   const result = spawnSync(cmd, rest, { cwd: runCwd, stdio: 'inherit', shell: process.platform === 'win32' });
+  if (nonAscii && isAccessViolation(result.status)) asciiAdvice(cwd);
   process.exit(result.status ?? 1);
 }

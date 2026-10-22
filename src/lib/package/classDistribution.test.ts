@@ -26,6 +26,8 @@ function makeWorkspace(): string {
   write('node_modules/foo/index.js', 'excluded');
   write('dist/play.html', 'excluded');
   write('.vanilla/work-order.json', 'excluded');
+  write('scenes/intro/.vanilla/thumb.png', 'excluded');
+  write('scenes/intro/node_modules/x/index.js', 'excluded');
   write('.git/HEAD', 'excluded');
   write('debug.log', 'excluded');
   write('.env', 'excluded');
@@ -74,6 +76,15 @@ describe('class-distribution pack (D-041)', () => {
     const root = makeWorkspace();
     const rels = collectWorkspaceFiles(root, join(root, 'out.zip')).map((f) => f.rel);
     expect(rels).toEqual(['package.json', 'pnpm-lock.yaml', 'scenes/intro/scene.json', 'workspace.json']);
+  });
+
+  it('keeps nested dist/ content but drops nested app-state dirs', () => {
+    const root = makeWorkspace();
+    mkdirSync(join(root, 'assets/dist'), { recursive: true });
+    writeFileSync(join(root, 'assets/dist/logo.svg'), '<svg/>');
+    const rels = collectWorkspaceFiles(root, join(root, 'out.zip')).map((f) => f.rel);
+    expect(rels).toContain('assets/dist/logo.svg');
+    expect(rels.some((r) => r.includes('.vanilla') || r.includes('node_modules'))).toBe(false);
   });
 
   it('writes a readable zip with exact bytes', () => {

@@ -15,7 +15,9 @@ const ROOT = process.env.VANILLA_WORKSPACE_ROOT
   : path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 // Kept in sync with the template `.gitignore` (+ local-only / machine-specific).
-const EXCLUDE_DIRS = new Set(['node_modules', 'dist', '.vanilla', '.git']);
+// Gitignore semantics: these names match at any depth (e.g. `scenes/<slug>/.vanilla/`
+// thumbnails), except `dist`, which is the root build output only.
+const EXCLUDE_ANY_DEPTH = new Set(['node_modules', '.vanilla', '.git']);
 const EXCLUDE_BASENAMES = new Set(['.DS_Store', 'Thumbs.db', 'desktop.ini']);
 
 function isExcludedFile(relPosix) {
@@ -75,8 +77,7 @@ export function collectWorkspaceFiles(root = ROOT, outAbs = null) {
         continue;
       }
       if (st.isDirectory()) {
-        const top = rel.includes('/') ? rel.slice(0, rel.indexOf('/')) : rel;
-        if (EXCLUDE_DIRS.has(top) || EXCLUDE_DIRS.has(rel)) continue;
+        if (EXCLUDE_ANY_DEPTH.has(name) || rel === 'dist') continue;
         stack.push(abs);
         continue;
       }
@@ -264,7 +265,13 @@ function defaultOutPath(root, folderName) {
   return path.resolve(root, '..', `${stem}.zip`);
 }
 
-const isMain = process.argv[1] === fileURLToPath(import.meta.url);
+const isMain = (() => {
+  try {
+    return fs.realpathSync(process.argv[1]) === fs.realpathSync(fileURLToPath(import.meta.url));
+  } catch {
+    return false;
+  }
+})();
 if (isMain) {
   const flags = parseArgs(process.argv.slice(2));
   if (flags.help) {
@@ -274,7 +281,7 @@ if (isMain) {
     console.log('folder (package.json `name` by default, `--root` to override, `--flat` for none).');
     console.log('Excludes node_modules/, dist/, .vanilla/, .git/, logs and .env files;');
     console.log('ensures pnpm-workspace.yaml (minimumReleaseAge: 0) so the recipient');
-    console.log('runs plain `pnpm install`.');
+    console.log('runs plain `pnpm install`, then `pnpm play`.');
     process.exit(0);
   }
   if (!fs.existsSync(path.join(ROOT, 'workspace.json'))) {
@@ -304,5 +311,5 @@ if (isMain) {
   }
   const report = writeZip(found, outAbs);
   console.log(`Packed ${report.files} files -> ${outAbs} (${report.bytes} bytes)`);
-  console.log('Recipient steps: unzip, then `pnpm install`, then `pnpm dev`.');
+  console.log('Recipient steps: unzip, then `pnpm install`, then `pnpm play`.');
 }

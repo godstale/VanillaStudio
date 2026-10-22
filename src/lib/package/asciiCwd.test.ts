@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { aliasNameFor, isAscii, needsVite, pickAsciiBase } from '../../../resources/workspace-template/scripts/ascii-cwd.mjs';
+import { aliasNameFor, isAccessViolation, isAscii, needsVite, pickAsciiBase } from '../../../resources/workspace-template/scripts/ascii-cwd.mjs';
 
 describe('ascii-cwd launcher helpers (D-043)', () => {
   it('detects non-ASCII paths', () => {
@@ -33,5 +33,13 @@ describe('ascii-cwd launcher helpers (D-043)', () => {
     expect(needsVite('node', ['scripts/vite.js'])).toBe(true);
     expect(needsVite('node', ['scripts/check-scene.mjs'])).toBe(false);
     expect(needsVite('node', ['scripts/vanilla-agent.mjs'])).toBe(false);
+  });
+
+  it('recognises the Node loader access-violation exit code only (D-044)', () => {
+    expect(isAccessViolation(3221225477)).toBe(true);
+    expect(isAccessViolation(-1073741819)).toBe(true);
+    expect(isAccessViolation(0)).toBe(false);
+    expect(isAccessViolation(1)).toBe(false);
+    expect(isAccessViolation(null)).toBe(false);
   });
 });
