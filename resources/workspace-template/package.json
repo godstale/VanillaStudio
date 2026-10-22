@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "play": "vite --open play.html",
+    "preview": "vite preview --open play.html",
     "build": "vite build",
     "check:scene": "node scripts/check-scene.mjs",
     "vanilla": "node scripts/vanilla-agent.mjs"

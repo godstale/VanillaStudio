@@ -1,10 +1,14 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <title>{{workspaceName}}</title>
+    <meta http-equiv="refresh" content="0; url=./play.html" />
+    <title>{{workspaceName}} — Play</title>
   </head>
   <body>
-    <p>{{workspaceName}} — scenes live in <code>scenes/&lt;slug&gt;/</code>.</p>
+    <p><a href="./play.html">Play {{workspaceName}}</a></p>
+    <script>
+      location.replace('./play.html');
+    </script>
   </body>
 </html>
