@@ -290,3 +290,13 @@
   - 기존 5종 `tests/LLM_and_Vibe_Coding*` 워크스페이스에 동일 파일을 백필한다(로컬 전용·gitignore, 커밋 대상 아님).
 - **근거**: D-023(파일이 진실 공급원 — 시퀀스·신 JSON을 빌드 시점에 번들), D-032(타입 입력 위임), D-038(Bridge `input` v2.1). 구 런타임(`input` 이전) 신은 클릭·키 위임이 무시되므로 `‹` `›` 단계 버튼(레거시 `next`/`prev`)으로 폴백한다.
 - **영향**: `Technical-Design.md` §2.2(신 런타임 행)·§4.2(standalone play 항)·§9(템플릿 구조) 개정(v1.2). `VANILLA_GUIDE.md` §7·템플릿 `AGENTS.md`에 `play`/`preview` 문서화. 데이터 계약 변경 없음(`scene.json`·`sequence.json`·Bridge 스키마 불변).
+
+## D-041 수업 배포용 zip·무개입 설치(plain `pnpm install`) — Accepted (2026-10-22)
+
+- **맥락**: 배포 워크스페이스(`tests/LLM_and_Vibe_Coding_Day02_v2`)를 폴더째 압축해 다른 PC에서 `pnpm install`했더니 `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`(`caniuse-lite@1.0.30001818`, 발행 3시간 전)으로 실패했다. 원인은 ① pnpm v11 기본 24시간 게이트(`minimumReleaseAge: 1440`, 수일 간격으로 갱신되는 전이 DB 패키지에 상시 노출) + 배포 PC(pnpm 10, 무검사)로 만든 lock이 신선 버전을 물고 있던 것, ② `node_modules/`·`dist/`·`.vanilla/`를 포함한 채 압축한 것. 받는 쪽 네트워크 차단 경고도 겹쳐 있었다.
+- **결정**:
+  - `workspace-template/pnpm-workspace.yaml`에 `minimumReleaseAge: 0`을 둔다(수업 배포 워크스페이스는 추가 플래그 없는 설치가 보안 게이트보다 우선). 직접 의존성에는 영향 없고 해결 버전의 허용 연령만 바꾼다. `open_workspace`가 기존 폴더에도 비파괴 보충한다.
+  - `workspace-template/scripts/pack-workspace.mjs`(`pnpm pack`, Node 내장만·Win/Mac/Linux)를 둔다. `node_modules/`·`dist/`·`.vanilla/`·`.git/`·로그·`.env*`·심링크 제외, `pnpm-lock.yaml` 포함, `pnpm-workspace.yaml` 미존재 시 자동 생성. 직접 손으로 짠 미니 zip 라이터(deflate via `node:zlib`)라 의존성이 없다.
+  - 받는 쪽 순서 고정: 압축 풀기 → `pnpm install` → `pnpm dev` (템플릿 `AGENTS.md`·`VANILLA_GUIDE.md` §8에 문서화).
+- **근거**: D-023(파일이 진실 공급원 — lock 포함 배포로 재현 설치), D-012(고정 argv — 앱 소유 프로세스 변경 없음, 스크립트는 사용자 실행).
+- **영향**: `Technical-Design.md` §8.2(워크스페이스 파일 표)·§9(템플릿 구조) 개정(v1.3). 데이터 계약 변경 없음(`scene.json`·`sequence.json`·Bridge 스키마 불변). 검증: 추출본 `pnpm install` 통과 + zip 엔트리 검사(금지어 0) + vitest 4건 + Rust 스캐폴드 단언. → [[issue-dist-pack-pnpm-policy]]

@@ -1,3 +1,7 @@
+## [2026-10-22] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
 ## [2026-10-18] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
@@ -382,3 +386,11 @@ Ran lint (orphans 0, broken links 0). See lint-report.md for details.
 ## [2026-10-22] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
+
+## [2026-10-22] fix | 수업 배포 zip·무개입 설치 (D-041)
+
+- 배포 zip 압축본의 다른-PC `pnpm install` 실패(ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION, caniuse-lite 발행 3시간 전)를 템플릿 차원에서 수정. `pnpm-workspace.yaml`(minimumReleaseAge: 0) + `pnpm pack`(Node 내장 zip, node_modules/dist/.vanilla/.git 제외) + AGENTS·VANILLA_GUIDE §8 문서화 + vitest/Rust 단언. 브랜치 fix/workspace-dist-pack. See: [[issue-dist-pack-pnpm-policy]], [[decisions]]
+
+## [2026-10-22] lint | Wiki health check
+
+Ran lint (74 pages, no structural issues). See lint-report.md for details.
