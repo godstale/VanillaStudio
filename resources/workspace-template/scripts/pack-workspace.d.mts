@@ -12,4 +12,5 @@ export interface ZipReport {
 }
 export function ensureReleaseAgePolicy(root?: string): boolean;
 export function collectWorkspaceFiles(root?: string, outAbs?: string | null): WorkspaceFileEntry[];
+export function resolveProjectName(root?: string): string;
 export function writeZip(entries: ZipEntryInput[], outAbs: string): ZipReport;

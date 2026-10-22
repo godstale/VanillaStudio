@@ -1,6 +1,9 @@
-// `pnpm pack` — build a class-distribution zip of this workspace.
+// `pnpm dist` — build a class-distribution zip of this workspace.
 // Pure Node.js built-ins only (win/mac/linux, works even before `pnpm install`).
-// Usage: `node scripts/pack-workspace.mjs [--out <file.zip>] [--name <stem>]`
+// Usage: `node scripts/pack-workspace.mjs [--out <file.zip>] [--root <folder>] [--flat]`
+//
+// NOTE: the npm script must be named `dist`, not `pack` — `pnpm pack` is a
+// built-in (tarball with a `package/` top folder) and shadows any script.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -42,7 +45,7 @@ export function ensureReleaseAgePolicy(root = ROOT) {
   return true;
 }
 
-/** Walk the workspace and return sorted { abs, rel } entries (rel is posix). */
+/** Walk the workspace and return sorted { abs, rel } entries (rel is posix, no prefix yet). */
 export function collectWorkspaceFiles(root = ROOT, outAbs = null) {
   const outRel = outAbs ? path.relative(root, outAbs).split(path.sep).join('/') : null;
   const files = [];
@@ -111,6 +114,19 @@ function dosDateTime(mtimeMs) {
   const date =
     ((clamped.getFullYear() - 1980) << 9) | ((clamped.getMonth() + 1) << 5) | clamped.getDate();
   return { time: time & 0xffff, date: date & 0xffff };
+}
+
+/** Project folder name inside the zip: package.json `name`, sanitized for paths. */
+export function resolveProjectName(root = ROOT) {
+  let name = '';
+  try {
+    name = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).name ?? '';
+  } catch {
+    // fall back to the directory name below
+  }
+  const clean = String(name).replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '');
+  if (clean) return clean;
+  return path.basename(root) || 'workspace';
 }
 
 /** Minimal zip writer (deflate via built-in zlib). Returns { files, bytes }. */
@@ -232,8 +248,10 @@ function parseArgs(argv) {
     const a = argv[i];
     if (a === '--out' && argv[i + 1]) {
       flags.out = argv[++i];
-    } else if (a === '--name' && argv[i + 1]) {
-      flags.name = argv[++i];
+    } else if (a === '--root' && argv[i + 1]) {
+      flags.root = argv[++i];
+    } else if (a === '--flat') {
+      flags.flat = true;
     } else if (a === '--help' || a === '-h') {
       flags.help = true;
     }
@@ -241,8 +259,8 @@ function parseArgs(argv) {
   return flags;
 }
 
-function defaultOutPath(root, nameStem) {
-  const stem = nameStem || path.basename(root) || 'workspace';
+function defaultOutPath(root, folderName) {
+  const stem = folderName || path.basename(root) || 'workspace';
   return path.resolve(root, '..', `${stem}.zip`);
 }
 
@@ -250,18 +268,21 @@ const isMain = process.argv[1] === fileURLToPath(import.meta.url);
 if (isMain) {
   const flags = parseArgs(process.argv.slice(2));
   if (flags.help) {
-    console.log('Usage: node scripts/pack-workspace.mjs [--out <file.zip>] [--name <stem>]');
+    console.log('Usage: node scripts/pack-workspace.mjs [--out <file.zip>] [--root <folder>] [--flat]');
     console.log('');
-    console.log('Builds a class-distribution zip: excludes node_modules/, dist/, .vanilla/,');
-    console.log('.git/, logs and .env files; ensures pnpm-workspace.yaml (minimumReleaseAge: 0)');
-    console.log('so the recipient runs plain `pnpm install`.');
+    console.log('Builds a class-distribution zip: every entry lives under a top-level');
+    console.log('folder (package.json `name` by default, `--root` to override, `--flat` for none).');
+    console.log('Excludes node_modules/, dist/, .vanilla/, .git/, logs and .env files;');
+    console.log('ensures pnpm-workspace.yaml (minimumReleaseAge: 0) so the recipient');
+    console.log('runs plain `pnpm install`.');
     process.exit(0);
   }
   if (!fs.existsSync(path.join(ROOT, 'workspace.json'))) {
     console.error(`Error: workspace.json not found in ${ROOT}`);
     process.exit(1);
   }
-  const outAbs = flags.out ? path.resolve(flags.out) : defaultOutPath(ROOT, flags.name);
+  const folderName = flags.flat ? '' : flags.root || resolveProjectName(ROOT);
+  const outAbs = flags.out ? path.resolve(flags.out) : defaultOutPath(ROOT, folderName);
   if (ensureReleaseAgePolicy(ROOT)) {
     console.log('Added missing pnpm-workspace.yaml (minimumReleaseAge: 0) so plain `pnpm install` works.');
   }
@@ -275,7 +296,7 @@ if (isMain) {
     } catch {
       // fall back to now
     }
-    return { ...f, mtimeMs };
+    return { ...f, rel: folderName ? `${folderName}/${f.rel}` : f.rel, mtimeMs };
   });
   if (found.length === 0) {
     console.error('Error: nothing to pack (workspace is empty or unreadable).');

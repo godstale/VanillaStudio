@@ -77,20 +77,25 @@ pnpm vanilla sync-guides [<slug>]                                # Re-render GUI
 pnpm vanilla work-order                                          # View open user changes & comments from WORK_ORDER.md
 pnpm vanilla resolve <id|--all>                                  # Mark a work-order item (chg_*) or comment (cmt_*) as done
 pnpm check:scene                                                 # Verify runtime determinism & token contract across scenes
-pnpm pack                                                        # Build a class-distribution zip (node_modules/dist/.vanilla excluded)
+pnpm dist                                                        # Build a class-distribution zip (node_modules/dist/.vanilla excluded)
 pnpm play                                                        # Standalone presentation screen (opens play.html in the browser)
 pnpm preview                                                     # Serve the production build (dist/play.html) for a final check
 ```
 
 ## Class Distribution (zip for other PCs)
 
-- Run `pnpm pack` in the workspace root. It writes `<workspace>.zip` next to the folder
-  (override with `node scripts/pack-workspace.mjs --out <file.zip>`).
+- Run `pnpm dist` in the workspace root. It writes `<project-name>.zip` next to the folder
+  (override with `node scripts/pack-workspace.mjs --out <file.zip> --root <folder>`).
+  NOTE: `pnpm pack` is pnpm's built-in tarball command (`package/` top folder) and shadows
+  scripts — always use `pnpm dist` (or `pnpm run dist`).
 - The zip excludes machine-specific output (`node_modules/`, `dist/`, `.vanilla/`, `.git/`,
   logs, `.env*`) and includes `pnpm-lock.yaml` + `pnpm-workspace.yaml`
   (`minimumReleaseAge: 0`) so the recipient runs plain `pnpm install` with no extra flags,
   even on pnpm v11+ with a freshly published transitive package (e.g. `caniuse-lite`).
-- Recipient steps: unzip → `pnpm install` → `pnpm dev`.
+- Recipient steps: unzip **to an ASCII-only path (no Korean or other non-ASCII characters —
+  Node/Vite crashes with exit 3221225477 otherwise)** → `pnpm install` → `pnpm dev`.
+  All `pnpm dev|play|build|preview|check:scene|vanilla` commands start with `guard:path`,
+  which stops with this message on a non-ASCII path instead of crashing.
 
 ## Standalone Play (no Vanilla Studio needed)
 

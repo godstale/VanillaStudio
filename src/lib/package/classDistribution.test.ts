@@ -1,12 +1,14 @@
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { inflateRawSync } from 'node:zlib';
 import { describe, expect, it } from 'vitest';
 
 import {
   collectWorkspaceFiles,
   ensureReleaseAgePolicy,
+  resolveProjectName,
   writeZip,
 } from '../../../resources/workspace-template/scripts/pack-workspace.mjs';
 
@@ -100,10 +102,39 @@ describe('class-distribution pack (D-041)', () => {
     expect(readFileSync(join(root, 'pnpm-workspace.yaml'), 'utf8')).toBe('minimumReleaseAge: 10080\n');
   });
 
-  it('template ships the policy file and pack script wiring', () => {
+  it('template ships the policy file and dist script wiring', () => {
     const tpl = join(__dirname, '../../../resources/workspace-template');
     expect(readFileSync(join(tpl, 'pnpm-workspace.yaml'), 'utf8')).toContain('minimumReleaseAge: 0');
     const pkg = JSON.parse(readFileSync(join(tpl, 'package.json'), 'utf8')) as { scripts: Record<string, string> };
-    expect(pkg.scripts.pack).toBe('node scripts/pack-workspace.mjs');
+    expect(pkg.scripts.dist).toBe('node scripts/pack-workspace.mjs');
+    expect(pkg.scripts.pack).toBeUndefined();
+    expect(pkg.scripts['guard:path']).toMatch(/^node -e /);
+    for (const cmd of ['dev', 'play', 'preview', 'build', 'check:scene', 'vanilla']) {
+      expect(pkg.scripts[cmd].startsWith('pnpm guard:path && ')).toBe(true);
+    }
+  });
+
+  it('resolves the zip top folder from package.json name', () => {
+    const root = makeWorkspace();
+    writeFileSync(join(root, 'package.json'), '{"name":"my-scene","version":"0.0.0"}');
+    expect(resolveProjectName(root)).toBe('my-scene');
+    expect(resolveProjectName(join(root, 'missing-dir'))).not.toBe('');
+  });
+
+  it('packs a rooted zip via the CLI (no package/ top folder)', () => {
+    const root = makeWorkspace();
+    writeFileSync(join(root, 'package.json'), '{"name":"demo-proj","version":"0.0.0"}');
+    const out = join(root, 'out.zip');
+    execFileSync(process.execPath, [resolve(__dirname, '../../../resources/workspace-template/scripts/pack-workspace.mjs'), '--out', out], {
+      cwd: root,
+      env: { ...process.env, VANILLA_WORKSPACE_ROOT: root },
+    });
+    const back = readZip(readFileSync(out));
+    const names = [...back.keys()].sort();
+    expect(names.length).toBeGreaterThan(0);
+    for (const n of names) expect(n.startsWith('demo-proj/')).toBe(true);
+    expect(names).toContain('demo-proj/workspace.json');
+    expect(names).toContain('demo-proj/pnpm-workspace.yaml');
+    expect(names.some((n) => n.includes('node_modules') || n.includes('.vanilla'))).toBe(false);
   });
 });

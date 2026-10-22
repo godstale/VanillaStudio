@@ -4,13 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "play": "vite --open play.html",
-    "preview": "vite preview --open play.html",
-    "build": "vite build",
-    "check:scene": "node scripts/check-scene.mjs",
-    "vanilla": "node scripts/vanilla-agent.mjs",
-    "pack": "node scripts/pack-workspace.mjs"
+    "guard:path": "node -e \"if(/[^\\x00-\\x7F]/.test(process.cwd())){console.error('[vanilla] Non-ASCII path: move this folder to an ASCII-only path and run again (e.g. C:/class/my-work).');process.exit(1)}\"",
+    "dev": "pnpm guard:path && vite",
+    "play": "pnpm guard:path && vite --open play.html",
+    "preview": "pnpm guard:path && vite preview --open play.html",
+    "build": "pnpm guard:path && vite build",
+    "check:scene": "pnpm guard:path && node scripts/check-scene.mjs",
+    "vanilla": "pnpm guard:path && node scripts/vanilla-agent.mjs",
+    "dist": "node scripts/pack-workspace.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^9.8.1",
