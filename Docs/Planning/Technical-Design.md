@@ -1,6 +1,6 @@
 # Vanilla Studio 기술 설계서 (Technical Design)
 
-- 문서 버전: **v1.1 (에이전트 중심 UI, 2026-10-17)** — D-034 반영(셸·메뉴·코멘트 파일). v1.0(v2 리팩토링, 2026-10-05)은 git 이력에 남아 있다.
+- 문서 버전: **v1.2 (standalone play, 2026-10-22)** — D-040 반영(워크스페이스 자체 빌드·발표). v1.1(에이전트 중심 UI, 2026-10-17)은 git 이력에 남아 있다.
 - 선행 문서: `Docs/Planning/Refactor-Spec-v2.md`(무엇을 만드는가), `Docs/Planning/Decisions.md`(D-022~D-033)
 - 템플릿 공통 아키텍처(`Docs/Architecture.md`)는 **템플릿 원본으로 유지**하고, 이 문서가 Vanilla Studio 고유 설계의 진실 공급원이다. 충돌 시 이 문서가 우선한다.
 - ⚠️ 표시 항목은 PoC(`Feasibility-Risks.md`)로 확정해야 하는 가정이다.
@@ -70,7 +70,8 @@
 
 | 영역 | 선택 | 비고 |
 | --- | --- | --- |
-| 빌드/프리뷰 | Vite + React 19 + TypeScript | 워크스페이스 루트에서 신별 엔트리(`scenes/<slug>/src/index.html`)를 멀티 엔트리로 서빙. HMR로 에이전트 수정 즉시 반영 |
+| 빌드/프리뷰 | Vite + React 19 + TypeScript | 워크스페이스 루트에서 신별 엔트리(`scenes/<slug>/src/index.html`)를 멀티 엔트리로 서빙. HMR로 에이전트 수정 즉시 반영. `vite build`는 발표 화면(`play.html`)과 모든 신 엔트리를 묶어 `dist/`가 어떤 정적 서버에서 동작(`base: './'`, D-040) |
+| 발표 화면 | `play.html` + `play/`(매니페스트·Bridge 호스트·내비게이터·플레이어 UI, 의존성 추가 없음) | 스튜디오 없이 시퀀스 재생·발표. 루트(`/`)·`pnpm dev` URL이 여기로 리다이렉트. Bridge v2 프로토콜로 신과 대화, 전환은 컷/페이드로 단순화(§4.2.2) |
 | 3D | three.js + `@react-three/fiber` + `@react-three/drei` | `frameloop="demand"` 강제(결정성) |
 | 2D | SVG·Canvas·CSS, 선택: `motion`(MIT), `animejs` v4(MIT) | 시간 함수형 사용 |
 | GSAP | **선택적**(생성 코드 내에서만, paused timeline + seek) | 표준 라이선스 제약(D-007) — 앱 기능은 GSAP 비의존 |
@@ -230,11 +231,21 @@ function IntroScene() {
 #### 4.2.1 시퀀스 재생 (V6)
 
 - **구조**: `src/lib/sequence/manager.ts`(상태 머신)는 신을 `SceneHandle`로, 전환 재생을 `TransitionRunner`로 주입받는다. 브라우저 구현은 `src/lib/playground/iframeScene.ts`(신 iframe + Bridge v2)와 `sceneTransitions.ts`다. 검증(`validate.ts`)이 통과해야 재생한다.
-- **trigger**: `end`(motion·3d가 끝 시각 도달 — 런타임은 끝에서 멈출 뿐 `done`을 보내지 않으므로 호스트가 `time`과 `ready.duration`을 비교해 판단), `timeout:Ns`(일시정지하면 타이머도 멈춤), `click`·`key:K`(static 신은 마지막 step 전까지 입력을 `next`로 위임), `choice:<label>`(신 UI의 `choice` 또는 호스트 선택지).
+- **trigger**: `end`(motion·3d가 끝 시각 도달 — 런타임은 끝에서 멈출 뿐 `done`을 보내지 않으므로 호스트가 `time`과 `ready.duration`을 비교해 판단), `timeout:Ns`(일시정지하면 타이머도 멈춤), `click`·`key:K`(static 신은 타입 입력으로 위임해 `advance`와 맞을 때만 진행, D-038), `choice:<label>`(신 UI의 `choice` 또는 호스트 선택지).
 - **검증 규칙**(`validate.ts`): static 신에서 나가는 `end`·`timeout` 금지, 같은 신에서 같은 trigger 두 개 금지, 자동 엣지만으로 된 순환 금지(입력 엣지가 낀 순환은 허용), linear는 신당 나가는 엣지 1개·`choice` 금지, 시작 신 필수·도달 불가 신은 경고, 알 수 없는 전환 금지.
 - **전환 합성(PoC R-1, `wiki/sources/poc-r1.md`)**: 두 신을 별도 origin iframe으로 겹쳐 두고 나가는 신 iframe 요소에 Web Animations를 건다(`cut`·`crossfade`·`slide-left/right/up/down`·`mask-wipe`·`circular-reveal`·`zoom-through`). 다음 신은 이웃 프리로드로 미리 로드하며, **숨긴 신은 `visibility:hidden`이 아니라 맨 아래 투명 층(opacity 0)** 에 둔다(보이지 않는 cross-origin iframe은 Chrome이 렌더를 멈춰 `ready`가 오지 않는다). `match-cut`은 v2.0에서 제외, `custom`은 코드가 아니라 선언형 `transitions/<name>.json`(속성·값 화이트리스트)이다.
 - **입력**: 투명한 입력 레이어가 iframe 위를 덮어 클릭을 받고 키는 창 전체에서 받는다(신 안의 버튼은 재생 중 누를 수 없고 분기는 호스트 선택지로 고른다).
 - **측정**(헤드리스 Chrome, 샘플 시퀀스, `pnpm test:e2e:sequence`): 시작 신 콜드 로드 1.23s, 비이웃 신 점프 0.13s, 프리로드 이웃 전환은 설정값 + 10~120ms.
+
+#### 4.2.2 Standalone play (D-040)
+
+워크스페이스는 앱 없이 자체 빌드·발표할 수 있다. 발표 화면(`play.html` + `play/`)은
+`workspace.json`·`sequence.json`·`scenes/*/scene.json`을 빌드 시점에 번들한 뒤(Bridge v2 호스트 +
+내비게이터로) 한 번에 한 신씩 iframe에 띄운다. 입력 레이어가 클릭·키를 받아 타입 입력(`input`)으로
+위임하므로 `static` 신은 `advance` 규칙대로만 진행하고, 마지막 단계 입력이 시퀀스 엣지 `trigger`를
+평가한다. `choice` 엣지는 화면 아래 선택지로 고른다. 전환 합성(§4.2.1, 두 iframe 오버레이 + WAAPI)은
+포함하지 않고 컷/페이드로 단순화한다. 스크립트: `pnpm dev`(루트가 `play.html`로 리다이렉트) ·
+`pnpm play` · `pnpm build`(멀티 엔트리) · `pnpm preview`.
 
 ### 4.3 계약 검사 (`check_scene`)
 
@@ -426,7 +437,7 @@ src-tauri/src/commands/
 src-tauri/src/{process,watch.rs}     # 보존
 resources/
   runtime/                     # @vanilla/runtime 소스(워크스페이스에 설치)
-  workspace-template/          # 워크스페이스 스캐폴딩 원본(workspace.json·AGENTS.md·CLAUDE.md·DESIGN.md·package.json·vite.config.ts)
+  workspace-template/          # 워크스페이스 스캐폴딩 원본(workspace.json·AGENTS.md·CLAUDE.md·DESIGN.md·package.json·vite.config.ts·play.html·play/)
   guides/<type>/<id>@<ver>/    # 내장 가이드 템플릿(motion/commercial-v1, static/web-page-v1, 3d/three-scene-v1)
   glossary/                    # 용어집(템플릿이 참조)
   palettes/*.json              # 보존

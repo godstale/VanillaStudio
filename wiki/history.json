@@ -315,6 +315,15 @@
       "pages": [
         "sources/ui-agent-centric.md"
       ]
+    },
+    "standalone-play": {
+      "source_file": "Docs/Planning/Decisions.md",
+      "ingest_mode": "summary-only",
+      "status": "active",
+      "ingested_at": "2026-10-22",
+      "pages": [
+        "sources/standalone-play.md"
+      ]
     }
   }
 }

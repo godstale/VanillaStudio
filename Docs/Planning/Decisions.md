@@ -278,3 +278,15 @@
 
 - **제안**: 신 폴더에 `poster.svg`(16:9, 코드로 그린 SVG, `DESIGN.md` 토큰만 사용)를 두고 커밋·공유한다. 생성형 이미지/영상 AI 금지(D-006 준수). 앱은 자동 캡처(`.vanilla/thumb.png`, 로컬 전용·공유 제외)가 없을 때 `poster.svg`를 대신 표시한다. `scene.json` 스키마 변경 없음.
 - **근거**: 미리보기를 한 번도 열지 않은 신은 썸네일이 비어 보인다. 에이전트가 신을 만들 때 포스터도 함께 만들면 시퀀스·신 카드가 처음부터 채워진다.
+
+## D-040 워크스페이스 자체 빌드·발표(Standalone Play): 앱 없이 재생 — Accepted (2026-10-22)
+
+- **맥락**: 사용자 요청 — 생성된 워크스페이스를 Vanilla Studio 없이 자체 실행·발표해야 한다. 기존에는 신별 URL(`scenes/<slug>/src/index.html`)을 브라우저에 직접 지정해야 했고 루트 `index.html`은 스텁이었다.
+- **결정**:
+  - `workspace-template`에 발표용 재생 화면(`play.html` + `play/`: manifest·Bridge 호스트·내비게이터·플레이어 UI)을 내장한다. 새 의존성 없음(React·Vite 기존분만).
+  - 루트 `index.html`은 `play.html`로 리다이렉트하므로 `pnpm dev` 출력 URL이 바로 재생 화면이다. `pnpm play`(브라우저 자동 열기)·`pnpm preview`(dist 확인) 스크립트를 둔다.
+  - `vite build`는 `play.html`과 모든 신 엔트리를 묶는 멀티 엔트리 + `base: './'`로, `dist/`가任意 정적 서버에서 동작한다.
+  - 플레이어는 스튜디오 플레이그라운드와 같은 Bridge v2 프로토콜(타입 입력 위임 `input`, `step`/`done`·`choice`·`time`/`ready`)로 신과 대화하고, 시퀀스 `trigger`(`end`·`timeout`·`click`·`key`·`choice`) semantics는 시퀀스 매니저와 동일하게 따른다. 전환 연출은 컷/페이드로 단순화한다(스튜디오 전환 합성과 다름을 도움말·가이드에 명시).
+  - 기존 5종 `tests/LLM_and_Vibe_Coding*` 워크스페이스에 동일 파일을 백필한다(로컬 전용·gitignore, 커밋 대상 아님).
+- **근거**: D-023(파일이 진실 공급원 — 시퀀스·신 JSON을 빌드 시점에 번들), D-032(타입 입력 위임), D-038(Bridge `input` v2.1). 구 런타임(`input` 이전) 신은 클릭·키 위임이 무시되므로 `‹` `›` 단계 버튼(레거시 `next`/`prev`)으로 폴백한다.
+- **영향**: `Technical-Design.md` §2.2(신 런타임 행)·§4.2(standalone play 항)·§9(템플릿 구조) 개정(v1.2). `VANILLA_GUIDE.md` §7·템플릿 `AGENTS.md`에 `play`/`preview` 문서화. 데이터 계약 변경 없음(`scene.json`·`sequence.json`·Bridge 스키마 불변).
