@@ -25,9 +25,14 @@ export interface MountOptions {
   hmr?: Parameters<typeof reportHmr>[1];
 }
 
-/** PNG of the first canvas at the current time; DOM-only scenes are rasterized from the page itself. */
+/** A WebGL canvas is the frame itself; 2D canvases are usually decorative layers (grain, particles) inside a DOM scene. */
+function isWebGl(canvas: HTMLCanvasElement): boolean {
+  return canvas.getContext('webgl2') !== null || canvas.getContext('webgl') !== null;
+}
+
+/** PNG of the WebGL canvas at the current time; every other scene is rasterized from the page itself. */
 function captureCanvas(clock: Clock, scale: number): Promise<string> {
-  const canvas = document.querySelector('canvas');
+  const canvas = Array.from(document.querySelectorAll('canvas')).find(isWebGl);
   if (!canvas) return captureDom(scale);
   // Draw and read in the same task: without preserveDrawingBuffer the buffer is cleared after compositing.
   clock.redraw();

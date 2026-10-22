@@ -12,7 +12,7 @@ import { TemplatesProvider } from '@/components/guides/TemplatesContext';
 import { useTemplates } from '@/components/guides/templatesContextValue';
 import { useSafeTerminals } from '@/components/terminal/terminalContextValue';
 import { groupChanges, outsideWrites } from '@/lib/scene/status';
-import { loadSceneThumbnail } from '@/lib/scene/thumbnail';
+import { loadSceneThumbnail, loadThumbnail } from '@/lib/scene/thumbnail';
 import { readSequence, writeSequence } from '@/lib/sequence/file';
 import { addNode, moveNodes, reconcile, removeNode, type Sequence } from '@/lib/sequence/schema';
 import { checkSavable, setMode } from '@/lib/sequence/edit';
@@ -168,11 +168,12 @@ function Inner({ root, workspace: workspaceProp, initialView, canvas, onViewChan
     let cancelled = false;
     for (const e of entries) {
       if (thumbs[e.slug] || !e.scene) continue;
-      loadSceneThumbnail(root, e.slug)
-        .then((url) => {
+      // poster.svg가 대신 보여도 캡처(thumb.png)가 없으면 자동 생성 대상이다(D-039).
+      Promise.all([loadSceneThumbnail(root, e.slug), loadThumbnail(root, e.slug).catch(() => null)])
+        .then(([url, captured]) => {
           if (cancelled) return;
           if (url) setThumbs((m) => (m[e.slug] ? m : { ...m, [e.slug]: url }));
-          else setUnthumbed((s) => (s.has(e.slug) ? s : new Set(s).add(e.slug)));
+          if (!captured) setUnthumbed((s) => (s.has(e.slug) ? s : new Set(s).add(e.slug)));
         })
         .catch(() => undefined);
     }
@@ -185,9 +186,9 @@ function Inner({ root, workspace: workspaceProp, initialView, canvas, onViewChan
   const thumbTargets = useMemo(
     () =>
       canvas
-        ? entries.flatMap((e) => (e.scene && (e.scene.status === 'generated' || e.scene.status === 'needs-revision') && unthumbed.has(e.slug) && !thumbs[e.slug] && !tried.has(e.slug) ? [{ slug: e.slug, sceneType: e.scene.type, entry: e.scene.runtime.entry }] : []))
+        ? entries.flatMap((e) => (e.scene && (e.scene.status === 'generated' || e.scene.status === 'needs-revision') && unthumbed.has(e.slug) && !tried.has(e.slug) ? [{ slug: e.slug, sceneType: e.scene.type, entry: e.scene.runtime.entry }] : []))
         : [],
-    [entries, unthumbed, thumbs, tried, canvas],
+    [entries, unthumbed, tried, canvas],
   );
   const onThumbSaved = useCallback((slug: string, url: string) => setThumbs((m) => ({ ...m, [slug]: url })), []);
   const onThumbSettled = useCallback((slug: string) => setTried((s) => (s.has(slug) ? s : new Set(s).add(slug))), []);

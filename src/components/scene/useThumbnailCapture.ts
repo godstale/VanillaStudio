@@ -1,9 +1,18 @@
 import { useEffect, useRef } from 'react';
 import { useBridge, useBridgeEvents } from '@/lib/review/bridgeContextValue';
+import { pickBestFrame, RICH_SCORE, scoreFrame, type ScoredFrame } from '@/lib/scene/frameScore';
 import { saveThumbnail } from '@/lib/scene/thumbnail';
 
 const THUMB_SCALE = 0.25;
 const THUMB_SETTLE_MS = 400;
+/** 시크 후 렌더가 반영되길 기다리는 시간. */
+const SEEK_SETTLE_MS = 250;
+/** 영상 신에서 후보로 찍는 길이 비율. 앞에서부터 보고, 내용이 충분한 프레임이 나오면 멈춘다. */
+const MOTION_FRACTIONS = [0.3, 0.5, 0.7, 0.9, 0.15];
+/** 정적 신은 시간축이 없어 진입 애니메이션이 끝나길 기다리며 다시 찍는다(미리보기 준비 후 ms). */
+const STATIC_DELAYS_MS = [THUMB_SETTLE_MS, 1400, 2800];
+
+const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export interface ThumbnailCaptureOptions {
   root: string;
@@ -15,37 +24,68 @@ export interface ThumbnailCaptureOptions {
   onSettled?: (ok: boolean) => void;
 }
 
-/** 미리보기가 준비될 때마다 썸네일을 한 번 캡처해 저장한다(T4.8). 첫 프레임이 비는 신이 많아 영상 신은 길이의 30% 지점에서 찍는다. */
+/**
+ * 미리보기가 준비될 때마다 썸네일을 한 번 캡처해 저장한다(T4.8).
+ * 모션은 시작·끝이 빈 화면인 경우가 많아 여러 시점을 찍어 내용이 가장 잘 보이는 프레임을 고른다.
+ */
 export function useThumbnailCapture({ root, slug, sceneType, onThumbnail, onSettled }: ThumbnailCaptureOptions): void {
   const bridge = useBridge();
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const run = useRef(0);
   useEffect(
     () => () => {
-      if (timer.current) clearTimeout(timer.current);
+      run.current++;
     },
     [],
   );
 
   useBridgeEvents((e) => {
     if (e.type !== 'ready' || !onThumbnail) return;
-    if (timer.current) clearTimeout(timer.current);
-    const at = sceneType !== 'static' && e.payload.duration ? e.payload.duration * 0.3 : null;
-    if (at !== null) bridge.seek(at);
-    timer.current = setTimeout(() => {
+    const id = ++run.current;
+    const superseded = () => run.current !== id;
+    const duration = sceneType !== 'static' ? e.payload.duration : undefined;
+
+    void (async () => {
+      const frames: ScoredFrame[] = [];
+      const grab = async () => {
+        const c = await bridge.capture(THUMB_SCALE);
+        frames.push({ dataUrl: c.dataUrl, score: await scoreFrame(c.dataUrl) });
+        return frames[frames.length - 1]!.score >= RICH_SCORE;
+      };
+      let sought = false;
       let ok = false;
-      bridge
-        .capture(THUMB_SCALE)
-        .then(async (c) => {
-          if (await saveThumbnail(root, slug, c.dataUrl)) {
-            ok = true;
-            onThumbnail(slug, c.dataUrl);
+      try {
+        if (duration) {
+          await sleep(THUMB_SETTLE_MS);
+          for (const f of MOTION_FRACTIONS) {
+            if (superseded()) return;
+            bridge.seek(duration * f);
+            sought = true;
+            await sleep(SEEK_SETTLE_MS);
+            if (await grab()) break;
           }
-        })
-        .catch(() => undefined) // 썸네일은 부가 기능이다. 실패해도 미리보기는 계속 쓴다.
-        .finally(() => {
-          if (at !== null) bridge.seek(0);
+        } else {
+          let waited = 0;
+          for (const at of STATIC_DELAYS_MS) {
+            await sleep(at - waited);
+            waited = at;
+            if (superseded()) return;
+            if (await grab()) break;
+          }
+        }
+        const best = pickBestFrame(frames);
+        if (superseded() || !best) return;
+        if (await saveThumbnail(root, slug, best.dataUrl)) {
+          ok = true;
+          onThumbnail(slug, best.dataUrl);
+        }
+      } catch {
+        // 썸네일은 부가 기능이다. 실패해도 미리보기는 계속 쓴다.
+      } finally {
+        if (!superseded()) {
+          if (sought) bridge.seek(0);
           onSettled?.(ok);
-        });
-    }, THUMB_SETTLE_MS);
+        }
+      }
+    })();
   });
 }

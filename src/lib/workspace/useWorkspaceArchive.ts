@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
 import { open, save } from '@tauri-apps/plugin-dialog';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
-import { tauriWorkspaceApi } from './api';
 import { ARCHIVE_EXTENSION, archiveErrorKey, packWorkspaceZip, unpackWorkspaceZip } from './archive';
 
 const messageOf = (e: unknown): string => (typeof e === 'string' ? e : e instanceof Error ? e.message : String(e));
@@ -50,15 +48,7 @@ export function useWorkspaceArchive(workspaceRoot: string | null, onImported: (d
     if (typeof zip !== 'string') return;
     setBusy(true);
     try {
-      const dest = await tauriWorkspaceApi.pickFolder();
-      if (!dest) return;
-      try {
-        await unpackWorkspaceZip(zip, dest);
-      } catch (e) {
-        // 폴더 선택이 파일 명령의 활성 스코프를 바꿨으므로 원래 워크스페이스로 되돌린다.
-        await invoke('set_active_workspace', { path: workspaceRoot }).catch(() => undefined);
-        throw e;
-      }
+      const { path: dest } = await unpackWorkspaceZip(zip);
       setNotice(t('archive.importDone'));
       await onImported(dest);
     } catch (e) {

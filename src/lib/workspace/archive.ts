@@ -15,8 +15,9 @@ export function packWorkspaceZip(workspaceRoot: string, outPath: string): Promis
   return invoke<ArchiveReport>('pack_workspace_zip', { workspaceRoot, outPath });
 }
 
-export function unpackWorkspaceZip(zipPath: string, destDir: string): Promise<ArchiveReport> {
-  return invoke<ArchiveReport>('unpack_workspace_zip', { zipPath, destDir });
+/** zip 옆에 새 폴더를 만들어 푼다. 결과 `path`가 풀린 워크스페이스 폴더. */
+export function unpackWorkspaceZip(zipPath: string): Promise<ArchiveReport> {
+  return invoke<ArchiveReport>('unpack_workspace_zip', { zipPath });
 }
 
 /** Rust 거부 코드 → i18n 키. `.vsx`와 겹치는 코드는 그쪽 키를 재사용한다. 모르는 코드는 null(원문을 보여 준다). */
