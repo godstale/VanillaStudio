@@ -206,3 +206,31 @@ export default defineScene({
 4. **작업 지시서(`WORK_ORDER.md`) 확인 및 완료 처리**:
    - 사용자가 Vanilla Studio에서 변경한 내역이나 코멘트는 `pnpm vanilla work-order` (또는 `WORK_ORDER.md` 열람)로 확인합니다.
    - 반영을 마친 항목은 `pnpm vanilla resolve <id>` (예: `pnpm vanilla resolve cmt_...` 또는 `pnpm vanilla resolve chg_...`)로 완료(`done`) 처리합니다.
+
+---
+
+## 7. 앱 없이 재생·발표하기 (Standalone Play)
+
+워크스페이스는 Vanilla Studio 없이도 자체 빌드·재생할 수 있습니다. 발표용 재생 화면(`play.html`)은 스튜디오 플레이그라운드와 같은 Bridge 프로토콜(v2: 타입 입력 위임·`step`/`done`)로 신과 대화합니다.
+
+| 명령 | 동작 |
+| --- | --- |
+| `pnpm dev` | Vite 개발 서버를 띄웁니다. 루트(`/`)가 `play.html`로 리다이렉트되므로 출력된 URL이 바로 재생 화면입니다. |
+| `pnpm play` | 브라우저에 `play.html`을 바로 엽니다 (개발 서버 + 자동 열기). |
+| `pnpm build` | `play.html`과 모든 신 엔트리(`scenes/<slug>/src/index.html`)를 `dist/`에 묶습니다. |
+| `pnpm preview` | 빌드 결과(`dist/play.html`)를 정적 서빙으로 최종 확인합니다. |
+
+- 화면 구성: 상단 신 목록·진행률(`3 / 23`), 하단 처음부터·이전/다음 신·(정적 신) 이전/다음 단계·(시간 신) 재생/일시정지·시크바·전체화면, 분기 신은 화면 아래 선택지, 주소 `#/play/<sceneId>`로 특정 신 딥링크.
+- 입력 라우팅: 클릭·키 입력은 신의 진행 규칙(`advance`)에 맞는 타입 입력으로 위임됩니다. 마지막 단계 입력이 다음 신으로 넘깁니다 (`static`의 `done` → 시퀀스 엣지 `trigger` 평가).
+- 차이점: 신 전환 연출은 컷/페이드로 단순화됩니다 (스튜디오의 전환 합성과 다름). 구 런타임(v2.1 `input` 이전) 신에서는 클릭·키 위임이 무시되므로 `‹` `›` 단계 버튼을 쓰세요.
+- `dist/`는 반드시 http(s) 정적 서버로 여세요 (`pnpm preview`). 파일 직접 열기(`file://`)에서는 모듈·`postMessage` Bridge가 동작하지 않습니다.
+
+### 기존 워크스페이스에 적용하기 (이 템플릿 이전에 만든 폴더)
+
+워크스페이스를 Vanilla Studio에서 다시 열면 `play.html`·`play/`가 자동 복사되고 `VANILLA_GUIDE.md`가 갱신됩니다.
+아래 4종은 사용자 소유 파일이라 자동 교체되지 않으니 직접 합치세요 (신규 워크스페이스는 불필요):
+
+1. `package.json` scripts에 `"play": "vite --open play.html"`, `"preview": "vite preview --open play.html"` 추가.
+2. `vite.config.ts`를 템플릿 최신본으로 교체 (멀티 엔트리 + `base: './'`).
+3. `index.html`을 템플릿 최신본으로 교체 (`play.html` 리다이렉트, `{{workspaceName}}`은 실제 이름으로).
+4. `tsconfig.json`: `include`에 `"play"` 추가, `compilerOptions`에 `"resolveJsonModule": true`, `"types": ["vite/client"]` 추가.

@@ -5,7 +5,7 @@ tags: [decisions, phase-p2]
 date: 2026-09-28
 source_file: Docs/Planning/Decisions.md
 sources: []
-last_updated: 2026-10-18
+last_updated: 2026-10-22
 ---
 
 ## Summary
@@ -53,6 +53,7 @@ last_updated: 2026-10-18
 | D-037 | 스토리보드 & 3-문서 Material-First 워크플로 | Accepted (2026-10-18) | [[refactor-spec-v2]] |
 | D-038 | 플레이그라운드 static 입력 타입 위임(Bridge `input` v2.1) | Accepted (2026-10-18) | [[issue-playground-scaffold-fixes]] |
 | D-039 | 신 공유 썸네일 `poster.svg` | Proposed (2026-10-20) | [[poster-thumbnail-d039]] |
+| D-040 | 워크스페이스 자체 빌드·발표(Standalone Play) | Accepted (2026-10-22) | [[standalone-play]] |
 
 ## Connections
 

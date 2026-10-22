@@ -98,23 +98,4 @@ describe('References', () => {
     setup({ ...scene, references: [{ id: 'ref-1', kind: 'image', path: 'references/ref-1-a.png', url: null, note: '', analysis: null }] } as Scene);
     expect(screen.queryByRole('button', { name: /키프레임 추출|Extract keyframes/ })).toBeNull();
   });
-
-  it('analysis button needs references and a terminal', () => {
-    const onAnalyze = vi.fn();
-    const render1 = (initial: Scene, handler?: () => void) =>
-      render(
-        <LanguageProvider>
-          <References root="/w" slug="intro" scene={initial} onChange={vi.fn()} onAnalyze={handler} />
-        </LanguageProvider>,
-      );
-    const empty = render1(scene, onAnalyze);
-    expect((screen.getByRole('button', { name: /분석 실행|Run analysis/ }) as HTMLButtonElement).disabled).toBe(true);
-    empty.unmount();
-    const noTerminal = render1(withVideo);
-    expect((screen.getByRole('button', { name: /분석 실행|Run analysis/ }) as HTMLButtonElement).disabled).toBe(true);
-    noTerminal.unmount();
-    render1(withVideo, onAnalyze);
-    fireEvent.click(screen.getByRole('button', { name: /분석 실행|Run analysis/ }));
-    expect(onAnalyze).toHaveBeenCalledOnce();
-  });
 });

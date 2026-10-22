@@ -35,7 +35,6 @@ export interface WorkspaceCanvasProps {
   onNodeClick?: ReactFlowProps['onNodeClick'];
   onPaneClick?: ReactFlowProps['onPaneClick'];
   onNodeDragStop?: ReactFlowProps['onNodeDragStop'];
-  onPaneContextMenu?: ReactFlowProps['onPaneContextMenu'];
   children?: ReactNode;
 }
 
@@ -57,7 +56,7 @@ export function WorkspaceCanvas({
   const { resolvedTheme } = useTheme();
   const viewportProps = initialView ? { defaultViewport: initialView } : { fitView: true };
   return (
-    <div className="h-full w-full" data-allow-context>
+    <div className="h-full w-full">
       <ReactFlow
         className="vs-canvas"
         nodes={nodes}

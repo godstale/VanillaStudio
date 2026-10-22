@@ -1,9 +1,8 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useEffect } from 'react';
-import { Boxes, ClipboardList, FlaskConical, LayoutTemplate, Settings, Workflow, type LucideIcon } from 'lucide-react';
+import { Boxes, ClipboardList, Folders, LayoutTemplate, Play as PlayIcon, Settings, Workflow, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
-import { Switcher } from '@/components/workspace/Switcher';
 import { TitleBar } from './TitleBar';
 
 interface NavItem {
@@ -13,18 +12,19 @@ interface NavItem {
 }
 
 // 화면 추가: 항목 하나 + App.tsx 라우트 하나(Docs/Extension-Guide.md).
-// 제작 흐름 순서: 스토리보드(기획·재료·조립) → 시퀀스(기존 워크스페이스 캔버스) → 신 → 템플릿 → 플레이그라운드. 설정은 가장 하단에 둔다.
+// 제작 흐름 순서: 스토리보드(기획·재료·조립) → 시퀀스(기존 워크스페이스 캔버스) → 신 → 템플릿 → 재생. 설정은 가장 하단에 둔다.
+// 플레이그라운드는 온라인 미구축이라 노출하지 않는다(뷰어 역할에 집중).
 const NAV_ITEMS: NavItem[] = [
   { to: '/storyboard', icon: ClipboardList, labelKey: 'shell.nav.storyboard' },
   { to: '/workspace', icon: Workflow, labelKey: 'shell.nav.sequence' },
   { to: '/scenes', icon: Boxes, labelKey: 'shell.nav.scenes' },
   { to: '/templates', icon: LayoutTemplate, labelKey: 'shell.nav.templates' },
-  { to: '/playground', icon: FlaskConical, labelKey: 'shell.nav.playground' },
+  { to: '/play', icon: PlayIcon, labelKey: 'shell.nav.play' },
 ];
 
 const SETTINGS_ITEM: NavItem = { to: '/settings', icon: Settings, labelKey: 'shell.nav.settings' };
 
-function NavButton({ to, icon: Icon, labelKey }: NavItem) {
+function NavButton({ to, icon: Icon, labelKey, testId }: NavItem & { testId?: string }) {
   const { t } = useLanguage();
   return (
     <NavLink
@@ -32,6 +32,7 @@ function NavButton({ to, icon: Icon, labelKey }: NavItem) {
       to={to}
       title={t(labelKey)}
       aria-label={t(labelKey)}
+      data-testid={testId}
       className={({ isActive }) =>
         cn(
           'flex h-10 w-10 items-center justify-center rounded-md transition-colors',
@@ -58,12 +59,27 @@ export function AppShell() {
     window.addEventListener('contextmenu', onContextMenu);
     return () => window.removeEventListener('contextmenu', onContextMenu);
   }, []);
+  // 브라우저 기본 찾기(Ctrl+F / Cmd+F)는 앱 전역에서 막는다.
+  // 허용된 곳(`data-allow-find`)에서만 custom 검색 팝업을 쓴다(추후 구현).
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.defaultPrevented) return;
+      if (!(e.ctrlKey || e.metaKey) || e.altKey || e.shiftKey) return;
+      if (e.key.toLowerCase() !== 'f') return;
+      const el = e.target instanceof Element ? e.target : null;
+      if (el?.closest('[data-allow-find]')) return;
+      e.preventDefault();
+      e.stopPropagation();
+    };
+    window.addEventListener('keydown', onKeyDown, true);
+    return () => window.removeEventListener('keydown', onKeyDown, true);
+  }, []);
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground">
       <TitleBar />
       <div className="flex min-h-0 flex-1">
         <nav aria-label={t('shell.nav.label')} className="flex w-14 shrink-0 flex-col items-center gap-1 border-r border-border bg-sidebar py-2">
-          <Switcher />
+          <NavButton to="/workspaces" icon={Folders} labelKey="switcher.title" testId="workspace-menu-button" />
           {NAV_ITEMS.map((item) => (
             <NavButton key={item.to} {...item} />
           ))}
