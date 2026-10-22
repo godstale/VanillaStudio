@@ -281,10 +281,11 @@ export function createNavigator(options: NavigatorOptions) {
       set({ t });
     },
 
-    /** Typed user input: static scenes match it against advance rules, timed scenes match edges. */
+    /** Typed user input: static scenes match it against advance rules, timed scenes match edges.
+     *  Accepted while paused too: arrows advance even after the video was paused. */
     input(input: UserInput): void {
       const cur = state.current;
-      if (cur === null || state.status !== 'playing') return;
+      if (cur === null || (state.status !== 'playing' && state.status !== 'paused')) return;
       if (typeOf(cur) === 'static') {
         lastInput = input;
         driver?.input(input);

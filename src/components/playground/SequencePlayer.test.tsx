@@ -101,6 +101,30 @@ describe('SequencePlayer', () => {
     await waitFor(() => expect(frameOf('scn_m')).toBeUndefined());
   });
 
+  it('keyboard: ArrowRight advances a paused motion scene (e.g. after clicking the stage to pause)', async () => {
+    renderPlayer(sequence([edge('scn_m', 'scn_d', 'key:ArrowRight')]));
+    await waitFor(() => expect(frameOf('scn_m')).toBeTruthy());
+    fromScene('scn_m', 'ready', ready(4));
+    await waitFor(() => expect(frameOf('scn_d')).toBeTruthy());
+    fromScene('scn_d', 'ready', ready(2));
+    fireEvent.click(screen.getByTestId('player-input')); // no click edge: toggles pause
+    await waitFor(() => expect(screen.getByTestId('player-time')).toBeTruthy());
+    fireEvent.keyDown(window, { key: 'ArrowRight' });
+    await waitFor(() => expect(frameOf('scn_m')).toBeUndefined());
+  });
+
+  it('keyboard: ArrowRight on the seek slider still advances instead of scrubbing', async () => {
+    renderPlayer(sequence([edge('scn_m', 'scn_d', 'key:ArrowRight')]));
+    await waitFor(() => expect(frameOf('scn_m')).toBeTruthy());
+    fromScene('scn_m', 'ready', ready(4));
+    await waitFor(() => expect(frameOf('scn_d')).toBeTruthy());
+    fromScene('scn_d', 'ready', ready(2));
+    const seek = screen.getByLabelText(/시크|Seek/);
+    seek.focus();
+    fireEvent.keyDown(seek, { key: 'ArrowRight' });
+    await waitFor(() => expect(frameOf('scn_m')).toBeUndefined());
+  });
+
   it('static scene keyboard: keys go to the page as typed input, not as unconditional next (ArrowLeft goes back)', async () => {
     renderPlayer(sequence([edge('scn_s', 'scn_d', 'key:ArrowRight')], ['scn_s', 'scn_d']));
     await waitFor(() => expect(frameOf('scn_s')).toBeTruthy());
