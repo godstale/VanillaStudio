@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "id": "scn_790a2769797d",
+  "name": "숫자와 흐름",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "숫자와 흐름",
+    "goal": "01 시작하기 — S02",
+    "audience": "일반 청중",
+    "message": "year 를 쓰면 화면 위 연표에 시기가 표시됩니다",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s02-stats",
+      "title": "통계 레이아웃",
+      "copy": "큰 숫자로 핵심을 보여 줍니다\nyear 를 쓰면 화면 위 연표에 시기가 표시됩니다\n14 가지 기본 제공 레이아웃\n1 개 문구 원본 content.json",
+      "layout": "stats",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s02-timeline-1",
+      "title": "타임라인 레이아웃 (1/3)",
+      "copy": "build 가 true 면 클릭할 때마다 한 항목씩 나타납니다\n2023 첫 번째 사건 항목의 설명을 적습니다",
+      "layout": "timeline",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s02-timeline-2",
+      "title": "타임라인 레이아웃 (2/3)",
+      "copy": "2024 두 번째 사건 날짜는 2024 또는 2024.06 형식입니다",
+      "layout": "timeline",
+      "enter": "reveal",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s02-timeline-3",
+      "title": "타임라인 레이아웃 (3/3)",
+      "copy": "2025 세 번째 사건 마지막 항목",
+      "layout": "timeline",
+      "enter": "reveal",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "stats",
+    "timeline"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s02",
+    "chapter": "ch01",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

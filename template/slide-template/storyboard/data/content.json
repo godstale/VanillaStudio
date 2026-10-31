@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "deck": {
+    "title": "슬라이드 템플릿",
+    "course": "발표 제목을 여기에 쓰세요",
+    "day": 1,
+    "audience": "일반 청중",
+    "eraFrom": 2020,
+    "eraTo": 2027,
+    "eraTicks": [2020, 2021, 2022, 2023, 2024, 2025, 2026]
+  },
+  "chapters": [
+    { "id": "ch01", "no": "01", "label": "시작하기" },
+    { "id": "ch02", "no": "02", "label": "레이아웃 둘러보기" }
+  ],
+  "bumper": {
+    "kicker": "CHAPTER",
+    "durationSeconds": 4,
+    "before": ["ch02"]
+  },
+  "scenes": [
+    {
+      "key": "s01",
+      "title": "표지와 메시지",
+      "chapter": "ch01",
+      "screens": [
+        {
+          "id": "s01-cover",
+          "layout": "cover",
+          "kicker": "발표 부제 · 날짜",
+          "heading": "슬라이드\n**템플릿**",
+          "text": "content.json 의 문구만 바꾸면 슬라이드가 바뀝니다"
+        },
+        {
+          "id": "s01-statement",
+          "layout": "statement",
+          "kicker": "한 장에 한 가지 메시지",
+          "heading": "강조할 단어는 **별표 두 개**로 감싸세요",
+          "bullets": ["줄바꿈은 \\n 으로 넣습니다", "불릿은 bullets 배열에 한 줄씩 적습니다"],
+          "text": "화면 하단의 보조 문구입니다"
+        },
+        {
+          "id": "s01-cards",
+          "layout": "cards",
+          "title": "카드 레이아웃",
+          "sub": "cols 로 열 개수를 정합니다",
+          "cols": 3,
+          "items": [
+            { "title": "문구는 data 에", "text": "화면 문구는 모두 storyboard/data/content.json 에 둡니다" },
+            { "title": "코드는 shared 에", "text": "레이아웃 코드는 shared/deck 에 있고 모든 슬라이드가 공유합니다" },
+            { "title": "에이전트에게", "text": "**Claude Code** 같은 에이전트에게 \"이 주제로 슬라이드를 만들어 줘\"라고 요청하세요" }
+          ]
+        },
+        {
+          "id": "s01-compare",
+          "layout": "compare",
+          "title": "비교 레이아웃",
+          "sub": "왼쪽과 오른쪽을 나란히 놓습니다",
+          "left": { "tag": "Before", "title": "직접 작성", "tone": "muted", "bullets": ["슬라이드마다 디자인을 맞춘다", "문구를 바꾸면 레이아웃이 어긋난다"] },
+          "right": { "tag": "After", "title": "템플릿 사용", "tone": "primary", "bullets": ["문구만 **JSON**으로 관리한다", "디자인은 DESIGN.md 토큰이 책임진다"] },
+          "link": "vs"
+        }
+      ]
+    },
+    {
+      "key": "s02",
+      "title": "숫자와 흐름",
+      "chapter": "ch01",
+      "year": "2023-2025",
+      "screens": [
+        {
+          "id": "s02-stats",
+          "layout": "stats",
+          "title": "통계 레이아웃",
+          "sub": "큰 숫자로 핵심을 보여 줍니다",
+          "items": [
+            { "value": "14", "unit": "가지", "label": "기본 제공 **레이아웃**" },
+            { "value": "1", "unit": "개", "label": "문구 원본 **content.json**" }
+          ],
+          "note": "year 를 쓰면 화면 위 연표에 시기가 표시됩니다"
+        },
+        {
+          "id": "s02-timeline",
+          "layout": "timeline",
+          "title": "타임라인 레이아웃",
+          "sub": "build 가 true 면 클릭할 때마다 한 항목씩 나타납니다",
+          "build": true,
+          "items": [
+            { "date": "2023", "title": "첫 번째 사건", "text": "항목의 **설명**을 적습니다" },
+            { "date": "2024", "title": "두 번째 사건", "text": "날짜는 2024 또는 2024.06 형식입니다" },
+            { "date": "2025", "title": "세 번째 사건", "text": "마지막 항목" }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "s03",
+      "title": "표와 막대",
+      "chapter": "ch02",
+      "screens": [
+        {
+          "id": "s03-divider",
+          "layout": "divider",
+          "kicker": "챕터 구분 슬라이드",
+          "heading": "레이아웃 둘러보기"
+        },
+        {
+          "id": "s03-table",
+          "layout": "table",
+          "title": "표 레이아웃",
+          "sub": "cols 는 머리글, rows 는 행입니다",
+          "cols": ["항목", "설명", "예시"],
+          "rows": [
+            ["cover", "표지", "발표 첫 장"],
+            ["statement", "핵심 메시지", "**한 줄** 주장"],
+            ["table", "표", "지금 보는 화면"]
+          ],
+          "foot": "표 아래 출처나 기준 시점을 적습니다"
+        },
+        {
+          "id": "s03-bars",
+          "layout": "bars",
+          "title": "막대 레이아웃",
+          "sub": "값의 크기를 막대 길이로 비교합니다",
+          "unit": "%",
+          "max": 100,
+          "items": [
+            { "label": "A안", "value": 30, "display": "30%", "tone": "muted" },
+            { "label": "B안", "value": 55, "display": "55%", "tone": "muted" },
+            { "label": "C안", "value": 90, "display": "90%", "tone": "primary" }
+          ],
+          "bullets": ["tone 으로 막대 색을 고릅니다 (primary · accent · muted · danger)"]
+        },
+        {
+          "id": "s03-quote",
+          "layout": "quote",
+          "sub": "인용 레이아웃",
+          "quote": "좋은 슬라이드는 말을 돕고, 말을 대신하지 않는다",
+          "source": "발표 원칙",
+          "text": "그림과 영상이 필요하면 **assets/img**, **assets/video** 에 넣고 figure, video 레이아웃을 쓰세요"
+        }
+      ]
+    }
+  ]
+}
