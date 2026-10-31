@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "id": "scn_748d59403105",
+  "name": "09. MCP",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "MCP",
+    "goal": "02 LLM을 에이전트로 — 강의안 S09",
+    "audience": "중학생 이상 일반인",
+    "message": "MCP 표준이 마련되었다. 이제 MCP와 LLM을 붙여 더 강력한 에이전트를 만들자",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s09-mcp",
+      "title": "MCP",
+      "copy": "2024.11.25 Anthropic 발표\nMCP · Model Context Protocol\n외부 서버와 PC에서 돌아가는 프로그램을 LLM에 연결하는 표준\n대표적 MCP — GitHub · Context7 · Filesystem · Playwright · Firecrawl · Supabase · PostgreSQL · Notion · Slack…\nMCP 표준이 마련되었다. 이제 MCP와 LLM을 붙여 더 강력한 에이전트를 만들자",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s09-cicd",
+      "title": "개발 프로세스 곳곳에 MCP",
+      "copy": "CI/CD 파이프라인의 각 단계에 MCP 툴이 붙기 시작했다\n반복 업무 상당 부분이 자동화되었다 — 개발자는 설계와 판단에 집중\n조사 · 계획 Firecrawl로 자료 수집\nNotion에서 요구사항 확인\n코딩 Context7로 최신 문서 참조\nFilesystem으로 파일 편집\n테스트 Playwright로 브라우저 테스트 자동 실행\n리뷰 · 병합 GitHub에서 PR 생성, 리뷰, 병합\n배포 · 운영 Supabase · PostgreSQL 데이터 확인\nSlack으로 결과 알림",
+      "layout": "cards",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s10-needs",
+      "title": "MCP",
+      "copy": "개발자들의 요구는 단순했다\n이제 이 개발 단계들을 내가 하나하나 실행하지 않고,\n에이전트가 자율적으로 실행하게 할 수 없을까?",
+      "layout": "statement",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "split",
+    "cards",
+    "statement"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s09",
+    "chapter": "ch02",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

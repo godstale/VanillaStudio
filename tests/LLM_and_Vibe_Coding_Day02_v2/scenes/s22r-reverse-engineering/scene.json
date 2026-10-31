@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "id": "scn_ac5e13e15c7d",
+  "name": "22. 역공학",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "역공학",
+    "goal": "04 특이점 — 강의안 S22R",
+    "audience": "중학생 이상 일반인",
+    "message": "REA (Reverse Engineer Anything) — 역공학의 시작",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s22r-viral",
+      "title": "REA - GitHub를 뒤흔든 성장 곡선",
+      "copy": "10.6 스타 1만 미만 → 지금 37만+\nREA (Reverse Engineer Anything) — 역공학의 시작\n23만 ★ 8일 만에 (10.6 → 10.14)\n1위 GitHub 일간 트렌딩 — 하루 2.6만 스타\n37.6만 ★ 10.24 현재 스타\n9.4만 포크 직접 고쳐 쓰는 사람들",
+      "layout": "stats",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s22r-photoshop",
+      "title": "사례 1 · 포토샵 → PhotoCraft",
+      "copy": "Photoshop을 클린룸으로 다시 쓰다\nClaude + Rust · 2026.09.30 · REA와는 별개 프로젝트\n실제 PSD 파일을 여는 100% Rust 앱\n공개 3주 만에 스타 7.2만\n완성도는 아직 논쟁 중",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s22r-office",
+      "title": "사례 1 · 오피스 → Craft 시리즈",
+      "copy": "Word·Excel·PowerPoint도 같은 방식으로\n같은 개발자 · 2026.10.07 공개\nWordCraft — Word · 스타 1.6만\nGridCraft — Excel · 스타 6,400\nDeckCraft — PowerPoint · 스타 4,200\n무료 대안이 나오면 구독 모델은?",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s22r-hop",
+      "title": "사례 2 · HOP — 오픈소스 HWP 앱",
+      "copy": "닫힌 문서 포맷을 누구나 열 수 있게\nrhwp(Rust + WebAssembly) 기반 · 스타 1,900\nrhwp — HWP 파서·렌더링 엔진\nHOP — 그 위에 얹은 데스크톱 앱\n에이전트도 HWP를 읽고 고친다",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s22r-anyps5",
+      "title": "사례 3 · AnyPS5",
+      "copy": "에뮬레이터가 아니라 재링크\nGPL-2.0 · 스타 4.8만\nPS5 실행 파일을 PC용으로 변환\n시스템 라이브러리는 직접 재구현\n아직은 일부 2D 게임만 동작",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s22r-alzgg",
+      "title": "기타 사례 · 알집 → alzgg",
+      "copy": "알집의 압축 포맷을 C로 다시 구현\nALZ · EGG\nseb3773 · 순수 C · 2026.10.22\nALZip과 바이트 단위로 같은 결과\n비공개 압축·암호까지 역공학\nESTsoft 바이너리는 포함하지 않음",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s22r-openlogi",
+      "title": "기타 사례 · 오픈로지(OpenLogi)",
+      "copy": "마우스 설정 앱을 내 컴퓨터 안에서만\nRust · 스타 2.4만\nLogitech Options+의 오픈소스 대안\n계정·텔레메트리 없음\nmacOS · Windows · Linux",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "stats",
+    "split"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s22r",
+    "chapter": "ch04",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

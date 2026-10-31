@@ -129,7 +129,7 @@ export function Workspaces() {
         </p>
       )}
       {archive.notice && (
-        <p role="status" className="text-xs text-success">
+        <p role="status" className="whitespace-pre-line break-all text-xs text-success">
           {archive.notice}
         </p>
       )}

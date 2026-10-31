@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "id": "scn_b36af79172e6",
+  "name": "표지와 메시지",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "표지와 메시지",
+    "goal": "01 시작하기 — S01",
+    "audience": "일반 청중",
+    "message": "슬라이드 템플릿",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s01-cover",
+      "title": "표지와 메시지",
+      "copy": "발표 부제 · 날짜\n슬라이드\n템플릿\ncontent.json 의 문구만 바꾸면 슬라이드가 바뀝니다",
+      "layout": "cover",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s01-statement",
+      "title": "표지와 메시지",
+      "copy": "한 장에 한 가지 메시지\n강조할 단어는 별표 두 개로 감싸세요\n화면 하단의 보조 문구입니다\n줄바꿈은 \\n 으로 넣습니다\n불릿은 bullets 배열에 한 줄씩 적습니다",
+      "layout": "statement",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s01-cards",
+      "title": "카드 레이아웃",
+      "copy": "cols 로 열 개수를 정합니다\n문구는 data 에 화면 문구는 모두 storyboard/data/content.json 에 둡니다\n코드는 shared 에 레이아웃 코드는 shared/deck 에 있고 모든 슬라이드가 공유합니다\n에이전트에게 Claude Code 같은 에이전트에게 \"이 주제로 슬라이드를 만들어 줘\"라고 요청하세요",
+      "layout": "cards",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s01-compare",
+      "title": "비교 레이아웃",
+      "copy": "왼쪽과 오른쪽을 나란히 놓습니다",
+      "layout": "compare",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "cover",
+    "statement",
+    "cards",
+    "compare"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s01",
+    "chapter": "ch01",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

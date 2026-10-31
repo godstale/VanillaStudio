@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "id": "scn_6d3dd66b21c2",
+  "name": "09. 순환 신경망, RNN",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "순환 신경망, RNN",
+    "goal": "03 보고 기억하는 신경망 — 강의안 S09",
+    "audience": "중학생 이상 일반인",
+    "message": "순환 신경망, RNN",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s09-rnn",
+      "title": "순환 신경망, RNN",
+      "copy": "순서(시간)가 중요한 데이터 — 소리와 문장\n이미지는 한 번에, 문장은 한 단어씩 차례대로 읽어야 문맥이 보인다\nRNN: 이전 단계의 기억(은닉 상태, Hidden State)을 현재 입력과 합쳐서 계산\n문장이 길어지면 앞쪽 내용을 잃어버리는 장기 의존성 문제",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s09-lstm",
+      "title": "기억을 관리하는 법",
+      "copy": "장기 의존성 문제를 개선한 LSTM(Long Short-Term Memory)과 GRU",
+      "layout": "compare",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "split",
+    "compare"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s09",
+    "chapter": "ch03",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

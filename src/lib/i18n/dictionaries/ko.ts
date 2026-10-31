@@ -218,7 +218,7 @@ const ko = {
   'switcher.stopAndSwitch': '정리하고 전환',
   'archive.pack': '워크스페이스 압축(.zip)',
   'archive.import': '압축 파일에서 불러오기',
-  'archive.packDone': '파일 {files}개({size})를 압축했습니다. 받는 쪽은 압축을 풀고 pnpm install → pnpm play 순서로 실행합니다.',
+  'archive.packDone': '파일 {files}개({size})를 압축했습니다.\n파일명: {name}\n위치: {path}\n받는 쪽은 압축을 풀고 pnpm install → pnpm play 순서로 실행합니다.',
   'archive.importDone': '압축을 풀었습니다. 외부 파일이므로 신뢰 여부를 확인하세요. 신뢰하면 의존성(pnpm install)은 미리보기를 처음 열 때 자동으로 설치됩니다.',
   'archive.err.notWorkspace': '워크스페이스 폴더가 아니라 압축할 수 없습니다.',
   'archive.err.notWorkspaceZip': '워크스페이스 압축 파일이 아닙니다(workspace.json이 없거나 올바르지 않음).',

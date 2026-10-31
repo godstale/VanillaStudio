@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "workspaceId": "ws_ec86fb7a89a8e94b",
+  "stage": "assembling",
+  "brief": {
+    "title": "LLM과 바이브 코딩 — 2일차",
+    "oneLiner": "ChatGPT 쇼크에서 출발해 Copilot·Cursor·Claude Code와 에이전트 방법론의 진화를 따라가고, 특이점에 다가선 2026년 에이전트의 성과와 위험을 본다.",
+    "mediaIntent": "slide",
+    "purpose": "수정 강의안(references/수정-강의안-Day02.txt) 흐름 그대로 진행할 2일차 발표 화면 — 1일차 덱과 같은 형식·템플릿",
+    "inScope": [
+      "강의안 Scene 23개",
+      "강의자 제공 이미지 15장"
+    ],
+    "nonGoals": [
+      "대본 전체 옮기기",
+      "자동 넘김·반복 애니메이션",
+      "생성형 이미지 AI",
+      "1일차 덱 수정"
+    ]
+  },
+  "designFlow": {
+    "narrativeArc": "GPT 쇼크 → Copilot·Cursor·Claude Code → 진화사 01 LLM을 에이전트로 → 진화사 02 에이전트의 날갯짓 → 진화사 03 특이점 → 맺음말",
+    "dataSchemas": [
+      {
+        "id": "content",
+        "path": "storyboard/data/content.json",
+        "description": "위계형 문구·챕터·신/화면 데이터",
+        "itemCount": 23
+      },
+      {
+        "id": "items",
+        "path": "storyboard/data/items.json",
+        "description": "도식 데이터와 라벨(탭 코딩, 컨텍스트 스택, LLM+CLI 등식, 사고 강도, 랄프 루프)",
+        "itemCount": 5
+      }
+    ],
+    "assemblyPlan": [
+      {
+        "id": "asm_content",
+        "layer": "data",
+        "name": "shared/deck/content.ts — 타입·조회·스텝 계산·월 단위 연대",
+        "dependsOn": [],
+        "status": "done",
+        "targetPath": "shared/deck/content.ts",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_atoms",
+        "layer": "component",
+        "name": "shared/deck/atoms.tsx — Rich·Reveal·Figure·Bullets·Note",
+        "dependsOn": [
+          "asm_content"
+        ],
+        "status": "done",
+        "targetPath": "shared/deck/atoms.tsx",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_diagrams",
+        "layer": "component",
+        "name": "shared/deck/diagrams.tsx — tab-coding·context-stack·equation·effort·loop·manuals·skills·adoption",
+        "dependsOn": [
+          "asm_content"
+        ],
+        "status": "done",
+        "targetPath": "shared/deck/diagrams.tsx",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_layouts",
+        "layer": "component",
+        "name": "shared/deck/layouts.tsx — 레이아웃 14종",
+        "dependsOn": [
+          "asm_atoms",
+          "asm_diagrams"
+        ],
+        "status": "done",
+        "targetPath": "shared/deck/layouts.tsx",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_deck_shell",
+        "layer": "section",
+        "name": "shared/deck/DeckShell.tsx — 1920 무대·헤더·연대기 바",
+        "dependsOn": [
+          "asm_layouts"
+        ],
+        "status": "done",
+        "targetPath": "shared/deck/DeckShell.tsx",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_scenes",
+        "layer": "scene",
+        "name": "scenes/*/src/Scene.tsx (scripts/sync-deck.mjs 생성)",
+        "dependsOn": [
+          "asm_deck_shell"
+        ],
+        "status": "done",
+        "targetPath": "scenes/",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_sequence",
+        "layer": "scene",
+        "name": "sequence.json — 23개 신 선형 연결",
+        "dependsOn": [
+          "asm_scenes"
+        ],
+        "status": "done",
+        "targetPath": "sequence.json",
+        "taxonomy": []
+      }
+    ]
+  },
+  "visualDirection": {
+    "moodKeywords": [
+      "midnight navy",
+      "single amber accent",
+      "bold Korean headline",
+      "keynote"
+    ],
+    "themeStages": [],
+    "invariants": [
+      "navy gradient + warm/cool glow",
+      "amber bar header + chapter chip",
+      "era bar 2021→2026 (dated screens)",
+      "slate cards, paper frames for diagrams"
+    ],
+    "variables": [
+      "layout per screen",
+      "photo/diagram",
+      "highlight words",
+      "year"
+    ],
+    "selectedTaxonomy": [
+      "opus-narrative-deck@1"
+    ]
+  }
+}

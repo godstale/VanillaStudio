@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "id": "scn_e753e994b2b0",
+  "name": "08. 딥러닝의 시작, CNN",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "딥러닝의 시작, CNN",
+    "goal": "03 보고 기억하는 신경망 — 강의안 S08",
+    "audience": "중학생 이상 일반인",
+    "message": "합성곱 신경망(CNN)",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s08-lecun",
+      "title": "딥러닝의 시작, CNN",
+      "copy": "얀 르쿤 · 미국 뉴저지 벨 연구소(트랜지스터가 태어난 곳)\n합성곱 신경망(CNN)\n미국 우체국이 모은 우편번호 손글씨를 인식하는 과제\n제각각인 손글씨를 읽어 낼 수 있는 새로운 신경망을 고안",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s08-how",
+      "title": "CNN은 어떻게 보는가",
+      "copy": "인간의 시각 피질을 모방\n도장 찍듯 훑는 필터 이미지의 2차원 공간 정보를 유지한 채 필터(마스크)를 이동시키며 특징을 추출\n부분에서 전체로 지역적인 패턴을 먼저 파악하고 점차 전체 조합을 찾는다 — 하위층은 짧은 선·모서리, 중간층은 동그라미·꺾인 모양\n더 적은 연산 전부 다 연결하지 않으니 연산량과 필요한 학습 데이터가 줄어든다",
+      "layout": "cards",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s08-lenet5",
+      "title": "딥러닝의 시작, CNN",
+      "copy": "LeNet-5 완성\n1998\n10여 년 연구 끝에 나온 완성형\n이때 정리한 손글씨 숫자 데이터 = MNIST (딥러닝 입문자의 첫 예제)\n실제 은행 수표 판독에 사용\n하지만 큰 사진은 여전히 엄청난 연산량을 요구",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "split",
+    "cards"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s08",
+    "chapter": "ch03",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

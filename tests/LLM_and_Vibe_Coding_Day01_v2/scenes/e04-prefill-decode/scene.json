@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "id": "scn_111b01ecdabe",
+  "name": "E4. 생각의 원리: 프리필과 디코딩",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "프리필과 디코딩",
+    "goal": "+ 생각의 원리 — 강의안 E04",
+    "audience": "중학생 이상 일반인",
+    "message": "프리필과 디코딩",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "e04-prefill",
+      "title": "프리필(Prefill)",
+      "copy": "사용자가 미리 입력한 문장(프롬프트)을 변환하는 과정\n입력이 이미 정해져 있으니 병렬로 빠르게 계산\n각 단어는 Attention 계산용 상태를 기록해 둔다 = KV 캐시\n각 단어는 자기보다 앞에 나온 단어와의 관계만 계산 — 자기 위치까지의 문맥을 담는다",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e04-decode",
+      "title": "디코딩(Decoding)",
+      "copy": "답변이 끝날 때까지 토큰 단위로 하나씩 반복(Loop)\n마지막 단어 벡터(히든 스테이트) = 지금까지 문맥을 모두 압축한 벡터\n다음에 올 단어의 확률을 계산 → 가장 그럴듯한 단어를 덧붙인다\n새 단어와 기존 단어의 관계를 다시 계산 → 또 새로운 히든 스테이트\n하나씩 생성하므로 프리필처럼 병렬로 계산할 수 없다",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "split"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#e04",
+    "chapter": "bonus",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

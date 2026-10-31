@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "id": "scn_44390b6b085c",
+  "name": "16. 알파고 쇼크 (딥마인드)",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "알파고 쇼크",
+    "goal": "05 언어와 생성, 그리고 깊이 — 강의안 S16",
+    "audience": "중학생 이상 일반인",
+    "message": "37수",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s16-deepmind",
+      "title": "딥마인드",
+      "copy": "목표는 범용 인공지능\n2010 런던에서 창업 데미스 하사비스(체스 신동·10대 게임회사 직원·뇌과학 박사), 셰인 레그, 무스타파 술레이만\n2013 아타리 게임 논문 규칙은 알려주지 않고 화면 픽셀과 점수만 — 벽돌 깨기에서 고수의 파훼법을 스스로 발견. 강화학습(보상으로 배움) + CNN(화면을 보는 눈)\n2014 구글, 딥마인드 인수 바둑에 도전 — 기보를 학습하고, 알파고끼리 대국하며 실력 향상",
+      "layout": "timeline",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s16-alphago",
+      "title": "2016.03 알파고 쇼크",
+      "copy": "이세돌 9단과의 다섯 판, 그리고 그 후\n37 수 제2국 · 사람이 두지 않는 창의적인 수\n78 수 제4국 · 판을 뒤집은 이세돌의 신의 한 수\n3 일 2017 알파고 제로 · 사람의 기보 없이 스스로 학습해 알파고에 압승",
+      "layout": "stats",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s16-move37",
+      "title": "알파고 쇼크",
+      "copy": "2016.03 이세돌 9단과의 제2국\n37수\n사람이 두지 않는 창의적인 수\n해설자들도 실수로 여길 만큼 낯선 수였다",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s16-move78",
+      "title": "알파고 쇼크",
+      "copy": "2016.03 이세돌 9단과의 제4국\n78수\n판을 뒤집은 이세돌의 신의 한 수\n다섯 판 중 사람이 알파고에게 거둔 유일한 승리",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "timeline",
+    "stats",
+    "split"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s16",
+    "chapter": "ch05",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

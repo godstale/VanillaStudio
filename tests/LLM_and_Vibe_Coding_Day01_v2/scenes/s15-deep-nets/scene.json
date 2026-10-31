@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "id": "scn_8ec864129ee3",
+  "name": "15. 거대 신경망을 위한 실험",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "거대 신경망을 위한 실험",
+    "goal": "05 언어와 생성, 그리고 깊이 — 강의안 S15",
+    "audience": "중학생 이상 일반인",
+    "message": "50층을 넘기자 역전파가 앞쪽까지 전달되지 못했다 — 기울기 소실",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s15-depth",
+      "title": "깊게 쌓으면 더 똑똑해질까?",
+      "copy": "신경망의 층 수\n50층을 넘기자 역전파가 앞쪽까지 전달되지 못했다 — 기울기 소실\n8 AlexNet · 2012\n19 VGGNet · 2014\n22 GoogLeNet · 2014\n56 그냥 더 쌓으면\n152 ResNet · 2015",
+      "layout": "bars",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s15-resnet",
+      "title": "깊이의 벽을 넘다",
+      "copy": "ResNet · 잔차 신경망 2015 MS 리서치 아시아(베이징) 카이밍 허 — 층을 건너뛰는 지름길. 152층, 이미지넷 오류율 3.5% (사람 약 5%)\n배치 정규화 2015 구글 — 층을 지날 때마다 숫자들의 크기를 고르게 맞춰 준다",
+      "layout": "cards",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "bars",
+    "cards"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s15",
+    "chapter": "ch05",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

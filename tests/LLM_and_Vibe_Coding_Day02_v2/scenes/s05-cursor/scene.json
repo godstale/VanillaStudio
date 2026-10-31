@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "id": "scn_ce5ca81a7f8b",
+  "name": "05. 커서와 코딩 에이전트",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "커서와 코딩 에이전트",
+    "goal": "01 바이브 코딩의 시작까지 — 강의안 S05",
+    "audience": "중학생 이상 일반인",
+    "message": "불과 몇 개월 새에 “Copilot은 이제 옛날 물건이다”",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s05-cursor",
+      "title": "커서와 코딩 에이전트",
+      "copy": "2023.03 등장(Anysphere) → 2023년 말~2024년 본격적인 기능 확장 후 주목",
+      "layout": "compare",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s05-agent",
+      "title": "코딩 에이전트",
+      "copy": "탭 코딩뿐 아니라 에이전트와의 채팅 중심으로 작업 전반에 참여\n프로젝트 파악 프로젝트 전체 파일들의 구조를 파악\n다중 파일 작업 여러 파일에 걸친 작업\n@ 컨텍스트 @Files · @Folders · @Docs · @Web으로 원하는 파일·문서·웹 검색 결과를 전달\n수정 · 빌드 · 디버깅 수정, 빌드, 디버깅에 참여",
+      "layout": "cards",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s05-shift",
+      "title": "커서와 코딩 에이전트",
+      "copy": "더 복잡한 작업을 수행하며 개발에서 AI의 비중이 높아지다\n불과 몇 개월 새에\n“Copilot은 이제 옛날 물건이다”\n훗날 Cursor는 2026.06 600억 달러(약 85~90조 원)에 SpaceX에 인수된다\nAI는 더 자율성을 갖추게 되었다\n하지만 여전히 개발은 개발자가 주도한다",
+      "layout": "statement",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "compare",
+    "cards",
+    "statement"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s05",
+    "chapter": "ch01",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

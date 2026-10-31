@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "id": "scn_19ddb3316911",
+  "name": "E5. 생각의 원리: 숫자로 보는 LLM",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "숫자로 보는 LLM",
+    "goal": "+ 생각의 원리 — 강의안 E05",
+    "audience": "중학생 이상 일반인",
+    "message": "이것을 수백만 명이 동시에 — 그래서 GPU와 메모리, 데이터센터가 부족하다",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "e05-headline",
+      "title": "숫자로 보는 LLM",
+      "copy": "질문: ‘나랏말싸미 듕귁에 달아…’ 이 문장은 어떤 책에 등장하는가? (약 120바이트)\n이것을 수백만 명이 동시에 — 그래서 GPU와 메모리, 데이터센터가 부족하다\n811 GB 메모리에 상주하는 모델 가중치\n200 회+ 답을 쓰는 동안 가중치 전체를 훑는 횟수\n200 조 번 질문 하나에 필요한 연산",
+      "layout": "stats",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e05-compute",
+      "title": "연산 — 짧은 질문 vs 일반 작업",
+      "copy": "실제 서비스는 시스템 프롬프트와 요구사항이 더해져 입력이 훨씬 길다",
+      "layout": "table",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e05-memory",
+      "title": "메모리와 시간",
+      "copy": "GPU 16장 기준",
+      "layout": "table",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "stats",
+    "table"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#e05",
+    "chapter": "bonus",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

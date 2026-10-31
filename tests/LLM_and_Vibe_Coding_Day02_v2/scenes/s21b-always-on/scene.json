@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "id": "scn_f467fbca7d45",
+  "name": "21-2. 상시 비서",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "상시 비서",
+    "goal": "04 특이점 — 강의안 S21B",
+    "audience": "중학생 이상 일반인",
+    "message": "상시 비서",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s21b-muse-surge",
+      "title": "뮤즈, 기록적인 흥행",
+      "copy": "2026.09.08 Meta 출시 · 미국·캐나다 한정 · 저커버그 “제품-시장 적합성 확인, 새로운 국면”\n1,090만 회 출시 40일 만의 다운로드(미국 1,020만) — 앱스토어 1위, 같은 기간 ChatGPT의 약 2.8배\n1,000만 명+ 출시 6주 만에 사용을 시작한 사람(Meta 발표) — 일일 활성 사용자 약 250만(Sensor Tower)\n25% + 주간 활성 사용자 중 쇼핑에 쓰는 비율 — 뮤즈 최다 사용처 (다음은 생산성·창작)\n$200 + 뮤즈로 한 번 사면 쓰는 평균 금액 — Meta는 거래 수수료로 수익화 계획",
+      "layout": "stats",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s21b-four-way",
+      "title": "클로드 듀엣 합류, 4파전",
+      "copy": "2026.10.21 Anthropic 발표 — 출시 10주 만에 상시 비서가 4곳으로",
+      "layout": "table",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s21b-agent-era",
+      "title": "독립형 에이전트 시대가 열린다",
+      "copy": "강력해진 LLM 위에서 개인과 기업이 “내 에이전트”를 갖는 시장\n개인 · 비서실장을 갖는다 쇼핑·일정·메일처럼 잡무를 맡기고 승인만 한다. 뮤즈에서는 주간 사용자 4명 중 1명 이상이 이미 쇼핑을 맡기는 중\n기업 · 업무 단위로 위임한다 소규모 사업자·팀이 운영·영업·보고서를 에이전트에 맡긴다. Gartner 전망: 2026년 말 기업 앱 40%에 에이전트 탑재(2025년 5% 미만). Meta는 소상공인 5억 곳을 겨냥\n에이전트끼리 거래한다 내 에이전트가 기업의 에이전트와 직접 협상·주문한다. 웹사이트를 사람이 돌아다니는 일이 줄고, 수수료 모델이 새로 생긴다\n남은 과제 · 신뢰와 보안 도입한 조직은 아직 17%, 에이전트 프로젝트 40%+는 2027년까지 중단 전망(Gartner). 뮤즈는 개인정보 노출 지적으로 일부 기능을 멈췄다. 승인 게이트가 핵심",
+      "layout": "cards",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "stats",
+    "table",
+    "cards"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s21b",
+    "chapter": "ch04",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

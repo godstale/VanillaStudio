@@ -1,0 +1,34 @@
+{
+  "name": "slide-template",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/ascii-cwd.mjs vite",
+    "build": "node scripts/ascii-cwd.mjs vite build",
+    "check:scene": "node scripts/ascii-cwd.mjs node scripts/check-scene.mjs",
+    "vanilla": "node scripts/ascii-cwd.mjs node scripts/vanilla-agent.mjs",
+    "play": "node scripts/ascii-cwd.mjs vite --open play.html",
+    "preview": "node scripts/ascii-cwd.mjs vite preview --open play.html",
+    "dist": "node scripts/pack-workspace.mjs"
+  },
+  "dependencies": {
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@fontsource/playfair-display": "^5.3.0",
+    "@react-three/fiber": "^9.8.1",
+    "@vanilla/runtime": "link:./vanilla/runtime",
+    "pretendard": "1.3.9",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "three": "^0.179.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@types/three": "^0.179.0",
+    "@vitejs/plugin-react": "^4.6.0",
+    "typescript": "~5.8.3",
+    "vite": "^7.0.4"
+  }
+}

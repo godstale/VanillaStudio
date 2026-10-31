@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "id": "scn_ff43bc5ed86c",
+  "name": "E3. 생각의 원리: 맥락과 지식",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "맥락과 지식",
+    "goal": "+ 생각의 원리 — 강의안 E03",
+    "audience": "중학생 이상 일반인",
+    "message": "조각에 비유하면, 대충 잘린 돌을 여러 각도에서 살피며 스케치하는 단계",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "e03-attention",
+      "title": "Step 2 · 맥락 — Attention",
+      "copy": "기계가 맥락을 이해하는 가장 근본적인 방법\n한 단어가 문장의 다른 단어들과 어떤 관련이 있는지 평가\n평가 결과를 반영해 의미를 바꾼다 — 사전적 의미 → 문맥이 반영된 의미\n문법·인과·감정·시간·장소… 여러 관점에서 동시에 수행하고 결과를 합친다\n조각에 비유하면, 대충 잘린 돌을 여러 각도에서 살피며 스케치하는 단계",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e03-ffn",
+      "title": "지식과 반복",
+      "copy": "조각가는 대리석을 단 한 번의 손질로 완성하지 않는다",
+      "layout": "compare",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "split",
+    "compare"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#e03",
+    "chapter": "bonus",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "id": "scn_60c64d7e443d",
+  "name": "E2. 생각의 원리: 단어의 분해",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "단어의 분해",
+    "goal": "+ 생각의 원리 — 강의안 E02",
+    "audience": "중학생 이상 일반인",
+    "message": "단어의 분해",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "e02-twenty-1",
+      "title": "스무고개로 만드는 단어의 지도 (1/9)",
+      "copy": "Step 1 · 문장을 잘게 쪼개고, 각 단어의 뜻을 숫자로\n스무고개의 질문 하나 = 차원(Dimension)\n답의 강도를 −1.0 ~ +1.0 사이 숫자로\n질문이 4,096개면 4,096차원의 숫자 묶음\n단어를 숫자 목록으로 바꾼 것 = 벡터 · 임베딩\n생물인가요? 0.9",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e02-twenty-2",
+      "title": "스무고개로 만드는 단어의 지도 (2/9)",
+      "copy": "식물인가요? -0.8",
+      "layout": "split",
+      "enter": "reveal",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e02-twenty-3",
+      "title": "스무고개로 만드는 단어의 지도 (3/9)",
+      "copy": "포유류인가요? 0.9",
+      "layout": "split",
+      "enter": "reveal",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e02-twenty-4",
+      "title": "스무고개로 만드는 단어의 지도 (4/9)",
+      "copy": "네 발로 걷나요? -0.8",
+      "layout": "split",
+      "enter": "reveal",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e02-twenty-5",
+      "title": "스무고개로 만드는 단어의 지도 (5/9)",
+      "copy": "사람인가요? 0.85",
+      "layout": "split",
+      "enter": "reveal",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e02-twenty-6",
+      "title": "스무고개로 만드는 단어의 지도 (6/9)",
+      "copy": "남자인가요? 1",
+      "layout": "split",
+      "enter": "reveal",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e02-twenty-7",
+      "title": "스무고개로 만드는 단어의 지도 (7/9)",
+      "copy": "리더인가요? 1",
+      "layout": "split",
+      "enter": "reveal",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e02-twenty-8",
+      "title": "스무고개로 만드는 단어의 지도 (8/9)",
+      "copy": "국가를 다스리나요? 0.85",
+      "layout": "split",
+      "enter": "reveal",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e02-twenty-9",
+      "title": "스무고개로 만드는 단어의 지도 (9/9)",
+      "copy": "나이가 많나요? 0.85",
+      "layout": "split",
+      "enter": "reveal",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e02-morph-1",
+      "title": "벡터를 움직이면 뜻이 바뀐다 (1/3)",
+      "copy": "이제 단어를 수학으로 다룰 수 있다 — 조각가의 끌과 망치\n국왕의 성별 값을 음수로 → 여왕에 가까워진다\n나이와 통치를 줄이면 → 왕자에 가까워진다\n각 차원의 값을 바꾸면 단어의 의미가 바뀐다\n국왕",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e02-morph-2",
+      "title": "벡터를 움직이면 뜻이 바뀐다 (2/3)",
+      "copy": "여왕",
+      "layout": "split",
+      "enter": "reveal",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e02-morph-3",
+      "title": "벡터를 움직이면 뜻이 바뀐다 (3/3)",
+      "copy": "왕자",
+      "layout": "split",
+      "enter": "reveal",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "split"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#e02",
+    "chapter": "bonus",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}
