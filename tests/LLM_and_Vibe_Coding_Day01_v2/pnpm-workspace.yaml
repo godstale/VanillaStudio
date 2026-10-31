@@ -1,0 +1,14 @@
+# pnpm v11+ supply-chain policy for class-distribution workspaces (D-041).
+# Transitive DB packages (e.g. caniuse-lite via browserslist) are published every
+# few days, so a fresh `pnpm install` often resolves a version younger than the
+# default 24h gate and fails with ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION unless
+# the recipient passes an extra flag. Class PCs must work with plain
+# `pnpm install`, so the age gate is disabled here. No direct dependency is
+# affected: this only controls how young a resolved version may be.
+minimumReleaseAge: 0
+# NOTE (D-043): no `allowBuilds` entry on purpose. esbuild's postinstall is a
+# validation-only script and crashes under a non-ASCII cwd (exit 3221225477);
+# pre-approving it (`esbuild: true`) would break `pnpm install` on 한글 paths
+# (postinstall failure aborts bin linking). The platform binary comes from the
+# `@esbuild/<platform>` optional dependency, so skipping the script is safe and
+# `pnpm install` exits 0 with only an "Ignored build scripts" notice.

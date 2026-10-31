@@ -1,0 +1,81 @@
+<!-- vanilla:generated scene-hash=205100558035bda6be5ee0090a23a07a47f151c5f2c8a828a93e4aa1769790d2 body-hash=be66cc67bf0f328cc125f80fbb8e35624d8d08e766b7d2ba850586cb3d5f9af7 -->
+# 20. 프런티어 랩의 등장 — Guide
+
+Generated from `scene.json` for workspace "LLM_and_Vibe_Coding_Day01_v2". Read-only: change the scene in the app or in `scene.json`, not here.
+
+Template: opus-narrative-deck@1 · Type: static · Status: generated
+
+## Brief
+
+- **subject**: 프런티어 랩의 등장
+- **goal**: 07 프런티어 경쟁 — 강의안 S20
+- **audience**: 중학생 이상 일반인
+- **message**: 프런티어 경쟁
+- **language**: ko
+
+## Page
+
+- **mode**: steps
+- **layout**: keynote-16x9
+
+## Sections
+
+- divider
+- timeline
+- stats
+
+## Steps
+
+- **s20-divider** 프런티어 랩의 등장 — advance: `key:ArrowRight`, enter: fade
+  - copy: 70년의 기술이 하나의 대화창으로
+프런티어 경쟁
+- **s20-rlhf** 사람이 직접 가르치다 — advance: `key:ArrowRight`, enter: fade
+  - copy: GPT-3는 질문을 반복하거나, 틀리거나, 해로운 말을 하기도 했다
+2017 둘 중 나은 쪽 고르기 사람이 두 동작 중 나은 쪽을 고르는 방식으로 가상 로봇을 학습
+방법 RLHF · 사람 피드백 강화 학습 사람이 모범 답안을 제시 → 모델이 내놓은 답에 순위를 매겨 학습
+2022.03 InstructGPT 훨씬 작은 모델의 대답을 사람들이 GPT-3 같은 대형 모델보다 선호
+- **s20-chatgpt** 2022.11 ChatGPT — advance: `key:ArrowRight`, enter: fade
+  - copy: GPT-3.5 계열을 대화에 맞게 수정 · 무료 · 가입 후 바로 사용
+내부에서는 ‘연구용 미리보기’ 정도였다 — 구글은 코드 레드
+5 일 사용자 100만 명
+2 개월 월간 사용자 약 1억 명(추정) — 가장 빠르게 큰 소비자 서비스
+70 년 기술이 집약된 대화창에 사람들이 반응했다
+- **s20-2023** 2023 · LLM 경쟁의 시작 — advance: `key:ArrowRight`, enter: fade
+  - copy: 2023.01 MS 대규모 추가 투자 새로운 LLM 경쟁의 시작
+2023.02 메타 LLaMA 연구자들에게 공개 → 한 달 만에 가중치가 유출되며 전 세계로
+2023.03 GPT-4 사진도 이해, 웹사이트 코딩, 변호사 모의시험 상위 10% — 크기·학습법 비공개
+2023.03 Anthropic Claude OpenAI 출신 연구자들 — 안전 우선
+2023.07 Llama 2 공식 공개 — 전 세계 개발자들의 다양한 변형 버전
+2023.11 OpenAI 내홍 샘 올트먼 해임과 복귀
+2023.12 구글 Gemini 구글 브레인과 딥마인드를 한 팀으로 합친 뒤 내놓은 모델
+- **s20-2024** 2024 · 멀티모달과 추론 — advance: `key:ArrowRight`, enter: fade
+  - copy: 2024.02 Sora · Gemini 1.5 텍스트→동영상 / 100만 토큰 컨텍스트
+2024.03 Claude 3 6월 Claude 3.5 Sonnet
+2024.04 Llama 3 메타의 3세대 공개 모델
+2024.05 GPT-4o 멀티모달 기능 통합
+2024.08 EU AI Act 발효 세계 첫 포괄적 AI 규제법
+2024.09 OpenAI o1 thinking 모드(CoT) — 크기가 아니라 추론을 강화해 성능 향상
+2024.10 노벨상 물리학상 홉필드·힌턴, 화학상 하사비스·점퍼·베이커
+2024.10 Computer Use Anthropic — AI가 화면을 보고 마우스·키보드를 조작
+2024.12 o3 · DeepSeek V3 ARC-AGI 고득점 / R1의 기반 모델
+
+## Breakpoints
+
+- 1920x1080
+
+## Accessibility
+
+- wcag-aa-contrast
+- keyboard-nav
+
+## References
+
+_(empty)_
+
+## User prompt
+
+_(empty)_
+
+## Fields you may fill
+
+`mode`, `steps`, `sections`, `layout`, `breakpoints`, `accessibility`, `status`

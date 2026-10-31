@@ -1,0 +1,511 @@
+{
+  "version": 1,
+  "workspaceId": "ws_ec86fb7a89a8e94b",
+  "id": "seq_main",
+  "mode": "linear",
+  "nodes": [
+    {
+      "sceneId": "scn_2c75c92e3237",
+      "pos": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "sceneId": "scn_593e82986d68",
+      "pos": {
+        "x": 320,
+        "y": 0
+      }
+    },
+    {
+      "sceneId": "scn_b830f3494922",
+      "pos": {
+        "x": 640,
+        "y": 0
+      }
+    },
+    {
+      "sceneId": "scn_a89258998560",
+      "pos": {
+        "x": 960,
+        "y": 0
+      }
+    },
+    {
+      "sceneId": "scn_6ef4df80f787",
+      "pos": {
+        "x": 1280,
+        "y": 0
+      }
+    },
+    {
+      "sceneId": "scn_ce5ca81a7f8b",
+      "pos": {
+        "x": 1600,
+        "y": 0
+      }
+    },
+    {
+      "sceneId": "scn_90e41e3a6189",
+      "pos": {
+        "x": 1920,
+        "y": 0
+      }
+    },
+    {
+      "sceneId": "scn_2ff488b89c42",
+      "pos": {
+        "x": 0,
+        "y": 220
+      }
+    },
+    {
+      "sceneId": "scn_89e2e65bb556",
+      "pos": {
+        "x": 320,
+        "y": 220
+      }
+    },
+    {
+      "sceneId": "scn_748d59403105",
+      "pos": {
+        "x": 640,
+        "y": 220
+      }
+    },
+    {
+      "sceneId": "scn_290606b5d86e",
+      "pos": {
+        "x": 960,
+        "y": 220
+      }
+    },
+    {
+      "sceneId": "scn_b0a7a7b04c57",
+      "pos": {
+        "x": 1280,
+        "y": 220
+      }
+    },
+    {
+      "sceneId": "scn_3036b5408f47",
+      "pos": {
+        "x": 1600,
+        "y": 220
+      }
+    },
+    {
+      "sceneId": "scn_a045c3e53bfd",
+      "pos": {
+        "x": 1920,
+        "y": 220
+      }
+    },
+    {
+      "sceneId": "scn_dbe7972942d9",
+      "pos": {
+        "x": 0,
+        "y": 440
+      }
+    },
+    {
+      "sceneId": "scn_3749cccdf600",
+      "pos": {
+        "x": 320,
+        "y": 440
+      }
+    },
+    {
+      "sceneId": "scn_0844e822c99b",
+      "pos": {
+        "x": 640,
+        "y": 440
+      }
+    },
+    {
+      "sceneId": "scn_951b0d36801e",
+      "pos": {
+        "x": 960,
+        "y": 440
+      }
+    },
+    {
+      "sceneId": "scn_b87cf4b582ab",
+      "pos": {
+        "x": 1280,
+        "y": 440
+      }
+    },
+    {
+      "sceneId": "scn_869922e21e78",
+      "pos": {
+        "x": 1600,
+        "y": 440
+      }
+    },
+    {
+      "sceneId": "scn_061daff4c0ae",
+      "pos": {
+        "x": 1920,
+        "y": 440
+      }
+    },
+    {
+      "sceneId": "scn_467fc7f07d24",
+      "pos": {
+        "x": 0,
+        "y": 660
+      }
+    },
+    {
+      "sceneId": "scn_8fb5ee07edcf",
+      "pos": {
+        "x": 320,
+        "y": 660
+      }
+    },
+    {
+      "sceneId": "scn_ca2cf167fb46",
+      "pos": {
+        "x": 640,
+        "y": 660
+      }
+    },
+    {
+      "sceneId": "scn_f467fbca7d45",
+      "pos": {
+        "x": 960,
+        "y": 660
+      }
+    },
+    {
+      "sceneId": "scn_ac5e13e15c7d",
+      "pos": {
+        "x": 1280,
+        "y": 660
+      }
+    },
+    {
+      "sceneId": "scn_494192d9bb75",
+      "pos": {
+        "x": 1600,
+        "y": 660
+      }
+    },
+    {
+      "sceneId": "scn_77f9a0f09c52",
+      "pos": {
+        "x": 1920,
+        "y": 660
+      }
+    },
+    {
+      "sceneId": "scn_4528edb9f6f8",
+      "pos": {
+        "x": 0,
+        "y": 2100
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "scn_2c75c92e3237",
+      "to": "scn_593e82986d68",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 600,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_593e82986d68",
+      "to": "scn_b830f3494922",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_b830f3494922",
+      "to": "scn_a89258998560",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_a89258998560",
+      "to": "scn_6ef4df80f787",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_6ef4df80f787",
+      "to": "scn_ce5ca81a7f8b",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_ce5ca81a7f8b",
+      "to": "scn_90e41e3a6189",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_90e41e3a6189",
+      "to": "scn_2ff488b89c42",
+      "trigger": "end",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_2ff488b89c42",
+      "to": "scn_89e2e65bb556",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_89e2e65bb556",
+      "to": "scn_748d59403105",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_748d59403105",
+      "to": "scn_290606b5d86e",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_290606b5d86e",
+      "to": "scn_b0a7a7b04c57",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_b0a7a7b04c57",
+      "to": "scn_3036b5408f47",
+      "trigger": "end",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_3036b5408f47",
+      "to": "scn_a045c3e53bfd",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_a045c3e53bfd",
+      "to": "scn_dbe7972942d9",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_dbe7972942d9",
+      "to": "scn_3749cccdf600",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_3749cccdf600",
+      "to": "scn_0844e822c99b",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_0844e822c99b",
+      "to": "scn_951b0d36801e",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_951b0d36801e",
+      "to": "scn_b87cf4b582ab",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_b87cf4b582ab",
+      "to": "scn_869922e21e78",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_869922e21e78",
+      "to": "scn_061daff4c0ae",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_061daff4c0ae",
+      "to": "scn_467fc7f07d24",
+      "trigger": "end",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_467fc7f07d24",
+      "to": "scn_8fb5ee07edcf",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_8fb5ee07edcf",
+      "to": "scn_ca2cf167fb46",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_ca2cf167fb46",
+      "to": "scn_f467fbca7d45",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_f467fbca7d45",
+      "to": "scn_ac5e13e15c7d",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_ac5e13e15c7d",
+      "to": "scn_494192d9bb75",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_494192d9bb75",
+      "to": "scn_77f9a0f09c52",
+      "trigger": "end",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    }
+  ],
+  "start": "scn_2c75c92e3237"
+}

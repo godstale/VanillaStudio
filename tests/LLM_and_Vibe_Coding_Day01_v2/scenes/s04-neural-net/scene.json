@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "id": "scn_2cd6e871f649",
+  "name": "04. 신경망",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "신경망",
+    "goal": "02 뇌를 닮은 기계 — 강의안 S04",
+    "audience": "중학생 이상 일반인",
+    "message": "뇌를 닮은 기계",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s04-divider",
+      "title": "신경망",
+      "copy": "LLM의 시작은 인간의 뇌에 대한 관찰에서\n뇌를 닮은 기계",
+      "layout": "divider",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s04-brain",
+      "title": "척척박사보다 대단한 것",
+      "copy": "LLM은 모르는 게 없는 척척박사 같다. 하지만…\n그래서 LLM의 시작은 인간의 뇌에 대한 관찰에서 출발했다",
+      "layout": "compare",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s04-neuron",
+      "title": "뉴런과 시냅스",
+      "copy": "뇌를 이루는 기본 단위\n우리 뇌에는 약 1000억 개의 뉴런(신경 세포)\n1800년대 후반의 논쟁: 뉴런은 하나로 이어진 융합체인가, 서로 떨어져 있는가?\n뉴런 사이의 틈 = 시냅스(synapse)\n전기 신호는 도파민·세로토닌 같은 신경전달물질로 틈을 건넌다\n수많은 뉴런-시냅스의 연결, 그리고 신호 전달 세기의 조합이 복잡한 사고를 만든다",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "divider",
+    "compare",
+    "split"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s04",
+    "chapter": "ch02",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

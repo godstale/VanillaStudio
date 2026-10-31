@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "id": "scn_a045c3e53bfd",
+  "name": "12. Thinking Effort",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "Thinking Effort",
+    "goal": "03 에이전트의 날갯짓 — 강의안 S12",
+    "audience": "중학생 이상 일반인",
+    "message": "고급 모델은 medium · 중급 모델은 high · 단순 작업은 low",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s12-effort",
+      "title": "사고 강도 (Thinking Effort)",
+      "copy": "어느 수준으로 추론해야 할지는 사용자의 몫\n현재의 에이전트들은 작업 시작 전 기본적으로 추론 과정을 수행\n/effort low · medium · high — 강도가 높을수록 여러 가설을 검토한 후 행동\n복잡한 문제에 적합하지만 더 오랜 시간과 토큰 비용을 소모",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s12-model",
+      "title": "모델 등급 × 추론 강도",
+      "copy": "LLM 모델과 작업에 따라 다르게 적용\n고급 모델은 medium · 중급 모델은 high · 단순 작업은 low",
+      "layout": "compare",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s12-models",
+      "title": "주요 LLM 제공사 모델",
+      "copy": "고성능 · 중간 · 빠른 모델로 나눠 보면",
+      "layout": "table",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s12-question",
+      "title": "Thinking Effort",
+      "copy": "다음 이야기로 이어지는 개발자들의 의문\n“어, 그런데 MCP 를 덕지덕지 붙여 쓰다보니\n너무 느려지는데?”",
+      "layout": "statement",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "split",
+    "compare",
+    "table",
+    "statement"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s12",
+    "chapter": "ch03",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

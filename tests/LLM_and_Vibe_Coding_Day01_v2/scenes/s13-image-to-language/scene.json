@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "id": "scn_50f7448c20d9",
+  "name": "13. 이미지에서 언어로",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "이미지에서 언어로",
+    "goal": "05 언어와 생성, 그리고 깊이 — 강의안 S13",
+    "audience": "중학생 이상 일반인",
+    "message": "언어와 생성, 그리고 깊이",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s13-divider",
+      "title": "이미지에서 언어로",
+      "copy": "단어를 어떻게 데이터로 표현할 것인가?\n언어와 생성, 그리고 깊이",
+      "layout": "divider",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s13-word2vec",
+      "title": "이미지에서 언어로",
+      "copy": "이미지는 그 자체가 실체적인 데이터, 단어는 추상적인 개념\n2013 · Word2Vec\n토마스 미콜로프 팀\n“단어의 뜻은 그 단어와 어울리는 주변 단어들을 보면 알 수 있다”\n신경망이 방대한 글을 읽으며 단어의 지도를 그렸다\n스무고개처럼 다양한 질문(관점)으로 각 단어를 수치화",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s13-sentence",
+      "title": "단어 다음은 문장",
+      "copy": "어색한 번역투는 문장을 쪼개고 조각을 짝짓던 방식에서 나왔다\n2014 Seq2Seq 일리야 수츠케버와 동료들 — 문장 전체를 하나의 의미로 압축한 뒤 통째로 재구성\n2014 Attention 몬트리올 요슈아 벤지오 연구실, 드미트리 바다나우 — 요약본만 보지 말고 원문을 다시 보자. 지금 옮길 단어와 관련된 부분에 더 눈길을\n2016 구글 신경망 번역 구글 번역이 규칙 기반에서 신경망으로 — 훨씬 자연스러워진 번역",
+      "layout": "timeline",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "divider",
+    "split",
+    "timeline"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s13",
+    "chapter": "ch05",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

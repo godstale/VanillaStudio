@@ -1,0 +1,252 @@
+{
+  "version": 1,
+  "id": "scn_ee31a77d114d",
+  "name": "00. 인트로 — Motion Reel",
+  "template": "commercial@1",
+  "brief": {
+    "subject": "LLM과 AI 산업의 이해 — Day 01 인트로",
+    "goal": "s01 직전 15초 오프닝 모션 릴: 강의의 흐름(뉴런 → 형태 → 깊이 → 어텐션 → 토큰 → 프롬프트 → 스케일)을 9컷으로 예고",
+    "audience": "중학생 이상 일반인",
+    "message": "언어모델(LLM)과 AI 산업의 이해",
+    "language": "ko",
+    "mediaIntent": "motion"
+  },
+  "type": "motion",
+  "duration": {
+    "seconds": 15.000
+  },
+  "creativeMode": [
+    "kinetic-typography",
+    "motion-design-reel"
+  ],
+  "structure": "multi-shot",
+  "adStructure": "typography-led",
+  "brandVoice": [
+    "bold",
+    "energetic",
+    "minimal"
+  ],
+  "visualStyle": {
+    "medium": "2D vector motion graphics (SVG): flat Swiss color fields, geometric shape motifs, a projected 3D cube, halftone dots",
+    "lighting": "Flat solid color field per shot (reel-* tokens); no gradients",
+    "typography": "Archivo Black for Latin display, Pretendard 900 for the Korean title, Playfair Display Italic accent, JetBrains Mono four-corner HUD",
+    "density": "One idea per shot, big type, generous negative space",
+    "cameraFeeling": "Locked frame; hard cuts on the beat, elements whip in with directional motion blur",
+    "mood": "Punchy, crafted, energetic"
+  },
+  "motionVocabulary": {
+    "typography": [
+      "slam-in",
+      "whip-in",
+      "clip-reveal",
+      "hud-type-on"
+    ],
+    "object": [
+      "ball-bounce",
+      "shape-morph",
+      "cube-split",
+      "halftone-ring",
+      "ribbon-draw",
+      "toggle-click",
+      "sun-spin",
+      "orbit"
+    ],
+    "camera": [
+      "locked"
+    ],
+    "material": [
+      "motion-blur"
+    ],
+    "transition": [
+      "hard-cut",
+      "color-field-cut"
+    ]
+  },
+  "beats": [
+    {
+      "id": "signal",
+      "start": 0.000,
+      "end": 1.750,
+      "role": "hook",
+      "copy": "",
+      "visual": "Black field: a cream line draws, a red ball drops and bounces with a dotted trail — a neuron's signal",
+      "motion": [
+        "ball bounce",
+        "squash & stretch",
+        "dotted trail"
+      ],
+      "camera": "locked",
+      "transitionOut": "cut",
+      "notes": "HUD bottom-left: 01  SIGNAL."
+    },
+    {
+      "id": "type",
+      "start": 1.750,
+      "end": 3.500,
+      "role": "brand",
+      "copy": "MAKE / IT / THINK.",
+      "visual": "Red field: MAKE slams in from the right, IT (cream) follows, THINK. whips in from the left; the cream dot pops",
+      "motion": [
+        "slam-in",
+        "motion blur"
+      ],
+      "camera": "locked",
+      "transitionOut": "cut",
+      "notes": "HUD bottom-left: 02  TYPE."
+    },
+    {
+      "id": "form",
+      "start": 3.500,
+      "end": 5.000,
+      "role": "proof",
+      "copy": "",
+      "visual": "Cream field: a red square morphs to a cross, then a hexagon, with blue/yellow ghosts and an annotated bounding box — a perceptron's shape",
+      "motion": [
+        "shape morph",
+        "ghost offset"
+      ],
+      "camera": "locked",
+      "transitionOut": "cut",
+      "notes": "HUD bottom-left: 03  FORM."
+    },
+    {
+      "id": "depth",
+      "start": 5.000,
+      "end": 6.750,
+      "role": "proof",
+      "copy": "",
+      "visual": "Blue field: a 2×2×2 cube spins, splits into cubelets with black seams, then scatters with motion blur — deep layers",
+      "motion": [
+        "3d rotate",
+        "split",
+        "scatter"
+      ],
+      "camera": "locked",
+      "transitionOut": "cut",
+      "notes": "HUD bottom-left: 04  DEPTH."
+    },
+    {
+      "id": "attention",
+      "start": 6.750,
+      "end": 8.000,
+      "role": "proof",
+      "copy": "",
+      "visual": "Black field: a halftone ring breathes and turns; a few red dots light up across the grid — attention",
+      "motion": [
+        "halftone ring",
+        "accent sparkle"
+      ],
+      "camera": "locked",
+      "transitionOut": "cut",
+      "notes": "HUD bottom-left: 05  ATTENTION."
+    },
+    {
+      "id": "flow",
+      "start": 8.000,
+      "end": 9.250,
+      "role": "proof",
+      "copy": "",
+      "visual": "Black field: two striped ribbons (red/pink/cream, yellow/blue) snake across the frame — tokens flowing",
+      "motion": [
+        "ribbon draw"
+      ],
+      "camera": "locked",
+      "transitionOut": "cut",
+      "notes": "HUD bottom-left: 06  FLOW."
+    },
+    {
+      "id": "prompt",
+      "start": 9.250,
+      "end": 10.750,
+      "role": "proof",
+      "copy": "",
+      "visual": "Cream field: a cursor flies in and clicks a toggle; it turns red with a ripple — the prompt moment",
+      "motion": [
+        "cursor click",
+        "toggle"
+      ],
+      "camera": "locked",
+      "transitionOut": "cut",
+      "notes": "HUD bottom-left: 07  PROMPT."
+    },
+    {
+      "id": "scale",
+      "start": 10.750,
+      "end": 12.000,
+      "role": "proof",
+      "copy": "",
+      "visual": "Yellow field: a black-rayed sun spins out of a red core; cut to blue: a planet with two tilted orbits and fast moons — scale",
+      "motion": [
+        "rays spin",
+        "orbit",
+        "motion blur"
+      ],
+      "camera": "locked",
+      "transitionOut": "cut",
+      "notes": "HUD bottom-left: 08  SCALE."
+    },
+    {
+      "id": "title",
+      "start": 12.000,
+      "end": 15.000,
+      "role": "end-card",
+      "copy": "LLM과 AI / 산업의 이해 Day 01.",
+      "visual": "Cream field: Korean title lines whip in from both sides, the italic serif 'Day 01' reveals, the red ball from shot 1 drops in as the full stop; rule and footer type in",
+      "motion": [
+        "whip-in",
+        "clip-reveal",
+        "ball-drop"
+      ],
+      "camera": "locked",
+      "transitionOut": "crossfade",
+      "notes": "HUD bottom-left: 09  FIN. Hold from 14.0 s; nothing new appears after 13.9 s."
+    }
+  ],
+  "copy": {
+    "textFidelity": "exact",
+    "items": []
+  },
+  "identity": {
+    "product": "LLM Day1 강의 덱",
+    "character": "",
+    "mustKeep": [
+      "red ball returns as the title's full stop",
+      "reel-* color tokens only",
+      "four-corner mono HUD"
+    ]
+  },
+  "endCard": {
+    "holdSeconds": 1.000,
+    "elements": [
+      "LLM과 AI / 산업의 이해 (Pretendard 900)",
+      "Day 01 (serif italic) + red dot",
+      "footer row"
+    ]
+  },
+  "audio": {
+    "voiceOver": null,
+    "soundDesign": "Bounce plucks under the signal, impact on the first cut, a slam per word, ticks on the morph, whooshes on the cube split/scatter, sparkles for attention, swish for the ribbons, a click for the toggle, sun impact, riser into the title impact, a kick + bell when the ball lands",
+    "music": "Procedural Web Audio (code, no samples, no generative AI): 120 BPM kick/clap/hat groove with bass and stabs, Am – F – C – G – Am – Dm – E, resolving on A major under the title. Rendered offline from a fixed seed and played in sync with the scene clock."
+  },
+  "constraints": {
+    "avoid": [
+      "generative imagery",
+      "raw colors",
+      "GSAP",
+      "subtitles or narration"
+    ],
+    "noUnspecifiedElements": true
+  },
+  "custom": {
+    "contentRef": "storyboard/data/content.json#intro",
+    "style": "shared/reel",
+    "reference": "https://claudevideo.org/videos/bold-type-and-a-spinning-cube-in-a-15-second-motion-reel"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

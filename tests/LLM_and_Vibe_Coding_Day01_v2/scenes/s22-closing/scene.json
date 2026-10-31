@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "id": "scn_dc3c29d530c0",
+  "name": "22. 맺음말",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "맺음말",
+    "goal": "08 맺음말 — 강의안 S22",
+    "audience": "중학생 이상 일반인",
+    "message": "맺음말",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s22-porter",
+      "title": "맺음말",
+      "copy": "네팔의 짐꾼들과 사람의 역할\n차도 닿지 않는 히말라야의 험준한 마을들\n그곳을 잇는 짐꾼은 당나귀와 야크만이 아니다\n짐승으로 옮길 수 없는 짐과 길이라면\n사람도 그 역할을 한다",
+      "layout": "photo",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "photo"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s22",
+    "chapter": "ch08",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

@@ -24,5 +24,11 @@ Docs/images/
 !resources/workspace-template/.vanilla/
 !resources/workspace-template/.vanilla/**
 
-# Lecture-deck trial workspaces (local only)
-tests/LLM_and_Vibe_Coding*/
+# Lecture-deck trial workspaces (local only); the *_v2 decks are shared
+tests/LLM_and_Vibe_Coding/
+tests/LLM_and_Vibe_Coding_Day01/
+tests/LLM_and_Vibe_Coding_Day02/
+# Third-party images in the shared decks are kept locally only (copyright)
+tests/LLM_and_Vibe_Coding_Day0*_v2/assets/img/
+tests/LLM_and_Vibe_Coding_Day0*_v2/references/images/
+tests/LLM_and_Vibe_Coding_Day0*_v2/references/template-design/

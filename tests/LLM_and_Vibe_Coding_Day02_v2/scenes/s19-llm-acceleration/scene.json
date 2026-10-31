@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "id": "scn_467fc7f07d24",
+  "name": "19. LLM 가속",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "LLM 가속",
+    "goal": "04 특이점 — 강의안 S19",
+    "audience": "중학생 이상 일반인",
+    "message": "특이점",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s19-divider",
+      "title": "LLM 가속",
+      "copy": "바이브 코딩 진화사 · 03\n특이점",
+      "layout": "divider",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s19-cadence",
+      "title": "가속화된 LLM 개발 주기",
+      "copy": "그럼에도 성능 향상폭은 가파르다\n42 개 2026년 주요 출시 (1~10월)\n38 일 Anthropic 평균 출시 간격 (2024년 116일)\n48 일 OpenAI 평균 출시 간격 (2024년 132일)",
+      "layout": "stats",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s19-interval",
+      "title": "플래그십 모델 사이 평균 간격",
+      "copy": "Anthropic 116일 → 80일 → 38일 · OpenAI 132일 → 62일 → 48일",
+      "layout": "figure",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s19-rsi",
+      "title": "재귀적 자기 개선(RSI)에 대한 의심",
+      "copy": "2026.05 기준 Anthropic 프로덕션 코드베이스에 머지되는 코드\nClaude가 작성\n80%+\nLLM이 LLM을 학습시키는 RSI 단계에 들어선 것 아니냐는 의심\n인간의 통제가 더 어려워지는 상황에 대한 우려\n2026.09.12 다리오 아모데이(앤트로픽 CEO): AI 개발 속도를 1~2년 늦추고 안전 검증에 집중하자",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "divider",
+    "stats",
+    "figure",
+    "split"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s19",
+    "chapter": "ch04",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

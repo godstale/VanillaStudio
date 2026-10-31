@@ -1,0 +1,248 @@
+/* Standalone play chrome (plain CSS: workspace-template has no Tailwind). */
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+}
+
+.vp-root {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  background: #0b0d12;
+  color: #f5f7fa;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  overflow: hidden;
+}
+
+.vp-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #232838;
+  background: #10141d;
+}
+
+.vp-title {
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 28vw;
+}
+
+.vp-select {
+  background: #1a2130;
+  color: inherit;
+  border: 1px solid #2c3547;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 13px;
+  max-width: 40vw;
+}
+
+.vp-counter {
+  font-size: 12px;
+  color: #9aa4b8;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.vp-spacer {
+  flex: 1;
+}
+
+.vp-btn {
+  background: #1a2130;
+  color: inherit;
+  border: 1px solid #2c3547;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.vp-btn:hover:not(:disabled) {
+  background: #232c40;
+}
+
+.vp-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.vp-btn-primary {
+  background: #2f6fed;
+  border-color: #2f6fed;
+  color: #fff;
+}
+
+.vp-btn-primary:hover:not(:disabled) {
+  background: #3b7bf5;
+}
+
+.vp-stagebox {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  padding: 12px;
+}
+
+.vp-empty {
+  color: #9aa4b8;
+  font-size: 14px;
+  text-align: center;
+  padding: 0 24px;
+}
+
+.vp-stage {
+  position: relative;
+  background: #000;
+  overflow: hidden;
+}
+
+.vp-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+.vp-input {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+.vp-input:focus-visible {
+  outline: 2px solid #2f6fed;
+  outline-offset: -2px;
+}
+
+.vp-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(5, 7, 12, 0.72);
+  font-size: 14px;
+}
+
+.vp-error-msg {
+  max-width: 80%;
+  overflow-wrap: anywhere;
+  color: #ff9d9d;
+  font-size: 13px;
+  text-align: center;
+}
+
+.vp-choices {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  background: rgba(5, 7, 12, 0.7);
+}
+
+.vp-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-top: 1px solid #232838;
+  background: #10141d;
+}
+
+.vp-meta {
+  font-size: 12px;
+  color: #9aa4b8;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.vp-current {
+  margin-left: auto;
+  font-size: 12px;
+  color: #9aa4b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 30vw;
+}
+
+.vp-seek {
+  flex: 1;
+  min-width: 80px;
+  accent-color: #2f6fed;
+}
+
+.vp-vol {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.vp-vol-slider {
+  width: 90px;
+  accent-color: #2f6fed;
+}
+
+.vp-help-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.vp-help {
+  max-width: min(560px, calc(100vw - 48px));
+  max-height: calc(100dvh - 48px);
+  overflow: auto;
+  background: #141a27;
+  border: 1px solid #2c3547;
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.vp-help h2 {
+  font-size: 14px;
+  margin: 12px 0 4px;
+}
+
+.vp-help h2:first-child {
+  margin-top: 0;
+}
+
+.vp-help ul {
+  margin: 0 0 12px;
+  padding-left: 20px;
+}
