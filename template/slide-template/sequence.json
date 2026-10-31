@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "workspaceId": "ws_4872fcb751dbd24e",
+  "id": "seq_main",
+  "mode": "linear",
+  "nodes": [
+    {
+      "sceneId": "scn_b36af79172e6",
+      "pos": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "sceneId": "scn_790a2769797d",
+      "pos": {
+        "x": 320,
+        "y": 0
+      }
+    },
+    {
+      "sceneId": "scn_995b21d02756",
+      "pos": {
+        "x": 640,
+        "y": 0
+      }
+    },
+    {
+      "sceneId": "scn_02e9a9aea44c",
+      "pos": {
+        "x": 960,
+        "y": 0
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "scn_b36af79172e6",
+      "to": "scn_790a2769797d",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_790a2769797d",
+      "to": "scn_995b21d02756",
+      "trigger": "key:ArrowRight",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    },
+    {
+      "from": "scn_995b21d02756",
+      "to": "scn_02e9a9aea44c",
+      "trigger": "end",
+      "transition": {
+        "type": "crossfade",
+        "durationMs": 500,
+        "easing": "ease-in-out",
+        "params": {}
+      }
+    }
+  ],
+  "start": "scn_b36af79172e6"
+}

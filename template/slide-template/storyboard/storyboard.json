@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "workspaceId": "ws_4872fcb751dbd24e",
+  "stage": "brief",
+  "brief": {
+    "title": "슬라이드 템플릿",
+    "oneLiner": "content.json 의 문구만 바꿔 키노트형 슬라이드를 만드는 시작점",
+    "mediaIntent": "slide",
+    "purpose": "새 발표용 슬라이드 프로젝트의 출발점 — 샘플 슬라이드를 내 내용으로 교체한다",
+    "inScope": [
+      "샘플 Scene 3개 + 챕터 범퍼 1개"
+    ],
+    "nonGoals": [
+      "생성형 이미지 AI",
+      "자동 넘김·반복 애니메이션"
+    ]
+  },
+  "designFlow": {
+    "narrativeArc": "(발표 흐름을 한 줄로 적으세요)",
+    "dataSchemas": [
+      {
+        "id": "content",
+        "path": "storyboard/data/content.json",
+        "description": "덱 정보·챕터·신/화면 데이터",
+        "itemCount": 3
+      },
+      {
+        "id": "items",
+        "path": "storyboard/data/items.json",
+        "description": "도식 데이터(필요할 때만)",
+        "itemCount": 0
+      }
+    ],
+    "assemblyPlan": [
+      {
+        "id": "asm_content",
+        "layer": "data",
+        "name": "shared/deck/content.ts — 타입·조회·스텝 계산·월 단위 연대",
+        "dependsOn": [],
+        "status": "done",
+        "targetPath": "shared/deck/content.ts",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_atoms",
+        "layer": "component",
+        "name": "shared/deck/atoms.tsx — Rich·Reveal·Figure·Bullets·Note",
+        "dependsOn": [
+          "asm_content"
+        ],
+        "status": "done",
+        "targetPath": "shared/deck/atoms.tsx",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_diagrams",
+        "layer": "component",
+        "name": "shared/deck/diagrams.tsx — 도식 컴포넌트(필요할 때 교체)",
+        "dependsOn": [
+          "asm_content"
+        ],
+        "status": "done",
+        "targetPath": "shared/deck/diagrams.tsx",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_layouts",
+        "layer": "component",
+        "name": "shared/deck/layouts.tsx — 레이아웃 14종",
+        "dependsOn": [
+          "asm_atoms",
+          "asm_diagrams"
+        ],
+        "status": "done",
+        "targetPath": "shared/deck/layouts.tsx",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_deck_shell",
+        "layer": "section",
+        "name": "shared/deck/DeckShell.tsx — 1920 무대·헤더·연대기 바",
+        "dependsOn": [
+          "asm_layouts"
+        ],
+        "status": "done",
+        "targetPath": "shared/deck/DeckShell.tsx",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_scenes",
+        "layer": "scene",
+        "name": "scenes/*/src/Scene.tsx (scripts/sync-deck.mjs 생성)",
+        "dependsOn": [
+          "asm_deck_shell"
+        ],
+        "status": "done",
+        "targetPath": "scenes/",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_sequence",
+        "layer": "scene",
+        "name": "sequence.json — 신 선형 연결 (sync-deck.mjs 생성)",
+        "dependsOn": [
+          "asm_scenes"
+        ],
+        "status": "done",
+        "targetPath": "sequence.json",
+        "taxonomy": []
+      }
+    ]
+  },
+  "visualDirection": {
+    "moodKeywords": [
+      "midnight navy",
+      "single amber accent",
+      "bold headline",
+      "keynote"
+    ],
+    "themeStages": [],
+    "invariants": [
+      "navy gradient + warm/cool glow",
+      "amber bar header + chapter chip",
+      "era bar (dated screens)",
+      "slate cards, paper frames for diagrams"
+    ],
+    "variables": [
+      "layout per screen",
+      "photo/diagram",
+      "highlight words",
+      "year"
+    ],
+    "selectedTaxonomy": [
+      "opus-narrative-deck@1"
+    ]
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "id": "scn_02e9a9aea44c",
+  "name": "표와 막대",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "표와 막대",
+    "goal": "02 레이아웃 둘러보기 — S03",
+    "audience": "일반 청중",
+    "message": "레이아웃 둘러보기",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s03-divider",
+      "title": "표와 막대",
+      "copy": "챕터 구분 슬라이드\n레이아웃 둘러보기",
+      "layout": "divider",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s03-table",
+      "title": "표 레이아웃",
+      "copy": "cols 는 머리글, rows 는 행입니다",
+      "layout": "table",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s03-bars",
+      "title": "막대 레이아웃",
+      "copy": "값의 크기를 막대 길이로 비교합니다\ntone 으로 막대 색을 고릅니다 (primary · accent · muted · danger)\n30 A안\n55 B안\n90 C안",
+      "layout": "bars",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s03-quote",
+      "title": "표와 막대",
+      "copy": "인용 레이아웃\n좋은 슬라이드는 말을 돕고, 말을 대신하지 않는다\n그림과 영상이 필요하면 assets/img, assets/video 에 넣고 figure, video 레이아웃을 쓰세요",
+      "layout": "quote",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "divider",
+    "table",
+    "bars",
+    "quote"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s03",
+    "chapter": "ch02",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}
