@@ -220,7 +220,7 @@ const en: Dict = {
   'switcher.stopAndSwitch': 'Stop and switch',
   'archive.pack': 'Pack workspace (.zip)',
   'archive.import': 'Load from zip file',
-  'archive.packDone': 'Packed {files} files ({size}). The recipient unzips, then runs pnpm install → pnpm play.',
+  'archive.packDone': 'Packed {files} files ({size}).\nFile: {name}\nLocation: {path}\nThe recipient unzips, then runs pnpm install → pnpm play.',
   'archive.importDone': 'Unzipped. The files come from outside, so confirm trust when prompted. Once trusted, dependencies (pnpm install) are installed automatically the first time the preview opens.',
   'archive.err.notWorkspace': 'This folder is not a workspace, so it cannot be packed.',
   'archive.err.notWorkspaceZip': 'Not a workspace zip (workspace.json is missing or invalid).',

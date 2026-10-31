@@ -33,7 +33,7 @@ export function useWorkspaceArchive(workspaceRoot: string | null, onImported: (d
     setBusy(true);
     try {
       const r = await packWorkspaceZip(workspaceRoot, out);
-      setNotice(t('archive.packDone', { files: r.files, size: fmtBytes(r.bytes) }));
+      setNotice(t('archive.packDone', { files: r.files, size: fmtBytes(r.bytes), name: baseName(r.path), path: r.path }));
     } catch (e) {
       setError(errorText(e));
     } finally {
