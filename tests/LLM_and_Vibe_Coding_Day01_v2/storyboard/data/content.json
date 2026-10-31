@@ -1,0 +1,2260 @@
+{
+  "version": 1,
+  "deck": {
+    "title": "언어모델(LLM)과 AI 산업의 이해",
+    "course": "LLM과 AI 산업의 이해 & 바이브 코딩 개론",
+    "day": 1,
+    "eraFrom": 1940,
+    "eraTo": 2026
+  },
+  "bumpers": {
+    "label": "NEXT",
+    "kicker": "CHAPTER",
+    "hud": "LLM & AI INDUSTRY — DAY 01",
+    "items": [
+      {
+        "key": "ch02",
+        "next": "s04",
+        "motif": "ball",
+        "field": "black",
+        "tag": "SIGNAL",
+        "en": "Built like a brain."
+      },
+      {
+        "key": "ch03",
+        "next": "s07",
+        "motif": "morph",
+        "field": "cream",
+        "tag": "FORM",
+        "en": "Seeing, remembering."
+      },
+      {
+        "key": "ch04",
+        "next": "s10",
+        "motif": "cube",
+        "field": "blue",
+        "tag": "DEPTH",
+        "en": "Deep, once again."
+      },
+      {
+        "key": "ch05",
+        "next": "s13",
+        "motif": "halftone",
+        "field": "red",
+        "tag": "SYSTEMS",
+        "en": "Words that create."
+      },
+      {
+        "key": "ch06",
+        "next": "s17",
+        "motif": "ribbon",
+        "field": "black",
+        "tag": "FLOW",
+        "en": "Attention is all."
+      },
+      {
+        "key": "ch07",
+        "next": "s20",
+        "motif": "sun",
+        "field": "yellow",
+        "tag": "RACE",
+        "en": "The frontier race."
+      },
+      {
+        "key": "ch08",
+        "next": "s22",
+        "motif": "orbit",
+        "field": "blue",
+        "tag": "ORBIT",
+        "en": "What comes next."
+      },
+      {
+        "key": "bonus",
+        "next": "e01",
+        "motif": "toggle",
+        "field": "cream",
+        "tag": "INTERFACE",
+        "en": "How it thinks."
+      }
+    ]
+  },
+  "chapters": [
+    {
+      "id": "ch01",
+      "no": "01",
+      "label": "먼저 온 미래"
+    },
+    {
+      "id": "ch02",
+      "no": "02",
+      "label": "뇌를 닮은 기계"
+    },
+    {
+      "id": "ch03",
+      "no": "03",
+      "label": "보고 기억하는 신경망"
+    },
+    {
+      "id": "ch04",
+      "no": "04",
+      "label": "딥러닝의 부활"
+    },
+    {
+      "id": "ch05",
+      "no": "05",
+      "label": "언어와 생성, 그리고 깊이"
+    },
+    {
+      "id": "ch06",
+      "no": "06",
+      "label": "트랜스포머와 GPT"
+    },
+    {
+      "id": "ch07",
+      "no": "07",
+      "label": "프런티어 경쟁"
+    },
+    {
+      "id": "ch08",
+      "no": "08",
+      "label": "맺음말"
+    },
+    {
+      "id": "bonus",
+      "no": "+",
+      "label": "생각의 원리"
+    }
+  ],
+  "scenes": [
+    {
+      "key": "s01",
+      "title": "알파고 쇼크",
+      "chapter": "ch01",
+      "screens": [
+        {
+          "id": "s01-cover",
+          "layout": "cover",
+          "kicker": "주말 특강 · 1일차",
+          "heading": "언어모델(LLM)과\n**AI 산업**의 이해",
+          "text": "1943년 인공 뉴런에서 2026년 프런티어 모델까지"
+        },
+        {
+          "id": "s01-before",
+          "layout": "quote",
+          "sub": "2016.03 · 이세돌 9단 vs 알파고",
+          "quote": "최소한 이번 대국은 이길 자신이 있다.",
+          "source": "대국을 앞둔 이세돌 9단",
+          "text": "“알파고가 프로 기사들과 상대하려면 2~3점을 먼저 깔고 두는 **접바둑**이 적당해 보인다.”",
+          "note": "바둑계 역시 알파고의 도전이 **이르다**는 평이 대부분이었다",
+          "figure": {
+            "src": "s01-lee-sedol.jpg",
+            "caption": "이세돌 9단 · 구글 딥마인드 챌린지 매치"
+          }
+        },
+        {
+          "id": "s01-move37",
+          "layout": "compare",
+          "sub": "결과는 알파고의 4 : 1 승리 — 승부를 가른 두 수",
+          "left": {
+            "tag": "제2국 · 알파고 37수",
+            "title": "기계의 창의적인 한 수",
+            "tone": "primary",
+            "diagram": "go-board",
+            "bullets": [
+              "인간 프로 기사가 둘 확률 **1 / 10,000**",
+              "귀퉁이가 아닌 **5선**에 툭 던진 한 수",
+              "해설자들: “알파고가 고장 났다”"
+            ]
+          },
+          "right": {
+            "tag": "제4국 · 이세돌 78수",
+            "title": "인간의 신의 한 수",
+            "tone": "accent",
+            "figure": {
+              "src": "s01-move78.jpg",
+              "paper": false
+            },
+            "bullets": [
+              "알파고가 예상한 확률도 **1 / 10,000**",
+              "중앙 **L11**에 끼워 넣은 흰 78수",
+              "알파고를 무너뜨린 이세돌의 유일한 1승"
+            ]
+          },
+          "link": "VS",
+          "note": "37수는 대국 전체를 지배한 **창의적인 수**, 78수는 그 알파고를 흔든 **인간의 한 수**였다"
+        },
+        {
+          "id": "s01-future",
+          "layout": "compare",
+          "title": "먼저 온 미래",
+          "sub": "알파고 이후, 바둑을 공부하는 방식이 완전히 바뀌었다",
+          "left": {
+            "tag": "수천 년",
+            "title": "도제식 교육",
+            "tone": "muted",
+            "bullets": [
+              "스승의 기보를 외운다",
+              "훈수를 들으며 배운다"
+            ]
+          },
+          "right": {
+            "tag": "알파고 이후",
+            "title": "AI와 함께 연구",
+            "tone": "primary",
+            "bullets": [
+              "모든 프로 기사가 컴퓨터 화면 앞으로",
+              "AI가 알려주는 **승률 그래프**를 보며 연구"
+            ]
+          },
+          "link": "공부 방식의 전환",
+          "note": "사람들은 바둑계가 겪은 이 변화를 **“먼저 온 미래”**라고 불렀다"
+        }
+      ]
+    },
+    {
+      "key": "s02",
+      "title": "먼저 온 미래",
+      "chapter": "ch01",
+      "screens": [
+        {
+          "id": "s02-coding",
+          "layout": "split",
+          "sub": "알파고 쇼크를 겪은 또 하나의 분야 — 프로그래밍",
+          "figure": {
+            "src": "s02-ai-first.png",
+            "caption": "AI First Programming"
+          },
+          "heading": "처음에는 **반신반의**",
+          "bullets": [
+            "Copilot 등장, 이른바 ‘탭 코딩’의 보급 — 그래도 AI는 **보조 수단**",
+            "“AI가 프로그래머를 대체한다고?” 많은 사람들의 의구심",
+            "OpenAI 사용자 연구 〈How People Use ChatGPT〉(2024~2025): 일상 대화·창작 글쓰기와 함께 **프로그래밍** 사용량 급증",
+            "2024년부터 본격 접목 → LLM의 발전과 함께 급속도로 성장"
+          ]
+        },
+        {
+          "id": "s02-cursor",
+          "layout": "compare",
+          "title": "엇갈린 운명",
+          "sub": "트렌드를 가장 잘 보여주는 두 사례",
+          "left": {
+            "tag": "2022 창업 · Anysphere",
+            "title": "Cursor",
+            "tone": "primary",
+            "logo": "s02-cursor.png",
+            "bullets": [
+              "MIT 출신 개발자들이 만든 AI 코드 에디터",
+              "2026.06 **600억 달러**(약 85~90조 원)에 인수"
+            ]
+          },
+          "right": {
+            "tag": "개발자들의 전통적 커뮤니티",
+            "title": "Stack Overflow",
+            "tone": "muted",
+            "logo": "s02-stackoverflow.png",
+            "logoPaper": true,
+            "bullets": [
+              "질문과 답이 AI 채팅창으로 옮겨 갔다",
+              "불과 몇 년 새 **몰락**의 길"
+            ]
+          },
+          "link": "질문이 옮겨 간 곳"
+        }
+      ]
+    },
+    {
+      "key": "s03",
+      "title": "다가올 미래",
+      "chapter": "ch01",
+      "screens": [
+        {
+          "id": "s03-fields",
+          "layout": "cards",
+          "sub": "알파고 쇼크는 이제 사회 각 분야로 번지고 있다",
+          "cols": 4,
+          "items": [
+            {
+              "title": "과학",
+              "text": "알파폴드와 노벨상"
+            },
+            {
+              "title": "수학",
+              "text": "나비에-스토크스 방정식, 리만 가설 증명"
+            },
+            {
+              "title": "법률·회계",
+              "text": "Claude·OpenAI의 법률 산업용 AI 플랫폼과 서비스 출시"
+            },
+            {
+              "title": "영상·영화·음악",
+              "text": "AI가 만든 영상과 음악, 차트에 오른 AI 창작물"
+            },
+            {
+              "title": "보안",
+              "text": "AI의 탈주, 해킹에 악용된 사례 등장"
+            },
+            {
+              "title": "게임",
+              "text": "인력 감소, 2026.06 스팀 신규 등록 게임의 **40%**가 AI 사용"
+            },
+            {
+              "title": "자동차",
+              "text": "자율주행과 개발 프로세스 혁신"
+            },
+            {
+              "title": "제약",
+              "text": "AI 신약 개발과 생산"
+            }
+          ]
+        },
+        {
+          "id": "s03-first-step",
+          "layout": "statement",
+          "figure": {
+            "src": "s03-human-vs-ai.png"
+          },
+          "kicker": "바둑과 소프트웨어 업계가 겪은 충격, 혹은 그보다 더한 영향이 사회 각 분야로",
+          "heading": "다가올 미래에 대비하는 첫걸음은\n**신경망과 언어모델**에 대한 이해"
+        }
+      ]
+    },
+    {
+      "key": "s04",
+      "title": "신경망",
+      "chapter": "ch02",
+      "screens": [
+        {
+          "id": "s04-divider",
+          "layout": "divider",
+          "kicker": "LLM의 시작은 인간의 뇌에 대한 관찰에서",
+          "heading": "뇌를 닮은 기계"
+        },
+        {
+          "id": "s04-brain",
+          "layout": "compare",
+          "title": "척척박사보다 대단한 것",
+          "sub": "LLM은 모르는 게 없는 척척박사 같다. 하지만…",
+          "left": {
+            "tag": "AI 챗 서비스",
+            "title": "LLM",
+            "tone": "muted",
+            "bullets": [
+              "어떤 질문에든 답을 해 준다",
+              "정말 대단하다"
+            ]
+          },
+          "right": {
+            "tag": "인간이 태어날 때부터 가진",
+            "title": "뇌",
+            "tone": "primary",
+            "bullets": [
+              "이미지·소리·촉각·청각·미각 신호를 처리",
+              "신체를 움직이고 고차원적인 사고",
+              "이 모든 것을 고작 **밥 한 그릇**으로"
+            ]
+          },
+          "link": "vs",
+          "note": "그래서 LLM의 시작은 **인간의 뇌에 대한 관찰**에서 출발했다"
+        },
+        {
+          "id": "s04-neuron",
+          "layout": "split",
+          "title": "뉴런과 시냅스",
+          "sub": "뇌를 이루는 기본 단위",
+          "figure": {
+            "src": "s04-neuron-synapse.jpg",
+            "paper": true,
+            "caption": "뉴런(neuron)과 시냅스(synapse)"
+          },
+          "bullets": [
+            "우리 뇌에는 약 **1000억 개**의 뉴런(신경 세포)",
+            "1800년대 후반의 논쟁: 뉴런은 하나로 이어진 융합체인가, 서로 떨어져 있는가?",
+            "뉴런 사이의 틈 = **시냅스(synapse)**",
+            "전기 신호는 도파민·세로토닌 같은 **신경전달물질**로 틈을 건넌다"
+          ],
+          "note": "수많은 뉴런-시냅스의 **연결**, 그리고 신호 전달 **세기**의 조합이 복잡한 사고를 만든다"
+        }
+      ]
+    },
+    {
+      "key": "s05",
+      "title": "퍼셉트론",
+      "chapter": "ch02",
+      "year": "1943",
+      "screens": [
+        {
+          "id": "s05-first",
+          "layout": "timeline",
+          "sub": "뇌세포를 수학으로 옮기다",
+          "year": "1943-1958",
+          "items": [
+            {
+              "date": "1943",
+              "title": "최초의 인공 뉴런",
+              "text": "신경생리학자 워런 맥컬록 + 수학자 월터 피츠 — 뇌세포의 작동 방식을 **수학 공식**으로",
+              "figures": [
+                {
+                  "src": "s05-mcculloch-pitts.webp",
+                  "caption": "워런 맥컬록(왼쪽)과 월터 피츠"
+                }
+              ]
+            },
+            {
+              "date": "1958",
+              "title": "퍼셉트론(Perceptron)",
+              "text": "심리학자 프랭크 로젠블랫 — 연결 강도(**가중치**)를 스스로 조절하며 도형을 구별하는 최초의 학습 기계",
+              "figures": [
+                {
+                  "src": "s05-rosenblatt.png",
+                  "caption": "프랭크 로젠블랫과 퍼셉트론"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s05-nyt",
+          "layout": "quote",
+          "sub": "방 하나를 가득 채운 카메라 센서와 전선 뭉치",
+          "year": "1958",
+          "quote": "곧 스스로 걷고 말하고 생각하는 기계가 나올 것",
+          "source": "1958 뉴욕타임스",
+          "text": "“우리가 개발한 인공지능은 스스로 학습해서 걷고 말하며, 보고 쓸 수 있게 될 것이다. 그리고 종국에는 자신의 존재를 인지할 것으로 기대한다.”",
+          "figure": {
+            "src": "s05-perceptron-neuron.png",
+            "paper": true,
+            "caption": "뉴런을 본뜬 퍼셉트론 — 입력 × 가중치의 합으로 출력을 정한다"
+          }
+        },
+        {
+          "id": "s05-xor",
+          "layout": "split",
+          "title": "XOR 문제",
+          "sub": "단층 퍼셉트론의 한계",
+          "year": "1969",
+          "figures": [
+            {
+              "src": "s05-xor.png",
+              "paper": true,
+              "caption": "AND · NAND · OR는 직선 하나로 나뉘지만 XOR은 나뉘지 않는다"
+            },
+            {
+              "src": "s05-slp-mlp.png",
+              "paper": true,
+              "caption": "단층 퍼셉트론과 다층 퍼셉트론"
+            }
+          ],
+          "bullets": [
+            "**XOR** 논리 문제는 단층 퍼셉트론으로 풀 수 없다",
+            "해결 방법은 층을 여러 겹 쌓은 **다층 퍼셉트론**",
+            "하지만 여러 층을 동시에 **어떻게 가르쳐야 할지** 몰랐다"
+          ]
+        },
+        {
+          "id": "s05-winter",
+          "layout": "compare",
+          "title": "첫 번째 AI 겨울",
+          "sub": "기호주의의 부흥, 연결주의의 침체",
+          "year": "1970-1980",
+          "left": {
+            "tag": "부흥",
+            "title": "기호주의",
+            "tone": "primary",
+            "bullets": [
+              "세상의 규칙·논리·지식을",
+              "**기호(Symbol)**와 **명시적인 규칙(Rule)**으로 코딩"
+            ]
+          },
+          "right": {
+            "tag": "침체",
+            "title": "연결주의",
+            "tone": "muted",
+            "bullets": [
+              "신경망의 복잡한 연결성",
+              "데이터 기반 학습과 가중치 조정",
+              "스스로 패턴을 깨닫는다"
+            ]
+          },
+          "link": "겨울"
+        }
+      ]
+    },
+    {
+      "key": "s06",
+      "title": "역전파와 두 번째 겨울",
+      "chapter": "ch02",
+      "year": "1986",
+      "screens": [
+        {
+          "id": "s06-backprop",
+          "layout": "split",
+          "sub": "1986 학술지 · 데이비드 럼멜하트 · 제프리 힌튼 · 로널드 윌리엄스",
+          "figure": {
+            "src": "s06-backprop.png",
+            "paper": true,
+            "caption": "순방향 전파와 역방향 전파"
+          },
+          "heading": "**역전파**(Back Propagation)",
+          "bullets": [
+            "피드포워드 신경망(FFN)에서 **오차를 거꾸로 전파**해 배우는 방법",
+            "여러 겹의 신경망을 학습시킬 수 있게 되었다"
+          ],
+          "note": "하지만 또 커다란 장벽에 부딪히는데…"
+        },
+        {
+          "id": "s06-winter",
+          "layout": "cards",
+          "title": "두 번째 AI 겨울",
+          "sub": "1990년대를 잠식한 네 가지 장벽",
+          "year": "1990-2000",
+          "cols": 2,
+          "numbered": true,
+          "items": [
+            {
+              "title": "기울기 소실",
+              "text": "신경망이 깊어질수록 오차가 희미해져 학습 불가 (+ 지역 최적점·과적합 문제)"
+            },
+            {
+              "title": "연산과 데이터의 한계",
+              "text": "CPU 연산 속도와 메모리 용량의 한계, 방대한 데이터의 부재"
+            },
+            {
+              "title": "통계적 학습의 등장",
+              "text": "SVM 같은 통계적 학습 방법론의 부상"
+            },
+            {
+              "title": "AI 투자 급감",
+              "text": "전문가 시스템 몰락의 여파"
+            }
+          ],
+          "note": "이 시기를 버티고 신경망 연구를 이어간 사람들 — **제프리 힌튼 · 얀 르쿤 · 요슈아 벤지오**"
+        },
+        {
+          "id": "s06-trio",
+          "layout": "split",
+          "sub": "겨울을 버텨 낸 연구자들",
+          "year": "1990-2018",
+          "figure": {
+            "src": "s06-bengio-hinton-lecun.png",
+            "caption": "요슈아 벤지오 · 제프리 힌튼 · 얀 르쿤"
+          },
+          "heading": "**딥러닝의 세 거장**",
+          "bullets": [
+            "투자와 관심이 끊긴 시기에도 신경망 연구를 이어갔다",
+            "2018 **튜링상** 공동 수상"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "s07",
+      "title": "손글씨 인식 신경망",
+      "chapter": "ch03",
+      "year": "1990",
+      "screens": [
+        {
+          "id": "s07-divider",
+          "layout": "divider",
+          "kicker": "신경망은 어떤 문제를 어떤 원리로 풀까?",
+          "heading": "보고 기억하는 신경망"
+        },
+        {
+          "id": "s07-layers",
+          "layout": "split",
+          "sub": "가장 전형적인 예제 — N×N 손글씨 이미지를 신경망에 통과시킨다",
+          "figure": {
+            "src": "s07-mnist-net.png",
+            "paper": true,
+            "caption": "손글씨 ‘8’이 신경망을 통과하는 모습"
+          },
+          "flow": true,
+          "items": [
+            {
+              "title": "입력층",
+              "text": "이미지의 픽셀 정보"
+            },
+            {
+              "title": "은닉층",
+              "text": "이미지의 특징 파악"
+            },
+            {
+              "title": "출력층",
+              "text": "최종 판단 결과 (0~9)"
+            }
+          ]
+        },
+        {
+          "id": "s07-demo",
+          "layout": "figure",
+          "title": "MNIST_NeuralNet 예제",
+          "sub": "직접 실행해 봅시다",
+          "figure": {
+            "src": "s07-mnist-demo.png",
+            "caption": "MNIST 손글씨 인식 신경망 예제 프로그램"
+          }
+        }
+      ]
+    },
+    {
+      "key": "s08",
+      "title": "딥러닝의 시작, CNN",
+      "chapter": "ch03",
+      "year": "1989",
+      "screens": [
+        {
+          "id": "s08-lecun",
+          "layout": "split",
+          "sub": "얀 르쿤 · 미국 뉴저지 벨 연구소(트랜지스터가 태어난 곳)",
+          "figure": {
+            "src": "s08-lenet.png",
+            "paper": true,
+            "caption": "LeNet — 합성곱 신경망의 구조"
+          },
+          "heading": "**합성곱 신경망**(CNN)",
+          "bullets": [
+            "미국 우체국이 모은 **우편번호 손글씨**를 인식하는 과제",
+            "제각각인 손글씨를 읽어 낼 수 있는 새로운 신경망을 고안"
+          ]
+        },
+        {
+          "id": "s08-how",
+          "layout": "cards",
+          "title": "CNN은 어떻게 보는가",
+          "sub": "인간의 시각 피질을 모방",
+          "cols": 3,
+          "numbered": true,
+          "items": [
+            {
+              "title": "도장 찍듯 훑는 필터",
+              "text": "이미지의 2차원 공간 정보를 유지한 채 필터(마스크)를 이동시키며 특징을 추출"
+            },
+            {
+              "title": "부분에서 전체로",
+              "text": "지역적인 패턴을 먼저 파악하고 점차 전체 조합을 찾는다 — 하위층은 짧은 선·모서리, 중간층은 동그라미·꺾인 모양"
+            },
+            {
+              "title": "더 적은 연산",
+              "text": "전부 다 연결하지 않으니 연산량과 필요한 학습 데이터가 줄어든다"
+            }
+          ]
+        },
+        {
+          "id": "s08-lenet5",
+          "layout": "split",
+          "year": "1998",
+          "value": "1998",
+          "heading": "**LeNet-5** 완성",
+          "bullets": [
+            "10여 년 연구 끝에 나온 완성형",
+            "이때 정리한 손글씨 숫자 데이터 = **MNIST** (딥러닝 입문자의 첫 예제)",
+            "실제 은행 **수표 판독**에 사용",
+            "하지만 큰 사진은 여전히 엄청난 연산량을 요구"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "s09",
+      "title": "순환 신경망, RNN",
+      "chapter": "ch03",
+      "year": "1997",
+      "screens": [
+        {
+          "id": "s09-rnn",
+          "layout": "split",
+          "sub": "순서(시간)가 중요한 데이터 — 소리와 문장",
+          "figure": {
+            "src": "s09-rnn.jpg",
+            "paper": true,
+            "caption": "순환 신경망: 이전 단계의 기억을 다음 단계로"
+          },
+          "bullets": [
+            "이미지는 한 번에, 문장은 **한 단어씩** 차례대로 읽어야 문맥이 보인다",
+            "RNN: 이전 단계의 기억(**은닉 상태**, Hidden State)을 현재 입력과 합쳐서 계산",
+            "문장이 길어지면 앞쪽 내용을 잃어버리는 **장기 의존성 문제**"
+          ]
+        },
+        {
+          "id": "s09-lstm",
+          "layout": "compare",
+          "title": "기억을 관리하는 법",
+          "sub": "장기 의존성 문제를 개선한 LSTM(Long Short-Term Memory)과 GRU",
+          "left": {
+            "tag": "기억 한 페이지",
+            "title": "RNN",
+            "tone": "muted",
+            "diagram": "page-one",
+            "bullets": [
+              "하나의 페이지에 기억을 계속 **덮어쓴다**"
+            ]
+          },
+          "right": {
+            "tag": "기억 여러 페이지",
+            "title": "LSTM",
+            "tone": "primary",
+            "diagram": "page-many",
+            "bullets": [
+              "**삭제 · 입력 · 출력** 게이트를 운영",
+              "무엇을 기억하고 지우고 꺼낼지 판단"
+            ]
+          },
+          "link": "→"
+        }
+      ]
+    },
+    {
+      "key": "s10",
+      "title": "딥 블루 쇼크",
+      "chapter": "ch04",
+      "year": "1997",
+      "screens": [
+        {
+          "id": "s10-divider",
+          "layout": "divider",
+          "kicker": "겨울의 끝에서",
+          "heading": "딥러닝의 부활"
+        },
+        {
+          "id": "s10-deepblue",
+          "layout": "split",
+          "sub": "1997.05 · 슈퍼컴퓨터 딥 블루, 세계 체스 챔피언에게 승리",
+          "figure": {
+            "src": "s10-deep-blue.jpg",
+            "caption": "IBM 딥 블루 vs 가리 카스파로프"
+          },
+          "heading": "신경망이 아닌 **탐색 기계**",
+          "bullets": [
+            "딥 블루는 신경망이 아니라 **경우의 수**를 탐색하는 기계",
+            "경우의 수가 훨씬 많은 바둑은 이 방식으로 이길 수 없다"
+          ],
+          "note": "사람들이 **알파고는 아직 멀었다**고 생각했던 이유"
+        }
+      ]
+    },
+    {
+      "key": "s11",
+      "title": "부활의 전조",
+      "chapter": "ch04",
+      "year": "2006",
+      "screens": [
+        {
+          "id": "s11-signs",
+          "layout": "timeline",
+          "sub": "알고리즘 · 연산 · 데이터가 차례로 갖춰지다",
+          "year": "2006-2011",
+          "figure": {
+            "src": "s11-hinton.jpg",
+            "caption": "제프리 힌튼(오른쪽)과 제자들"
+          },
+          "items": [
+            {
+              "date": "2006",
+              "title": "심층 신뢰망",
+              "text": "제프리 힌튼과 제자들의 논문 두 편 — 깊은 신경망이 학습되기 시작, **딥러닝**이라는 이름"
+            },
+            {
+              "date": "2007",
+              "title": "GPU와 CUDA",
+              "text": "GPU에 CUDA 프레임워크 제공 — 딥러닝을 위한 도구가 되다"
+            },
+            {
+              "date": "2009",
+              "title": "GPU로 수십 배",
+              "text": "앤드루 응 연구팀 — GPU로 신경망을 학습시키니 기존보다 수십 배 빠르다"
+            },
+            {
+              "date": "2009",
+              "title": "ImageNet",
+              "text": "페이페이 리 — 좋은 알고리즘 이전에 **좋은 데이터**. 사진 천만 장과 라벨, 1000가지 사물을 맞히는 대회",
+              "figures": [
+                {
+                  "src": "s11-fei-fei-li.webp",
+                  "caption": "페이페이 리(스탠퍼드)"
+                },
+                {
+                  "src": "s11-imagenet.webp",
+                  "caption": "ImageNet — 사진 천만 장과 라벨"
+                }
+              ]
+            },
+            {
+              "date": "2010~11",
+              "title": "음성 인식",
+              "text": "힌튼과 마이크로소프트 — 깊은 신경망을 결합해 오류율이 눈에 띄게 감소",
+              "figures": [
+                {
+                  "src": "s11-hinton.jpg",
+                  "caption": "제프리 힌튼(오른쪽)과 제자들"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "s12",
+      "title": "딥러닝, 신경망의 부활",
+      "chapter": "ch04",
+      "year": "2012",
+      "screens": [
+        {
+          "id": "s12-score",
+          "layout": "bars",
+          "sub": "2012 이미지넷 대회 · 이탈리아 피렌체 성적표 발표",
+          "lead": "해마다 아주 조금씩 줄어드는 게 보통이던 오류율",
+          "unit": "%",
+          "max": 30,
+          "items": [
+            {
+              "label": "2011 우승팀",
+              "value": 25.8,
+              "display": "25.8%",
+              "tone": "muted"
+            },
+            {
+              "label": "2012 2위",
+              "value": 26.2,
+              "display": "26.2%",
+              "tone": "muted"
+            },
+            {
+              "label": "2012 AlexNet",
+              "value": 15.3,
+              "display": "15.3%",
+              "tone": "primary"
+            }
+          ],
+          "badge": "−10%p",
+          "figure": {
+            "src": "s12-alexnet-lineage.jpg",
+            "caption": "퍼셉트론에서 ChatGPT까지, AlexNet의 위치"
+          },
+          "note": "충격 — **컴퓨터 비전의 전환점**"
+        },
+        {
+          "id": "s12-alexnet",
+          "layout": "split",
+          "sub": "주인공은 토론토 대학 — 제프리 힌튼 · 알렉스 크리제브스키 · 일리야 수츠케버",
+          "figure": {
+            "src": "s12-alexnet-layers.jpg",
+            "caption": "AlexNet의 합성곱 층"
+          },
+          "heading": "**AlexNet**",
+          "bullets": [
+            "르쿤의 LeNet을 크게 키운 합성곱 신경망 — **8층 · 6000만 파라미터**",
+            "이듬해 2013 대회에는 신경망을 쓴 팀들이 몰려들었다"
+          ]
+        },
+        {
+          "id": "s12-aftermath",
+          "layout": "cards",
+          "title": "기계가 스스로 개념을 찾다",
+          "sub": "2012, 빅테크가 신경망에 올라타다",
+          "cols": 2,
+          "numbered": true,
+          "figure": {
+            "src": "s12-cat-neuron.png",
+            "paper": true,
+            "caption": "구글 브레인 ‘고양이 뉴런’이 반응한 이미지들"
+          },
+          "items": [
+            {
+              "title": "구글의 고양이",
+              "text": "앤드루 응과 제프 딘의 구글 브레인 — 유튜브 영상 이미지 1000만 장을 보여 주자, 정답을 알려 주지 않았는데도 **고양이에 반응하는 뉴런**이 생겼다"
+            },
+            {
+              "title": "4400만 달러 경매",
+              "text": "2012년 겨울, 힌튼과 두 제자가 세운 DNN Research — 구글·마이크로소프트·바이두·딥마인드가 입찰해 **구글이 4400만 달러**에 낙찰"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "s13",
+      "title": "이미지에서 언어로",
+      "chapter": "ch05",
+      "year": "2013",
+      "screens": [
+        {
+          "id": "s13-divider",
+          "layout": "divider",
+          "kicker": "단어를 어떻게 데이터로 표현할 것인가?",
+          "heading": "언어와 생성, 그리고 깊이"
+        },
+        {
+          "id": "s13-word2vec",
+          "layout": "split",
+          "sub": "이미지는 그 자체가 실체적인 데이터, 단어는 추상적인 개념",
+          "figure": {
+            "src": "s13-word2vec.png",
+            "paper": true,
+            "caption": "Word2Vec이 그린 단어의 지도"
+          },
+          "heading": "2013 · **Word2Vec**",
+          "text": "토마스 미콜로프 팀",
+          "bullets": [
+            "“단어의 뜻은 그 단어와 어울리는 **주변 단어**들을 보면 알 수 있다”",
+            "신경망이 방대한 글을 읽으며 **단어의 지도**를 그렸다",
+            "스무고개처럼 다양한 질문(관점)으로 각 단어를 수치화"
+          ]
+        },
+        {
+          "id": "s13-sentence",
+          "layout": "timeline",
+          "title": "단어 다음은 문장",
+          "sub": "어색한 번역투는 문장을 쪼개고 조각을 짝짓던 방식에서 나왔다",
+          "year": "2014-2016",
+          "figure": {
+            "src": "s13-seq2seq.webp",
+            "paper": true,
+            "caption": "Seq2Seq — 인코더가 문장을 압축하고 디코더가 재구성"
+          },
+          "items": [
+            {
+              "date": "2014",
+              "title": "Seq2Seq",
+              "text": "일리야 수츠케버와 동료들 — 문장 전체를 하나의 **의미**로 압축한 뒤 통째로 재구성"
+            },
+            {
+              "date": "2014",
+              "title": "Attention",
+              "text": "몬트리올 요슈아 벤지오 연구실, 드미트리 바다나우 — 요약본만 보지 말고 **원문을 다시** 보자. 지금 옮길 단어와 관련된 부분에 더 눈길을"
+            },
+            {
+              "date": "2016",
+              "title": "구글 신경망 번역",
+              "text": "구글 번역이 규칙 기반에서 신경망으로 — 훨씬 자연스러워진 번역"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "s14",
+      "title": "생성형 AI의 등장",
+      "chapter": "ch05",
+      "year": "2014",
+      "screens": [
+        {
+          "id": "s14-gan",
+          "layout": "split",
+          "sub": "2014 몬트리올 · 이안 굿펠로",
+          "figure": {
+            "src": "s14-gan.png",
+            "paper": true,
+            "caption": "위조지폐범(생성자)과 경찰(판별자)"
+          },
+          "heading": "**GAN** · 생성적 적대 신경망",
+          "bullets": [
+            "이미지를 만들기 위해 신경망 두 개를 **서로 경쟁**시키자",
+            "위조지폐범은 더 완벽한 위조를, 경찰은 더 정확한 적발을",
+            "경쟁하는 과정에서 높은 수준의 결과물을 내도록 학습된다"
+          ],
+          "note": "얀 르쿤: “지난 10년간 머신러닝에서 **가장 흥미로운 아이디어**”"
+        },
+        {
+          "id": "s14-proof",
+          "layout": "timeline",
+          "title": "생성형 AI의 가능성을 증명",
+          "year": "2017-2018",
+          "items": [
+            {
+              "date": "2017",
+              "title": "딥페이크",
+              "text": "영상 속 얼굴을 다른 사람의 얼굴로 합성"
+            },
+            {
+              "date": "2018",
+              "title": "StyleGAN",
+              "text": "NVIDIA 발표 — 실제 사람과 구분하기 힘든 얼굴 사진 생성"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "s15",
+      "title": "거대 신경망을 위한 실험",
+      "chapter": "ch05",
+      "year": "2015",
+      "screens": [
+        {
+          "id": "s15-depth",
+          "layout": "bars",
+          "title": "깊게 쌓으면 더 똑똑해질까?",
+          "sub": "신경망의 층 수",
+          "year": "2012-2015",
+          "unit": "층",
+          "max": 152,
+          "items": [
+            {
+              "label": "AlexNet · 2012",
+              "value": 8,
+              "display": "8층",
+              "tone": "muted"
+            },
+            {
+              "label": "VGGNet · 2014",
+              "value": 19,
+              "display": "16~19층",
+              "tone": "muted"
+            },
+            {
+              "label": "GoogLeNet · 2014",
+              "value": 22,
+              "display": "22층",
+              "tone": "muted"
+            },
+            {
+              "label": "그냥 더 쌓으면",
+              "value": 56,
+              "display": "50층+ → 성능 하락",
+              "tone": "danger"
+            },
+            {
+              "label": "ResNet · 2015",
+              "value": 152,
+              "display": "152층",
+              "tone": "primary"
+            }
+          ],
+          "note": "50층을 넘기자 역전파가 앞쪽까지 전달되지 못했다 — **기울기 소실**"
+        },
+        {
+          "id": "s15-resnet",
+          "layout": "cards",
+          "title": "깊이의 벽을 넘다",
+          "year": "2015",
+          "cols": 2,
+          "numbered": true,
+          "figure": {
+            "src": "s15-resnet.jpg",
+            "caption": "ResNet — 층을 건너뛰는 지름길"
+          },
+          "items": [
+            {
+              "title": "ResNet · 잔차 신경망",
+              "text": "2015 MS 리서치 아시아(베이징) 카이밍 허 — 층을 건너뛰는 **지름길**. 152층, 이미지넷 오류율 **3.5%** (사람 약 5%)"
+            },
+            {
+              "title": "배치 정규화",
+              "text": "2015 구글 — 층을 지날 때마다 숫자들의 크기를 고르게 맞춰 준다"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "s16",
+      "title": "알파고 쇼크",
+      "chapter": "ch05",
+      "year": "2016",
+      "screens": [
+        {
+          "id": "s16-deepmind",
+          "layout": "timeline",
+          "title": "딥마인드",
+          "sub": "목표는 범용 인공지능",
+          "year": "2010-2014",
+          "figure": {
+            "src": "s16-atari.jpg",
+            "caption": "아타리 ‘벽돌 깨기’ — 구멍을 뚫어 공을 넣는 파훼법"
+          },
+          "items": [
+            {
+              "date": "2010",
+              "title": "런던에서 창업",
+              "text": "데미스 하사비스(체스 신동·10대 게임회사 직원·뇌과학 박사), 셰인 레그, 무스타파 술레이만"
+            },
+            {
+              "date": "2013",
+              "title": "아타리 게임 논문",
+              "text": "규칙은 알려주지 않고 화면 픽셀과 점수만 — 벽돌 깨기에서 고수의 파훼법을 스스로 발견. **강화학습**(보상으로 배움) + **CNN**(화면을 보는 눈)"
+            },
+            {
+              "date": "2014",
+              "title": "구글, 딥마인드 인수",
+              "text": "바둑에 도전 — 기보를 학습하고, 알파고끼리 대국하며 실력 향상"
+            }
+          ]
+        },
+        {
+          "id": "s16-alphago",
+          "layout": "stats",
+          "title": "2016.03 알파고 쇼크",
+          "sub": "이세돌 9단과의 다섯 판, 그리고 그 후",
+          "year": "2016-2017",
+          "items": [
+            {
+              "value": "37",
+              "unit": "수",
+              "label": "제2국 · 사람이 두지 않는 **창의적인 수**"
+            },
+            {
+              "value": "78",
+              "unit": "수",
+              "label": "제4국 · 판을 뒤집은 이세돌의 **신의 한 수**"
+            },
+            {
+              "value": "3",
+              "unit": "일",
+              "label": "2017 알파고 제로 · 사람의 기보 없이 스스로 학습해 알파고에 **압승**"
+            }
+          ]
+        },
+        {
+          "id": "s16-move37",
+          "layout": "split",
+          "sub": "2016.03 이세돌 9단과의 제2국",
+          "year": "2016",
+          "figure": {
+            "src": "s16-alphago-g2-move37.png",
+            "caption": "제2국 · 알파고의 37수"
+          },
+          "heading": "**37수**",
+          "bullets": [
+            "사람이 두지 않는 **창의적인 수**",
+            "해설자들도 실수로 여길 만큼 낯선 수였다"
+          ]
+        },
+        {
+          "id": "s16-move78",
+          "layout": "split",
+          "sub": "2016.03 이세돌 9단과의 제4국",
+          "year": "2016",
+          "figure": {
+            "src": "s16-alphago-g4-move78.webp",
+            "caption": "제4국 · 이세돌 9단의 78수"
+          },
+          "heading": "**78수**",
+          "bullets": [
+            "판을 뒤집은 이세돌의 **신의 한 수**",
+            "다섯 판 중 사람이 알파고에게 거둔 유일한 승리"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "s17",
+      "title": "Attention Is All You Need",
+      "chapter": "ch06",
+      "year": "2017",
+      "screens": [
+        {
+          "id": "s17-divider",
+          "layout": "divider",
+          "kicker": "2017.06, 논문 공유 사이트에 올라온 한 편의 논문",
+          "heading": "트랜스포머와 GPT"
+        },
+        {
+          "id": "s17-paper",
+          "layout": "split",
+          "sub": "구글 브레인 · 구글 리서치 소속 8명 (아시시 바스와니 외)",
+          "figure": {
+            "src": "s17-paper.jpg",
+            "paper": true,
+            "caption": "〈Attention Is All You Need〉와 Transformer 구조"
+          },
+          "bullets": [
+            "**Self-Attention**: 각 단어가 문장 안의 다른 단어와 얼마나 강하게 연관되는지 점수를 매긴다",
+            "이 구조에 **Transformer**라는 이름이 붙다 (야코프 우스코라이트)",
+            "영→독, 영→프 번역 시험 최고 성적 — 학습은 더 빠르고 성능은 더 좋다",
+            "오늘날 거의 모든 언어모델의 뼈대 — ChatGPT의 **T**도 Transformer의 T"
+          ]
+        },
+        {
+          "id": "s17-parallel",
+          "layout": "compare",
+          "title": "왜 빨랐을까?",
+          "sub": "연산이 적어서가 아니라 GPU의 장점을 십분 활용했기 때문",
+          "left": {
+            "tag": "순차 처리",
+            "title": "RNN",
+            "tone": "muted",
+            "diagram": "chain",
+            "bullets": [
+              "단어를 하나씩 처리하며 의미를 쌓아 간다",
+              "앞 단어가 끝나야 다음 단어 — 병렬 처리 불가"
+            ]
+          },
+          "right": {
+            "tag": "병렬 처리",
+            "title": "Attention",
+            "tone": "primary",
+            "diagram": "matrix",
+            "bullets": [
+              "모든 단어 쌍(**N×N**)의 관계를 한꺼번에 계산",
+              "GPU가 가장 잘하는 일"
+            ]
+          },
+          "link": "vs"
+        },
+        {
+          "id": "s17-split",
+          "layout": "compare",
+          "title": "인코더와 디코더",
+          "sub": "2018, 두 회사가 Transformer의 모듈을 하나씩 키워 나가다",
+          "year": "2018",
+          "left": {
+            "tag": "구글 · 인코더",
+            "title": "BERT",
+            "tone": "accent",
+            "bullets": [
+              "원문을 읽고 **이해**하는 쪽",
+              "분석·판단한 결과를 출력 — 분류·추출·랭킹"
+            ]
+          },
+          "right": {
+            "tag": "OpenAI · 디코더",
+            "title": "GPT",
+            "tone": "primary",
+            "bullets": [
+              "새 문장을 **써 내려가는** 쪽",
+              "텍스트 생성(Text Generation)"
+            ]
+          },
+          "link": "Transformer"
+        }
+      ]
+    },
+    {
+      "key": "s18",
+      "title": "OpenAI",
+      "chapter": "ch06",
+      "year": "2018",
+      "screens": [
+        {
+          "id": "s18-gpt",
+          "layout": "timeline",
+          "sub": "문장의 다음에 올 단어를 맞히는 과제에 집중하다",
+          "year": "2015-2019",
+          "figure": {
+            "src": "s18-openai.webp"
+          },
+          "items": [
+            {
+              "date": "2015",
+              "title": "OpenAI 설립",
+              "text": "샌프란시스코"
+            },
+            {
+              "date": "2018",
+              "title": "GPT-1",
+              "text": "알렉 래드퍼드 — 수천 권의 책을 학습. 핵심은 **2단계 학습**: ① 방대한 글로 사전 학습 ② 원하는 일에 맞춰 미세 조정 (GPT = 미리 학습한 생성형 트랜스포머)"
+            },
+            {
+              "date": "2018",
+              "title": "구글 BERT",
+              "text": "2019년 가을 구글 검색에 접목"
+            },
+            {
+              "date": "2019.02",
+              "title": "GPT-2",
+              "text": "GPT-1의 10배가 넘는 **15억** 매개변수. 악용 우려로 작은 버전부터 단계적 공개 — “너무 위험해서 못 푸는 AI”"
+            }
+          ],
+          "note": "이걸 **훨씬 더 크게** 만들면 어떻게 될까?"
+        }
+      ]
+    },
+    {
+      "key": "s19",
+      "title": "LLM과 멀티모달",
+      "chapter": "ch06",
+      "year": "2020",
+      "screens": [
+        {
+          "id": "s19-scaling",
+          "layout": "bars",
+          "title": "스케일링 법칙",
+          "sub": "2020.01 OpenAI · 재러드 캐플런 — 모델을 키우면 성능이 얼마나 좋아지는가",
+          "lead": "모델 크기 · 학습 데이터 · 연산량을 늘리면 실력이 **규칙적으로** 향상된다",
+          "scale": "log",
+          "unit": "매개변수",
+          "items": [
+            {
+              "label": "GPT-1 · 2018",
+              "value": 117000000,
+              "display": "1.17억",
+              "tone": "muted"
+            },
+            {
+              "label": "GPT-2 · 2019",
+              "value": 1500000000,
+              "display": "15억",
+              "tone": "muted"
+            },
+            {
+              "label": "GPT-3 · 2020",
+              "value": 175000000000,
+              "display": "1750억",
+              "tone": "primary"
+            }
+          ],
+          "bullets": [
+            "큰 모델일수록 같은 글에서 더 많이 배운다 — 투입한 자원의 효과를 **예측**할 수 있다",
+            "MS의 투자와 슈퍼컴퓨터 동원",
+            "2020 여름, 개발자에게 공개 — 다른 프로그램에 연동해 다양한 실험"
+          ],
+          "figure": {
+            "src": "s19-llm-tree.jpg",
+            "paper": true,
+            "caption": "LLM 진화 계통도"
+          }
+        },
+        {
+          "id": "s19-alphafold",
+          "layout": "stats",
+          "title": "알파폴드",
+          "sub": "수십 년간 난제였던 단백질 접힘 구조 예측",
+          "year": "2020-2024",
+          "items": [
+            {
+              "value": "2020",
+              "label": "단백질 구조 예측 대회 — 알파폴드2가 실험에 견줄 정확도, 주최 측 “사실상 풀렸다”"
+            },
+            {
+              "value": "2억+",
+              "label": "딥마인드가 공개한 단백질 구조"
+            },
+            {
+              "value": "2024",
+              "label": "데미스 하사비스 · 존 점퍼 **노벨 화학상**"
+            }
+          ],
+          "note": "AI가 과학에 기여하고 **연구 방식을 바꾼** 상징적 사건"
+        },
+        {
+          "id": "s19-diffusion",
+          "layout": "split",
+          "title": "확산 모델",
+          "sub": "2015 스탠퍼드 · 야샤 졸딕스타인 — 물에 떨어진 잉크를 되돌리면?",
+          "year": "2015-2020",
+          "diagram": "diffusion",
+          "bullets": [
+            "사진에 잡음을 조금씩 더하기를 반복 → 노이즈만 남은 화면",
+            "신경망에게 **반대 과정**을 학습: 노이즈 → 원하는 화면",
+            "GAN은 선명하지만 학습이 까다롭고 문제가 잦았다",
+            "2020 버클리 조너선 호 연구팀 **DDPM** — GAN에 필적하는 결과"
+          ]
+        },
+        {
+          "id": "s19-images",
+          "layout": "timeline",
+          "title": "이미지 생성 AI의 폭발",
+          "year": "2021-2022",
+          "items": [
+            {
+              "date": "2021.01",
+              "title": "CLIP",
+              "text": "인터넷의 사진-설명 4억 쌍 학습 — 그림과 글의 관련성을 이해"
+            },
+            {
+              "date": "2021.01",
+              "title": "DALL·E",
+              "text": "텍스트로 이미지를 생성"
+            },
+            {
+              "date": "2022.04",
+              "title": "DALL·E 2",
+              "text": "성능을 극적으로 향상"
+            },
+            {
+              "date": "2022.05",
+              "title": "구글 Imagen",
+              "text": "발표, 일반 공개는 미룸"
+            },
+            {
+              "date": "2022.07",
+              "title": "미드저니",
+              "text": "누구나 쓰는 이미지 생성 AI"
+            },
+            {
+              "date": "2022.08",
+              "title": "Stable Diffusion",
+              "text": "Stability AI — 누구나 내려받아 수정, **게임용 그래픽카드**로 실행"
+            },
+            {
+              "date": "2022.09",
+              "title": "콜로라도 미술대회",
+              "text": "미드저니로 만든 작품이 **1등**"
+            }
+          ]
+        },
+        {
+          "id": "s19-colorado",
+          "layout": "split",
+          "sub": "2022.09 콜로라도 미술대회",
+          "year": "2022",
+          "figure": {
+            "src": "s19-colorado-fair.jpg",
+            "caption": "Théâtre D'opéra Spatial — 미드저니로 만든 수상작"
+          },
+          "heading": "**Théâtre D'opéra Spatial**",
+          "bullets": [
+            "미드저니로 만든 작품이 미술대회에서 **1등**",
+            "이미지 생성 AI가 ‘창작’ 논쟁의 한가운데에 서다"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "s20",
+      "title": "프런티어 랩의 등장",
+      "chapter": "ch07",
+      "year": "2022",
+      "screens": [
+        {
+          "id": "s20-divider",
+          "layout": "divider",
+          "kicker": "70년의 기술이 하나의 대화창으로",
+          "heading": "프런티어 경쟁"
+        },
+        {
+          "id": "s20-rlhf",
+          "layout": "timeline",
+          "title": "사람이 직접 가르치다",
+          "sub": "GPT-3는 질문을 반복하거나, 틀리거나, 해로운 말을 하기도 했다",
+          "year": "2017-2022",
+          "items": [
+            {
+              "date": "2017",
+              "title": "둘 중 나은 쪽 고르기",
+              "text": "사람이 두 동작 중 나은 쪽을 고르는 방식으로 가상 로봇을 학습"
+            },
+            {
+              "date": "방법",
+              "title": "RLHF · 사람 피드백 강화 학습",
+              "text": "사람이 모범 답안을 제시 → 모델이 내놓은 답에 순위를 매겨 학습"
+            },
+            {
+              "date": "2022.03",
+              "title": "InstructGPT",
+              "text": "훨씬 작은 모델의 대답을 사람들이 GPT-3 같은 대형 모델보다 **선호**"
+            }
+          ]
+        },
+        {
+          "id": "s20-chatgpt",
+          "layout": "stats",
+          "title": "2022.11 ChatGPT",
+          "sub": "GPT-3.5 계열을 대화에 맞게 수정 · 무료 · 가입 후 바로 사용",
+          "year": "2022",
+          "figure": {
+            "src": "s20-frontier-labs.jpg",
+            "caption": "대화창이 연 프런티어 랩들의 경쟁"
+          },
+          "items": [
+            {
+              "value": "5",
+              "unit": "일",
+              "label": "사용자 **100만** 명"
+            },
+            {
+              "value": "2",
+              "unit": "개월",
+              "label": "월간 사용자 약 **1억** 명(추정) — 가장 빠르게 큰 소비자 서비스"
+            },
+            {
+              "value": "70",
+              "unit": "년",
+              "label": "기술이 집약된 대화창에 사람들이 반응했다"
+            }
+          ],
+          "note": "내부에서는 ‘연구용 미리보기’ 정도였다 — 구글은 **코드 레드**"
+        },
+        {
+          "id": "s20-2023",
+          "layout": "timeline",
+          "title": "2023 · LLM 경쟁의 시작",
+          "year": "2023",
+          "items": [
+            {
+              "date": "2023.01",
+              "title": "MS 대규모 추가 투자",
+              "text": "새로운 LLM 경쟁의 시작"
+            },
+            {
+              "date": "2023.02",
+              "title": "메타 LLaMA",
+              "text": "연구자들에게 공개 → 한 달 만에 가중치가 유출되며 전 세계로"
+            },
+            {
+              "date": "2023.03",
+              "title": "GPT-4",
+              "text": "사진도 이해, 웹사이트 코딩, 변호사 모의시험 상위 10% — 크기·학습법 비공개"
+            },
+            {
+              "date": "2023.03",
+              "title": "Anthropic Claude",
+              "text": "OpenAI 출신 연구자들 — 안전 우선"
+            },
+            {
+              "date": "2023.07",
+              "title": "Llama 2",
+              "text": "공식 공개 — 전 세계 개발자들의 다양한 변형 버전"
+            },
+            {
+              "date": "2023.11",
+              "title": "OpenAI 내홍",
+              "text": "샘 올트먼 해임과 복귀"
+            },
+            {
+              "date": "2023.12",
+              "title": "구글 Gemini",
+              "text": "구글 브레인과 딥마인드를 한 팀으로 합친 뒤 내놓은 모델"
+            }
+          ]
+        },
+        {
+          "id": "s20-2024",
+          "layout": "timeline",
+          "title": "2024 · 멀티모달과 추론",
+          "year": "2024",
+          "items": [
+            {
+              "date": "2024.02",
+              "title": "Sora · Gemini 1.5",
+              "text": "텍스트→동영상 / 100만 토큰 컨텍스트"
+            },
+            {
+              "date": "2024.03",
+              "title": "Claude 3",
+              "text": "6월 Claude 3.5 Sonnet"
+            },
+            {
+              "date": "2024.04",
+              "title": "Llama 3",
+              "text": "메타의 3세대 공개 모델"
+            },
+            {
+              "date": "2024.05",
+              "title": "GPT-4o",
+              "text": "멀티모달 기능 통합"
+            },
+            {
+              "date": "2024.08",
+              "title": "EU AI Act 발효",
+              "text": "세계 첫 포괄적 AI 규제법"
+            },
+            {
+              "date": "2024.09",
+              "title": "OpenAI o1",
+              "text": "thinking 모드(CoT) — 크기가 아니라 **추론**을 강화해 성능 향상"
+            },
+            {
+              "date": "2024.10",
+              "title": "노벨상",
+              "text": "물리학상 홉필드·힌턴, 화학상 하사비스·점퍼·베이커"
+            },
+            {
+              "date": "2024.10",
+              "title": "Computer Use",
+              "text": "Anthropic — AI가 화면을 보고 마우스·키보드를 조작"
+            },
+            {
+              "date": "2024.12",
+              "title": "o3 · DeepSeek V3",
+              "text": "ARC-AGI 고득점 / R1의 기반 모델"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "s21",
+      "title": "지능의 폭발",
+      "chapter": "ch07",
+      "year": "2025",
+      "screens": [
+        {
+          "id": "s21-hero",
+          "layout": "hero",
+          "year": "2025-2026",
+          "kicker": "2025 → 2026",
+          "heading": "지능의 폭발",
+          "figure": {
+            "src": "s21-llm-stack.jpg"
+          }
+        },
+        {
+          "id": "s21-2025",
+          "layout": "timeline",
+          "title": "2025",
+          "year": "2025",
+          "items": [
+            {
+              "date": "2025.01",
+              "title": "스타게이트 프로젝트",
+              "text": "5,000억 달러 규모 AI 인프라 계획"
+            },
+            {
+              "date": "2025.01",
+              "title": "DeepSeek R1",
+              "text": "o1에 맞먹는 추론 모델을 공개, 훨씬 적은 학습 비용 주장 → 일주일 뒤 NVIDIA 주가 **17%** 하락(5,890억 달러)"
+            },
+            {
+              "date": "2025.02",
+              "title": "바이브 코딩",
+              "text": "용어 등장 · Claude Code 리서치 프리뷰 출시"
+            },
+            {
+              "date": "2025.03",
+              "title": "Gemini Robotics",
+              "text": "피지컬 AI와 비전-언어 모델(VLM)의 고도화 — 로보틱스 투자 급증"
+            },
+            {
+              "date": "2025.07",
+              "title": "IMO 금메달",
+              "text": "OpenAI·구글 모델, 국제수학올림피아드 금메달 수준"
+            },
+            {
+              "date": "2025.07",
+              "title": "Kimi K2",
+              "text": "중국발 LLM 쇼크(Qwen·Kimi) — 초저비용·긴 컨텍스트로 가격 경쟁 심화"
+            },
+            {
+              "date": "2025.08",
+              "title": "GPT-5",
+              "text": "출시"
+            },
+            {
+              "date": "2025.11",
+              "title": "Gemini 3",
+              "text": "출시"
+            }
+          ]
+        },
+        {
+          "id": "s21-2026",
+          "layout": "timeline",
+          "title": "2026",
+          "year": "2026",
+          "build": true,
+          "items": [
+            {
+              "date": "2026.01",
+              "title": "OpenClaw 열풍",
+              "text": ""
+            },
+            {
+              "date": "2026.01.22",
+              "title": "한국 AI 기본법 시행",
+              "text": ""
+            },
+            {
+              "date": "2026.02",
+              "title": "중국 모델 추월",
+              "text": "OpenRouter 상위 모델 토큰 처리 점유율에서 중국 모델이 미국 모델을 앞서다"
+            },
+            {
+              "date": "2026.03",
+              "title": "AI와 국가안보",
+              "text": "국방부, Anthropic을 공급망 위험 기업으로 지정"
+            },
+            {
+              "date": "2026.04",
+              "title": "Claude Mythos Preview",
+              "text": "Project Glasswing — 몇 주 만에 주요 OS·브라우저에서 수천 건의 **제로데이** 발견, 방어 목적 파트너에게만 제공"
+            },
+            {
+              "date": "2026.04",
+              "title": "GPT-5.5 · DeepSeek V4",
+              "text": "4월 23일 · 4월 24일(오픈 웨이트)"
+            },
+            {
+              "date": "2026.06",
+              "title": "프런티어 모델 수출통제",
+              "text": "Claude Fable 5 일반 출시, Mythos 5는 검증된 파트너에게(6/9) → 정부의 수출통제 지시(6/12)"
+            },
+            {
+              "date": "2026.07",
+              "title": "OpenAI–허깅페이스 사건",
+              "text": "보안 평가 중 모델들이 인터넷 차단을 우회해 내부 연구 인프라와 허깅페이스 시스템 일부를 침해"
+            },
+            {
+              "date": "2026.09",
+              "title": "GPT-6",
+              "text": "Astra의 굉장한 성능, 특히 computer-use 능력"
+            },
+            {
+              "date": "2026.09",
+              "title": "Claude Opus 5.5",
+              "text": "Astra를 뛰어넘는 성능 — 코드로 2D/3D 애니메이션·음악·영상·디자인"
+            },
+            {
+              "date": "2026.09.30",
+              "title": "구글 Gemini 4 Argon",
+              "text": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "s22",
+      "title": "맺음말",
+      "chapter": "ch08",
+      "screens": [
+        {
+          "id": "s22-porter",
+          "layout": "photo",
+          "figure": {
+            "src": "s22-porter.jpg"
+          },
+          "kicker": "네팔의 짐꾼들과 사람의 역할",
+          "lines": [
+            "차도 닿지 않는 히말라야의 험준한 마을들",
+            "그곳을 잇는 짐꾼은 당나귀와 야크만이 아니다",
+            "짐승으로 옮길 수 없는 짐과 길이라면\n**사람**도 그 역할을 한다"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "e01",
+      "title": "문장의 구조와 이해",
+      "chapter": "bonus",
+      "screens": [
+        {
+          "id": "e01-divider",
+          "layout": "divider",
+          "kicker": "보너스 트랙",
+          "heading": "생각의 원리"
+        },
+        {
+          "id": "e01-sentence",
+          "layout": "statement",
+          "kicker": "사람이 문장을 이해하듯 기계도 문장을 이해할 수 있을까?",
+          "classic": "나랏말싸미 듕귁에 달아\n문자와로 서로 사맛디 아니할쎄",
+          "text": "이 글을 읽는 순간, 여러분의 머릿속에는 어떤 생각들이 스쳐 지나가나요?"
+        },
+        {
+          "id": "e01-associations",
+          "layout": "cards",
+          "title": "머릿속에 떠오르는 것들",
+          "sub": "“나랏말싸미…” 한 줄에 딸려 오는 개념들",
+          "cols": 3,
+          "items": [
+            {
+              "title": "인물",
+              "text": "세종대왕, 집현전 학자들"
+            },
+            {
+              "title": "문서와 유물",
+              "text": "훈민정음 해례본, 간송 전형필 선생, 국보 70호"
+            },
+            {
+              "title": "역사와 공간",
+              "text": "조선 전기, 15세기, 한양, 궁궐"
+            },
+            {
+              "title": "언어와 문자",
+              "text": "한글, 닿소리와 홀소리, 한자, 말과 글의 불일치"
+            },
+            {
+              "title": "문화와 미디어",
+              "text": "영화 〈나랏말싸미〉, 드라마 〈뿌리깊은 나무〉, 한글날"
+            }
+          ]
+        },
+        {
+          "id": "e01-steps",
+          "layout": "cards",
+          "title": "사람이 문장을 이해하는 과정",
+          "sub": "스스로 의식하지는 않지만, 수십 년의 학습으로 자연스럽게",
+          "cols": 3,
+          "numbered": true,
+          "flow": true,
+          "items": [
+            {
+              "title": "잘게 쪼갠다",
+              "text": "문장을 단어와 기호로. 단어는 다양한 개념을 압축한 상징 — 스무고개처럼 여러 관점에서 뜻을 좁힌다. 첫 단어 **‘나라’**에 주목"
+            },
+            {
+              "title": "관계로 확장한다",
+              "text": "문법·인과·감정·뉘앙스·연상·시간·장소… 단어 사이의 관계로 **맥락**을 파악. ‘나라’는 옛 문법의 표현이고, 대한민국은 아닌 것 같다"
+            },
+            {
+              "title": "지식으로 구체화한다",
+              "text": "배운 배경 지식에 비추어 뜻을 확정 — ‘나라’는 15세기 세종대왕 시기의 **조선**"
+            }
+          ],
+          "note": "LLM도 방대한 학습을 거쳐 같은 과정을 **수학적으로** 수행한다 — 그 구조가 Transformer · Attention"
+        }
+      ]
+    },
+    {
+      "key": "e02",
+      "title": "단어의 분해",
+      "chapter": "bonus",
+      "screens": [
+        {
+          "id": "e02-twenty",
+          "layout": "split",
+          "title": "스무고개로 만드는 단어의 지도",
+          "sub": "Step 1 · 문장을 잘게 쪼개고, 각 단어의 뜻을 숫자로",
+          "diagram": "vector",
+          "build": true,
+          "items": [
+            {
+              "title": "생물인가요?",
+              "value": 0.9
+            },
+            {
+              "title": "식물인가요?",
+              "value": -0.8
+            },
+            {
+              "title": "포유류인가요?",
+              "value": 0.9
+            },
+            {
+              "title": "네 발로 걷나요?",
+              "value": -0.8
+            },
+            {
+              "title": "사람인가요?",
+              "value": 0.85
+            },
+            {
+              "title": "남자인가요?",
+              "value": 1.0
+            },
+            {
+              "title": "리더인가요?",
+              "value": 1.0
+            },
+            {
+              "title": "국가를 다스리나요?",
+              "value": 0.85
+            },
+            {
+              "title": "나이가 많나요?",
+              "value": 0.85
+            }
+          ],
+          "answer": "국왕",
+          "bullets": [
+            "스무고개의 질문 하나 = **차원**(Dimension)",
+            "답의 강도를 −1.0 ~ +1.0 사이 숫자로",
+            "질문이 4,096개면 4,096차원의 숫자 묶음",
+            "단어를 숫자 목록으로 바꾼 것 = **벡터 · 임베딩**"
+          ]
+        },
+        {
+          "id": "e02-morph",
+          "layout": "split",
+          "title": "벡터를 움직이면 뜻이 바뀐다",
+          "sub": "이제 단어를 수학으로 다룰 수 있다 — 조각가의 끌과 망치",
+          "diagram": "vector-compare",
+          "build": true,
+          "dims": [
+            "남자인가요?",
+            "국가를 다스리나요?",
+            "나이가 많나요?"
+          ],
+          "items": [
+            {
+              "title": "국왕",
+              "values": [
+                1.0,
+                0.85,
+                0.85
+              ]
+            },
+            {
+              "title": "여왕",
+              "values": [
+                -1.0,
+                0.85,
+                0.85
+              ]
+            },
+            {
+              "title": "왕자",
+              "values": [
+                1.0,
+                0.2,
+                -0.6
+              ]
+            }
+          ],
+          "bullets": [
+            "국왕의 **성별** 값을 음수로 → **여왕**에 가까워진다",
+            "**나이**와 **통치**를 줄이면 → **왕자**에 가까워진다",
+            "각 차원의 값을 바꾸면 단어의 의미가 바뀐다"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "e03",
+      "title": "맥락과 지식",
+      "chapter": "bonus",
+      "screens": [
+        {
+          "id": "e03-attention",
+          "layout": "split",
+          "title": "Step 2 · 맥락 — Attention",
+          "sub": "기계가 맥락을 이해하는 가장 근본적인 방법",
+          "diagram": "multihead",
+          "tokens": [
+            "나라",
+            "말씀",
+            "중국",
+            "달라",
+            "문자",
+            "서로",
+            "통하지",
+            "않으니"
+          ],
+          "heads": [
+            {
+              "label": "문법",
+              "weights": [
+                1,
+                0.9,
+                0.2,
+                0.6,
+                0.3,
+                0.1,
+                0.5,
+                0.4
+              ]
+            },
+            {
+              "label": "시간",
+              "weights": [
+                1,
+                0.7,
+                0.3,
+                0.1,
+                0.8,
+                0.1,
+                0.2,
+                0.2
+              ]
+            },
+            {
+              "label": "장소",
+              "weights": [
+                1,
+                0.2,
+                0.95,
+                0.3,
+                0.2,
+                0.1,
+                0.1,
+                0.1
+              ]
+            },
+            {
+              "label": "인과",
+              "weights": [
+                1,
+                0.3,
+                0.2,
+                0.8,
+                0.4,
+                0.3,
+                0.9,
+                0.85
+              ]
+            }
+          ],
+          "bullets": [
+            "한 단어가 문장의 다른 단어들과 어떤 관련이 있는지 평가",
+            "평가 결과를 반영해 의미를 바꾼다 — 사전적 의미 → **문맥이 반영된 의미**",
+            "문법·인과·감정·시간·장소… **여러 관점에서 동시에** 수행하고 결과를 합친다"
+          ],
+          "note": "조각에 비유하면, 대충 잘린 돌을 여러 각도에서 살피며 **스케치**하는 단계"
+        },
+        {
+          "id": "e03-ffn",
+          "layout": "compare",
+          "title": "지식과 반복",
+          "sub": "조각가는 대리석을 단 한 번의 손질로 완성하지 않는다",
+          "left": {
+            "tag": "Step 3 · 지식",
+            "title": "FFN",
+            "tone": "accent",
+            "bullets": [
+              "분야별로 방대하게 학습된 **전문가 집단**",
+              "맥락이 반영된 단어의 의미가 더 명확해진다",
+              "스케치에 따라 **세부 조각**을 하는 단계"
+            ]
+          },
+          "right": {
+            "tag": "Step 4 · 계층적 추상화",
+            "title": "× N 레이어",
+            "tone": "primary",
+            "bullets": [
+              "Step 2·3 블록을 반복 = **레이어(layer)**",
+              "최신 모델은 수십~수백 번 반복",
+              "층마다 다른 끌과 손놀림 = **층마다 다른 가중치**"
+            ]
+          },
+          "link": "반복"
+        }
+      ]
+    },
+    {
+      "key": "e04",
+      "title": "프리필과 디코딩",
+      "chapter": "bonus",
+      "screens": [
+        {
+          "id": "e04-prefill",
+          "layout": "split",
+          "title": "프리필(Prefill)",
+          "sub": "사용자가 미리 입력한 문장(프롬프트)을 변환하는 과정",
+          "diagram": "prefill",
+          "bullets": [
+            "입력이 이미 정해져 있으니 **병렬로** 빠르게 계산",
+            "각 단어는 Attention 계산용 상태를 기록해 둔다 = **KV 캐시**",
+            "각 단어는 **자기보다 앞**에 나온 단어와의 관계만 계산 — 자기 위치까지의 문맥을 담는다"
+          ]
+        },
+        {
+          "id": "e04-decode",
+          "layout": "split",
+          "title": "디코딩(Decoding)",
+          "sub": "답변이 끝날 때까지 토큰 단위로 하나씩 반복(Loop)",
+          "diagram": "decode",
+          "bullets": [
+            "마지막 단어 벡터(**히든 스테이트**) = 지금까지 문맥을 모두 압축한 벡터",
+            "다음에 올 단어의 확률을 계산 → 가장 그럴듯한 단어를 덧붙인다",
+            "새 단어와 기존 단어의 관계를 다시 계산 → 또 새로운 히든 스테이트",
+            "하나씩 생성하므로 프리필처럼 **병렬로 계산할 수 없다**"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "e05",
+      "title": "숫자로 보는 LLM",
+      "chapter": "bonus",
+      "screens": [
+        {
+          "id": "e05-headline",
+          "layout": "stats",
+          "sub": "질문: ‘나랏말싸미 듕귁에 달아…’ 이 문장은 어떤 책에 등장하는가? (약 120바이트)",
+          "items": [
+            {
+              "value": "811",
+              "unit": "GB",
+              "label": "메모리에 상주하는 모델 가중치"
+            },
+            {
+              "value": "200",
+              "unit": "회+",
+              "label": "답을 쓰는 동안 가중치 전체를 훑는 횟수"
+            },
+            {
+              "value": "200",
+              "unit": "조 번",
+              "label": "질문 하나에 필요한 연산"
+            }
+          ],
+          "note": "이것을 **수백만 명이 동시에** — 그래서 GPU와 메모리, 데이터센터가 부족하다",
+          "foot": "기준: 구조가 공개된 Llama 3.1 405B · BF16 · NVIDIA H100 16장"
+        },
+        {
+          "id": "e05-compute",
+          "layout": "table",
+          "title": "연산 — 짧은 질문 vs 일반 작업",
+          "sub": "실제 서비스는 시스템 프롬프트와 요구사항이 더해져 입력이 훨씬 길다",
+          "cols": [
+            "항목",
+            "예제 (짧은 질문)",
+            "일반 작업 (32KB)",
+            "배수"
+          ],
+          "rows": [
+            [
+              "입력 텍스트",
+              "120 B",
+              "32 KB",
+              "약 270배"
+            ],
+            [
+              "입력 토큰 (prefill)",
+              "50",
+              "약 10,000",
+              "200배"
+            ],
+            [
+              "출력 토큰 (decoding)",
+              "200",
+              "200",
+              "같음"
+            ],
+            [
+              "① Prefill 연산",
+              "약 40조 번",
+              "**약 8,400조 번**",
+              "약 210배"
+            ],
+            [
+              "└ 그중 Attention(N²) 비중",
+              "0.05%",
+              "**약 5%**",
+              "문맥이 길수록 커짐"
+            ],
+            [
+              "② Decoding 연산",
+              "약 160조 번",
+              "약 180조 번",
+              "1.1배"
+            ],
+            [
+              "연산 총합",
+              "**약 200조 번**",
+              "**약 8,600조 번**",
+              "**약 43배**"
+            ],
+            [
+              "연산 중 prefill 비중",
+              "20%",
+              "**98%**",
+              "주역이 바뀜"
+            ]
+          ]
+        },
+        {
+          "id": "e05-memory",
+          "layout": "table",
+          "title": "메모리와 시간",
+          "sub": "GPU 16장 기준",
+          "cols": [
+            "항목",
+            "예제 (짧은 질문)",
+            "일반 작업 (32KB)",
+            "배수"
+          ],
+          "rows": [
+            [
+              "모델 가중치 (상주)",
+              "811 GB",
+              "811 GB",
+              "같음"
+            ],
+            [
+              "KV 캐시: prefill 직후",
+              "약 25 MB",
+              "**약 5.2 GB**",
+              "200배"
+            ],
+            [
+              "KV 캐시: 답변 완료 시",
+              "약 126 MB",
+              "**약 5.3 GB**",
+              "약 42배"
+            ],
+            [
+              "Decoding 중 읽는 메모리",
+              "약 162 TB",
+              "약 163 TB",
+              "거의 같음"
+            ],
+            [
+              "Prefill 시간",
+              "약 15 ms (메모리 병목)",
+              "약 0.5~1초 (**연산 병목**)",
+              ""
+            ],
+            [
+              "Decoding 시간",
+              "약 3초",
+              "약 3초",
+              "같음"
+            ],
+            [
+              "동시 수용 사용자 (이론값)",
+              "약 3,500명",
+              "**약 85명**",
+              "**1/40**"
+            ]
+          ],
+          "foot": "동시 사용자 = (GPU 메모리 1,280 GB − 가중치 811 GB ≈ 460 GB) ÷ 사용자 1명의 KV 캐시. 실제로는 중간 계산값 공간이 필요해 더 적다."
+        }
+      ]
+    },
+    {
+      "key": "e06",
+      "title": "GPU와 메모리",
+      "chapter": "bonus",
+      "screens": [
+        {
+          "id": "e06-bottleneck",
+          "layout": "cards",
+          "title": "인공지능의 병목",
+          "sub": "어려운 고등 미적분이 아니라, 수십억 번의 곱셈과 덧셈의 무한 반복",
+          "cols": 4,
+          "numbered": true,
+          "flow": true,
+          "items": [
+            {
+              "title": "GPU",
+              "text": "벡터 곱셈과 덧셈(행렬 곱, GEMM) — 게임 화면의 수많은 점을 동시에 계산하도록 진화한 프로세서"
+            },
+            {
+              "title": "메모리",
+              "text": "진짜 병목. 거대한 모델 + 입력에 따라 불어나는 KV 캐시 + 몰려든 사용자들의 데이터"
+            },
+            {
+              "title": "데이터 이동",
+              "text": "HBM ↔ DRAM으로 나뉜 작업 공간을 오가며 연산 — 이 **이동 시간**이 가장 큰 병목"
+            },
+            {
+              "title": "인프라",
+              "text": "데이터센터가 몇 배로 → 전력·냉각수·전선·발전기"
+            }
+          ]
+        },
+        {
+          "id": "e06-why",
+          "layout": "statement",
+          "heading": "이제 이해가 되시나요?",
+          "bullets": [
+            "**NVIDIA**가 세계 최대 시가총액 회사가 된 이유",
+            "**삼성전자와 SK하이닉스** 주가가 그렇게 오른 이유",
+            "**전력과 데이터센터** 관련 주식이 활황인 이유"
+          ]
+        }
+      ]
+    }
+  ],
+  "intro": {
+    "hud": "LLM & AI INDUSTRY — DAY 01",
+    "shots": [
+      "SIGNAL",
+      "TYPE",
+      "FORM",
+      "DEPTH",
+      "ATTENTION",
+      "FLOW",
+      "PROMPT",
+      "SCALE",
+      "FIN"
+    ],
+    "make": [
+      "MAKE",
+      "IT",
+      "THINK."
+    ],
+    "title": [
+      "LLM과 AI",
+      "산업의 이해"
+    ],
+    "serif": "Day 01",
+    "footer": [
+      "언어모델(LLM)과 AI 산업의 이해",
+      "15 SEC / 450 FRAMES / 30 FPS",
+      "1943 — 2026"
+    ]
+  }
+}

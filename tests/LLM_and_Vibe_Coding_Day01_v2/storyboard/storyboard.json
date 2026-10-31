@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "workspaceId": "ws_e794b37e9b5ff1e5",
+  "stage": "assembling",
+  "brief": {
+    "title": "언어모델(LLM)과 AI 산업의 이해 — 1일차",
+    "oneLiner": "알파고의 \"먼저 온 미래\"에서 출발해 1943년 인공 뉴런부터 2026년 프런티어 모델까지 따라가며 신경망과 언어모델을 이해한다.",
+    "mediaIntent": "slide",
+    "purpose": "수정 강의안(references/수정-강의안.txt) 흐름 그대로 진행할 1일차 발표 화면",
+    "inScope": [
+      "본편 Scene 1~22",
+      "보너스 E1~E6",
+      "강의자 제공 이미지 31장"
+    ],
+    "nonGoals": [
+      "대본 전체 옮기기",
+      "자동 넘김·반복 애니메이션",
+      "생성형 이미지 AI",
+      "기존 Day01 덱 수정"
+    ]
+  },
+  "designFlow": {
+    "narrativeArc": "먼저 온 미래 → 다가올 미래 → 1943→2026 연대기 → 맺음말 → 보너스: 생각의 원리",
+    "dataSchemas": [
+      {
+        "id": "content",
+        "path": "storyboard/data/content.json",
+        "description": "위계형 문구·챕터·신/화면 데이터",
+        "itemCount": 28
+      },
+      {
+        "id": "items",
+        "path": "storyboard/data/items.json",
+        "description": "도식 데이터와 라벨(바둑판 37수, 확산 노이즈 시드, 프리필·디코딩 토큰)",
+        "itemCount": 4
+      }
+    ],
+    "assemblyPlan": [
+      {
+        "id": "asm_content",
+        "layer": "data",
+        "name": "shared/deck/content.ts — 타입·조회·스텝 계산",
+        "dependsOn": [],
+        "status": "done",
+        "targetPath": "shared/deck/content.ts",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_atoms",
+        "layer": "component",
+        "name": "shared/deck/atoms.tsx — Rich·Reveal·Figure·Bullets·Note",
+        "dependsOn": [
+          "asm_content"
+        ],
+        "status": "done",
+        "targetPath": "shared/deck/atoms.tsx",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_diagrams",
+        "layer": "component",
+        "name": "shared/deck/diagrams.tsx — go-board·diffusion·chain·matrix 외 도식",
+        "dependsOn": [
+          "asm_content"
+        ],
+        "status": "done",
+        "targetPath": "shared/deck/diagrams.tsx",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_layouts",
+        "layer": "component",
+        "name": "shared/deck/layouts.tsx — 레이아웃 14종",
+        "dependsOn": [
+          "asm_atoms",
+          "asm_diagrams"
+        ],
+        "status": "done",
+        "targetPath": "shared/deck/layouts.tsx",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_deck_shell",
+        "layer": "section",
+        "name": "shared/deck/DeckShell.tsx — 1920 무대·헤더·연대기 바",
+        "dependsOn": [
+          "asm_layouts"
+        ],
+        "status": "done",
+        "targetPath": "shared/deck/DeckShell.tsx",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_scenes",
+        "layer": "scene",
+        "name": "scenes/*/src/Scene.tsx (scripts/sync-deck.mjs 생성)",
+        "dependsOn": [
+          "asm_deck_shell"
+        ],
+        "status": "done",
+        "targetPath": "scenes/",
+        "taxonomy": []
+      },
+      {
+        "id": "asm_sequence",
+        "layer": "scene",
+        "name": "sequence.json — 28개 신 선형 연결",
+        "dependsOn": [
+          "asm_scenes"
+        ],
+        "status": "done",
+        "targetPath": "sequence.json",
+        "taxonomy": []
+      }
+    ]
+  },
+  "visualDirection": {
+    "moodKeywords": [
+      "midnight navy",
+      "single amber accent",
+      "bold Korean headline",
+      "keynote"
+    ],
+    "themeStages": [],
+    "invariants": [
+      "navy gradient + warm/cool glow",
+      "amber bar header + chapter chip",
+      "era bar (S5~S21)",
+      "slate cards, paper frames for diagrams"
+    ],
+    "variables": [
+      "layout per screen",
+      "photo/diagram",
+      "highlight words",
+      "year"
+    ],
+    "selectedTaxonomy": [
+      "opus-narrative-deck@1"
+    ]
+  }
+}

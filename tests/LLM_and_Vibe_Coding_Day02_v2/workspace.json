@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "workspaceId": "ws_ec86fb7a89a8e94b",
+  "name": "LLM_and_Vibe_Coding_Day02_v2",
+  "canvas": {
+    "aspect": "16:9",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30
+  },
+  "view": {
+    "x": 201.15,
+    "y": 174.57,
+    "zoom": 0.55
+  }
+}

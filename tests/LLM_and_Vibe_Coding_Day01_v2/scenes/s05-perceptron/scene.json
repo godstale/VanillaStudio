@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "id": "scn_94e7d0cd6747",
+  "name": "05. 퍼셉트론",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "퍼셉트론",
+    "goal": "02 뇌를 닮은 기계 — 강의안 S05",
+    "audience": "중학생 이상 일반인",
+    "message": "퍼셉트론",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s05-first",
+      "title": "퍼셉트론",
+      "copy": "뇌세포를 수학으로 옮기다\n1943 최초의 인공 뉴런 신경생리학자 워런 맥컬록 + 수학자 월터 피츠 — 뇌세포의 작동 방식을 수학 공식으로\n1958 퍼셉트론(Perceptron) 심리학자 프랭크 로젠블랫 — 연결 강도(가중치)를 스스로 조절하며 도형을 구별하는 최초의 학습 기계",
+      "layout": "timeline",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s05-nyt",
+      "title": "퍼셉트론",
+      "copy": "방 하나를 가득 채운 카메라 센서와 전선 뭉치\n곧 스스로 걷고 말하고 생각하는 기계가 나올 것\n“우리가 개발한 인공지능은 스스로 학습해서 걷고 말하며, 보고 쓸 수 있게 될 것이다. 그리고 종국에는 자신의 존재를 인지할 것으로 기대한다.”",
+      "layout": "quote",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s05-xor",
+      "title": "XOR 문제",
+      "copy": "단층 퍼셉트론의 한계\nXOR 논리 문제는 단층 퍼셉트론으로 풀 수 없다\n해결 방법은 층을 여러 겹 쌓은 다층 퍼셉트론\n하지만 여러 층을 동시에 어떻게 가르쳐야 할지 몰랐다",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s05-winter",
+      "title": "첫 번째 AI 겨울",
+      "copy": "기호주의의 부흥, 연결주의의 침체",
+      "layout": "compare",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "timeline",
+    "quote",
+    "split",
+    "compare"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s05",
+    "chapter": "ch02",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

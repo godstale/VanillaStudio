@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "id": "scn_56100d0598c2",
+  "name": "E1. 생각의 원리: 문장의 구조와 이해",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "문장의 구조와 이해",
+    "goal": "+ 생각의 원리 — 강의안 E01",
+    "audience": "중학생 이상 일반인",
+    "message": "생각의 원리",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "e01-divider",
+      "title": "문장의 구조와 이해",
+      "copy": "보너스 트랙\n생각의 원리",
+      "layout": "divider",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e01-sentence",
+      "title": "문장의 구조와 이해",
+      "copy": "사람이 문장을 이해하듯 기계도 문장을 이해할 수 있을까?\n나랏말싸미 듕귁에 달아\n문자와로 서로 사맛디 아니할쎄\n이 글을 읽는 순간, 여러분의 머릿속에는 어떤 생각들이 스쳐 지나가나요?",
+      "layout": "statement",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e01-associations",
+      "title": "머릿속에 떠오르는 것들",
+      "copy": "“나랏말싸미…” 한 줄에 딸려 오는 개념들\n인물 세종대왕, 집현전 학자들\n문서와 유물 훈민정음 해례본, 간송 전형필 선생, 국보 70호\n역사와 공간 조선 전기, 15세기, 한양, 궁궐\n언어와 문자 한글, 닿소리와 홀소리, 한자, 말과 글의 불일치\n문화와 미디어 영화 〈나랏말싸미〉, 드라마 〈뿌리깊은 나무〉, 한글날",
+      "layout": "cards",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "e01-steps",
+      "title": "사람이 문장을 이해하는 과정",
+      "copy": "스스로 의식하지는 않지만, 수십 년의 학습으로 자연스럽게\nLLM도 방대한 학습을 거쳐 같은 과정을 수학적으로 수행한다 — 그 구조가 Transformer · Attention\n잘게 쪼갠다 문장을 단어와 기호로. 단어는 다양한 개념을 압축한 상징 — 스무고개처럼 여러 관점에서 뜻을 좁힌다. 첫 단어 ‘나라’에 주목\n관계로 확장한다 문법·인과·감정·뉘앙스·연상·시간·장소… 단어 사이의 관계로 맥락을 파악. ‘나라’는 옛 문법의 표현이고, 대한민국은 아닌 것 같다\n지식으로 구체화한다 배운 배경 지식에 비추어 뜻을 확정 — ‘나라’는 15세기 세종대왕 시기의 조선",
+      "layout": "cards",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "divider",
+    "statement",
+    "cards"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#e01",
+    "chapter": "bonus",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

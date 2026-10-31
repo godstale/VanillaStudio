@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "id": "scn_d4397ea0f9d9",
+  "name": "17. Attention Is All You Need",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "Attention Is All You Need",
+    "goal": "06 트랜스포머와 GPT — 강의안 S17",
+    "audience": "중학생 이상 일반인",
+    "message": "트랜스포머와 GPT",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s17-divider",
+      "title": "Attention Is All You Need",
+      "copy": "2017.06, 논문 공유 사이트에 올라온 한 편의 논문\n트랜스포머와 GPT",
+      "layout": "divider",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s17-paper",
+      "title": "Attention Is All You Need",
+      "copy": "구글 브레인 · 구글 리서치 소속 8명 (아시시 바스와니 외)\nSelf-Attention: 각 단어가 문장 안의 다른 단어와 얼마나 강하게 연관되는지 점수를 매긴다\n이 구조에 Transformer라는 이름이 붙다 (야코프 우스코라이트)\n영→독, 영→프 번역 시험 최고 성적 — 학습은 더 빠르고 성능은 더 좋다\n오늘날 거의 모든 언어모델의 뼈대 — ChatGPT의 T도 Transformer의 T",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s17-parallel",
+      "title": "왜 빨랐을까?",
+      "copy": "연산이 적어서가 아니라 GPU의 장점을 십분 활용했기 때문",
+      "layout": "compare",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s17-split",
+      "title": "인코더와 디코더",
+      "copy": "2018, 두 회사가 Transformer의 모듈을 하나씩 키워 나가다",
+      "layout": "compare",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "divider",
+    "split",
+    "compare"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s17",
+    "chapter": "ch06",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

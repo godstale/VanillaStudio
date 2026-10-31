@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "id": "scn_290606b5d86e",
+  "name": "10. 클로드 코드",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "클로드 코드",
+    "goal": "02 LLM을 에이전트로 — 강의안 S10",
+    "audience": "중학생 이상 일반인",
+    "message": "Claude Code 정식 출시",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s06-anthropic",
+      "title": "Anthropic",
+      "copy": "AI 안전성(Safety)과 정렬(Alignment)에 중점을 둔 연구진\n2021.01 앤트로픽 설립 OpenAI 연구 부사장 다리오 아모데이, 동생 다니엘라 아모데이를 비롯한 핵심 연구진 7명\n2023.07 Claude 2 · claude.ai 웹 서비스 론칭\n2024.06 Claude 3.5 Sonnet 코딩 성능이 크게 향상\n2024.10 Claude Desktop LLM이 웹을 벗어나 PC로 — 로컬 파일, 프로그램과 결합\n2024.11.25 MCP 발표 Model Context Protocol — 외부 도구에 연결되는 표준 확립",
+      "layout": "timeline",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s06-claude-code",
+      "title": "클로드 코드",
+      "copy": "2025.02 안드레 카파시가 X에 올린 글에서 바이브(Vibe) 코딩을 언급\nClaude Code 정식 출시\n2025.05.22\n자율형 코딩 에이전트 중심의 설계\n바이브 코딩 트렌드를 선도\n이후 Gemini CLI · Codex CLI · OpenCode 등 폭발적 확산",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    },
+    {
+      "id": "s10-claude-code",
+      "title": "클로드 코드",
+      "copy": "이를 가장 효율적으로 구현한 코딩 에이전트\nClaude Code\n코드에 강한 LLM 모델 Sonnet 사용\n빠르게 발전하는 텍스트 기반 LLM에게 복잡한 UI는 오히려 부담\n가벼운 실행 환경 — PC 요구 사양이 낮다\n개발자에게 익숙한 CLI 기반 — 원격 제어도 용이\nLLM에 Claude Code라는 CLI 앱을 입혀 주니, 에이전트의 모습을 갖췄다",
+      "layout": "split",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "timeline",
+    "split"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s10",
+    "chapter": "ch02",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

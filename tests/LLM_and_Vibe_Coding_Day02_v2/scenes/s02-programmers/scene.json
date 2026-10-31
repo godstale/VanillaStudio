@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "id": "scn_b830f3494922",
+  "name": "02. 프로그래머들의 탐색",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "프로그래머들의 탐색",
+    "goal": "01 바이브 코딩의 시작까지 — 강의안 S02",
+    "audience": "중학생 이상 일반인",
+    "message": "하지만 물밑에서는 중요한 움직임이 있었다",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s02-explore",
+      "title": "프로그래머들의 탐색",
+      "copy": "프로그래머들도 ChatGPT를 코딩 업무에 활용할 수 있을지 탐색했다\n하지만 물밑에서는 중요한 움직임이 있었다\n코드 스니펫 재사용할 수 있는 짧은 소스 코드 조각(Code Snippet)\n에러 해결 에러 해결책 검색 대용\n언어 번역\n업무 보조 문서 작업, 이메일 같은 업무 보조",
+      "layout": "cards",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "cards"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s02",
+    "chapter": "ch01",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

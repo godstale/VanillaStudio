@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "code.tab",
+      "kind": "code",
+      "scenes": ["s04"],
+      "file": "names.js",
+      "comment": "// 여기 100명의 사람 이름을 ㄱㄴㄷ 순 정렬해서 배열에 넣어줘",
+      "ghost": ["a[0] = \"가철수\";", "a[1] = \"나영희\";", "…"],
+      "labels": { "ghost": "회색 제안(Ghost Text)", "accept": "Tab ↹" },
+      "note": "강의안의 탭 코딩 예시. 3스텝: 주석 타이핑 → 회색 제안 → Tab으로 수락."
+    },
+    {
+      "id": "context.stack",
+      "kind": "context",
+      "scenes": ["s07"],
+      "blocks": [
+        { "label": "시스템 프롬프트", "tone": "accent" },
+        { "label": "질문 1" },
+        { "label": "답변 1" },
+        { "label": "질문 2" },
+        { "label": "답변 2" },
+        { "label": "…" },
+        { "label": "새 질문", "tone": "primary" }
+      ],
+      "labels": { "send": "매번 통째로 LLM에 전송", "fade": "길어질수록 앞쪽이 흐려진다" }
+    },
+    {
+      "id": "agent.equation",
+      "kind": "equation",
+      "scenes": ["s10"],
+      "parts": ["LLM", "CLI 앱", "에이전트"],
+      "subs": ["Sonnet", "Claude Code", "자율적으로 일한다"]
+    },
+    {
+      "id": "effort.levels",
+      "kind": "effort",
+      "scenes": ["s12"],
+      "levels": [
+        { "label": "low", "hypotheses": 1, "cost": 0.22 },
+        { "label": "medium", "hypotheses": 3, "cost": 0.5 },
+        { "label": "high", "hypotheses": 6, "cost": 0.95 }
+      ],
+      "labels": { "hypotheses": "검토하는 가설", "cost": "시간 · 토큰" },
+      "note": "개념도. 가설 수와 막대 길이는 상대적 크기만 나타낸다(실측값 아님)."
+    },
+    {
+      "id": "loop.ralph",
+      "kind": "loop",
+      "scenes": ["s15"],
+      "steps": ["코드", "테스트", "분석", "자가 교정"],
+      "center": "종료 조건까지\n반복",
+      "labels": { "fresh": "매회 새 대화", "files": "상태는 파일에" }
+    }
+  ]
+}

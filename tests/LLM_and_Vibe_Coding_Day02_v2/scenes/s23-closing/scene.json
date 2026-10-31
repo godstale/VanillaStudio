@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "id": "scn_77f9a0f09c52",
+  "name": "23. 맺음말",
+  "template": "opus-narrative-deck@1",
+  "brief": {
+    "subject": "세상을 바꾼 두 번의 발표",
+    "goal": "05 맺음말 — 강의안 S23",
+    "audience": "중학생 이상 일반인",
+    "message": "우리는 이 게임을 해 본 적이 있습니다",
+    "language": "ko",
+    "mediaIntent": "slide"
+  },
+  "type": "static",
+  "mode": "steps",
+  "steps": [
+    {
+      "id": "s23-two-keynotes",
+      "title": "세상을 바꾼 두 번의 발표",
+      "copy": "우리는 이 게임을 해 본 적이 있습니다",
+      "layout": "versus",
+      "enter": "fade",
+      "advance": "key:ArrowRight"
+    }
+  ],
+  "sections": [
+    "versus"
+  ],
+  "layout": "keynote-16x9",
+  "breakpoints": [
+    "1920x1080"
+  ],
+  "accessibility": [
+    "wcag-aa-contrast",
+    "keyboard-nav"
+  ],
+  "custom": {
+    "contentRef": "storyboard/data/content.json#s23",
+    "chapter": "ch05",
+    "shell": "shared/deck/DeckShell.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "generated"
+}

@@ -1,0 +1,160 @@
+{
+  "version": 1,
+  "id": "scn_494192d9bb75",
+  "name": "Bumper — 05. 맺음말",
+  "template": "opus-science-explainer@1",
+  "brief": {
+    "subject": "Chapter 05 — 맺음말",
+    "goal": "4 s chapter bumper in the intro's chalk-on-blueprint style, played right before chapter 05",
+    "audience": "중학생 이상 일반인",
+    "message": "Next: chapter 05 맺음말",
+    "language": "ko",
+    "mediaIntent": "motion"
+  },
+  "type": "motion",
+  "duration": {
+    "seconds": 4.000
+  },
+  "creativeMode": [
+    "hand-drawn-explainer",
+    "kinetic-type"
+  ],
+  "structure": "continuous",
+  "adStructure": "transformation",
+  "brandVoice": [
+    "warm",
+    "technical",
+    "minimal"
+  ],
+  "visualStyle": {
+    "medium": "Chalk-on-blueprint SVG line drawing: strokes draw themselves, static grain erodes every line",
+    "lighting": "Deep navy board (canvas-deep) with cream chalk (paper) and a single amber accent (primary)",
+    "typography": "Display serif (Playfair Display) for the chapter number, mono (JetBrains Mono) for the kicker, Pretendard 800 for the Korean chapter title",
+    "density": "One chapter card, generous negative space",
+    "cameraFeeling": "Slow push-in, then a zoom-through dive into the ring",
+    "mood": "Curious, crafted, optimistic"
+  },
+  "motionVocabulary": {
+    "typography": [
+      "handwrite-reveal",
+      "typewriter"
+    ],
+    "object": [
+      "line-draw",
+      "check-draw"
+    ],
+    "camera": [
+      "push-in",
+      "zoom-through"
+    ],
+    "material": [
+      "chalk-grain"
+    ],
+    "transition": [
+      "zoom-through"
+    ]
+  },
+  "beats": [
+    {
+      "id": "number",
+      "start": 0.000,
+      "end": 1.200,
+      "role": "hook",
+      "copy": "05",
+      "visual": "Amber spark at the top of a chalk ring that draws itself with ruler ticks; the serif chapter number writes itself inside",
+      "motion": [
+        "line-draw",
+        "handwrite-reveal"
+      ],
+      "camera": "push-in",
+      "transitionOut": "match-cut",
+      "notes": "Number lands on the impact at 0.94 s."
+    },
+    {
+      "id": "title",
+      "start": 1.200,
+      "end": 3.350,
+      "role": "end-card",
+      "copy": "CHAPTER / 맺음말",
+      "visual": "Kicker types in amber mono, an amber bar draws, the Korean title is handwritten with an amber dot; the chapter rail checks past chapters and sparks the current one",
+      "motion": [
+        "typewriter",
+        "handwrite-reveal",
+        "check-draw"
+      ],
+      "camera": "push-in",
+      "transitionOut": "zoom-through",
+      "notes": "Hold from 2.4 s; nothing new appears after 2.6 s."
+    },
+    {
+      "id": "exit",
+      "start": 3.350,
+      "end": 4.000,
+      "role": "transition",
+      "copy": "",
+      "visual": "Board dives through the ring and fades to the clean canvas",
+      "motion": [
+        "zoom-through"
+      ],
+      "camera": "zoom-through",
+      "transitionOut": "crossfade",
+      "notes": "Ends on the empty board so the next slide crossfades in cleanly."
+    }
+  ],
+  "copy": {
+    "textFidelity": "adapt",
+    "items": [
+      "CHAPTER",
+      "05",
+      "맺음말",
+      "바이브 코딩의 시작까지",
+      "LLM을 에이전트로",
+      "에이전트의 날갯짓",
+      "특이점",
+      "맺음말"
+    ]
+  },
+  "identity": {
+    "product": "Vibe Coding for Beginners (lecture)",
+    "character": "",
+    "mustKeep": [
+      "amber dot after the title",
+      "chalk grain",
+      "zoom-through exit"
+    ]
+  },
+  "endCard": {
+    "holdSeconds": 0.900,
+    "elements": [
+      "chapter number in ring",
+      "chapter title",
+      "chapter rail"
+    ]
+  },
+  "audio": {
+    "voiceOver": null,
+    "soundDesign": "Spark chime, whoosh as the ring draws, key clicks for the kicker, impact when the number lands, bell for the dot and the rail spark, reverse whoosh on the exit",
+    "music": "Procedural Web Audio (code, no samples, no generative AI): 96 BPM pad + plucks on the intro progression, one chord per chapter (Bm, G, A, D). Rendered offline from a fixed seed, synced to the scene clock."
+  },
+  "constraints": {
+    "avoid": [
+      "subtitles or narration",
+      "voice-over",
+      "unlabeled decorative clutter"
+    ],
+    "noUnspecifiedElements": true
+  },
+  "custom": {
+    "contentRef": "storyboard/data/content.json#chapters/ch05",
+    "chapter": "ch05",
+    "bumperBefore": "ch05",
+    "shell": "shared/bumper/Bumper.tsx"
+  },
+  "references": [],
+  "userPrompt": "",
+  "runtime": {
+    "contract": "scene-runtime@1",
+    "entry": "src/index.html"
+  },
+  "status": "needs-revision"
+}
