@@ -21,7 +21,7 @@
 
 - [x] TE.0 [단독] 예제 구조·`pnpm examples`·카드 표시·샘플 4종·백로그 — 대상: `scripts/examples.mjs`, `src/lib/examples/`, `resources/examples/` · (D-047)
 - [x] TE.1 [병렬 · 1순위] 프로젝트 템플릿 E25(7개 남음) — 다른 배치의 시각 기준이 되므로 먼저 끝낸다 — 완료: `feat/examples-styles`에 7종 추가, `pnpm examples check` 통과
-- [ ] TE.2 [병렬 · 1순위] 스타일 E01~E24(198개 남음) — family별 배치, 동시 실행 가능
+- [x] TE.2 [병렬 · 1순위] 스타일 E01~E24(198개 남음) — family별 배치, 동시 실행 가능 — 완료: style 200/200, `pnpm examples check` 통과
 - [ ] TE.3 [병렬 · 2순위] 구성 기법 E32~E47(181개, 미리보기 없음 161개) — 코드로 시연이 어려운 용어는 건너뛰고 보고
 - [x] TE.4 [병렬 · 2순위] 팔레트 E48~E50(31개 남음) — `palette/blush-ledger` 레이아웃을 재사용해 색만 교체 — 완료: 31종 추가, `pnpm examples check` 통과
 - [ ] TE.5 [병렬 · 3순위] 신 가이드 E26~E27(15개), 세부 프리셋 E28~E29(15개), 레시피 E30~E31(22개) — 외부 이미지를 오프라인 예제로 교체
