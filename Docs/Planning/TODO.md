@@ -26,8 +26,8 @@
 - [x] TE.4 [병렬 · 2순위] 팔레트 E48~E50(31개 남음) — `palette/blush-ledger` 레이아웃을 재사용해 색만 교체 — 완료: 31종 추가, `pnpm examples check` 통과
 - [x] TE.5 [병렬 · 3순위] 신 가이드 E26~E27(15개), 세부 프리셋 E28~E29(15개), 레시피 E30~E31(22개) — 외부 이미지를 오프라인 예제로 교체 — 완료: 52종 추가, `pnpm examples check` 통과
 - [x] TE.6 [단독 · 배치 병합마다] 병합 담당: `pnpm examples check`·`pnpm examples backlog` 실행 후 백로그 커밋, 전체 완료 시 `pnpm examples status` 기록 — 완료: 단일 브랜치(`feat/examples-styles`)에서 전 배치 제작, `check` 통과(468/473, 5종 시연 불가 스킵), `backlog` 최신, status: style 200/200·template 8/8·palette 32/32·guide 15/15·preset 15/15·recipe 22/22·technique 176/181(미리보기 없음 5)
-- [ ] TE.7 [단독 · 마무리] 에이전트 참조 제공 — `example.html`을 워크스페이스나 CLI로 전달할지 결정(D-047 범위 밖) · 선행: TE.2
-- [ ] TE.8 [사람 확인] `pnpm tauri dev`에서 카드 호버 재생·확대 보기·소스 보기, 전체 완료 후 번들 크기 확인
+- [x] TE.7 [단독 · 마무리] 에이전트 참조 제공 — `example.html`을 워크스페이스나 CLI로 전달할지 결정(D-047 범위 밖) · 선행: TE.2 — 완료: D-048로 "워크스페이스 복사" 채택(`references/examples/<kind>-<id>.html`, 읽기 전용 참조, 프롬프트에는 경로만). 구현은 E 범위 밖 후속 항목
+- [ ] TE.8 [사람 확인] `pnpm tauri dev`에서 카드 호버 재생·확대 보기·소스 보기, 전체 완료 후 번들 크기 확인 — 자동 확인분 완료(`pnpm build` 성공 7.77s, dist 18MB/1547파일; 예제 소스 청크 468개·0.96MB 지연 로딩, 프리뷰 338개·5.19MB — D-047 예상 +12MB보다 작은 약 6.2MB; 소스 468개 중 ~130개는 바이트 동일로 중복 제거됨). **남음(사람)**: Tauri GUI 카드 확인
 
 ---
 

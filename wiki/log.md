@@ -1,3 +1,11 @@
+## [2026-11-01] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-11-01] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
 ## [2026-10-18] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
@@ -466,6 +474,18 @@ Ran lint. See lint-report.md for details.
 ## [2026-11-01] feature | 예제 라이브러리 준비(D-047)
 
 `pnpm examples`, 카드 미리보기, 샘플 4종, 50개 배치 백로그를 추가했다. 대량 제작은 TODO TE.1부터. → [[research-2026-11-01-style-tags]]
+
+## [2026-11-01] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-11-01] D-048 | TE.6·TE.7 완료
+
+예제 라이브러리 468/473 완료(시연 불가 5종 스킵)로 TE.6 종료. TE.7 결정 D-048(워크스페이스 복사, references/examples/, 읽기 전용 참조·프롬프트에는 경로만 — 구현은 E 범위 밖 후속). TE.8 자동 확인분: pnpm build 성공, 예제 기여분 약 6.2MB(소스 청크 0.96MB 지연 로딩·프리뷰 5.19MB). 사람 GUI 확인 남음. [[decisions]]
+
+## [2026-11-01] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
 
 ## [2026-11-01] lint | Wiki health check
 
