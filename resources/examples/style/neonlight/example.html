@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Neon light</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: radial-gradient(circle at 50% 45%, #2a1a33, #0b0910 70%);
+      }
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+      path {
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .bloom {
+        stroke: #ff2d8a;
+        stroke-width: 26;
+        filter: blur(18px);
+      }
+      .glow {
+        stroke: #ff5aa8;
+        stroke-width: 12;
+        filter: blur(4px);
+      }
+      .core {
+        stroke: #ffe9f3;
+        stroke-width: 4;
+      }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <g id="tube">
+        <path class="bloom" id="a" />
+        <path class="glow" id="b" />
+        <path class="core" id="c" />
+      </g>
+    </svg>
+    <script>
+      const SECONDS = 4;
+      const D = 'M300 470V250l180 220V250M570 250h-0M570 250v220h130M570 360h100M570 250h130M800 250q-70 0-70 110t70 110q70 0 70-110t-70-110M930 470V250l130 220V250';
+      for (const id of ['a', 'b', 'c']) document.getElementById(id).setAttribute('d', D);
+      const tube = document.getElementById('tube');
+
+      // A tube buzzes: fixed dips in brightness, never random, so a frame depends only on t.
+      const DIPS = [0.12, 0.17, 0.58, 0.8];
+      window.seekExample = (t) => {
+        const phase = (t % SECONDS) / SECONDS;
+        const dipped = DIPS.some((d) => Math.abs(phase - d) < 0.025);
+        tube.style.opacity = dipped ? 0.35 : 0.88 + 0.12 * Math.sin(phase * Math.PI * 2);
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

@@ -195,6 +195,17 @@ export default defineScene({
 
 ---
 
+### 5.3 템플릿과 스타일
+
+- **템플릿**(프로젝트 전체): 컨셉·서사·장면 슬롯을 담은 뼈대입니다. 앱에서 고르면 `storyboard/00-project-template.md`가 생성됩니다.
+- **스타일**(신·이미지·모션): `STYLE_LIBRARY.json`의 200종 어휘입니다. `scene.json`의 `styles`에 기록합니다.
+
+```json
+"styles": [{ "id": "chrome", "scope": "image" }, { "id": "cinematic", "scope": "scene" }]
+```
+
+`scope`는 `scene`(장면 전체)·`image`(이미지·소재)·`motion`(모션)입니다. 수정 후 `pnpm vanilla sync-guides <slug>`를 실행하면 키워드·예시·구현 기법이 신 `AGENTS.md`에 들어갑니다. 스타일은 코드로 구현하며 생성형 이미지·영상 AI를 쓰지 않습니다.
+
 ## 6. 바닐라 스튜디오 ↔ 에이전트 연동 프로토콜
 
 1. **초기 기획 & 인터뷰**:

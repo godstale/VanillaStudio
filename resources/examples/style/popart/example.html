@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pop art</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: #111;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 8px;
+        width: 100%;
+        height: 100%;
+      }
+      .cell {
+        position: relative;
+        display: grid;
+        place-items: center;
+        background: var(--bg);
+      }
+      .cell::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(var(--dot) 28%, transparent 30%);
+        background-size: 14px 14px;
+      }
+      svg {
+        position: relative;
+        width: 76%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid" id="grid"></div>
+    <script>
+      const panels = [
+        ['#ffd400', '#ff4f9a', '#e4002b'],
+        ['#00b8d9', '#7ee3f2', '#ffd400'],
+        ['#ff4f9a', '#ffa3cb', '#1b2cc1'],
+        ['#7bd13c', '#c5f08f', '#ff5a00'],
+        ['#1b2cc1', '#5566ff', '#ffd400'],
+        ['#ff5a00', '#ffa066', '#00b8d9'],
+        ['#f4f1ea', '#ffd400', '#e4002b'],
+        ['#7d2bd9', '#b98aff', '#7bd13c'],
+      ];
+      document.getElementById('grid').innerHTML = panels
+        .map(
+          ([bg, dot, fill]) => `
+          <div class="cell" style="--bg:${bg};--dot:${dot}">
+            <svg viewBox="0 0 120 150">
+              <path d="M36 44h48l-4 18 10 12v60a10 10 0 0 1-10 10H40a10 10 0 0 1-10-10V74l10-12z"
+                fill="${fill}" stroke="#111" stroke-width="6" stroke-linejoin="round" />
+              <rect x="34" y="20" width="52" height="24" rx="5" fill="#f4f1ea" stroke="#111" stroke-width="6" />
+              <rect x="44" y="90" width="32" height="30" fill="#f4f1ea" stroke="#111" stroke-width="5" />
+            </svg>
+          </div>`,
+        )
+        .join('');
+    </script>
+  </body>
+</html>

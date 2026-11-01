@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ExternalLink, Sparkles, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ExampleThumb } from '@/components/templates/ExampleThumb';
+import { ProjectTemplatesPanel } from '@/components/templates/ProjectTemplatesPanel';
+import { StyleLibraryPanel } from '@/components/templates/StyleLibraryPanel';
+import { getExample, type ExampleKind } from '@/lib/examples';
 import { useSafeWorkspace } from '@/lib/context/WorkspaceContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import {
@@ -33,7 +37,8 @@ const TYPES: SceneType[] = ['static', 'motion', '3d'];
 const SWATCH_ROLES = ['canvas', 'ink', 'primary', 'accent'] as const;
 const FAV_KEY = 'vs-template-favorites';
 
-type Tab = 'guides' | 'decomposed' | 'recipes' | 'palettes' | 'techniques';
+type Section = 'templates' | 'styles';
+type Tab = 'styles' | 'guides' | 'decomposed' | 'recipes' | 'palettes' | 'techniques';
 type ApplyTarget =
   | { kind: 'guide'; ref: string; name: string }
   | { kind: 'palette'; id: string; name: string }
@@ -52,6 +57,7 @@ function loadFavorites(): Set<string> {
 }
 
 function PreviewMedia({
+  example,
   previewUrl,
   actionUrl,
   postUrl,
@@ -60,6 +66,7 @@ function PreviewMedia({
   originalPostLabel,
   altText,
 }: {
+  example: { kind: ExampleKind; id: string };
   previewUrl?: string;
   actionUrl?: string;
   postUrl?: string;
@@ -68,10 +75,12 @@ function PreviewMedia({
   originalPostLabel?: string;
   altText: string;
 }) {
-  if (!previewUrl && !actionUrl) return null;
+  const local = getExample(example.kind, example.id);
+  if (!local && !previewUrl && !actionUrl) return null;
   return (
     <div className="mb-2 overflow-hidden rounded-md border border-border bg-muted/40">
-      {previewUrl && (
+      {local && <ExampleThumb example={local} name={name} />}
+      {!local && previewUrl && (
         <div className="relative aspect-video w-full overflow-hidden bg-muted">
           <img
             src={previewUrl}
@@ -94,7 +103,7 @@ function PreviewMedia({
           )}
         </div>
       )}
-      {!previewUrl && actionUrl && (
+      {(local || !previewUrl) && actionUrl && (
         <div className="flex items-center justify-end px-2 py-1.5">
           <a
             href={actionUrl}
@@ -125,7 +134,7 @@ function PreviewMedia({
   );
 }
 
-/** 템플릿 메뉴: 상단 탭(가이드·세부 프리셋·Opus 레시피·팔레트·기법) + 매체 분류 필터 + 미리보기/동작 링크 + 적용 다이얼로그. */
+/** 템플릿 메뉴(D-046): 템플릿(프로젝트 뼈대)과 스타일(스타일 사전·가이드·프리셋·레시피·팔레트·기법)로 나눈다. */
 export function Templates() {
   const { t, locale } = useLanguage();
   const lang = locale === 'en' ? 'en' : 'ko';
@@ -133,7 +142,8 @@ export function Templates() {
   const guides = useMemo(() => listBuiltinTemplates(), []);
   const allPresets = useMemo(() => listDecomposedPresets(), []);
   const allRecipes = useMemo(() => listOpusRecipes(), []);
-  const [tab, setTab] = useState<Tab>('guides');
+  const [section, setSection] = useState<Section>('templates');
+  const [tab, setTab] = useState<Tab>('styles');
   const [typeFilter, setTypeFilter] = useState<'all' | SceneType>('all');
   const [intentFilter, setIntentFilter] = useState<'all' | MediaIntent>('all');
   const [decomposedFilter, setDecomposedFilter] = useState<'all' | DecomposedCategory>('all');
@@ -219,6 +229,7 @@ export function Templates() {
   );
 
   const tabs: { id: Tab; label: string }[] = [
+    { id: 'styles', label: t('tpl.tabs.styles') },
     { id: 'guides', label: t('tpl.tabs.guides') },
     { id: 'decomposed', label: t('tpl.tabs.decomposed') },
     { id: 'recipes', label: t('tpl.tabs.recipes') },
@@ -233,6 +244,19 @@ export function Templates() {
         <p className="mt-1 text-xs text-muted-foreground">{t('tpl.desc')}</p>
       </div>
 
+      <div role="tablist" aria-label={t('tpl.sectionLabel')} className="flex gap-1">
+        {(['templates', 'styles'] as const).map((id) => (
+          <Button key={id} role="tab" aria-selected={section === id} size="sm" variant={section === id ? 'default' : 'outline'} onClick={() => setSection(id)}>
+            {t(`tpl.section.${id}`)}
+          </Button>
+        ))}
+      </div>
+      <p className="-mt-2 text-xs text-muted-foreground">{t(`tpl.section.${section}.desc`)}</p>
+
+      {section === 'templates' && <ProjectTemplatesPanel workspaceRoot={workspaceRoot} />}
+
+      {section === 'styles' && (
+      <>
       <div role="tablist" aria-label={t('tpl.title')} className="flex flex-wrap gap-1 border-b border-border">
         {tabs.map((item) => (
           <button
@@ -254,7 +278,9 @@ export function Templates() {
         </label>
       </div>
 
-      {tab !== 'palettes' && (
+      {tab === 'styles' && <StyleLibraryPanel workspaceRoot={workspaceRoot} favButton={favButton} favorites={favorites} favOnly={favOnly} />}
+
+      {tab !== 'palettes' && tab !== 'styles' && (
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex flex-wrap gap-1" role="group" aria-label={t('tpl.intent.label')}>
             {(['all', ...MEDIA_INTENTS] as const).map((intent) => (
@@ -303,6 +329,7 @@ export function Templates() {
               {visibleGuides.map((g) => (
                 <li key={g.ref} className="flex flex-col rounded-lg border border-border bg-card p-3 shadow-sm" data-testid="guide-card">
                   <PreviewMedia
+                    example={{ kind: 'guide', id: g.meta.id }}
                     previewUrl={g.meta.previewUrl}
                     actionUrl={g.meta.actionUrl}
                     name={g.meta.label[lang]}
@@ -357,6 +384,7 @@ export function Templates() {
                 return (
                   <li key={preset.id} className="flex flex-col rounded-lg border border-border bg-card p-3 shadow-sm" data-testid="decomposed-card">
                     <PreviewMedia
+                      example={{ kind: 'preset', id: preset.id }}
                       previewUrl={preset.previewUrl}
                       actionUrl={preset.actionUrl}
                       name={preset.label[lang]}
@@ -413,6 +441,7 @@ export function Templates() {
                 return (
                   <li key={r.id} className="flex flex-col rounded-lg border border-border bg-card p-3 shadow-sm" data-testid="recipe-card">
                     <PreviewMedia
+                      example={{ kind: 'recipe', id: r.id }}
                       previewUrl={r.previewUrl}
                       actionUrl={r.actionUrl}
                       postUrl={r.postUrl}
@@ -467,6 +496,7 @@ export function Templates() {
               {visiblePalettes.map((p) => (
                 <li key={p.id} className="flex flex-col rounded-lg border border-border bg-card p-3 shadow-sm" data-testid="palette-card">
                   <PreviewMedia
+                    example={{ kind: 'palette', id: p.id }}
                     previewUrl={p.previewUrl}
                     actionUrl={p.actionUrl}
                     name={p.name}
@@ -509,6 +539,7 @@ export function Templates() {
                 return (
                   <li key={favId} className="flex flex-col rounded-lg border border-border bg-card p-3 shadow-sm" data-testid="technique-card">
                     <PreviewMedia
+                      example={{ kind: 'technique', id: term.id }}
                       previewUrl={term.previewUrl}
                       actionUrl={term.actionUrl}
                       name={term.label[lang]}
@@ -530,6 +561,9 @@ export function Templates() {
             </ul>
           )}
         </section>
+      )}
+
+      </>
       )}
 
       {apply && (

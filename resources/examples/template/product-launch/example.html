@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Product launch skeleton</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: #10141c;
+        color: #f4f1ea;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      .slide {
+        position: absolute;
+        inset: 0 0 96px;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: 18px;
+        text-align: center;
+        opacity: 0;
+      }
+      h1 {
+        margin: 0;
+        font-size: 92px;
+      }
+      p {
+        margin: 0;
+        color: #a9b1c2;
+        font-size: 30px;
+      }
+      .product {
+        width: 280px;
+        height: 170px;
+        border-radius: 22px;
+        background: linear-gradient(135deg, #ffb347, #ff5a5f);
+      }
+      .proof {
+        display: flex;
+        gap: 40px;
+        font-size: 64px;
+        font-weight: 700;
+      }
+      .cta {
+        padding: 18px 44px;
+        border-radius: 999px;
+        background: #ffb347;
+        color: #10141c;
+        font-size: 34px;
+        font-weight: 700;
+      }
+      nav {
+        position: absolute;
+        right: 56px;
+        bottom: 30px;
+        left: 56px;
+        display: flex;
+        gap: 10px;
+      }
+      nav div {
+        height: 42px;
+        border-top: 4px solid #333b4d;
+        color: #6c7588;
+        font-size: 20px;
+        line-height: 42px;
+      }
+      nav div.on {
+        border-color: #ffb347;
+        color: #f4f1ea;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide"><h1>Still doing it by hand?</h1><p>Hook: name the problem</p></div>
+    <div class="slide"><div class="product"></div><h1>Meet the new way</h1><p>Reveal: show the product</p></div>
+    <div class="slide"><div class="proof"><span>3×</span><span>12 min</span><span>98%</span></div><p>Proof: numbers that back it up</p></div>
+    <div class="slide"><div class="cta">Start today</div><p>Call to action: one clear next step</p></div>
+    <nav id="nav"></nav>
+    <script>
+      const SECONDS = 8;
+      const BEATS = [
+        ['Hook', 6],
+        ['Reveal', 10],
+        ['Proof', 10],
+        ['Call to action', 5],
+      ];
+      const total = BEATS.reduce((sum, [, s]) => sum + s, 0);
+      const nav = document.getElementById('nav');
+      nav.innerHTML = BEATS.map(([name, s]) => `<div style="flex:${s}">${name} · ${s}s</div>`).join('');
+      const slides = [...document.querySelectorAll('.slide')];
+      const tabs = [...nav.children];
+
+      window.seekExample = (t) => {
+        let at = ((t % SECONDS) / SECONDS) * total;
+        const active = BEATS.findIndex(([, s]) => (at < s ? true : ((at -= s), false)));
+        slides.forEach((s, i) => (s.style.opacity = i === active ? 1 : 0));
+        tabs.forEach((tab, i) => tab.classList.toggle('on', i === active));
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

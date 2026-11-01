@@ -454,3 +454,19 @@ Ran lint. See lint-report.md for details.
 ## [2026-10-22] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
+
+## [2026-11-01] feature | 템플릿·스타일 분리(D-046)
+
+스타일 태그 200종을 수집해 `STYLE_LIBRARY.json`으로 재작성하고, 프로젝트 템플릿 8종과 사이드바 템플릿 화면 개편, `scene.json.styles`, `pnpm vanilla styles`를 추가했다. → [[research-2026-11-01-style-tags]]
+
+## [2026-11-01] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
+## [2026-11-01] feature | 예제 라이브러리 준비(D-047)
+
+`pnpm examples`, 카드 미리보기, 샘플 4종, 50개 배치 백로그를 추가했다. 대량 제작은 TODO TE.1부터. → [[research-2026-11-01-style-tags]]
+
+## [2026-11-01] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.

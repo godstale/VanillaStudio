@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { SceneForm } from '@/components/guides/SceneForm';
 import { MarkdownEditor } from '@/components/guides/MarkdownEditor';
 import { DesignSection } from './DesignSection';
+import { SceneStyles } from './SceneStyles';
 import { HistorySection } from './HistorySection';
 import { INSPECTOR_TABS, type InspectorTab } from './inspectorTabs';
 import { PreviewPanel } from '@/components/scene/PreviewPanel';
@@ -359,6 +360,7 @@ export function SceneInspector({ workspace, root, slug, scene, template, templat
               <>
                 <p className="text-[11px] text-muted-foreground">{t('inspector.tab.guide.hint')}</p>
                 {recommendationBox}
+                <SceneStyles scene={draft} onChange={(next) => edit(() => next)} />
                 <SceneForm scene={draft} template={template!} onChange={(next) => edit(() => next)} />
               </>
             )}

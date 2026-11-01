@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { matchesStyle, renderStylesGuide, renderStylesSection } from './style-core.mjs';
 
 const ROOT = process.env.VANILLA_WORKSPACE_ROOT
   ? path.resolve(process.env.VANILLA_WORKSPACE_ROOT)
@@ -30,6 +31,7 @@ const WORKSPACE_JSON = path.join(ROOT, 'workspace.json');
 const SEQUENCE_JSON = path.join(ROOT, 'sequence.json');
 const SCENES_DIR = path.join(ROOT, 'scenes');
 
+const STYLE_LIBRARY_JSON = path.join(ROOT, 'STYLE_LIBRARY.json');
 const SCENE_TIME_KEYS = new Set(['start', 'end', 'seconds', 'holdSeconds']);
 
 function sha256(text) {
@@ -107,9 +109,9 @@ function defaultTemplateFor(type) {
 function agentWritableFields(type) {
   const sharedTimed = [
     'duration', 'creativeMode', 'structure', 'adStructure', 'brandVoice',
-    'visualStyle', 'motionVocabulary', 'beats', 'identity', 'endCard', 'audio', 'constraints',
+    'visualStyle', 'motionVocabulary', 'beats', 'identity', 'endCard', 'audio', 'constraints', 'styles',
   ];
-  if (type === 'static') return ['mode', 'steps', 'sections', 'layout', 'breakpoints', 'accessibility', 'status'];
+  if (type === 'static') return ['mode', 'steps', 'sections', 'layout', 'breakpoints', 'accessibility', 'styles', 'status'];
   if (type === '3d') return [...sharedTimed, 'composition', 'materials', 'lighting', 'cameraPath', 'performanceBudget', 'status'];
   return [...sharedTimed, 'status'];
 }
@@ -131,6 +133,7 @@ function orderSceneObject(scene) {
     brief,
   };
   const tail = {
+    ...(scene.styles?.length ? { styles: scene.styles.map((s) => ({ id: s.id, scope: s.scope ?? 'scene' })) } : {}),
     custom: scene.custom ?? {},
     references: scene.references ?? [],
     userPrompt: scene.userPrompt ?? '',
@@ -342,6 +345,7 @@ function renderGuideBody(scene, workspaceName) {
       ['language', b.language],
     ]),
     ...typeSecs,
+    ...(scene.styles?.length ? [sec('Visual styles', renderStylesGuide(scene.styles))] : []),
     sec('References', refs),
     sec('User prompt', fmtVal(scene.userPrompt)),
     sec('Fields you may fill', agentWritableFields(scene.type).map((f) => `\`${f}\``).join(', ')),
@@ -440,6 +444,7 @@ function renderSceneAgentsMd(workspace, scene, template) {
       '## Task',
       '',
       'Read these first, in order: `GUIDE.md` (the scene spec), `scene.json` (the source of truth), `../../DESIGN.md` (design tokens), `comments.json` (scene comments), and `../../WORK_ORDER.md` (workspace work order & user changes).',
+      'If `../../storyboard/00-project-template.md` exists, it is the project skeleton: follow its concept and the slot for this scene.',
       'Then implement or refine the scene as code under `src/`. Do not use generative image or video AI services.',
     ].join('\n')],
     ['contract', [
@@ -458,6 +463,7 @@ function renderSceneAgentsMd(workspace, scene, template) {
       '',
       'Colors, type and spacing come only from `DESIGN.md` tokens: CSS `var(--color-*)` or `useDesign()`. Never write raw color values.',
     ].join('\n')],
+    ['styles', renderStylesSection(scene.styles, readJsonOrNull(STYLE_LIBRARY_JSON))],
     ['writeback', [
       '## Write-back rules',
       '',
@@ -1211,6 +1217,28 @@ function cmdTaxonomy(args) {
   }
 }
 
+function cmdStyles(args) {
+  const { flags } = parseFlags(args);
+  const library = readJsonOrNull(STYLE_LIBRARY_JSON);
+  if (!library) {
+    console.warn('STYLE_LIBRARY.json is missing. Reopen the workspace in Vanilla Studio to restore it.');
+    return;
+  }
+  const family = flags.family ? String(flags.family) : '';
+  const type = flags.type ? String(flags.type) : '';
+  const found = library.styles.filter(
+    (s) =>
+      matchesStyle(s, flags.query ? String(flags.query) : '') &&
+      (!family || s.family === family) &&
+      (!type || library.families[s.family]?.sceneTypes.includes(type)),
+  );
+  console.log(`=== Styles (${found.length}/${library.styles.length}) ===`);
+  for (const s of found) {
+    console.log(`- ${s.id} [${s.family}] ${s.label.en}: ${s.keywords.join(', ')}`);
+    console.log(`    Example: ${s.example}`);
+  }
+}
+
 const [, , cmd, ...rest] = process.argv;
 switch (cmd) {
   case 'status':
@@ -1237,6 +1265,9 @@ switch (cmd) {
   case 'taxonomy':
     cmdTaxonomy(rest);
     break;
+  case 'styles':
+    cmdStyles(rest);
+    break;
   case 'work-order':
     cmdWorkOrder();
     break;
@@ -1253,6 +1284,7 @@ Commands:
   storyboard                                          Show storyboard stage, 3-doc summaries, data & assembly plan
   init-storyboard [--intent web|image|slide|motion]   Scaffold storyboard/ (3 docs + storyboard.json + data files)
   taxonomy [--category layout|transition|theme]       Map intent to storyboard design taxonomy IDs + hints
+  styles [--query word] [--family id] [--type motion]  Search the visual style library (STYLE_LIBRARY.json)
   scaffold-scene <slug> --name "Title" --type motion  Create a scene folder + draft code + add to sequence.json
   sync-guides [<slug>]                                Re-render GUIDE.md & scene AGENTS.md from scene.json
   work-order                                          Print & refresh WORK_ORDER.md (open comments & studio changes)

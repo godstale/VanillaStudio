@@ -10,7 +10,24 @@
 
 - **기획·설계·지침 문서 개정 완료**(`docs/v2-refactor-spec` 브랜치, main 병합·push는 사용자 승인 대기).
 - **다음 작업**: v2 구현 V1~V7 완료. **사람 확인 대기**: GUI(`pnpm tauri dev`)·클린 VM 설치·실제 Claude Code/Codex 데모·코드 서명(`Docs/Verification/Clean-Install-Checklist-v2.md`). 로컬 `main`에는 V1~V6이 병합되어 있고 `feat/v2-release`(V7)는 병합 전. **병합·push는 사용자 승인 대기.**
+- **예제 대량 제작**: 준비 완료. "E 예제 라이브러리" 절의 TE.1부터 진행한다(D-047).
 - 이월 항목(v1): T7.2 클린 VM 재실행·T7.5 코드 서명은 V7.7에서 이어받는다.
+
+---
+
+## E 예제 라이브러리 (branch: `feat/examples-<batch>`, 선행 `feat/template-style-split` 병합)
+
+항목별 목록은 `Examples-Backlog.md`, 제작 규칙과 시작 프롬프트는 `resources/examples/README.md`를 따른다. 배치별 소유 경로는 `resources/examples/<kind>/<id>/`뿐이다. 배치 완료 판정: `pnpm examples check` 통과, 전 항목 `preview.webp` 육안 확인, 건너뛴 항목 보고. 항목 수는 473개, 샘플 4개를 포함한다.
+
+- [x] TE.0 [단독] 예제 구조·`pnpm examples`·카드 표시·샘플 4종·백로그 — 대상: `scripts/examples.mjs`, `src/lib/examples/`, `resources/examples/` · (D-047)
+- [ ] TE.1 [병렬 · 1순위] 프로젝트 템플릿 E25(7개 남음) — 다른 배치의 시각 기준이 되므로 먼저 끝낸다
+- [ ] TE.2 [병렬 · 1순위] 스타일 E01~E24(198개 남음) — family별 배치, 동시 실행 가능
+- [ ] TE.3 [병렬 · 2순위] 구성 기법 E32~E47(181개, 미리보기 없음 161개) — 코드로 시연이 어려운 용어는 건너뛰고 보고
+- [ ] TE.4 [병렬 · 2순위] 팔레트 E48~E50(31개 남음) — `palette/blush-ledger` 레이아웃을 재사용해 색만 교체
+- [ ] TE.5 [병렬 · 3순위] 신 가이드 E26~E27(15개), 세부 프리셋 E28~E29(15개), 레시피 E30~E31(22개) — 외부 이미지를 오프라인 예제로 교체
+- [ ] TE.6 [단독 · 배치 병합마다] 병합 담당: `pnpm examples check`·`pnpm examples backlog` 실행 후 백로그 커밋, 전체 완료 시 `pnpm examples status` 기록
+- [ ] TE.7 [단독 · 마무리] 에이전트 참조 제공 — `example.html`을 워크스페이스나 CLI로 전달할지 결정(D-047 범위 밖) · 선행: TE.2
+- [ ] TE.8 [사람 확인] `pnpm tauri dev`에서 카드 호버 재생·확대 보기·소스 보기, 전체 완료 후 번들 크기 확인
 
 ---
 

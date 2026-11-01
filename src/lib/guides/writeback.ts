@@ -16,10 +16,11 @@ const SHARED_TIMED = [
   'endCard',
   'audio',
   'constraints',
+  'styles',
 ] as const;
 
 const FIELDS: Record<SceneType, readonly string[]> = {
-  static: ['mode', 'steps', 'sections', 'layout', 'breakpoints', 'accessibility', 'status'],
+  static: ['mode', 'steps', 'sections', 'layout', 'breakpoints', 'accessibility', 'styles', 'status'],
   motion: [...SHARED_TIMED, 'status'],
   '3d': [...SHARED_TIMED, 'composition', 'materials', 'lighting', 'cameraPath', 'performanceBudget', 'status'],
 };

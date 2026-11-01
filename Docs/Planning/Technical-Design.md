@@ -1,6 +1,6 @@
 # Vanilla Studio 기술 설계서 (Technical Design)
 
-- 문서 버전: **v1.7 (워크스페이스 히스토리 일원화 기록·zip 압축/불러오기, 2026-10-22)** — D-045 반영. v1.6(D-044)은 git 이력에 있다. 앱 명령 `pack_workspace_zip`·`unpack_workspace_zip`(`src-tauri/src/commands/workspace_archive.rs`)은 `pnpm dist`와 같은 제외 규칙으로 폴더째 압축하고, 복원은 빈 폴더에만 풀며 zip-slip·심링크·암호화 항목을 거부한다. 히스토리 기록은 `WorkspaceContext`에서만 한다.
+- 문서 버전: **v1.9 (예제 라이브러리, 2026-11-01)** — D-047 반영. `resources/examples/<kind>/<id>/`의 코드 예제를 `pnpm examples`로 캡처해 카드에 표시하며, 앱은 예제 HTML을 실행하지 않는다. v1.8(D-046 템플릿·스타일 분리)은 git 이력에 있다.
 - 선행 문서: `Docs/Planning/Refactor-Spec-v2.md`(무엇을 만드는가), `Docs/Planning/Decisions.md`(D-022~D-033)
 - 템플릿 공통 아키텍처(`Docs/Architecture.md`)는 **템플릿 원본으로 유지**하고, 이 문서가 Vanilla Studio 고유 설계의 진실 공급원이다. 충돌 시 이 문서가 우선한다.
 - ⚠️ 표시 항목은 PoC(`Feasibility-Risks.md`)로 확정해야 하는 가정이다.

@@ -78,6 +78,8 @@ export const storyboardVisualDirectionSchema = z
     variables: z.array(z.string()).default([]),
     selectedTemplate: z.string().optional(),
     selectedTaxonomy: z.array(z.string()).default([]),
+    /** 프로젝트 전체 뼈대(D-046). 신별 가이드인 selectedTemplate과 별개다. */
+    projectTemplate: z.string().optional(),
   })
   .strict();
 

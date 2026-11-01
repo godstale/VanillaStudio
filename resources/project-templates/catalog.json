@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "templates": [
+    {
+      "id": "product-launch", "version": 1,
+      "label": { "ko": "제품 출시 키노트", "en": "Product launch keynote" },
+      "summary": { "ko": "문제 제기에서 제품 공개, 근거, 행동 유도로 이어지는 발표형 뼈대", "en": "Keynote arc from problem to reveal, proof and call to action" },
+      "mediaIntent": "motion", "paletteId": "opus-keynote-lime",
+      "concept": "One product, one promise. Every scene earns the reveal or pays it off.",
+      "narrativeArc": "Tension -> reveal -> proof -> invitation",
+      "moodKeywords": ["confident", "precise", "cinematic"],
+      "invariants": ["one hero object", "dark stage", "single accent color"],
+      "variables": ["hero angle", "spec numbers"],
+      "slots": [
+        { "id": "hook", "role": "Hook", "sceneType": "motion", "guide": "opus-kinetic-manifesto@1", "seconds": 6, "purpose": "State the problem in one line.", "visual": "Oversized type on a dark stage.", "styles": [{ "id": "minimalart", "scope": "scene" }] },
+        { "id": "reveal", "role": "Reveal", "sceneType": "3d", "guide": "three-scene@1", "seconds": 10, "purpose": "Show the product for the first time.", "visual": "Hero object emerges from shadow.", "styles": [{ "id": "chrome", "scope": "image" }, { "id": "cinematic", "scope": "scene" }] },
+        { "id": "proof", "role": "Proof", "sceneType": "motion", "guide": "opus-keynote-launch@1", "seconds": 10, "purpose": "Three numbers that support the promise.", "visual": "Animated specs around the hero.", "styles": [{ "id": "infographic", "scope": "image" }] },
+        { "id": "cta", "role": "Call to action", "sceneType": "motion", "guide": "commercial@1", "seconds": 5, "purpose": "Name, date, where to get it.", "visual": "End card with the logo the user supplies.", "styles": [{ "id": "gradientart", "scope": "scene" }] }
+      ]
+    },
+    {
+      "id": "brand-film", "version": 1,
+      "label": { "ko": "브랜드 필름", "en": "Brand film" },
+      "summary": { "ko": "세계관과 가치를 감정선으로 전달하는 짧은 영상 뼈대", "en": "Short film skeleton that carries a brand world and values" },
+      "mediaIntent": "motion", "paletteId": "opus-botanical-parchment",
+      "concept": "Show the world the brand believes in before naming the brand.",
+      "narrativeArc": "Everyday moment -> shift -> belief -> signature",
+      "moodKeywords": ["warm", "human", "crafted"],
+      "invariants": ["hand-made texture", "warm light", "slow pacing"],
+      "variables": ["setting", "main motif"],
+      "slots": [
+        { "id": "world", "role": "World", "sceneType": "motion", "guide": "commercial@1", "seconds": 8, "purpose": "Set the place and mood.", "visual": "Layered landscape in slow parallax.", "styles": [{ "id": "papercut", "scope": "scene" }] },
+        { "id": "shift", "role": "Shift", "sceneType": "motion", "guide": "commercial@1", "seconds": 8, "purpose": "Something changes.", "visual": "The motif grows across the frame.", "styles": [{ "id": "watercolor", "scope": "image" }] },
+        { "id": "belief", "role": "Belief", "sceneType": "motion", "guide": "opus-kinetic-manifesto@1", "seconds": 8, "purpose": "Say the value in words.", "visual": "Hand-lettered statement.", "styles": [{ "id": "brushlettering", "scope": "image" }] },
+        { "id": "signature", "role": "Signature", "sceneType": "motion", "guide": "commercial@1", "seconds": 5, "purpose": "Close with the brand.", "visual": "Quiet end card.", "styles": [{ "id": "minimalart", "scope": "scene" }] }
+      ]
+    },
+    {
+      "id": "concept-explainer", "version": 1,
+      "label": { "ko": "개념 설명 영상", "en": "Concept explainer" },
+      "summary": { "ko": "질문, 비유, 구조, 정리 순서로 어려운 개념을 푸는 뼈대", "en": "Question, analogy, mechanism and recap for a hard idea" },
+      "mediaIntent": "motion", "paletteId": "paper-dawn",
+      "concept": "Replace jargon with one visual analogy and build on it.",
+      "narrativeArc": "Question -> analogy -> mechanism -> recap",
+      "moodKeywords": ["clear", "curious", "friendly"],
+      "invariants": ["one analogy throughout", "labels are real text", "generous spacing"],
+      "variables": ["diagram parts", "worked example"],
+      "slots": [
+        { "id": "question", "role": "Question", "sceneType": "motion", "guide": "opus-science-explainer@1", "seconds": 6, "purpose": "Pose the question.", "visual": "Chalk-drawn prompt.", "styles": [{ "id": "chalkboard", "scope": "scene" }] },
+        { "id": "analogy", "role": "Analogy", "sceneType": "motion", "guide": "opus-science-explainer@1", "seconds": 10, "purpose": "Introduce the everyday analogy.", "visual": "Flat characters and objects.", "styles": [{ "id": "vectorflat", "scope": "image" }] },
+        { "id": "mechanism", "role": "Mechanism", "sceneType": "motion", "guide": "opus-science-explainer@1", "seconds": 14, "purpose": "Show how it works step by step.", "visual": "Sliced diagram with labels.", "styles": [{ "id": "crosssection", "scope": "image" }] },
+        { "id": "recap", "role": "Recap", "sceneType": "motion", "guide": "opus-science-explainer@1", "seconds": 6, "purpose": "Three takeaways.", "visual": "Numbered summary card.", "styles": [{ "id": "infographic", "scope": "scene" }] }
+      ]
+    },
+    {
+      "id": "pitch-deck", "version": 1,
+      "label": { "ko": "투자·제안 피치덱", "en": "Pitch deck" },
+      "summary": { "ko": "문제, 해결, 시장, 실행, 요청으로 구성된 발표 뼈대", "en": "Problem, solution, market, traction and ask slides" },
+      "mediaIntent": "slide", "paletteId": "deep-harbor",
+      "concept": "Each slide answers one investor question.",
+      "narrativeArc": "Why now -> what -> how big -> why us -> the ask",
+      "moodKeywords": ["sharp", "credible", "calm"],
+      "invariants": ["one claim per slide", "consistent grid", "sources shown"],
+      "variables": ["figures", "chart type"],
+      "slots": [
+        { "id": "problem", "role": "Problem", "sceneType": "static", "guide": "opus-narrative-deck@1", "purpose": "The pain in one sentence.", "visual": "Large claim, small evidence.", "styles": [{ "id": "minimalart", "scope": "scene" }] },
+        { "id": "solution", "role": "Solution", "sceneType": "static", "guide": "opus-narrative-deck@1", "purpose": "What you built.", "visual": "Product diagram.", "styles": [{ "id": "isometric", "scope": "image" }] },
+        { "id": "market", "role": "Market", "sceneType": "static", "guide": "opus-data-explainer-deck@1", "purpose": "Size and growth.", "visual": "Charts with sources.", "styles": [{ "id": "infographic", "scope": "scene" }] },
+        { "id": "traction", "role": "Traction", "sceneType": "static", "guide": "opus-data-explainer-deck@1", "purpose": "Proof so far.", "visual": "Timeline and metrics.", "styles": [{ "id": "duotone", "scope": "scene" }] },
+        { "id": "ask", "role": "Ask", "sceneType": "static", "guide": "opus-narrative-deck@1", "purpose": "What you need and what it unlocks.", "visual": "Single statement slide.", "styles": [{ "id": "bauhaus", "scope": "scene" }] }
+      ]
+    },
+    {
+      "id": "lecture-deck", "version": 1,
+      "label": { "ko": "강의 슬라이드", "en": "Lecture deck" },
+      "summary": { "ko": "목표, 개념, 실습, 복습 흐름의 수업용 뼈대", "en": "Class flow of goals, concepts, practice and review" },
+      "mediaIntent": "slide", "paletteId": "sage-field",
+      "concept": "Learners always know where they are and what to do next.",
+      "narrativeArc": "Goal -> concept -> demo -> practice -> review",
+      "moodKeywords": ["approachable", "structured", "encouraging"],
+      "invariants": ["progress marker", "readable from the back row", "one idea per step"],
+      "variables": ["examples", "exercises"],
+      "slots": [
+        { "id": "goals", "role": "Learning goals", "sceneType": "static", "guide": "opus-narrative-deck@1", "purpose": "What learners can do afterwards.", "visual": "Short numbered list.", "styles": [{ "id": "doodleart", "scope": "image" }] },
+        { "id": "concept", "role": "Concept", "sceneType": "static", "guide": "opus-data-explainer-deck@1", "purpose": "Explain the idea with steps.", "visual": "Step-by-step diagram.", "styles": [{ "id": "blueprint", "scope": "image" }] },
+        { "id": "demo", "role": "Demo", "sceneType": "static", "guide": "opus-simulator-canvas@1", "purpose": "Let learners try the idea.", "visual": "Interactive canvas.", "styles": [{ "id": "gameui", "scope": "image" }] },
+        { "id": "review", "role": "Review", "sceneType": "static", "guide": "opus-narrative-deck@1", "purpose": "Recap and next step.", "visual": "Checklist card.", "styles": [{ "id": "stickerart", "scope": "image" }] }
+      ]
+    },
+    {
+      "id": "landing-page", "version": 1,
+      "label": { "ko": "랜딩 페이지", "en": "Landing page" },
+      "summary": { "ko": "히어로, 가치, 근거, 전환으로 이어지는 웹 뼈대", "en": "Web flow of hero, value, proof and conversion" },
+      "mediaIntent": "web", "paletteId": "tide-glass",
+      "concept": "A visitor understands the offer in five seconds and can act at any depth.",
+      "narrativeArc": "Promise -> value -> proof -> action",
+      "moodKeywords": ["fresh", "tactile", "direct"],
+      "invariants": ["primary action always visible", "responsive grid", "real text"],
+      "variables": ["hero object", "feature list"],
+      "slots": [
+        { "id": "hero", "role": "Hero", "sceneType": "static", "guide": "opus-interactive-hero@1", "purpose": "Promise plus primary action.", "visual": "Interactive hero object.", "styles": [{ "id": "iridescent", "scope": "image" }] },
+        { "id": "features", "role": "Features", "sceneType": "static", "guide": "web-page@1", "purpose": "Three benefits.", "visual": "Card grid.", "styles": [{ "id": "vectorflat", "scope": "image" }] },
+        { "id": "proof", "role": "Proof", "sceneType": "static", "guide": "web-page@1", "purpose": "Quotes and numbers.", "visual": "Quiet evidence band.", "styles": [{ "id": "monochrome", "scope": "scene" }] }
+      ]
+    },
+    {
+      "id": "short-story", "version": 1,
+      "label": { "ko": "단편 스토리", "en": "Short story" },
+      "summary": { "ko": "인물, 사건, 위기, 결말의 4막 서사 뼈대", "en": "Four-act arc of character, event, crisis and ending" },
+      "mediaIntent": "motion", "paletteId": "ember-night",
+      "concept": "One character wants one thing; the look follows their emotional state.",
+      "narrativeArc": "Setup -> disturbance -> crisis -> resolution",
+      "moodKeywords": ["intimate", "storybook", "bittersweet"],
+      "invariants": ["same character design", "same line quality"],
+      "variables": ["light", "color temperature by act"],
+      "slots": [
+        { "id": "setup", "role": "Setup", "sceneType": "motion", "guide": "opus-pixel-illustration@1", "seconds": 10, "purpose": "Who and where.", "visual": "Calm establishing shot.", "styles": [{ "id": "gouache", "scope": "scene" }] },
+        { "id": "disturbance", "role": "Disturbance", "sceneType": "motion", "guide": "opus-pixel-illustration@1", "seconds": 10, "purpose": "The event.", "visual": "The frame tilts and colors cool.", "styles": [{ "id": "gouache", "scope": "scene" }, { "id": "webtoon", "scope": "motion" }] },
+        { "id": "crisis", "role": "Crisis", "sceneType": "motion", "guide": "opus-pixel-illustration@1", "seconds": 10, "purpose": "The lowest point.", "visual": "Near-black with one light.", "styles": [{ "id": "silhouette", "scope": "scene" }] },
+        { "id": "resolution", "role": "Resolution", "sceneType": "motion", "guide": "opus-pixel-illustration@1", "seconds": 8, "purpose": "What changed.", "visual": "Return to the first shot, warmer.", "styles": [{ "id": "gouache", "scope": "scene" }] }
+      ]
+    },
+    {
+      "id": "social-reel", "version": 1,
+      "label": { "ko": "숏폼 릴스", "en": "Social reel" },
+      "summary": { "ko": "3초 훅과 빠른 전개의 세로 숏폼 뼈대", "en": "Vertical short with a 3-second hook and fast beats" },
+      "mediaIntent": "motion", "paletteId": "opus-cyber-magenta",
+      "concept": "Stop the scroll, deliver one idea, loop back to the start.",
+      "narrativeArc": "Hook -> payoff -> loop",
+      "moodKeywords": ["bold", "fast", "playful"],
+      "invariants": ["captions inside safe area", "high contrast", "beat-synced cuts"],
+      "variables": ["hook line", "visual gag"],
+      "slots": [
+        { "id": "hook", "role": "Hook", "sceneType": "motion", "guide": "opus-kinetic-poster@1", "seconds": 3, "purpose": "Stop the scroll.", "visual": "Huge type slam.", "styles": [{ "id": "popart", "scope": "scene" }] },
+        { "id": "payoff", "role": "Payoff", "sceneType": "motion", "guide": "opus-kinetic-poster@1", "seconds": 9, "purpose": "Deliver the idea in fast beats.", "visual": "Rapid cuts between sticker-like objects.", "styles": [{ "id": "stickerart", "scope": "image" }, { "id": "glitchart", "scope": "motion" }] },
+        { "id": "loop", "role": "Loop", "sceneType": "motion", "guide": "opus-kinetic-poster@1", "seconds": 3, "purpose": "End where the hook begins.", "visual": "Match cut to the first frame.", "styles": [{ "id": "popart", "scope": "scene" }] }
+      ]
+    }
+  ]
+}

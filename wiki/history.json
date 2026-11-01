@@ -324,6 +324,16 @@
       "pages": [
         "sources/standalone-play.md"
       ]
+    },
+    "research-2026-11-01-style-tags": {
+      "source_file": "https://cocojuan.com/googleflow-image-style-tag/",
+      "origin": "https://cocojuan.com/googleflow-image-style-tag/",
+      "ingest_mode": "summary",
+      "status": "active",
+      "ingested_at": "2026-11-01",
+      "pages": [
+        "sources/research-2026-11-01-style-tags.md"
+      ]
     }
   }
 }

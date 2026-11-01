@@ -8,14 +8,45 @@ vi.mock('@/lib/context/WorkspaceContext', () => ({
 }));
 
 describe('Templates', () => {
+  it('splits project templates from styles and searches the 200-style library', () => {
+    render(
+      <LanguageProvider>
+        <Templates />
+      </LanguageProvider>,
+    );
+    expect(screen.getAllByTestId('project-template-card').length).toBeGreaterThanOrEqual(8);
+    fireEvent.click(screen.getByRole('tab', { name: /^(스타일|Styles)$/ }));
+    expect(screen.getAllByTestId('style-card')).toHaveLength(200);
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'chrome' } });
+    expect(screen.getAllByTestId('style-card').length).toBeLessThan(200);
+    fireEvent.click(screen.getAllByRole('button', { name: /적용|Apply/ })[0]);
+    expect(screen.getByTestId('style-apply-dialog')).toBeTruthy();
+  });
+
+  it('opens an example with its note and source from a style card', async () => {
+    render(
+      <LanguageProvider>
+        <Templates />
+      </LanguageProvider>,
+    );
+    fireEvent.click(screen.getByRole('tab', { name: /^(스타일|Styles)$/ }));
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'popart' } });
+    fireEvent.click(screen.getByTestId('example-thumb'));
+    const dialog = screen.getByTestId('example-dialog');
+    expect(dialog.textContent).toMatch(/망점|halftone/);
+    fireEvent(dialog.querySelector('details')!, new Event('toggle'));
+    expect(await screen.findByText(/<!doctype html>/)).toBeTruthy();
+  });
+
   it('shows tabs, preview thumbnails, and live demo links on guide cards', () => {
     render(
       <LanguageProvider>
         <Templates />
       </LanguageProvider>,
     );
+    fireEvent.click(screen.getByRole('tab', { name: /^(스타일|Styles)$/ }));
     expect(screen.getByTestId('templates-page')).toBeTruthy();
-    expect(screen.getByRole('tab', { name: /가이드 템플릿|Guide templates/ })).toBeTruthy();
+    fireEvent.click(screen.getByRole('tab', { name: /신 가이드|Scene guides/ }));
     expect(screen.getByRole('tab', { name: /세부 프리셋|Decomposed Presets/ })).toBeTruthy();
     expect(screen.getByRole('tab', { name: /Opus 쇼케이스 레시피|Opus Showcase Recipes/ })).toBeTruthy();
     expect(screen.getByRole('tab', { name: /컬러 팔레트|Color palettes/ })).toBeTruthy();
@@ -34,6 +65,7 @@ describe('Templates', () => {
         <Templates />
       </LanguageProvider>,
     );
+    fireEvent.click(screen.getByRole('tab', { name: /^(스타일|Styles)$/ }));
     fireEvent.click(screen.getByRole('tab', { name: /세부 프리셋|Decomposed Presets/ }));
     const allCards = screen.getAllByTestId('decomposed-card');
     expect(allCards.length).toBeGreaterThanOrEqual(12);
@@ -51,6 +83,7 @@ describe('Templates', () => {
         <Templates />
       </LanguageProvider>,
     );
+    fireEvent.click(screen.getByRole('tab', { name: /^(스타일|Styles)$/ }));
     fireEvent.click(screen.getByRole('tab', { name: /Opus 쇼케이스 레시피|Opus Showcase Recipes/ }));
     const allRecipes = screen.getAllByTestId('recipe-card');
     expect(allRecipes.length).toBeGreaterThanOrEqual(20);
@@ -67,6 +100,7 @@ describe('Templates', () => {
         <Templates />
       </LanguageProvider>,
     );
+    fireEvent.click(screen.getByRole('tab', { name: /^(스타일|Styles)$/ }));
     fireEvent.click(screen.getByRole('tab', { name: /컬러 팔레트|Color palettes/ }));
     expect(screen.getByText('Paper Dawn')).toBeTruthy();
     expect(screen.getByText('Opus Keynote Lime')).toBeTruthy();
@@ -79,6 +113,7 @@ describe('Templates', () => {
         <Templates />
       </LanguageProvider>,
     );
+    fireEvent.click(screen.getByRole('tab', { name: /^(스타일|Styles)$/ }));
     fireEvent.click(screen.getByRole('tab', { name: /구성 기법|Techniques/ }));
     expect(screen.getAllByTestId('technique-card').length).toBeGreaterThan(0);
   });

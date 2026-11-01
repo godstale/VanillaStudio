@@ -118,7 +118,16 @@ const head = {
 // 사용자 정의 템플릿이 추가하는 필드의 값(D-031). 키는 템플릿 schema.json의 fields[].id.
 const customValue = z.union([z.string(), z.number(), z.boolean(), z.array(z.string())]);
 
+// 스타일 참조(D-046). 없을 때는 키 자체를 쓰지 않아 기존 신의 바이트·해시가 유지된다.
+const sceneStyleSchema = z
+  .object({
+    id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/, 'style id must be kebab-case'),
+    scope: z.enum(['scene', 'image', 'motion']),
+  })
+  .strict();
+
 const tail = {
+  styles: z.array(sceneStyleSchema).optional(),
   custom: z.record(z.string(), customValue).default({}),
   references: z.array(referenceSchema),
   userPrompt: text,

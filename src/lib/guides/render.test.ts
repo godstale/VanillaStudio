@@ -27,7 +27,7 @@ describe('agents.md', () => {
     expect(readSection(md, 'security')).toContain('Write only inside this scene folder');
     expect(readSection(md, 'type-rules')).toContain(defaultTemplateFor(type).rules.trim().split('\n')[0]);
     expect(agentsMdSections(ctxFor(scene)).map((s) => s.id)).toEqual([
-      'identity', 'task', 'contract', 'design', 'writeback', 'type-rules', 'references', 'review', 'security',
+      'identity', 'task', 'contract', 'design', 'styles', 'writeback', 'type-rules', 'references', 'review', 'security',
     ]);
   });
 
