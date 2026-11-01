@@ -910,6 +910,8 @@ const en: Dict = {
   'tpl.liveDemo': 'Live Demo',
   'tpl.originalPost': 'Original Post',
   'tpl.previewAlt': '{name} preview',
+  'tpl.example.open': 'Open the {name} example',
+  'tpl.example.source': 'View example code',
   'tpl.applyPresetTitle': 'Apply decomposed preset: {name}',
   'tpl.applyRecipeTitle': 'Apply Opus recipe: {name}',
   'tpl.applyPresetHint': 'Keeps the scene’s current guide template and merges only this building block (beats, typography, motion effects, or 3D stage).',

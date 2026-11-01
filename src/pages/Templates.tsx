@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ExternalLink, Sparkles, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ExampleThumb } from '@/components/templates/ExampleThumb';
 import { ProjectTemplatesPanel } from '@/components/templates/ProjectTemplatesPanel';
 import { StyleLibraryPanel } from '@/components/templates/StyleLibraryPanel';
+import { getExample, type ExampleKind } from '@/lib/examples';
 import { useSafeWorkspace } from '@/lib/context/WorkspaceContext';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import {
@@ -55,6 +57,7 @@ function loadFavorites(): Set<string> {
 }
 
 function PreviewMedia({
+  example,
   previewUrl,
   actionUrl,
   postUrl,
@@ -63,6 +66,7 @@ function PreviewMedia({
   originalPostLabel,
   altText,
 }: {
+  example: { kind: ExampleKind; id: string };
   previewUrl?: string;
   actionUrl?: string;
   postUrl?: string;
@@ -71,10 +75,12 @@ function PreviewMedia({
   originalPostLabel?: string;
   altText: string;
 }) {
-  if (!previewUrl && !actionUrl) return null;
+  const local = getExample(example.kind, example.id);
+  if (!local && !previewUrl && !actionUrl) return null;
   return (
     <div className="mb-2 overflow-hidden rounded-md border border-border bg-muted/40">
-      {previewUrl && (
+      {local && <ExampleThumb example={local} name={name} />}
+      {!local && previewUrl && (
         <div className="relative aspect-video w-full overflow-hidden bg-muted">
           <img
             src={previewUrl}
@@ -97,7 +103,7 @@ function PreviewMedia({
           )}
         </div>
       )}
-      {!previewUrl && actionUrl && (
+      {(local || !previewUrl) && actionUrl && (
         <div className="flex items-center justify-end px-2 py-1.5">
           <a
             href={actionUrl}
@@ -323,6 +329,7 @@ export function Templates() {
               {visibleGuides.map((g) => (
                 <li key={g.ref} className="flex flex-col rounded-lg border border-border bg-card p-3 shadow-sm" data-testid="guide-card">
                   <PreviewMedia
+                    example={{ kind: 'guide', id: g.meta.id }}
                     previewUrl={g.meta.previewUrl}
                     actionUrl={g.meta.actionUrl}
                     name={g.meta.label[lang]}
@@ -377,6 +384,7 @@ export function Templates() {
                 return (
                   <li key={preset.id} className="flex flex-col rounded-lg border border-border bg-card p-3 shadow-sm" data-testid="decomposed-card">
                     <PreviewMedia
+                      example={{ kind: 'preset', id: preset.id }}
                       previewUrl={preset.previewUrl}
                       actionUrl={preset.actionUrl}
                       name={preset.label[lang]}
@@ -433,6 +441,7 @@ export function Templates() {
                 return (
                   <li key={r.id} className="flex flex-col rounded-lg border border-border bg-card p-3 shadow-sm" data-testid="recipe-card">
                     <PreviewMedia
+                      example={{ kind: 'recipe', id: r.id }}
                       previewUrl={r.previewUrl}
                       actionUrl={r.actionUrl}
                       postUrl={r.postUrl}
@@ -487,6 +496,7 @@ export function Templates() {
               {visiblePalettes.map((p) => (
                 <li key={p.id} className="flex flex-col rounded-lg border border-border bg-card p-3 shadow-sm" data-testid="palette-card">
                   <PreviewMedia
+                    example={{ kind: 'palette', id: p.id }}
                     previewUrl={p.previewUrl}
                     actionUrl={p.actionUrl}
                     name={p.name}
@@ -529,6 +539,7 @@ export function Templates() {
                 return (
                   <li key={favId} className="flex flex-col rounded-lg border border-border bg-card p-3 shadow-sm" data-testid="technique-card">
                     <PreviewMedia
+                      example={{ kind: 'technique', id: term.id }}
                       previewUrl={term.previewUrl}
                       actionUrl={term.actionUrl}
                       name={term.label[lang]}

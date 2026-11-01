@@ -156,3 +156,27 @@
     background: transparent;
   }
 }
+
+/* 예제 필름스트립(D-047): 프레임 이미지를 가로로 넘긴다. */
+@keyframes vs-filmstrip {
+  from {
+    background-position-x: 0%;
+  }
+  to {
+    background-position-x: 100%;
+  }
+}
+
+.vs-filmstrip:hover,
+.vs-filmstrip:focus-visible,
+.vs-filmstrip-playing {
+  animation: vs-filmstrip 2s steps(8, jump-none) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vs-filmstrip:hover,
+  .vs-filmstrip:focus-visible,
+  .vs-filmstrip-playing {
+    animation: none;
+  }
+}

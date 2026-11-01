@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { ExampleThumb } from '@/components/templates/ExampleThumb';
+import { getExample } from '@/lib/examples';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { getStyle } from '@/lib/styles/library';
 import { readStoryboard } from '@/lib/storyboard/files';
@@ -29,37 +31,45 @@ export function ProjectTemplatesPanel({ workspaceRoot }: { workspaceRoot: string
     <section aria-label={t('tpl.section.templates')}>
       <p className="mb-2 text-xs text-muted-foreground">{t('tpl.project.hint')}</p>
       <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {PROJECT_TEMPLATES.map((tpl) => (
-          <li key={tpl.id} className="flex flex-col rounded-lg border border-border bg-card p-3 shadow-sm" data-testid="project-template-card">
-            <div className="flex items-center gap-2">
-              <b className="min-w-0 flex-1 truncate">{tpl.label[lang]}</b>
-              {current === projectTemplateRef(tpl) && (
-                <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">{t('tpl.project.current')}</span>
+        {PROJECT_TEMPLATES.map((tpl) => {
+          const example = getExample('template', tpl.id);
+          return (
+            <li key={tpl.id} className="flex flex-col rounded-lg border border-border bg-card p-3 shadow-sm" data-testid="project-template-card">
+              {example && (
+                <div className="mb-2 overflow-hidden rounded-md border border-border">
+                  <ExampleThumb example={example} name={tpl.label[lang]} />
+                </div>
               )}
-            </div>
-            <div className="mt-1 flex flex-wrap gap-1 text-[10px] text-muted-foreground">
-              <span className="rounded bg-primary/10 px-1.5 py-0.5 text-primary">{t(`tpl.intent.${tpl.mediaIntent}`)}</span>
-              <span className="rounded bg-muted px-1.5 py-0.5">{t('tpl.project.slots', { count: tpl.slots.length })}</span>
-            </div>
-            <p className="mt-1.5 text-xs text-muted-foreground">{tpl.summary[lang]}</p>
-            <ol className="mt-2 flex-1 space-y-1 text-[11px]">
-              {tpl.slots.map((s) => (
-                <li key={s.id} className="flex flex-wrap items-center gap-1">
-                  <span className="font-medium">{s.role}</span>
-                  <span className="text-muted-foreground">{t(`scene.type.${s.sceneType}`)}</span>
-                  {s.styles.map((x) => (
-                    <span key={x.id} className="rounded bg-muted px-1 py-0.5 text-[10px] text-muted-foreground">
-                      {getStyle(x.id)?.label[lang] ?? x.id}
-                    </span>
-                  ))}
-                </li>
-              ))}
-            </ol>
-            <Button size="sm" className="mt-3" onClick={() => setTarget(tpl)}>
-              {t('tpl.apply')}
-            </Button>
-          </li>
-        ))}
+              <div className="flex items-center gap-2">
+                <b className="min-w-0 flex-1 truncate">{tpl.label[lang]}</b>
+                {current === projectTemplateRef(tpl) && (
+                  <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">{t('tpl.project.current')}</span>
+                )}
+              </div>
+              <div className="mt-1 flex flex-wrap gap-1 text-[10px] text-muted-foreground">
+                <span className="rounded bg-primary/10 px-1.5 py-0.5 text-primary">{t(`tpl.intent.${tpl.mediaIntent}`)}</span>
+                <span className="rounded bg-muted px-1.5 py-0.5">{t('tpl.project.slots', { count: tpl.slots.length })}</span>
+              </div>
+              <p className="mt-1.5 text-xs text-muted-foreground">{tpl.summary[lang]}</p>
+              <ol className="mt-2 flex-1 space-y-1 text-[11px]">
+                {tpl.slots.map((s) => (
+                  <li key={s.id} className="flex flex-wrap items-center gap-1">
+                    <span className="font-medium">{s.role}</span>
+                    <span className="text-muted-foreground">{t(`scene.type.${s.sceneType}`)}</span>
+                    {s.styles.map((x) => (
+                      <span key={x.id} className="rounded bg-muted px-1 py-0.5 text-[10px] text-muted-foreground">
+                        {getStyle(x.id)?.label[lang] ?? x.id}
+                      </span>
+                    ))}
+                  </li>
+                ))}
+              </ol>
+              <Button size="sm" className="mt-3" onClick={() => setTarget(tpl)}>
+                {t('tpl.apply')}
+              </Button>
+            </li>
+          );
+        })}
       </ul>
       {target && (
         <ApplyProjectDialog

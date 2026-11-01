@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>TODO example name</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: #10141c;
+        color: #f4f1ea;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- TODO draw one clear subject at 1280x720 with HTML, CSS, SVG or canvas -->
+    <script>
+      const SECONDS = 4;
+
+      // Pure function of t: the capture tool calls this with fixed times.
+      window.seekExample = (t) => {
+        const phase = (t % SECONDS) / SECONDS;
+        void phase; // TODO update the picture from phase
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

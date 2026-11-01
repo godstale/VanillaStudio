@@ -908,6 +908,8 @@ const ko = {
   'tpl.liveDemo': '동작 확인',
   'tpl.originalPost': '원본 링크',
   'tpl.previewAlt': '{name} 미리보기',
+  'tpl.example.open': '{name} 예제 크게 보기',
+  'tpl.example.source': '예제 코드 보기',
   'tpl.applyPresetTitle': '세부 프리셋 적용: {name}',
   'tpl.applyRecipeTitle': 'Opus 레시피 적용: {name}',
   'tpl.applyPresetHint': '선택한 신의 기존 가이드 템플릿은 유지하고, 분해된 세부 항목(장면 구조·타이포그래피·모션 효과·3D 설정)만 추가·병합합니다.',

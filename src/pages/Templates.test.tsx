@@ -23,6 +23,21 @@ describe('Templates', () => {
     expect(screen.getByTestId('style-apply-dialog')).toBeTruthy();
   });
 
+  it('opens an example with its note and source from a style card', async () => {
+    render(
+      <LanguageProvider>
+        <Templates />
+      </LanguageProvider>,
+    );
+    fireEvent.click(screen.getByRole('tab', { name: /^(스타일|Styles)$/ }));
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'popart' } });
+    fireEvent.click(screen.getByTestId('example-thumb'));
+    const dialog = screen.getByTestId('example-dialog');
+    expect(dialog.textContent).toMatch(/망점|halftone/);
+    fireEvent(dialog.querySelector('details')!, new Event('toggle'));
+    expect(await screen.findByText(/<!doctype html>/)).toBeTruthy();
+  });
+
   it('shows tabs, preview thumbnails, and live demo links on guide cards', () => {
     render(
       <LanguageProvider>

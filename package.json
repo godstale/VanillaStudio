@@ -12,6 +12,7 @@
     "lint": "eslint . --max-warnings=0",
     "format": "prettier --write .",
     "test": "vitest run",
+    "examples": "node scripts/examples.mjs",
     "test:e2e:scene": "node tests/e2e/scene-preview.mjs",
     "test:e2e:agent": "node tests/e2e/scene-preview.mjs --agent-scene",
     "test:e2e:sequence": "node tests/e2e/sequence-playback.mjs",

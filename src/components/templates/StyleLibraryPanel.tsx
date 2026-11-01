@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Copy, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ExampleThumb } from '@/components/templates/ExampleThumb';
+import { getExample } from '@/lib/examples';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { copyToClipboard } from '@/lib/agents/clipboard';
 import { listScenes, writeScene, type SceneEntry } from '@/lib/scene/files';
@@ -94,46 +96,54 @@ export function StyleLibraryPanel({
         <p className="text-xs text-muted-foreground">{t('tpl.empty')}</p>
       ) : (
         <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {visible.map((s) => (
-            <li key={s.id} className="flex flex-col rounded-lg border border-border bg-card p-3 shadow-sm" data-testid="style-card">
-              <div className="flex items-center gap-2">
-                <b className="min-w-0 flex-1 truncate text-xs">{s.label[lang]}</b>
-                {favButton(`style:${s.id}`)}
-              </div>
-              <div className="mt-0.5 flex flex-wrap items-center gap-1 text-[10px] text-muted-foreground">
-                <span className="font-mono">{s.id}</span>
-                {styleSceneTypes(s).map((st) => (
-                  <span key={st} className="rounded bg-muted px-1.5 py-0.5">
-                    {t(`scene.type.${st}`)}
-                  </span>
-                ))}
-              </div>
-              <p className="mt-1.5 flex-1 text-xs text-muted-foreground">{s.description[lang]}</p>
-              <div className="mt-2 flex flex-wrap gap-1">
-                {s.keywords.map((k) => (
-                  <span key={k} className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
-                    {k}
-                  </span>
-                ))}
-              </div>
-              <details className="mt-2 rounded border border-border p-2 text-xs">
-                <summary className="cursor-pointer font-medium">{t('tpl.style.details')}</summary>
-                <p className="mt-1 text-[11px] text-muted-foreground">{s.example}</p>
-                <p className="mt-1 text-[11px]">→ {styleFamily(s)?.technique}</p>
-                {s.ipSensitive && <p className="mt-1 text-[11px] text-warning">{t('tpl.style.ip')}</p>}
-              </details>
-              <div className="mt-3 flex gap-2">
-                <Button size="sm" variant="outline" className="flex-1" onClick={() => setTarget(s)}>
-                  <Sparkles className="mr-1 h-3.5 w-3.5" />
-                  {t('tpl.apply')}
-                </Button>
-                <Button size="sm" variant="ghost" onClick={() => void copy(s)}>
-                  <Copy className="mr-1 h-3.5 w-3.5" />
-                  {copied === s.id ? t('inspector.copied') : t('tpl.style.copy')}
-                </Button>
-              </div>
-            </li>
-          ))}
+          {visible.map((s) => {
+            const example = getExample('style', s.id);
+            return (
+              <li key={s.id} className="flex flex-col rounded-lg border border-border bg-card p-3 shadow-sm" data-testid="style-card">
+                {example && (
+                  <div className="mb-2 overflow-hidden rounded-md border border-border">
+                    <ExampleThumb example={example} name={s.label[lang]} />
+                  </div>
+                )}
+                <div className="flex items-center gap-2">
+                  <b className="min-w-0 flex-1 truncate text-xs">{s.label[lang]}</b>
+                  {favButton(`style:${s.id}`)}
+                </div>
+                <div className="mt-0.5 flex flex-wrap items-center gap-1 text-[10px] text-muted-foreground">
+                  <span className="font-mono">{s.id}</span>
+                  {styleSceneTypes(s).map((st) => (
+                    <span key={st} className="rounded bg-muted px-1.5 py-0.5">
+                      {t(`scene.type.${st}`)}
+                    </span>
+                  ))}
+                </div>
+                <p className="mt-1.5 flex-1 text-xs text-muted-foreground">{s.description[lang]}</p>
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {s.keywords.map((k) => (
+                    <span key={k} className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                      {k}
+                    </span>
+                  ))}
+                </div>
+                <details className="mt-2 rounded border border-border p-2 text-xs">
+                  <summary className="cursor-pointer font-medium">{t('tpl.style.details')}</summary>
+                  <p className="mt-1 text-[11px] text-muted-foreground">{s.example}</p>
+                  <p className="mt-1 text-[11px]">→ {styleFamily(s)?.technique}</p>
+                  {s.ipSensitive && <p className="mt-1 text-[11px] text-warning">{t('tpl.style.ip')}</p>}
+                </details>
+                <div className="mt-3 flex gap-2">
+                  <Button size="sm" variant="outline" className="flex-1" onClick={() => setTarget(s)}>
+                    <Sparkles className="mr-1 h-3.5 w-3.5" />
+                    {t('tpl.apply')}
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => void copy(s)}>
+                    <Copy className="mr-1 h-3.5 w-3.5" />
+                    {copied === s.id ? t('inspector.copied') : t('tpl.style.copy')}
+                  </Button>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
       {target && <ApplyStyleDialog style={target} workspaceRoot={workspaceRoot} onClose={() => setTarget(null)} />}
