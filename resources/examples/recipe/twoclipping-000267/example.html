@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><title>Launch film</title><style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#f5f3ec;color:#101418;font-family:system-ui,'Segoe UI',sans-serif}
+#hero{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+#hero h1{margin:0;font-size:120px;letter-spacing:-.045em}
+#hero p{margin:14px 0 0;font-size:32px;color:#5b6470}
+#app{position:absolute;left:340px;top:150px;width:600px;height:420px;background:#fff;border-radius:24px;box-shadow:0 30px 80px rgba(16,20,24,.18)}
+#app .bar{height:54px;border-bottom:2px solid #eceae2;display:flex;gap:10px;align-items:center;padding:0 24px}
+#app .bar b{width:16px;height:16px;border-radius:50%;background:#e2ded2}
+#row1{margin:34px 40px 0;height:120px;border-radius:16px;background:#101418}
+#row2{margin:20px 40px 0;display:flex;gap:16px}
+#row2 div{flex:1;height:110px;border-radius:16px;background:#efede4;border:3px solid #101418}
+#cursor{position:absolute;width:34px;height:34px;border-radius:50% 50% 50% 4px;background:#ff4d2e;box-shadow:0 6px 20px rgba(255,77,46,.5)}
+#end{position:absolute;inset:0;display:grid;place-content:center;text-align:center;background:#101418;color:#f5f3ec}
+#end h2{margin:0;font-size:110px;letter-spacing:-.04em}
+#end span{margin-top:16px;font-size:30px;color:#ffb347}
+svg.frame{position:absolute;inset:0;pointer-events:none}
+</style></head><body>
+<div id="hero"><div><h1 id="hh">One clear promise.</h1><p>then the proof, live</p></div></div>
+<div id="app"><div class="bar"><b></b><b></b><b></b></div><div id="row1"></div><div id="row2"><div></div><div></div><div></div></div></div>
+<div id="cursor"></div>
+<div id="end"><div><h2>Start today.</h2><span>one idea per shot</span></div></div>
+<svg class="frame" viewBox="0 0 1280 720"><rect x="24" y="24" width="1232" height="672" fill="none" stroke="#101418" stroke-width="4" opacity=".25"/></svg>
+<script>
+var SECONDS=8;
+var hero=document.getElementById("hero"),hh=document.getElementById("hh"),
+app=document.getElementById("app"),cursor=document.getElementById("cursor"),end=document.getElementById("end");
+function ease(x){return x<0?0:x>1?1:x*x*(3-2*x);}
+window.seekExample=function(t){
+var p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+var hA=1-ease((p-0.02)/0.08),aA=ease((p-0.22)/0.08)*(1-ease((p-0.68)/0.08)),eA=ease((p-0.72)/0.1);
+hero.style.opacity=hA;app.style.opacity=aA;end.style.opacity=eA;
+hh.style.transform="translateY("+((1-hA)*120)+"px)";
+var cx=380+560*ease((p-0.3)/0.35),cy=560-260*ease((p-0.42)/0.3);
+cursor.style.opacity=aA;cursor.style.left=cx+"px";cursor.style.top=cy+"px";
+var z=1+0.5*ease((p-0.5)/0.12)*(1-ease((p-0.62)/0.1));
+app.style.transform="scale("+z+")";app.style.transformOrigin="52% 60%";
+};
+if(!navigator.webdriver){var loop=function(ms){window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script></body></html>

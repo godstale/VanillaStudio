@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><title>Tour and zoom</title><style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0f1420;color:#eef2f7;font-family:system-ui,'Segoe UI',sans-serif}
+#win{position:absolute;left:290px;top:110px;width:700px;height:470px;background:#1a2233;border-radius:20px;box-shadow:0 30px 90px rgba(0,0,0,.5)}
+#win .t{height:52px;border-bottom:2px solid #2b3650;display:flex;align-items:center;gap:10px;padding:0 22px}
+#win .t b{width:14px;height:14px;border-radius:50%;background:#3b4763}
+#panel{margin:30px;display:flex;gap:20px}
+#panel div{flex:1;height:300px;border-radius:14px;background:#242f4a}
+#panel div:first-child{background:#4f7cff}
+#lens{position:absolute;width:220px;height:220px;border-radius:50%;border:6px solid #ffd166;box-shadow:0 0 0 4000px rgba(8,10,16,.45)}
+#cursor{position:absolute;width:30px;height:30px;border-radius:50% 50% 50% 4px;background:#fff}
+#cap{position:absolute;left:290px;bottom:60px;font-size:30px;color:#9fb0cc}
+svg.frame{position:absolute;inset:0}
+</style></head><body>
+<div id="win"><div class="t"><b></b><b></b><b></b></div><div id="panel"><div></div><div></div><div></div></div></div>
+<div id="lens"></div><div id="cursor"></div>
+<div id="cap">smooth move, click, focus zoom</div>
+<svg class="frame" viewBox="0 0 1280 720"><circle id="dot" cx="1060" cy="620" r="10" fill="#ffd166"/></svg>
+<script>
+var SECONDS=6;
+var cur=document.getElementById("cursor"),lens=document.getElementById("lens"),
+win=document.getElementById("win"),dot=document.getElementById("dot");
+var PX=[420,760,760,480],PY=[300,300,470,470];
+function ease(x){x=x<0?0:x>1?1:x;return x*x*(3-2*x);}
+window.seekExample=function(t){
+var p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+var seg=Math.min(2,Math.floor(p*3)),fr=p*3-seg;
+var e=ease(fr);
+var cx=PX[seg]+(PX[seg+1]-PX[seg])*e,cy=PY[seg]+(PY[seg+1]-PY[seg])*e;
+cur.style.left=cx+"px";cur.style.top=cy+"px";
+var hot=(fr>0.8)?1:0;
+lens.style.left=(cx-110)+"px";lens.style.top=(cy-110)+"px";
+lens.style.transform="scale("+(0.6+0.9*hot)+")";lens.style.opacity=(0.35+0.65*hot);
+win.style.transformOrigin=((cx-290)/700*100)+"% "+((cy-110)/470*100)+"%";
+win.style.transform="scale("+(1+0.28*hot)+")";
+dot.setAttribute("r",10+8*hot);
+};
+if(!navigator.webdriver){var loop=function(ms){window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script></body></html>

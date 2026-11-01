@@ -1,0 +1,7 @@
+{
+  "seconds": 6,
+  "note": {
+    "ko": "겹겹이 들어가는 화면 틀로 자기참조 깊이가 깊어지는 모습을 보세요.",
+    "en": "Watch frames nest inside frames as the self-reference goes deeper."
+  }
+}

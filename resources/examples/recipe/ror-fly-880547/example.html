@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><title>Process steps</title><style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#fbf7ee;color:#1d1a14;font-family:system-ui,'Segoe UI',sans-serif}
+.step{position:absolute;top:200px;width:230px;text-align:center}
+.step .n{width:110px;height:110px;margin:0 auto;border-radius:50%;display:grid;place-items:center;font-size:52px;font-weight:800;background:#e7dfcd}
+.step h3{margin:18px 0 6px;font-size:30px}
+.step p{margin:0;font-size:24px;color:#7a6f5c}
+#track{position:absolute;left:140px;right:140px;top:150px;height:12px;background:#e7dfcd;border-radius:6px}
+#fill{height:100%;border-radius:6px;background:#1d8a5c}
+svg.frame{position:absolute;inset:0}
+</style></head><body>
+<div id="track"><div id="fill"></div></div>
+<div class="step" style="left:120px"><div class="n" id="n0">1</div><h3>Gather</h3><p>collect parts</p></div>
+<div class="step" style="left:395px"><div class="n" id="n1">2</div><h3>Mix</h3><p>blend evenly</p></div>
+<div class="step" style="left:670px"><div class="n" id="n2">3</div><h3>Heat</h3><p>warm it up</p></div>
+<div class="step" style="left:945px"><div class="n" id="n3">4</div><h3>Serve</h3><p>plate neatly</p></div>
+<svg class="frame" viewBox="0 0 1280 720"><rect x="36" y="36" width="1208" height="648" fill="none" stroke="#1d8a5c" stroke-width="4"/></svg>
+<script>
+var SECONDS=6;
+var fill=document.getElementById("fill");
+var ns=[0,1,2,3].map(function(i){return document.getElementById("n"+i);});
+window.seekExample=function(t){
+var p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+fill.style.width=(p*100)+"%";
+var act=Math.min(3,Math.floor(p*4));
+for(var i=0;i<4;i++){
+ns[i].style.background=(i<=act)?"#1d8a5c":"#e7dfcd";
+ns[i].style.color=(i<=act)?"#fff":"#1d1a14";
+ns[i].style.transform=(i===act)?"scale(1.15)":"scale(1)";
+}
+};
+if(!navigator.webdriver){var loop=function(ms){window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script></body></html>
