@@ -8,6 +8,7 @@ last_updated: 2026-10-22
 
 ## 현재 상태 (2026-11-01)
 
+- **2026-11-01 예제 라이브러리**: `pnpm examples`와 샘플 4종 준비, 대량 제작 대기(TODO TE.1~), D-047 Accepted.
 - **2026-11-01 템플릿·스타일 분리**: 프로젝트 템플릿 8종·스타일 사전 200종 추가, D-046 Accepted. 근거 [[research-2026-11-01-style-tags]]
 - **2026-10-22 문서 정비**: `README.md`·`Docs/Architecture.md`(Part A v2)·`Docs/Project-Structure.md`(Part A v2)를 v2 기준으로 개정. 최신 결정 D-045까지 Accepted
 - **2026-10-05 v2 리팩토링(Scene 워크스페이스)**: 기획 [[refactor-spec-v2]] v0.3·설계 [[technical-design]] v1.0·계획 [[implementation-plan]] v2.0(V1~V7)·`AGENTS.md` v2 개정 완료, D-022~D-033 Accepted(D-010·D-018 Superseded). **다음: V1 기반 정리(TODO T1.0)**. 브랜치 `docs/v2-refactor-spec`(main 병합·push는 사용자 승인 대기). 아래 P4(v1) 상태는 이력

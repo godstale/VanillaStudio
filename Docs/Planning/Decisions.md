@@ -356,3 +356,15 @@
   - 태그 목록은 어휘 색인으로만 쓰고 설명·키워드·예시는 새로 작성한다. 상표·저작물을 가리키는 9개 태그는 중립 id·라벨로 바꾸고 `ipSensitive`로 표시해, 에이전트에게 기존 캐릭터·로고·상품 형태 금지를 지시한다. `sourceTag`로 원본 태그는 추적한다.
 - **근거**: D-006(생성형 AI 배제 — 스타일은 코드로 구현), D-022(에이전트 중립), D-023(파일이 진실 공급원), D-031(가이드 템플릿).
 - **영향**: 데이터 계약 추가(`scene.json.styles`, `storyboard.json.visualDirection.projectTemplate`, `STYLE_LIBRARY.json`). `Technical-Design.md` v1.8. 앞으로 "템플릿"은 프로젝트 뼈대, 신 단위 템플릿은 "신 가이드"로 부른다. → [[research-2026-11-01-style-tags]]
+
+## D-047 예제 라이브러리: 코드 예제 + 캡처 미리보기 — Accepted (2026-11-01)
+
+- **맥락**: 스타일 200종과 프로젝트 템플릿 8종은 글로만 표시되고, 기법·팔레트도 대부분 미리보기가 없다. 나머지 카드의 미리보기는 외부 이미지라 오프라인에서 보이지 않는다. 다른 에이전트로 대량 제작할 수 있는 구조가 필요하다.
+- **결정**:
+  - 예제는 `resources/examples/<kind>/<id>/`의 자체 완결 HTML(`example.html`), 메타(`example.json`), 캡처 이미지(`preview.webp`)다. 폴더를 추가하면 등록 없이 카드에 나타난다. 로컬 예제가 있으면 외부 `previewUrl`보다 우선한다.
+  - 앱은 `example.html`을 실행하지 않고 `preview.webp`와 소스 보기만 제공한다. srcdoc 프레임은 앱 CSP를 상속하고, Tauri가 CSP에 nonce를 넣으면 `unsafe-inline`이 무시되어 배포판에서 동작이 달라질 수 있기 때문이다. CSP를 넓히지 않는다.
+  - 움직이는 예제는 8프레임 필름스트립 한 장으로 캡처해 CSS `steps()`로 재생한다(호버·확대 보기).
+  - 제작·검사는 `pnpm examples`(new·capture·check·backlog·status)로 한다. 외부 리소스·비결정 입력·GSAP·상표명을 금지하고, 캡처 때 네트워크 요청 차단과 프레임 변화·결정성을 확인한다.
+  - 일감은 `Examples-Backlog.md`로 생성하며 배치별 소유 폴더가 겹치지 않아 병렬 작업에 공유 파일이 없다.
+- **근거**: D-006(생성형 AI 배제), D-007(GSAP 미사용), D-011·D-024(시간 함수 결정성), AGENTS.md §7(외부 콘텐츠 격리).
+- **영향**: 데이터 계약 추가 없음(앱 내장 자료). 이미지는 Vite 번들에 포함되어 예제 473개 기준 약 12MB 늘어날 전망이다. 워크스페이스로 복사하지 않으므로 에이전트 참조용 제공은 별도 항목(TE.7)이다. `Technical-Design.md` v1.9. → [[research-2026-11-01-style-tags]]

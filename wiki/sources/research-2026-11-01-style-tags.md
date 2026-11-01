@@ -23,3 +23,9 @@ cocojuan의 Google Flow 프리셋 태그 글에서 200개 태그를 수집했다
 
 - `applyMarkers`는 빠진 구간을 지우지 않는다. 스타일을 해제해도 낡은 내용이 남지 않도록 `styles` 구간은 비어 있어도 항상 렌더한다.
 - `vanilla-agent.mjs`의 `orderSceneObject`는 모르는 키를 버린다. `scene.json` 필드를 추가하면 CLI도 함께 고쳐야 한다. 회귀는 `src/lib/styles/cliParity.test.ts`가 막는다.
+
+## 후속: 예제 라이브러리
+
+항목마다 코드 예제를 붙이는 구조를 D-047로 추가했다. 제작 규칙은 `resources/examples/README.md`, 진행표는 `Docs/Planning/Examples-Backlog.md`.
+
+**교훈**: 앱 안에서 인라인 HTML을 재생하려면 배포판 CSP까지 검증해야 한다. 캡처 이미지로 표시하면 CSP를 넓히지 않고 개발판과 배포판의 동작을 맞출 수 있다.

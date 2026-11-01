@@ -462,3 +462,11 @@ Ran lint. See lint-report.md for details.
 ## [2026-11-01] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
+
+## [2026-11-01] feature | 예제 라이브러리 준비(D-047)
+
+`pnpm examples`, 카드 미리보기, 샘플 4종, 50개 배치 백로그를 추가했다. 대량 제작은 TODO TE.1부터. → [[research-2026-11-01-style-tags]]
+
+## [2026-11-01] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.

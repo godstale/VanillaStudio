@@ -1,6 +1,6 @@
 # Vanilla Studio 기술 설계서 (Technical Design)
 
-- 문서 버전: **v1.8 (템플릿·스타일 분리, 2026-11-01)** — D-046 반영. 프로젝트 템플릿은 `storyboard/00-project-template.md`를 생성하고, 스타일은 `scene.json.styles`와 `STYLE_LIBRARY.json`(렌더러 `scripts/style-core.mjs`, 앱·CLI 공용)으로 전달한다. v1.7(D-045)은 git 이력에 있다.
+- 문서 버전: **v1.9 (예제 라이브러리, 2026-11-01)** — D-047 반영. `resources/examples/<kind>/<id>/`의 코드 예제를 `pnpm examples`로 캡처해 카드에 표시하며, 앱은 예제 HTML을 실행하지 않는다. v1.8(D-046 템플릿·스타일 분리)은 git 이력에 있다.
 - 선행 문서: `Docs/Planning/Refactor-Spec-v2.md`(무엇을 만드는가), `Docs/Planning/Decisions.md`(D-022~D-033)
 - 템플릿 공통 아키텍처(`Docs/Architecture.md`)는 **템플릿 원본으로 유지**하고, 이 문서가 Vanilla Studio 고유 설계의 진실 공급원이다. 충돌 시 이 문서가 우선한다.
 - ⚠️ 표시 항목은 PoC(`Feasibility-Risks.md`)로 확정해야 하는 가정이다.

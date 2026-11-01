@@ -234,6 +234,7 @@ v1 파이프라인·검수·ACP 에이전트·프로젝트 마법사·탭 셸은
 | `src/lib/package/` | `manifest.ts`(zod)·`api.ts`·`import.ts`(`.vsx`) |
 | `src-tauri/src/commands/package_commands.rs` | `.vsx` 만들기(허용 목록·결정적 zip)·검사(zip-slip·심링크·해시)·추출(덮어쓰기 없음) |
 | `src/lib/migrate/v1.ts`·`applyV1.ts`, `src-tauri/src/commands/migrate_commands.rs` | v1 프로젝트 읽기(읽기 전용) → 변환 계획 → 적용 |
+| `resources/examples/<kind>/<id>/`, `scripts/examples.mjs`, `src/lib/examples/` | 카드용 예제와 `pnpm examples` 도구(D-047). 제작 규칙은 `resources/examples/README.md`. 폴더 추가만으로 등록 |
 | `resources/samples/` | 샘플 워크스페이스 4종(motion·static·3d·시퀀스). JSON은 `src/lib/sequence/sample*.test.ts`가 생성·검사 |
 | `tests/` | `e2e/`(실제 Chrome E2E 스크립트·하네스·목 에이전트), `fixtures/`(v1 샘플·manifest 골든), `repro/`(재현성) |
 | `spikes/r1-transition/` | PoC R-1 전환 합성 스파이크 |
