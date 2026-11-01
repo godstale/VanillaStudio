@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Glitchwave</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #000; }
+      canvas { width: 100%; height: 100%; }
+    </style>
+  </head>
+  <body>
+    <canvas id="c" width="320" height="180"></canvas>
+    <script>
+      const SECONDS = 4;
+      const cv = document.getElementById('c');
+      const ctx = cv.getContext('2d');
+      const hash = (i, f) => {
+        const x = Math.sin(i * 127.1 + f * 311.7) * 43758.5;
+        return x - Math.floor(x);
+      };
+      window.seekExample = (t) => {
+        const time = (((t % SECONDS) + SECONDS) % SECONDS);
+        const frame = Math.floor(time * 12);
+        // Base scene: horizon bands
+        const g = ctx.createLinearGradient(0, 0, 0, 180);
+        g.addColorStop(0, '#1b0533');
+        g.addColorStop(0.55, '#3d0a5e');
+        g.addColorStop(0.62, '#0a0a12');
+        g.addColorStop(1, '#050508');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, 320, 180);
+        ctx.fillStyle = '#ff2d8a';
+        ctx.fillRect(0, 108, 320, 4);
+        // Chroma bleed copies
+        ctx.fillStyle = 'rgba(0,224,255,0.5)';
+        ctx.fillRect(6, 108, 320, 4);
+        // Rolling bar
+        const barY = (time / SECONDS) * 220 - 20;
+        ctx.fillStyle = 'rgba(255,255,255,0.25)';
+        ctx.fillRect(0, barY, 320, 10);
+        ctx.fillStyle = 'rgba(255,255,255,0.12)';
+        ctx.fillRect(0, barY + 10, 320, 26);
+        // Static speckles, quantized to 12fps so each t maps to one pattern
+        for (let i = 0; i < 500; i += 1) {
+          if (hash(i, frame) > 0.72) {
+            const v = Math.floor(hash(i * 3, frame) * 255);
+            ctx.fillStyle = `rgb(${v},${v},${v})`;
+            ctx.fillRect(Math.floor(hash(i, frame + 7) * 320), Math.floor(hash(i, frame + 13) * 180), 1, 1);
+          }
+        }
+        // Slice displacement on two bands
+        const y1 = 40 + Math.floor(hash(frame, 99) * 60);
+        const dx = Math.floor((hash(frame, 100) - 0.5) * 40);
+        const band = ctx.getImageData(0, y1, 320, 18);
+        ctx.putImageData(band, dx, y1);
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

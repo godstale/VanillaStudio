@@ -1,0 +1,7 @@
+{
+  "seconds": 0,
+  "note": {
+    "ko": "낮은 해상도 캔버스를 확대한 도트 스프라이트입니다.",
+    "en": "Sprites on a low-resolution canvas scaled with nearest neighbor."
+  }
+}

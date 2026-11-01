@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Thermal cam</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #000;
+        display: grid; place-items: center; font-family: 'Courier New', monospace; }
+      .wrap { position: relative; width: 1000px; height: 600px; }
+      svg { width: 100%; height: 100%; }
+      .read { position: absolute; left: 30px; top: 24px; color: #fff; font-size: 34px; }
+      .scale { position: absolute; right: 30px; top: 60px; width: 34px; height: 400px;
+        background: linear-gradient(#ff2d8a, #ffd400, #00e0c6, #1b2cc1); border: 2px solid #fff; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <svg viewBox="0 0 1000 600">
+        <defs>
+          <linearGradient id="heat" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#1b2cc1" />
+            <stop offset="35%" stop-color="#00e0c6" />
+            <stop offset="65%" stop-color="#ffd400" />
+            <stop offset="100%" stop-color="#ff2d8a" />
+          </linearGradient>
+          <filter id="soft"><feGaussianBlur stdDeviation="18" /></filter>
+        </defs>
+        <rect width="1000" height="600" fill="#0a0a18" />
+        <g filter="url(#soft)">
+          <rect x="120" y="120" width="760" height="360" fill="url(#heat)" opacity="0.35" />
+          <ellipse cx="450" cy="330" rx="130" ry="150" fill="#ffd400" />
+          <ellipse cx="450" cy="300" rx="70" ry="80" fill="#ff2d8a" />
+          <ellipse cx="700" cy="420" rx="90" ry="60" fill="#00e0c6" />
+        </g>
+        <g fill="none" stroke="#fff" stroke-width="3">
+          <circle cx="450" cy="300" r="40" />
+          <path d="M450 260 V200 M450 340 V400 M410 300 H350 M490 300 H550" />
+        </g>
+      </svg>
+      <div class="read">36.6C &#9678; TRACK</div>
+      <div class="scale"></div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pixel art</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #1a1030;
+        display: grid; place-items: center; }
+      canvas { width: 960px; height: 540px; image-rendering: pixelated; }
+    </style>
+  </head>
+  <body>
+    <canvas id="c" width="96" height="54"></canvas>
+    <script>
+      const cv = document.getElementById('c');
+      const ctx = cv.getContext('2d');
+      // Sky
+      ctx.fillStyle = '#2a1a5e';
+      ctx.fillRect(0, 0, 96, 54);
+      ctx.fillStyle = '#ffd400';
+      ctx.fillRect(70, 6, 8, 8);
+      // Mountains
+      ctx.fillStyle = '#4a3a8a';
+      for (let x = 0; x < 96; x += 1) {
+        const h = 14 + Math.round(6 * Math.sin(x * 0.3) + 3 * Math.sin(x * 0.11));
+        ctx.fillRect(x, 40 - h, 1, h);
+      }
+      // Ground
+      ctx.fillStyle = '#2f6b46';
+      ctx.fillRect(0, 40, 96, 14);
+      ctx.fillStyle = '#3d8a56';
+      for (let x = 0; x < 96; x += 2) ctx.fillRect(x, 42 + (x % 4), 1, 1);
+      // Hero sprite (16x20)
+      const S = [
+        '....kkkk....',
+        '...kkkkkk...',
+        '...kffffk...',
+        '...fefefe...',
+        '...kffffk...',
+        '....ffff....',
+        '...bbbbbb...',
+        '..bbbbbbbb..',
+        '..b.bb.b.b..',
+        '...bbbbbb...',
+        '...bbbbbb...',
+        '....b..b....',
+        '...bb..bb...',
+        '...b....b...',
+      ];
+      const C = { k: '#3a2a1a', f: '#f2c9a0', e: '#101010', b: '#1b2cc1' };
+      S.forEach((row, y) => {
+        [...row].forEach((ch, x) => {
+          if (ch === '.') return;
+          ctx.fillStyle = C[ch];
+          ctx.fillRect(42 + x, 20 + y, 1, 1);
+        });
+      });
+      // Companion block
+      ctx.fillStyle = '#8a6f4d';
+      ctx.fillRect(62, 32, 8, 8);
+      ctx.fillStyle = '#e8a04c';
+      ctx.fillRect(63, 33, 6, 6);
+    </script>
+  </body>
+</html>

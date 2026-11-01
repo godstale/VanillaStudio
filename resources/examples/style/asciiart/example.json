@@ -1,0 +1,7 @@
+{
+  "seconds": 0,
+  "note": {
+    "ko": "밝기를 문자 농도로 옮긴 고정폭 그림입니다.",
+    "en": "Luminance sampled into a monospace character ramp."
+  }
+}

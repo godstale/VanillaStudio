@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Digital rain</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #020604; }
+      canvas { width: 100%; height: 100%; }
+    </style>
+  </head>
+  <body>
+    <canvas id="c" width="1280" height="720"></canvas>
+    <script>
+      const SECONDS = 4;
+      const cv = document.getElementById('c');
+      const ctx = cv.getContext('2d');
+      const GLYPHS = 'アイウエオカキクケコ0123456789ZTX$#';
+      const COLS = 64;
+      const rnd = (i, s) => {
+        const x = Math.sin(i * 12.9 + s * 78.2) * 43758.5;
+        return x - Math.floor(x);
+      };
+      const speed = [];
+      const offset = [];
+      for (let i = 0; i < COLS; i += 1) {
+        speed.push(120 + rnd(i, 1) * 260);
+        offset.push(rnd(i, 2) * 720);
+      }
+      window.seekExample = (t) => {
+        ctx.fillStyle = '#020604';
+        ctx.fillRect(0, 0, 1280, 720);
+        ctx.font = '22px monospace';
+        const time = (((t % SECONDS) + SECONDS) % SECONDS);
+        for (let c = 0; c < COLS; c += 1) {
+          const x = c * 20 + 10;
+          for (let k = 0; k < 14; k += 1) {
+            const y = (offset[c] + time * speed[c] - k * 30 + 720 * 4) % 720;
+            const g = GLYPHS[Math.floor(rnd(c * 31 + k, 3) * GLYPHS.length)];
+            ctx.fillStyle = k === 0 ? '#c8ffe8' : `rgba(46,211,160,${(0.9 - k * 0.06).toFixed(2)})`;
+            ctx.fillText(g, x, y);
+          }
+        }
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

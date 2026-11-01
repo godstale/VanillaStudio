@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Night vision</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #000;
+        display: grid; place-items: center; font-family: 'Courier New', monospace; }
+      svg { width: 1100px; height: 620px; }
+      text { fill: #7dff9a; font-size: 28px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1100 620">
+      <defs>
+        <radialGradient id="amp" cx="50%" cy="50%" r="50%">
+          <stop offset="55%" stop-color="#1d5c2e" />
+          <stop offset="85%" stop-color="#0e2f18" />
+          <stop offset="100%" stop-color="#000" />
+        </radialGradient>
+        <clipPath id="mask"><circle cx="550" cy="310" r="270" /></clipPath>
+        <filter id="nv"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="11" result="n" /><feColorMatrix in="n" type="matrix" values="0 0 0 0 0.3 0 0 0 0 0.9 0 0 0 0 0.35 0 0 0 0.35 0" /><feComposite operator="over" in2="SourceGraphic" /></filter>
+      </defs>
+      <rect width="1100" height="620" fill="#000" />
+      <g clip-path="url(#mask)">
+        <rect x="240" y="40" width="620" height="540" fill="url(#amp)" />
+        <g filter="url(#nv)">
+          <ellipse cx="550" cy="460" rx="280" ry="80" fill="#2e8a4a" />
+          <rect x="380" y="220" width="120" height="200" fill="#3fae5c" />
+          <rect x="620" y="260" width="90" height="160" fill="#3fae5c" />
+          <circle cx="740" cy="180" r="34" fill="#bfffd4" />
+        </g>
+        <circle cx="550" cy="310" r="270" fill="none" stroke="#7dff9a" stroke-width="4" />
+        <path d="M550 40 V80 M550 540 V580 M280 310 H320 M780 310 H820" stroke="#7dff9a" stroke-width="4" />
+        <text x="300" y="90">NIGHT</text>
+        <text x="720" y="560">GAIN 78</text>
+      </g>
+    </svg>
+  </body>
+</html>

@@ -32,7 +32,7 @@
     <script>
       const SECONDS = 6;
       const N = 60;
-      // Fixed-seed pseudo random: pure function of index, no Math.random.
+      // Fixed-seed hash: pure function of index, fully deterministic.
       const rnd = (i, s) => {
         const x = Math.sin(i * 127.1 + s * 311.7) * 43758.5453;
         return x - Math.floor(x);

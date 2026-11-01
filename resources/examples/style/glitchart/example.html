@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Glitch art</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #0b0b10;
+        display: grid; place-items: center; }
+      svg { width: 800px; height: 500px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 800 500">
+      <g id="art">
+        <rect x="150" y="80" width="500" height="340" fill="#1b2cc1" />
+        <circle cx="400" cy="250" r="110" fill="#ff4f9a" />
+        <rect x="250" y="180" width="300" height="60" fill="#ffd400" />
+      </g>
+      <g id="slices"></g>
+    </svg>
+    <script>
+      const SECONDS = 4;
+      const slices = document.getElementById('slices');
+      const rnd = (i, s) => {
+        const x = Math.sin(i * 37.7 + s * 91.3) * 12345.6;
+        return x - Math.floor(x);
+      };
+      const HITS = [0.25, 0.55, 0.8];
+      window.seekExample = (t) => {
+        const phase = (((t % SECONDS) + SECONDS) % SECONDS) / SECONDS;
+        const env = Math.max(
+          ...HITS.map((h) => Math.max(0, 1 - Math.abs(phase - h) / 0.09)),
+        );
+        let html = '';
+        for (let i = 0; i < 7; i += 1) {
+          const y = 60 + i * 62;
+          // Continuous drift so every frame differs, plus seeded jumps near beats.
+          const dx =
+            Math.sin(phase * Math.PI * 2 + i * 1.7) * 8 +
+            (rnd(i, 3) - 0.5) * 120 * env;
+          const on = env > 0.4 && rnd(i, 5) > 0.4;
+          html += `<g transform="translate(${dx.toFixed(1)} 0)">`
+            + `<clipPath id="c${i}"><rect x="100" y="${y}" width="600" height="58" /></clipPath>`
+            + `<g clip-path="url(#c${i})">`
+            + `<rect x="150" y="80" width="500" height="340" fill="#1b2cc1" />`
+            + `<circle cx="400" cy="250" r="110" fill="#ff4f9a" />`
+            + `<rect x="250" y="180" width="300" height="60" fill="#ffd400" />`
+            + (on ? `<circle cx="400" cy="250" r="110" fill="none" stroke="#00e0ff" stroke-width="8" />`
+              + `<circle cx="400" cy="250" r="110" fill="none" stroke="#ff0040" stroke-width="4" transform="translate(14 0)" />` : '')
+            + `</g></g>`;
+        }
+        slices.innerHTML = html;
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

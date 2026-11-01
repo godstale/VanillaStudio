@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Retro gaming</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #0c0c12;
+        display: grid; place-items: center; font-family: 'Courier New', monospace; }
+      .cab { position: relative; width: 900px; height: 600px; border-radius: 40px; background: #2a1a3a;
+        display: grid; place-items: center; }
+      .screen { position: relative; width: 720px; height: 460px; border-radius: 60px / 90px;
+        background: #0a1a2a; overflow: hidden; }
+      .score { position: absolute; top: 22px; width: 100%; text-align: center; color: #7dffd4;
+        font-size: 40px; font-weight: bold; text-shadow: 0 0 12px #2ed3a0; letter-spacing: 6px; }
+      .ship { position: absolute; left: 330px; top: 330px; width: 60px; height: 50px; background: #ff4f9a;
+        clip-path: polygon(50% 0, 100% 100%, 50% 75%, 0 100%); }
+      .foe { position: absolute; width: 44px; height: 34px; background: #ffd400; }
+      .scan { position: absolute; inset: 0;
+        background: repeating-linear-gradient(transparent 0 3px, rgba(0,0,0,0.5) 3px 5px); }
+      .glass { position: absolute; inset: 0; border-radius: 60px / 90px;
+        background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.18), transparent 55%); }
+    </style>
+  </head>
+  <body>
+    <div class="cab">
+      <div class="screen">
+        <div class="score">SCORE 025400</div>
+        <div class="ship"></div>
+        <div class="foe" style="left:120px;top:120px"></div>
+        <div class="foe" style="left:300px;top:80px"></div>
+        <div class="foe" style="left:500px;top:150px"></div>
+        <div class="foe" style="left:600px;top:90px"></div>
+        <div class="scan"></div>
+        <div class="glass"></div>
+      </div>
+    </div>
+  </body>
+</html>
