@@ -91,6 +91,11 @@ External resources (fonts, textures, icons) added to a user project must be
 open-licensed and recorded in that project's `CREDITS.md` (D-006; generative
 image/video AI services are not integrated).
 
+The built-in style library (`STYLE_LIBRARY.json`) uses a public list of Google Flow
+style tag names as a vocabulary index (https://cocojuan.com/googleflow-image-style-tag/,
+retrieved 2026-11-01). Descriptions, keywords and examples are original to Vanilla Studio.
+Styles are built with code; the app does not call image generation services.
+
 ## 5. Full license texts
 
 - Apache-2.0 / MIT / ISC / OFL-1.1: see each package (`node_modules/<pkg>/`,

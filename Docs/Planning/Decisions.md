@@ -344,3 +344,15 @@
   - Rust `workspace_archive.rs`: `pack_workspace_zip`(`pnpm dist`와 같은 제외 규칙·최상위 폴더 = `package.json` `name`·`pnpm-workspace.yaml` 없으면 항목으로만 추가)·`unpack_workspace_zip`(zip-slip·절대 경로·심링크·암호화 거부, 빈 폴더에만 풀기, 덮어쓰기 금지, `workspace.json` 검증, 실패 시 만든 것만 정리). 최상위 폴더가 있으면 벗겨 낸다.
   - UI: 워크스페이스 화면 헤더(압축/불러오기)와 온보딩(불러오기). 불러온 폴더는 신뢰 자동 부여 없이 열어 신뢰 확인을 받는다. `pnpm install`은 자동 실행하지 않는다(외부 파일의 lifecycle 스크립트).
 - **영향**: 데이터 계약 변경 없음. `Technical-Design.md` 개정(v1.7). 검증: vitest(기록·배지), `cargo test workspace_archive` 4건(제외 규칙·왕복·거부·flat zip). → [[issue-workspace-history-archive]]
+
+## D-046 템플릿(프로젝트 뼈대)과 스타일(시각 어휘) 분리 — Accepted (2026-11-01)
+
+- **맥락**: 기존 "템플릿"은 신 단위 가이드라 프로젝트 전체의 컨셉·스토리보드를 잡는 수단이 없었고, 사용자가 고를 시각 어휘도 부족했다. 사용자가 두 기능의 분리와 스타일 태그 200종 활용을 요청했다.
+- **결정**:
+  - **템플릿**은 프로젝트 전체 뼈대다. `resources/project-templates/catalog.json`(8종)에서 고르면 앱이 `storyboard/00-project-template.md`를 쓰고 `storyboard.json.visualDirection.projectTemplate`에 참조를 남긴다. 3대 문서와 신은 건드리지 않으며, 슬롯을 신으로 옮기는 일은 에이전트가 한다(D-022).
+  - **스타일**은 신·이미지·모션의 시각 어휘다. `scene.json.styles: [{ id, scope }]`(선택 필드, `scene|image|motion`)에 기록하고, 키워드·예시·코드 구현 기법이 신 `AGENTS.md` `styles` 마커에 렌더된다. 에이전트 되쓰기 허용 필드에 포함한다.
+  - 원본은 `resources/workspace-template/STYLE_LIBRARY.json` 하나다. 앱 소유 생성물이라 워크스페이스를 열 때 갱신한다. 렌더러는 `scripts/style-core.mjs`를 앱과 CLI가 공유한다. 기존 신은 `styles` 키가 없으므로 바이트·해시가 유지된다.
+  - 기존 가이드·세부 프리셋·레시피·팔레트·기법은 사이드바 템플릿 화면의 "스타일" 영역 아래로 옮긴다. 신 스키마의 `template` 필드 이름은 호환을 위해 유지한다.
+  - 태그 목록은 어휘 색인으로만 쓰고 설명·키워드·예시는 새로 작성한다. 상표·저작물을 가리키는 9개 태그는 중립 id·라벨로 바꾸고 `ipSensitive`로 표시해, 에이전트에게 기존 캐릭터·로고·상품 형태 금지를 지시한다. `sourceTag`로 원본 태그는 추적한다.
+- **근거**: D-006(생성형 AI 배제 — 스타일은 코드로 구현), D-022(에이전트 중립), D-023(파일이 진실 공급원), D-031(가이드 템플릿).
+- **영향**: 데이터 계약 추가(`scene.json.styles`, `storyboard.json.visualDirection.projectTemplate`, `STYLE_LIBRARY.json`). `Technical-Design.md` v1.8. 앞으로 "템플릿"은 프로젝트 뼈대, 신 단위 템플릿은 "신 가이드"로 부른다. → [[research-2026-11-01-style-tags]]
