@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Prism</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#07080d;font-family:'Segoe UI',system-ui,sans-serif}
+canvas{position:absolute;inset:0;width:1280px;height:720px}
+.bar{position:absolute;left:0;right:0;height:64px;background:#000}
+.bar.top{top:0}.bar.bot{bottom:0}
+svg.hud{position:absolute;inset:0;width:1280px;height:720px}
+</style>
+</head>
+<body>
+<canvas id="cv" width="1280" height="720"></canvas>
+<div class="bar top"></div>
+<div class="bar bot"></div>
+<svg class="hud" viewBox="0 0 1280 720">
+<path d="M24 104V88h40M1216 88h40v16M24 616v16h40M1256 632h-40v-16" fill="none" stroke="#fff" stroke-width="2" opacity=".5"/>
+<circle cx="1100" cy="150" r="4" fill="#fff" opacity=".7"/>
+<circle cx="1100" cy="150" r="12" fill="none" stroke="#fff" stroke-width="1.5" opacity=".5"/>
+</svg>
+<script>
+const SECONDS=6;
+const cv=document.getElementById('cv');
+const ctx=cv.getContext('2d');
+const h=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+const blobs=[['255,45,138',3.1,2.2,260],['34,211,238',2.3,3.4,300],['255,194,75',4.2,1.6,220],['139,92,246',1.7,2.8,240]];
+window.seekExample=(t)=>{
+const p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+const a=p*Math.PI*2;
+ctx.globalCompositeOperation='source-over';
+ctx.fillStyle='#07080d';
+ctx.fillRect(0,0,1280,720);
+ctx.globalCompositeOperation='lighter';
+for(let i=0;i<blobs.length;i++){
+const c=blobs[i];
+const x=640+430*Math.sin(a*c[1]+i*1.7);
+const y=360+240*Math.cos(a*c[2]+i*2.3);
+const r=c[3]+60*Math.sin(a*2+i);
+const g=ctx.createRadialGradient(x,y,0,x,y,r);
+g.addColorStop(0,`rgba(${c[0]},.55)`);
+g.addColorStop(1,`rgba(${c[0]},0)`);
+ctx.fillStyle=g;
+ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();
+}
+ctx.globalCompositeOperation='source-over';
+ctx.fillStyle='rgba(7,8,13,.16)';
+for(let i=0;i<260;i++){
+const x=h(i)*1280,y=h(i+999)*720;
+const tw=.5+.5*Math.sin(a*3+i);
+ctx.fillStyle=`rgba(255,255,255,${(.05+.1*tw).toFixed(3)})`;
+ctx.fillRect(x,y,2,2);
+}
+const v=ctx.createRadialGradient(640,360,300,640,360,760);
+v.addColorStop(0,'rgba(0,0,0,0)');
+v.addColorStop(1,'rgba(0,0,0,.55)');
+ctx.fillStyle=v;
+ctx.fillRect(0,0,1280,720);
+};
+if(!navigator.webdriver){const loop=(ms)=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

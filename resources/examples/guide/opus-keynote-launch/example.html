@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Launch</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0e2a1f;color:#f2f5ec;font-family:'Segoe UI',system-ui,sans-serif}
+#zoom{position:absolute;inset:0;transform-origin:760px 420px}
+.mask{position:absolute;left:0;right:0;top:150px;overflow:hidden;text-align:center}
+.mask h1{margin:0;font-size:118px;font-weight:800;letter-spacing:-.04em}
+.sub{text-align:center;font-size:28px;color:#b9cdc0;margin-top:8px}
+.board{position:absolute;left:340px;top:400px;width:600px;border-radius:20px;background:#16281f;padding:34px 40px;box-shadow:0 30px 80px rgba(0,0,0,.5);border:1px solid #2c4a3a}
+.rowbar{display:flex;gap:12px;align-items:center;margin:14px 0;font-size:22px}
+.rowbar i{flex:1;height:14px;border-radius:8px;background:#24402f;position:relative;overflow:hidden}
+.rowbar i b{position:absolute;inset:0;background:#b8e62e;border-radius:8px;transform-origin:left}
+.btn{display:inline-block;margin-top:10px;padding:14px 40px;border-radius:999px;background:#b8e62e;color:#0e2a1f;font-weight:800;font-size:26px}
+#cursor{position:absolute;width:34px;height:34px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5))}
+#ring{position:absolute;width:20px;height:20px;margin:-10px;border:3px solid #b8e62e;border-radius:50%;opacity:0}
+.end{position:absolute;inset:0;display:grid;place-content:center;background:#b8e62e;color:#0e2a1f;opacity:0}
+.end h1{margin:0;font-size:100px;font-weight:800;letter-spacing:-.03em}
+svg.hud{position:absolute;inset:0;width:1280px;height:720px}
+</style>
+</head>
+<body>
+<div id="zoom">
+<div class="mask"><h1 id="hook">ONE CLEAR PROMISE</h1></div>
+<div class="sub">Four steps, one continuous take</div>
+<div class="board" id="board">
+<div class="rowbar">A <i><b id="f0"></b></i></div>
+<div class="rowbar">B <i><b id="f1"></b></i></div>
+<div class="rowbar">C <i><b id="f2"></b></i></div>
+<span class="btn" id="btn">Begin</span>
+</div>
+<div id="cursor"><svg width="34" height="34" viewBox="0 0 34 34"><path d="M6 3l22 13-10 2-4 10z" fill="#fff" stroke="#111" stroke-width="2"/></svg></div>
+<div id="ring"></div>
+</div>
+<div class="end" id="end"><h1>READY NOW</h1></div>
+<svg class="hud" viewBox="0 0 1280 720"><path d="M24 64V24h40M1216 24h40v40M24 656v40h40M1256 656v40h-40" fill="none" stroke="#b8e62e" stroke-width="3" opacity=".6"/></svg>
+<script>
+const SECONDS=8;
+const zoom=document.getElementById('zoom');
+const hook=document.getElementById('hook');
+const cur=document.getElementById('cursor');
+const ring=document.getElementById('ring');
+const end=document.getElementById('end');
+const fills=[0,1,2].map(i=>document.getElementById('f'+i));
+const btn=document.getElementById('btn');
+function seg(p,from,to){return Math.min(1,Math.max(0,(p-from)/(to-from)));}
+function bez(p0,p1,p2,q){
+const u=1-q;
+return [u*u*p0[0]+2*u*q*p1[0]+q*q*p2[0],u*u*p0[1]+2*u*q*p1[1]+q*q*p2[1]];
+}
+window.seekExample=(t)=>{
+const p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+hook.style.transform=`translateY(${(1-seg(p,0,.1))*110}%)`;
+const cq=seg(p,.25,.6);
+const pos=bez([180,560],[520,300],[760,470],cq);
+cur.style.left=pos[0]+'px';cur.style.top=pos[1]+'px';
+const click=cq>.96?1:0;
+btn.style.transform=`scale(${1-.12*(cq>.9&&cq<1?Math.sin((cq-.9)/.1*Math.PI):0)})`;
+const rq=seg(p,.6,.68);
+ring.style.opacity=rq<1&&p>.6?String(1-rq):'0';
+ring.style.left=pos[0]+'px';ring.style.top=pos[1]+'px';
+ring.style.transform=`scale(${1+rq*5})`;
+const z=1+.35*seg(p,.55,.68);
+zoom.style.transform=`scale(${z})`;
+fills.forEach((f,i)=>{f.style.transform=`scaleX(${seg(p,.3+i*.08,.55+i*.08)})`;});
+end.style.opacity=seg(p,.72,.82);
+void click;
+};
+if(!navigator.webdriver){const loop=(ms)=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

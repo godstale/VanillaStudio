@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Hero</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0c0f16;color:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+.wrap{padding:56px 72px}
+nav{display:flex;gap:34px;align-items:center;font-size:21px;color:#a9b1c2}
+nav b{color:#fff;font-size:26px;letter-spacing:.06em}
+nav span{margin-left:auto;padding:10px 26px;border-radius:999px;background:#b8e62e;color:#0c0f16;font-weight:700}
+h1{margin:34px 0 8px;font-size:104px;line-height:1;letter-spacing:-.04em}
+h1 em{font-style:normal;color:#b8e62e}
+p{margin:0;font-size:25px;color:#a9b1c2}
+.grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:20px;margin-top:30px}
+.browser{border-radius:18px;background:#161c29;border:1px solid #2b3a52;padding:20px 24px;min-height:250px}
+.browser .bar{display:flex;gap:8px;margin-bottom:18px}
+.browser .bar i{width:14px;height:14px;border-radius:50%}
+.browser .bar i:nth-child(1){background:#ff5a5f}
+.browser .bar i:nth-child(2){background:#ffb347}
+.browser .bar i:nth-child(3){background:#58d68d}
+.mock{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mock div{border-radius:12px;background:#232d44;height:88px}
+.mock div:first-child{background:linear-gradient(135deg,#b8e62e,#39d5f2)}
+.tile{border-radius:18px;background:#161c29;border:1px solid #2b3a52;padding:24px;font-size:24px}
+.tile b{display:block;font-size:52px;color:#b8e62e}
+.tile:nth-child(3) b{color:#39d5f2}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav><b>WORKROOM</b>Tour Pricing Log<span>Open app</span></nav>
+<h1>SHAPE THE <em>FLOW</em></h1>
+<p>A live workspace preview beside the headline, with proof tiles below.</p>
+<div class="grid">
+<div class="browser"><div class="bar"><i></i><i></i><i></i></div><div class="mock"><div></div><div></div><div></div><div></div></div></div>
+<div class="tile"><b>12×</b>faster reviews</div>
+<div class="tile"><b>98%</b>kept layouts</div>
+</div>
+</div>
+</body>
+</html>

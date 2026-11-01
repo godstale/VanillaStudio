@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Explorer</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0b0e14;color:#eef2f7;font-family:'Segoe UI',system-ui,sans-serif}
+.stage{position:absolute;inset:0;perspective:1300px;background:radial-gradient(circle at 42% 40%,#182234 0%,#0b0e14 62%)}
+.stage::before{content:'';position:absolute;inset:0;background-image:radial-gradient(#2b3a52 1.2px,transparent 1.4px);background-size:34px 34px;opacity:.5}
+.iso{position:absolute;left:560px;top:400px;transform-style:preserve-3d}
+.slab{position:absolute;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:26px;transform-style:preserve-3d;border:3px solid rgba(255,255,255,.25)}
+.slab b{position:absolute;inset:64px;border-radius:50%;border:10px solid rgba(255,255,255,.35)}
+.slab i{position:absolute;left:60px;right:60px;top:50%;height:10px;margin-top:-5px;background:rgba(255,255,255,.35);border-radius:6px}
+.s0{background:linear-gradient(135deg,#d6dee9,#8d9ab0)}
+.s1{background:rgba(64,200,230,.28)}
+.s2{background:linear-gradient(135deg,#232f45,#101827)}
+.s3{background:linear-gradient(135deg,#ff7a5e,#c23a3a)}
+.axis{position:absolute;left:560px;top:120px;width:4px;height:520px;background:linear-gradient(#3ddcF2,#3ddcf2);opacity:.5}
+.panel{position:absolute;right:64px;top:150px;width:300px}
+.row{margin:0 0 18px;padding:14px 18px;border:1px solid #2b3a52;border-radius:12px;background:rgba(16,24,39,.8);font-size:24px;letter-spacing:.06em;opacity:.45}
+.row.on{opacity:1;border-color:#3ddcf2;box-shadow:0 0 24px rgba(61,220,242,.35)}
+.row small{display:block;font-size:15px;color:#8fa1bb;letter-spacing:.2em}
+.tag{position:absolute;left:64px;top:120px;font-size:20px;letter-spacing:.3em;color:#8fa1bb}
+.tag strong{display:block;font-size:64px;letter-spacing:.02em;color:#fff;margin-top:8px}
+svg.hud{position:absolute;inset:0;width:1280px;height:720px}
+</style>
+</head>
+<body>
+<div class="stage">
+<div class="axis"></div>
+<div class="iso" id="iso">
+<div class="slab s0" id="l0"><b></b></div>
+<div class="slab s1" id="l1"><i></i></div>
+<div class="slab s2" id="l2"><b></b></div>
+<div class="slab s3" id="l3"><i></i></div>
+</div>
+<div class="tag">FIELD UNIT<small style="display:block"></small><strong>FOUR<br/>LAYERS</strong></div>
+<div class="panel" id="panel">
+<div class="row"><small>01</small>OPTIC</div>
+<div class="row"><small>02</small>CORE</div>
+<div class="row"><small>03</small>FRAME</div>
+<div class="row"><small>04</small>BASE</div>
+</div>
+</div>
+<svg class="hud" viewBox="0 0 1280 720">
+<path d="M24 64V24h40M1216 24h40v40M24 656v40h40M1256 656v40h-40" fill="none" stroke="#3ddcf2" stroke-width="3" opacity=".7"/>
+<circle cx="560" cy="400" r="150" fill="none" stroke="#3ddcf2" stroke-width="2" stroke-dasharray="10 12" opacity=".5"/>
+<circle cx="560" cy="400" r="6" fill="#3ddcf2"/>
+</svg>
+<script>
+const SECONDS=6;
+const iso=document.getElementById('iso');
+const layers=[0,1,2,3].map(i=>document.getElementById('l'+i));
+const rows=[...document.querySelectorAll('.row')];
+window.seekExample=(t)=>{
+const p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+const a=p*Math.PI*2;
+const e=.5-.5*Math.cos(a);
+iso.style.transform=`rotateX(55deg) rotateZ(${38+10*Math.sin(a)}deg)`;
+layers.forEach((el,i)=>{el.style.transform=`translateZ(${(i-1.5)*52+e*(i-1.5)*120}px)`;});
+rows.forEach((r,i)=>r.classList.toggle('on',i===Math.min(3,Math.floor(p*4))));
+};
+if(!navigator.webdriver){const loop=(ms)=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

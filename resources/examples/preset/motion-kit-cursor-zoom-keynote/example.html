@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Focus</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0e1420;color:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+#zoom{position:absolute;inset:0;transform-origin:800px 420px}
+.panel{position:absolute;left:480px;top:200px;width:640px;border-radius:22px;background:#182234;border:1px solid #2b3a52;padding:36px 42px}
+.panel h1{margin:0 0 14px;font-size:52px;letter-spacing:-.02em}
+.rows{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:18px 0 24px}
+.rows div{border-radius:14px;background:#232d44;height:120px}
+.rows div:first-child{background:linear-gradient(135deg,#b8e62e,#39d5f2)}
+.btn{display:inline-block;padding:14px 44px;border-radius:999px;background:#b8e62e;color:#0e1420;font-weight:800;font-size:26px}
+#cursor{position:absolute;width:36px;height:36px}
+#ring{position:absolute;width:22px;height:22px;margin:-11px;border:3px solid #b8e62e;border-radius:50%;opacity:0}
+#wipe{position:absolute;inset:0;background:#b8e62e;transform:scaleX(0);transform-origin:left}
+svg.hud{position:absolute;inset:0;width:1280px;height:720px}
+</style>
+</head>
+<body>
+<div id="zoom">
+<div class="panel" id="panel"><h1>Pick a path</h1><div class="rows"><div></div><div></div><div></div></div><span class="btn" id="btn">Select</span></div>
+<div id="cursor"><svg width="36" height="36" viewBox="0 0 36 36"><path d="M7 3l23 14-11 2-4 11z" fill="#fff" stroke="#111" stroke-width="2"/></svg></div>
+<div id="ring"></div>
+</div>
+<div id="wipe"></div>
+<svg class="hud" viewBox="0 0 1280 720"><path d="M24 64V24h40M1216 24h40v40M24 656v40h40M1256 656v40h-40" fill="none" stroke="#b8e62e" stroke-width="3" opacity=".6"/></svg>
+<script>
+const SECONDS=5;
+const zoom=document.getElementById('zoom');
+const cur=document.getElementById('cursor');
+const ring=document.getElementById('ring');
+const wipe=document.getElementById('wipe');
+const btn=document.getElementById('btn');
+function seg(p,a,b){return Math.min(1,Math.max(0,(p-a)/(b-a)));}
+window.seekExample=(t)=>{
+const p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+const cq=seg(p,.05,.5);
+const u=1-cq;
+const x=u*u*180+2*u*cq*520+cq*cq*820;
+const y=u*u*580+2*u*cq*260+cq*cq*470;
+cur.style.left=x+'px';cur.style.top=y+'px';
+const rq=seg(p,.5,.58);
+ring.style.opacity=rq<1&&p>.5?String(1-rq):'0';
+ring.style.left='820px';ring.style.top='470px';
+ring.style.transform=`scale(${1+rq*5})`;
+btn.style.transform=`scale(${1-.12*(cq>.92&&cq<1?Math.sin((cq-.92)/.08*Math.PI):0)})`;
+zoom.style.transform=`scale(${1+.6*seg(p,.5,.66)})`;
+const wq=seg(p,.82,.94);
+wipe.style.transform=`scaleX(${wq<.5?wq*2:(1-wq)*2})`;
+wipe.style.transformOrigin=wq<.5?'left':'right';
+};
+if(!navigator.webdriver){const loop=(ms)=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Orbit</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0a1020;color:#d7f3ff;font-family:'Segoe UI',system-ui,sans-serif}
+canvas{position:absolute;inset:0;width:1280px;height:720px}
+svg.hud{position:absolute;inset:0;width:1280px;height:720px}
+.cap{position:absolute;left:64px;bottom:48px;font-size:22px;letter-spacing:.28em;color:#7fd8ef}
+.cap strong{display:block;font-size:46px;letter-spacing:.04em;color:#fff;margin-top:6px}
+</style>
+</head>
+<body>
+<canvas id="cv" width="1280" height="720"></canvas>
+<div class="cap">SCENE 03<strong>VALLEY TURN</strong></div>
+<svg class="hud" viewBox="0 0 1280 720">
+<path d="M24 64V24h40M1216 24h40v40M24 656v40h40M1256 656v40h-40" fill="none" stroke="#7fd8ef" stroke-width="3" opacity=".7"/>
+<circle cx="640" cy="360" r="200" fill="none" stroke="#7fd8ef" stroke-width="1.5" stroke-dasharray="6 10" opacity=".4"/>
+</svg>
+<script>
+const SECONDS=6;
+const cv=document.getElementById('cv');
+const ctx=cv.getContext('2d');
+const h=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+const V=[[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]];
+const E=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+function proj(x,y,z,f){
+const s=f/(f+z);
+return [640+x*s,360+y*s];
+}
+window.seekExample=(t)=>{
+const p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+const a=p*Math.PI*2;
+const f=520+180*Math.sin(a);
+ctx.fillStyle='#0a1020';
+ctx.fillRect(0,0,1280,720);
+for(let i=0;i<140;i++){
+const x=h(i)*1280,y=h(i+500)*430;
+const tw=.4+.6*Math.abs(Math.sin(a*2+i));
+ctx.fillStyle=`rgba(160,220,245,${(.15+.5*tw).toFixed(3)})`;
+ctx.fillRect(x,y,2,2);
+}
+ctx.strokeStyle='rgba(80,160,200,.4)';
+ctx.lineWidth=1.5;
+for(let g=-6;g<=6;g++){
+const p1=proj(g*70,140,-320,f),p2=proj(g*70,140,520,f);
+ctx.beginPath();ctx.moveTo(p1[0],p1[1]);ctx.lineTo(p2[0],p2[1]);ctx.stroke();
+}
+for(let d=0;d<7;d++){
+const z=-320+d*140;
+const p1=proj(-460,140,z,f),p2=proj(460,140,z,f);
+ctx.beginPath();ctx.moveTo(p1[0],p1[1]);ctx.lineTo(p2[0],p2[1]);ctx.stroke();
+}
+const ca=Math.cos(a*.8),sa=Math.sin(a*.8);
+const pts=V.map(v=>{
+const x=v[0]*110*1.4,y=v[1]*110*1.4,z=v[2]*110*1.4;
+const xr=x*ca-z*sa,zr=x*sa+z*ca;
+return proj(xr,y-40,zr+420,f);
+});
+ctx.lineWidth=4;
+ctx.strokeStyle='#39d5f2';
+ctx.shadowColor='#39d5f2';
+ctx.shadowBlur=18;
+ctx.beginPath();
+E.forEach(e=>{ctx.moveTo(pts[e[0]][0],pts[e[0]][1]);ctx.lineTo(pts[e[1]][0],pts[e[1]][1]);});
+ctx.stroke();
+ctx.shadowBlur=0;
+ctx.fillStyle='#ffe08a';
+pts.forEach(q=>{ctx.beginPath();ctx.arc(q[0],q[1],7,0,7);ctx.fill();});
+};
+if(!navigator.webdriver){const loop=(ms)=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

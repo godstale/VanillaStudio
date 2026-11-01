@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Loop</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0a0c12;color:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+#halo{position:absolute;left:50%;top:50%;width:560px;height:560px;margin:-280px;border-radius:50%}
+#shape{position:absolute;left:50%;top:50%;background:#f4f1ea;color:#0a0c12;display:grid;place-content:center;overflow:hidden}
+#shape .in{text-align:center}
+#shape .big{font-size:64px;font-weight:800}
+#shape .small{font-size:24px;color:#5a6578}
+.beats{position:absolute;left:0;right:0;bottom:52px;display:flex;gap:10px;justify-content:center}
+.beats i{width:26px;height:26px;border-radius:50%;background:#2a3348}
+.beats i.on{background:#b8e62e}
+svg.hud{position:absolute;inset:0;width:1280px;height:720px}
+</style>
+</head>
+<body>
+<div id="halo"></div>
+<div id="shape"><div class="in" id="inner"></div></div>
+<div class="beats" id="beats"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<svg class="hud" viewBox="0 0 1280 720"><path d="M24 64V24h40M1216 24h40v40M24 656v40h40M1256 656v40h-40" fill="none" stroke="#b8e62e" stroke-width="3" opacity=".6"/></svg>
+<script>
+const SECONDS=6;
+const shape=document.getElementById('shape');
+const halo=document.getElementById('halo');
+const inner=document.getElementById('inner');
+const dots=[...document.querySelectorAll('#beats i')];
+const states=[
+{w:560,h:120,r:60,html:'<div class="small">TYPE TO SEARCH</div>'},
+{w:420,h:200,r:40,html:'<div class="big">~ ~ ~</div>'},
+{w:480,h:260,r:30,html:'<div class="big">▮▮▮ ▮▮</div>'},
+{w:260,h:260,r:130,html:'<div class="big">OK</div>'}
+];
+function spring(q){
+return q<0?0:q>1?1:1-Math.exp(-6*q)*Math.cos(12*q);
+}
+window.seekExample=(t)=>{
+const p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+const cyc=(p*4)%4;
+const i0=Math.floor(cyc)%4,i1=(i0+1)%4;
+const q=spring((cyc-Math.floor(cyc))*1.6);
+const A=states[i0],B=states[i1];
+const w=A.w+(B.w-A.w)*q,h2=A.h+(B.h-A.h)*q,r=A.r+(B.r-A.r)*q;
+shape.style.width=w+'px';shape.style.height=h2+'px';
+shape.style.marginLeft=(-w/2)+'px';shape.style.marginTop=(-h2/2)+'px';
+shape.style.borderRadius=r+'px';
+inner.innerHTML=q<.5?A.html:B.html;
+const ang=p*Math.PI*2;
+halo.style.background=`conic-gradient(from ${p*360}deg, #b8e62e, #39d5f2, #ff5a5f, #b8e62e)`;
+halo.style.filter='blur(46px)';
+halo.style.opacity='.4';
+const beat=Math.floor(p*12)%12;
+dots.forEach((d,i)=>d.classList.toggle('on',i===beat));
+};
+if(!navigator.webdriver){const loop=(ms)=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

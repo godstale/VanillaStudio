@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Cutaway</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0b0e14;color:#eef2f7;font-family:'Segoe UI',system-ui,sans-serif}
+.stage{position:absolute;inset:0;perspective:1200px;background:radial-gradient(circle at 50% 38%,#1a2436 0%,#0b0e14 62%)}
+.iso{position:absolute;left:520px;top:400px;transform-style:preserve-3d}
+.part{position:absolute;margin:-110px 0 0 -110px;width:220px;height:220px;border-radius:24px;transform-style:preserve-3d}
+.part b{position:absolute;inset:44px;border-radius:50%;border:8px solid rgba(255,255,255,.4)}
+.p0{background:linear-gradient(135deg,#dfe7f0,#8d9ab0)}
+.p1{background:rgba(64,200,230,.30);border:3px solid rgba(120,230,250,.8)}
+.p2{background:linear-gradient(135deg,#3a4a63,#141c2c);border:3px solid #ffd97a}
+.p3{background:linear-gradient(135deg,#ff7a5e,#a32e2e)}
+.side{position:absolute;left:820px;top:170px;font-size:22px;letter-spacing:.24em;color:#8fa1bb}
+.side strong{display:block;font-size:56px;letter-spacing:.02em;color:#fff;margin:6px 0 18px}
+.spec{margin:0 0 12px;font-size:22px;letter-spacing:.08em;color:#c7d0dc}
+.spec i{display:inline-block;width:14px;height:14px;border-radius:50%;margin-right:12px}
+svg.hud{position:absolute;inset:0;width:1280px;height:720px}
+</style>
+</head>
+<body>
+<div class="stage">
+<div class="iso" id="iso">
+<div class="part p0" id="q0"><b></b></div>
+<div class="part p1" id="q1"><b></b></div>
+<div class="part p2" id="q2"><b></b></div>
+<div class="part p3" id="q3"><b></b></div>
+</div>
+<div class="side">SHOWCASE<strong>FOUR<br/>PARTS</strong><div class="spec"><i style="background:#dfe7f0"></i>SHELL</div><div class="spec"><i style="background:#40c8e6"></i>GLASS</div><div class="spec"><i style="background:#ffd97a"></i>CIRCUIT</div><div class="spec"><i style="background:#ff7a5e"></i>CORE</div></div>
+</div>
+<svg class="hud" viewBox="0 0 1280 720">
+<path d="M24 64V24h40M1216 24h40v40M24 656v40h40M1256 656v40h-40" fill="none" stroke="#ffd97a" stroke-width="3" opacity=".6"/>
+<circle cx="520" cy="400" r="200" fill="none" stroke="#ffd97a" stroke-width="2" stroke-dasharray="10 12" opacity=".4"/>
+</svg>
+<script>
+const SECONDS=5;
+const iso=document.getElementById('iso');
+const parts=[0,1,2,3].map(i=>document.getElementById('q'+i));
+window.seekExample=(t)=>{
+const p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+const a=p*Math.PI*2;
+const e=.5-.5*Math.cos(a);
+iso.style.transform=`rotateX(56deg) rotateZ(${30+14*Math.sin(a)}deg)`;
+parts.forEach((el,i)=>{el.style.transform=`translateZ(${(i-1.5)*44+e*(i-1.5)*120}px)`;});
+};
+if(!navigator.webdriver){const loop=(ms)=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

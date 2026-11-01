@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Signal</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#10141c;color:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+.beat{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;text-align:center;opacity:0}
+.mask{overflow:hidden}
+.mask h1{margin:0;font-size:120px;font-weight:800;letter-spacing:-.03em}
+.card{width:640px;border-radius:24px;background:#1b2334;padding:44px 52px;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.card .top{display:flex;gap:14px;margin-bottom:26px}
+.dot{width:18px;height:18px;border-radius:50%}
+.bars{display:flex;align-items:flex-end;gap:16px;height:150px}
+.bars i{flex:1;border-radius:8px;background:linear-gradient(#ffb347,#ff5a5f)}
+.nums{display:flex;gap:56px;font-size:72px;font-weight:800}
+.nums span{display:block;font-size:22px;font-weight:400;color:#a9b1c2;letter-spacing:.2em}
+.end{position:absolute;inset:0;display:grid;place-content:center;background:#ffb347;color:#10141c;opacity:0}
+.end h1{margin:0;font-size:110px;font-weight:800;letter-spacing:-.03em}
+.progress{position:absolute;left:120px;right:120px;bottom:44px;display:flex;gap:10px}
+.progress i{flex:1;height:6px;border-radius:4px;background:#2c3549}
+.progress i.on{background:#ffb347}
+svg.hud{position:absolute;inset:0;width:1280px;height:720px}
+</style>
+</head>
+<body>
+<div class="beat" id="b0"><div class="mask"><h1 id="hook">FLOW, AMPLIFIED</h1></div></div>
+<div class="beat" id="b1"><div class="card"><div class="top"><span class="dot" style="background:#ff5a5f"></span><span class="dot" style="background:#ffb347"></span><span class="dot" style="background:#58d68d"></span></div><div class="bars"><i style="height:40%"></i><i style="height:70%"></i><i style="height:52%"></i><i style="height:90%"></i><i style="height:64%"></i><i style="height:82%"></i></div></div></div>
+<div class="beat" id="b2"><div class="nums"><div><b id="n0">0</b><span>RATE</span></div><div><b id="n1">0</b><span>SCORE</span></div><div><b id="n2">0</b><span>LEVEL</span></div></div></div>
+<div class="end" id="b3"><h1>START TODAY</h1></div>
+<div class="progress" id="pg"><i></i><i></i><i></i><i></i></div>
+<svg class="hud" viewBox="0 0 1280 720"><path d="M24 64V24h40M1216 24h40v40M24 656v40h40M1256 656v40h-40" fill="none" stroke="#ffb347" stroke-width="3" opacity=".6"/></svg>
+<script>
+const SECONDS=6;
+const beats=[0,1,2,3].map(i=>document.getElementById('b'+i));
+const tabs=[...document.querySelectorAll('#pg i')];
+const hook=document.getElementById('hook');
+const nums=[0,1,2].map(i=>document.getElementById('n'+i));
+const vals=[128,96,12];
+function seg(p,from,to){return Math.min(1,Math.max(0,(p-from)/(to-from)));}
+window.seekExample=(t)=>{
+const p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+const idx=p<.25?0:p<.5?1:p<.78?2:3;
+beats.forEach((b,i)=>b.style.opacity=i===idx?1:0);
+tabs.forEach((el,i)=>el.classList.toggle('on',i<=idx));
+hook.style.transform=`translateY(${(1-seg(p,0,.12))*110}%)`;
+const q=seg(p,.55,.75);
+nums.forEach((el,i)=>el.textContent=Math.round(vals[i]*(idx<2?0:q)));
+};
+if(!navigator.webdriver){const loop=(ms)=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>
