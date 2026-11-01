@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Diorama</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: linear-gradient(#31363e, #14161a); display: grid; place-items: center; }
+      svg { width: 760px; height: 600px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 760 600">
+      <ellipse cx="380" cy="540" rx="260" ry="22" fill="#000" opacity="0.55" />
+      <rect x="180" y="480" width="400" height="40" fill="#4a4238" />
+      <rect x="200" y="460" width="360" height="24" fill="#6e6252" />
+      <g id="world">
+        <ellipse cx="380" cy="440" rx="190" ry="46" fill="#5a7d4f" />
+        <polygon id="hill" points="250,440 330,300 410,440" fill="#3d6b46" />
+        <rect id="house" x="430" y="360" width="90" height="80" fill="#b3541e" />
+        <polygon id="roof" points="420,360 475,310 530,360" fill="#6e2f10" />
+        <circle id="tree1" cx="270" cy="380" r="34" fill="#2f6b46" />
+        <rect x="262" y="400" width="16" height="30" fill="#5e3a1e" />
+        <circle id="tree2" cx="540" cy="400" r="26" fill="#2f6b46" />
+      </g>
+    </svg>
+    <script>
+      const SECONDS = 6;
+      const world = document.getElementById('world');
+      window.seekExample = (t) => {
+        const phase = (((t % SECONDS) + SECONDS) % SECONDS) / SECONDS;
+        const x = Math.sin(phase * Math.PI * 2) * 40;
+        const s = 1 + Math.cos(phase * Math.PI * 2) * 0.06;
+        world.setAttribute('transform', `translate(${x} 0) scale(${s} 1)`);
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>
