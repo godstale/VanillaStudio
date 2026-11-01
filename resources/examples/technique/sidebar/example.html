@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sidebar</title>
+    <style>
+      html, body {
+        margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #E9E4D6; color: #22262E;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      .wrap { display: grid; grid-template-columns: 300px 1fr; gap: 32px; height: 100%; padding: 64px; box-sizing: border-box; }
+      .side { border-radius: 20px; background: #22262E; padding: 36px 28px; box-sizing: border-box; }
+      .nav { height: 34px; margin-bottom: 24px; border-radius: 8px; background: #4A5160; }
+      .nav.on { background: #7AA2F7; }
+      .main { border-radius: 20px; background: #FFFFFF; padding: 56px; box-sizing: border-box; }
+      .hero { height: 150px; border-radius: 16px; background: linear-gradient(135deg, #2E9E5B, #9BD6B4); }
+      .bar { height: 34px; margin-top: 32px; border-radius: 7px; background: #22262E; }
+      .line { height: 18px; margin-top: 16px; border-radius: 9px; background: #CFC8B4; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="side"><div class="nav on"></div><div class="nav"></div><div class="nav"></div><div class="nav"></div></div>
+      <div class="main"><div class="hero"></div><div class="bar"></div><div class="line"></div><div class="line"></div></div>
+    </div>
+  </body>
+</html>

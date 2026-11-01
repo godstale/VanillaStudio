@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tablet 768</title>
+    <style>
+      html, body {
+        margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #14171C;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      .stage { display: grid; place-items: center; height: 100%; }
+      .tablet {
+        width: 768px; height: 576px; border-radius: 36px; background: #2B303B;
+        padding: 24px; box-sizing: border-box;
+      }
+      .screen {
+        display: grid; grid-template-columns: 150px 1fr; gap: 20px;
+        width: 100%; height: 100%; border-radius: 20px; background: #F2EEE2;
+        padding: 28px; box-sizing: border-box; overflow: hidden;
+      }
+      .rail { border-radius: 14px; background: #22262E; padding: 20px 14px; box-sizing: border-box; }
+      .nav { height: 26px; margin-bottom: 18px; border-radius: 6px; background: #4A5160; }
+      .nav.on { background: #7AA2F7; }
+      .page .hero { height: 200px; border-radius: 16px; background: linear-gradient(135deg, #2E9E5B, #9BD6B4); }
+      .row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 20px; }
+      .cell { height: 120px; border-radius: 14px; background: #FFFFFF; border: 3px solid #D8D2C2; }
+    </style>
+  </head>
+  <body>
+    <div class="stage">
+      <div class="tablet"><div class="screen">
+        <div class="rail"><div class="nav on"></div><div class="nav"></div><div class="nav"></div><div class="nav"></div></div>
+        <div class="page"><div class="hero"></div>
+          <div class="row"><div class="cell"></div><div class="cell"></div><div class="cell"></div></div>
+        </div>
+      </div></div>
+    </div>
+  </body>
+</html>

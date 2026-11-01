@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Multiscale zoom</title>
+    <style>
+      html, body {
+        margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #10141C; color: #F4F1EA;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      .wrap { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; height: 100%; padding: 64px; box-sizing: border-box; }
+      .cell { border-radius: 24px; background: #1B2130; padding: 32px; box-sizing: border-box; border: 6px solid transparent; }
+      .cell.hot { border-color: #FFB347; }
+      .view { height: 400px; border-radius: 16px; background: #0C0F16; position: relative; overflow: hidden; }
+      .dot { position: absolute; border-radius: 50%; background: #7AA2F7; }
+      .tag { height: 30px; margin-top: 28px; border-radius: 8px; background: #3A4150; }
+      .cell.hot .tag { background: #FFB347; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="cell" id="c0"><div class="view" id="v0"></div><div class="tag"></div></div>
+      <div class="cell" id="c1"><div class="view" id="v1"></div><div class="tag"></div></div>
+      <div class="cell" id="c2"><div class="view" id="v2"></div><div class="tag"></div></div>
+    </div>
+    <svg width="0" height="0" viewBox="0 0 10 10"></svg>
+    <script>
+      const SECONDS = 4;
+      const cells = [document.getElementById('c0'), document.getElementById('c1'), document.getElementById('c2')];
+      const views = [document.getElementById('v0'), document.getElementById('v1'), document.getElementById('v2')];
+
+      const hash = (i) => {
+        const x = Math.sin(i * 127.1 + 311.7) * 43758.5453;
+        return x - Math.floor(x);
+      };
+      const dots = views.map((v, c) => {
+        const list = [];
+        for (let i = 0; i < 40; i += 1) {
+          const d = document.createElement('div');
+          d.className = 'dot';
+          const s = 6 + hash(i + c * 91) * (8 + c * 14);
+          d.style.width = s + 'px';
+          d.style.height = s + 'px';
+          d.style.left = (hash(i * 3 + c) * 90) + '%';
+          d.style.top = (hash(i * 7 + c * 13) * 90) + '%';
+          v.appendChild(d);
+          list.push(d);
+        }
+        return list;
+      });
+
+      window.seekExample = (t) => {
+        const phase = (t % SECONDS) / SECONDS;
+        const hot = Math.min(2, Math.floor(phase * 3));
+        cells.forEach((c, i) => c.classList.toggle('hot', i === hot));
+        dots.forEach((list, c) => {
+          const zoom = 1 + (phase * 3 - c) * 0.6;
+          const z = Math.max(0.5, Math.min(2.4, zoom));
+          list.forEach((d) => {
+            d.style.transform = `scale(${z.toFixed(3)})`;
+          });
+        });
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

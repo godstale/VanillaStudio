@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Focus visible</title>
+    <style>
+      html, body {
+        margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #E9E4D6;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      .stage { display: grid; place-content: center; height: 100%; }
+      .row { display: flex; gap: 48px; }
+      .opt {
+        width: 260px; height: 150px; border-radius: 24px; border: 6px solid #22262E;
+        background: #FFFFFF; display: grid; place-items: center;
+        font-size: 64px; font-weight: 800; color: #22262E; outline: none;
+      }
+      .opt:focus-visible { border-color: #2456D6; box-shadow: 0 0 0 12px rgba(36, 86, 214, .45); }
+    </style>
+  </head>
+  <body>
+    <div class="stage">
+      <div class="row">
+        <button class="opt" type="button">A</button>
+        <button class="opt" type="button" autofocus>B</button>
+        <button class="opt" type="button">C</button>
+      </div>
+    </div>
+  </body>
+</html>
