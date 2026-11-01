@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#20262e}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<radialGradient id="dl" cx="40%" cy="30%" r="85%"><stop offset="0" stop-color="#fff3c4"/><stop offset="1" stop-color="#e0a83c"/></radialGradient>
+</defs>
+<rect width="1280" height="720" fill="#20262e"/>
+<rect id="pl" x="60" y="120" width="70" height="440" fill="#3a465e"/>
+<rect id="pr" x="1150" y="120" width="70" height="440" fill="#3a465e"/>
+<g id="w">
+<rect y="560" width="1280" height="160" fill="#2b3340"/>
+<ellipse id="sh" cx="640" cy="586" rx="190" ry="22" fill="#000" opacity=".5"/>
+<rect x="520" y="404" width="240" height="156" fill="#8f959d"/>
+<ellipse cx="640" cy="404" rx="120" ry="16" fill="#6a7076"/>
+<circle cx="640" cy="274" r="130" fill="url(#dl)"/>
+<ellipse cx="596" cy="230" rx="34" ry="22" fill="#fff" opacity=".8"/>
+</g>
+</svg>
+<script>
+const SECONDS=3;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+const s=0.72+0.56*ss(p);
+$('w').setAttribute('transform','translate(640 400) scale('+s.toFixed(3)+') translate(-640 -400)');
+$('pl').setAttribute('x',(60-140*(1-ss(p))).toFixed(1));
+$('pr').setAttribute('x',(1150+140*(1-ss(p))).toFixed(1));
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

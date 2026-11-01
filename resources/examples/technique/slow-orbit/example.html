@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#1a1e27}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<radialGradient id="so" cx="40%" cy="30%" r="85%"><stop offset="0" stop-color="#ffd9e8"/><stop offset="1" stop-color="#e0608f"/></radialGradient>
+</defs>
+<rect width="1280" height="720" fill="#1a1e27"/>
+<rect y="560" width="1280" height="160" fill="#141821"/>
+<ellipse id="sh" cx="640" cy="590" rx="180" ry="22" fill="#000" opacity=".5"/>
+<ellipse cx="640" cy="360" rx="270" ry="95" fill="none" stroke="#3a465e" stroke-width="4" stroke-dasharray="14 10"/>
+<circle cx="640" cy="360" r="130" fill="url(#so)"/>
+<ellipse id="hl" cx="600" cy="318" rx="34" ry="22" fill="#fff" opacity=".85"/>
+<circle id="sat" cx="910" cy="360" r="34" fill="#f5b942"/>
+<circle id="sat2" cx="910" cy="360" r="12" fill="#fff" opacity=".7"/>
+</svg>
+<script>
+const SECONDS=4;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+const a=p*Math.PI*2;
+const cx=640+270*Math.cos(a);
+const cy=360+95*Math.sin(a);
+$('sat').setAttribute('cx',cx.toFixed(1));
+$('sat').setAttribute('cy',cy.toFixed(1));
+$('sat').setAttribute('r',(26+12*Math.sin(a)).toFixed(1));
+$('sat2').setAttribute('cx',cx.toFixed(1));
+$('sat2').setAttribute('cy',cy.toFixed(1));
+$('hl').setAttribute('cx',(640-44*Math.cos(a)).toFixed(1));
+$('sh').setAttribute('cx',(640-36*Math.cos(a)).toFixed(1));
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

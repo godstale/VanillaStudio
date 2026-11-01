@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#87b5d6}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<g id="w">
+<rect x="-200" y="-300" width="1700" height="700" fill="#87b5d6"/>
+<circle cx="980" cy="-140" r="70" fill="#f5b942"/>
+<ellipse cx="320" cy="180" rx="330" ry="110" fill="#3e6b4f"/>
+<ellipse cx="980" cy="220" rx="360" ry="120" fill="#35603f"/>
+<rect x="540" y="30" width="200" height="150" fill="#efd9b4"/>
+<polygon points="540,30 740,30 640,-50" fill="#e4572e"/>
+<rect x="610" y="90" width="60" height="90" fill="#6b4a2e"/>
+<rect x="-200" y="260" width="1700" height="220" fill="#2c4a38"/>
+<ellipse cx="200" cy="420" rx="150" ry="50" fill="#24402e"/>
+<ellipse cx="1050" cy="440" rx="180" ry="55" fill="#24402e"/>
+<rect x="-200" y="480" width="1700" height="420" fill="#1e3327"/>
+<ellipse cx="640" cy="700" rx="420" ry="120" fill="#16281e"/>
+</g>
+</svg>
+<script>
+const SECONDS=3;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+$('w').setAttribute('transform','translate(0 '+(220-480*ss(p)).toFixed(1)+')');
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>
