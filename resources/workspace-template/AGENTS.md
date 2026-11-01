@@ -18,7 +18,9 @@ Do not use generative image/video AI services. Record every external resource in
 ### Stage 0: Worldview & Intent (세계관·의도 좁히기)
 When the user gives an initial request (often just `WORK_ORDER.md`):
 1. Define the work title and core value in **one sentence** (`storyboard/storyboard.json` → `brief.title`, `brief.oneLiner`).
-2. Run `pnpm vanilla templates --intent <web|image|slide|motion>` and `pnpm vanilla taxonomy` to pick the best template / Opus preset / design taxonomy with the user.
+2. If `storyboard/00-project-template.md` exists, treat it as the project skeleton (concept + scene slots). The user brief overrides it.
+3. Run `pnpm vanilla templates --intent <web|image|slide|motion>` and `pnpm vanilla taxonomy` to pick the best scene guide / Opus preset / design taxonomy with the user.
+4. Run `pnpm vanilla styles --query <word>` to turn the look the user describes into style ids from `STYLE_LIBRARY.json`, and record them in each scene's `scene.json` `styles`.
 
 ### Stage 1: Three Documents First (글 3개 먼저 쓰기)
 Before any code, write with `pnpm vanilla init-storyboard`:
@@ -48,6 +50,8 @@ When the user leaves comments or changes styles in Vanilla Studio:
 | `VANILLA_GUIDE.md` | Full studio guide, schema & parameter reference, template/palette catalog with preview images & demo URLs | Read to understand schemas, runtime APIs, and available templates. |
 | `storyboard/storyboard.json`, `storyboard/01-brief.md`, `storyboard/02-design-flow.md`, `storyboard/03-visual-direction.md` | 3-document storyboard source (기획·설계·비주얼) | Write before code (`pnpm vanilla init-storyboard`); fix cause documents before scene code. |
 | `storyboard/data/content.json`, `storyboard/data/items.json` | Core materials (위계형 문구·도메인 데이터) | Build before components; never hard-code copy in components. |
+| `storyboard/00-project-template.md` | Project skeleton generated when the user picks a project template | Read first; do not edit. Record your adaptation in `02-design-flow.md`. |
+| `STYLE_LIBRARY.json` | 200 visual styles with keywords, examples and code techniques | Read-only vocabulary; refreshed by Vanilla Studio. |
 | `WORK_ORDER.md`, `.vanilla/work-order.json` | Work order log of user edits in Vanilla Studio + open comments | Read before every task; resolve completed items via `pnpm vanilla resolve <id>`. |
 | `workspace.json` | Workspace id, name, global canvas (`aspect`, `width`, `height`, `fps`) | Read canvas spec via `useFrame()`; never change `workspaceId`. |
 | `sequence.json` | Sequence graph (`mode`, `nodes[]`, `edges[]`, `start`) | Create/update when structuring scenes & transitions. Static scenes only allow user-input edge triggers (`click`, `key:*`, `choice:*`). |
@@ -72,6 +76,7 @@ pnpm vanilla init-storyboard [--intent web]                     # Scaffold story
 pnpm vanilla taxonomy [--category layout] [--query <keyword>]    # Map intent to storyboard taxonomy IDs + hints
 pnpm vanilla templates [--intent motion] [--type motion]         # Browse templates, Opus presets, palettes & preview URLs
 pnpm vanilla inspect-template <id>                               # Inspect full template rules, defaults, hints & demo links
+pnpm vanilla styles [--query neon] [--type 3d] [--family id]     # Search visual styles (keywords, example)
 pnpm vanilla scaffold-scene <slug> --name "Intro" --type motion  # Create a new scene folder + draft code + add to sequence.json
 pnpm vanilla sync-guides [<slug>]                                # Re-render GUIDE.md & scene AGENTS.md after editing scene.json
 pnpm vanilla work-order                                          # View open user changes & comments from WORK_ORDER.md

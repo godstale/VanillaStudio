@@ -1,4 +1,5 @@
 import { serializeScene, type Scene } from '@/lib/scene/schema';
+import { renderStylesGuide } from '@/lib/styles/library';
 import { normalizeEol } from './markers';
 import { sha256 } from './sha256';
 import { agentWritableFields } from './writeback';
@@ -127,6 +128,7 @@ function body(scene: Scene, workspaceName: string): string {
       ['language', b.language],
     ]),
     ...typeSections(scene),
+    ...(scene.styles?.length ? [sec('Visual styles', renderStylesGuide(scene.styles))] : []),
     sec('References', refs),
     sec('User prompt', val(scene.userPrompt)),
     sec('Fields you may fill', agentWritableFields(scene.type).map((f) => `\`${f}\``).join(', ')),

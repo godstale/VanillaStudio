@@ -145,7 +145,7 @@ fn copy_template(src: &Path, dst: &Path, vars: &[(&str, &str)]) -> Result<(), St
                 }
                 continue;
             }
-            if name_str != "VANILLA_GUIDE.md" && !name_str.ends_with(".mjs") && !name_str.ends_with(".d.mts") {
+            if name_str != "VANILLA_GUIDE.md" && name_str != "STYLE_LIBRARY.json" && !name_str.ends_with(".mjs") && !name_str.ends_with(".d.mts") {
                 // 기존 사용자 파일(DESIGN.md, WORK_ORDER.md, sequence.json, package.json 등)은 덮어쓰지 않고 보존한다.
                 continue;
             }
@@ -362,6 +362,7 @@ mod tests {
             "CLAUDE.md",
             "DESIGN.md",
             "VANILLA_GUIDE.md",
+            "STYLE_LIBRARY.json",
             "WORK_ORDER.md",
             "sequence.json",
             "package.json",

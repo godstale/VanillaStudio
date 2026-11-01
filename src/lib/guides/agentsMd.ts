@@ -1,4 +1,5 @@
 import type { Scene } from '@/lib/scene/schema';
+import { renderStylesSection, STYLE_LIBRARY } from '@/lib/styles/library';
 import { applyMarkers, type MarkerSection } from './markers';
 import type { GuideTemplate } from './template';
 import { agentWritableFields } from './writeback';
@@ -73,6 +74,7 @@ export function agentsMdSections({ workspace, scene, template }: GuideContext): 
         '## Task',
         '',
         'Read these first, in order: `GUIDE.md` (the scene spec), `scene.json` (the source of truth), `../../DESIGN.md` (design tokens), `comments.json` (scene comments), and `../../WORK_ORDER.md` (workspace work order & user changes).',
+        'If `../../storyboard/00-project-template.md` exists, it is the project skeleton: follow its concept and the slot for this scene.',
         'Then implement the scene as code under `src/`. Do not use generative image or video AI services.',
       ].join('\n'),
     },
@@ -99,6 +101,7 @@ export function agentsMdSections({ workspace, scene, template }: GuideContext): 
         'Colors, type and spacing come only from `DESIGN.md` tokens: CSS `var(--color-*)` or `useDesign()`. Never write raw color values.',
       ].join('\n'),
     },
+    { id: 'styles', body: renderStylesSection(scene.styles, STYLE_LIBRARY) },
     {
       id: 'writeback',
       body: [
