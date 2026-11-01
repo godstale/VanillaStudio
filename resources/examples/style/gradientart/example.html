@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Gradient art</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: #141028;
+      }
+      canvas {
+        width: 1280px;
+        height: 720px;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="c" width="1280" height="720"></canvas>
+    <script>
+      const SECONDS = 4;
+      const W = 160;
+      const H = 90;
+      const cv = document.getElementById('c');
+      const ctx = cv.getContext('2d');
+      const buf = document.createElement('canvas');
+      buf.width = W;
+      buf.height = H;
+      const btx = buf.getContext('2d');
+      const img = btx.createImageData(W, H);
+      const Hh = (n) => {
+        const s = Math.sin(n * 127.1 + 311.7) * 43758.5453;
+        return s - Math.floor(s);
+      };
+      const BASE = [20, 16, 40];
+      const INKS = [
+        [255, 110, 90],
+        [120, 80, 220],
+        [40, 190, 170],
+        [250, 190, 90],
+      ];
+
+      // Pure function of t: four color blobs drift slowly, grain stays fixed.
+      window.seekExample = (t) => {
+        const ph = ((t % SECONDS) / SECONDS) * Math.PI * 2;
+        const cx = [0.5 + 0.34 * Math.cos(ph), 0.5 + 0.34 * Math.cos(ph + 2.1), 0.5 + 0.34 * Math.cos(ph + 4.2), 0.5 + 0.34 * Math.cos(ph + 1.05)];
+        const cy = [0.5 + 0.3 * Math.sin(ph * 1.3), 0.5 + 0.3 * Math.sin(ph * 1.3 + 2.1), 0.5 + 0.3 * Math.sin(ph * 1.3 + 4.2), 0.5 + 0.3 * Math.sin(ph * 1.3 + 1.05)];
+        const d = img.data;
+        let k = 0;
+        for (let j = 0; j < H; j += 1) {
+          const v = j / H;
+          for (let i = 0; i < W; i += 1) {
+            const u = i / W;
+            let r = BASE[0];
+            let g = BASE[1];
+            let b = BASE[2];
+            let wsum = 1;
+            for (let m = 0; m < 4; m += 1) {
+              const dx = u - cx[m];
+              const dy = (v - cy[m]) * 1.2;
+              const w = 1 / (1 + 9 * (dx * dx + dy * dy));
+              r += INKS[m][0] * w;
+              g += INKS[m][1] * w;
+              b += INKS[m][2] * w;
+              wsum += w;
+            }
+            const grain = (Hh(k * 0.73) - 0.5) * 16;
+            d[k] = r / wsum + grain;
+            d[k + 1] = g / wsum + grain;
+            d[k + 2] = b / wsum + grain;
+            d[k + 3] = 255;
+            k += 4;
+          }
+        }
+        btx.putImageData(img, 0, 0);
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(buf, 0, 0, 1280, 720);
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

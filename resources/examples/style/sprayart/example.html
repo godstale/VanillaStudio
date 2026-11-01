@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Spray art</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: #0b0916;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <radialGradient id="space" cx="0.32" cy="0.3" r="1">
+          <stop offset="0" stop-color="#2c2456" />
+          <stop offset="0.55" stop-color="#141126" />
+          <stop offset="1" stop-color="#0b0916" />
+        </radialGradient>
+      </defs>
+      <rect width="1280" height="720" fill="url(#space)" />
+      <g id="sp"></g>
+      <ellipse cx="430" cy="360" rx="235" ry="62" fill="none" stroke="#e8e2d4" stroke-width="16" transform="rotate(-18 430 360)" />
+      <circle cx="430" cy="360" r="150" fill="#3fbfae" />
+      <circle cx="482" cy="402" r="138" fill="#1c6f66" opacity="0.9" />
+      <circle cx="408" cy="330" r="120" fill="#3fbfae" />
+      <rect x="292" y="330" width="276" height="12" fill="#0b0916" opacity="0.85" />
+      <rect x="292" y="392" width="276" height="12" fill="#0b0916" opacity="0.85" />
+      <circle cx="880" cy="240" r="82" fill="#e07830" />
+      <circle cx="905" cy="262" r="70" fill="#a34e1c" opacity="0.9" />
+      <circle cx="862" cy="222" r="58" fill="#e07830" />
+      <circle cx="860" cy="225" r="12" fill="#a34e1c" />
+      <circle cx="892" cy="248" r="8" fill="#a34e1c" />
+      <circle cx="845" cy="252" r="6" fill="#a34e1c" />
+      <g stroke="#ffffff" stroke-width="6" stroke-linecap="round">
+        <path d="M1080 500v56M1052 528h56" />
+        <path d="M180 560v44M158 582h44" />
+        <path d="M700 120v44M678 142h44" />
+      </g>
+    </svg>
+    <script>
+      const NS = 'http://www.w3.org/2000/svg';
+      const H = (n) => {
+        const s = Math.sin(n * 127.1 + 311.7) * 43758.5453;
+        return s - Math.floor(s);
+      };
+      const g = document.getElementById('sp');
+      for (let i = 0; i < 380; i += 1) {
+        const c = document.createElementNS(NS, 'circle');
+        c.setAttribute('cx', (H(i * 1.37) * 1280).toFixed(1));
+        c.setAttribute('cy', (H(i * 2.11 + 40) * 720).toFixed(1));
+        c.setAttribute('r', (0.6 + H(i * 3.7 + 80) * 1.8).toFixed(2));
+        c.setAttribute('fill', H(i * 5.3 + 120) > 0.72 ? '#9fd8ff' : '#ffffff');
+        c.setAttribute('opacity', (0.15 + H(i * 7.9 + 160) * 0.7).toFixed(2));
+        g.appendChild(c);
+      }
+    </script>
+  </body>
+</html>

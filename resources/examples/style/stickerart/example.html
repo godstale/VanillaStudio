@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sticker art</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: #a8d8e8;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <pattern id="dots" width="72" height="72" patternUnits="userSpaceOnUse">
+          <circle cx="18" cy="18" r="9" fill="#ffffff" opacity="0.55" />
+        </pattern>
+        <clipPath id="face">
+          <circle cx="640" cy="380" r="150" />
+        </clipPath>
+      </defs>
+      <rect width="1280" height="720" fill="#a8d8e8" />
+      <rect width="1280" height="720" fill="url(#dots)" />
+      <ellipse cx="640" cy="600" rx="220" ry="40" fill="#1c1b19" opacity="0.18" />
+      <g fill="#ffffff">
+        <circle cx="640" cy="380" r="178" />
+        <circle cx="528" cy="248" r="66" />
+        <circle cx="752" cy="248" r="66" />
+        <rect x="612" y="120" width="56" height="90" rx="28" />
+      </g>
+      <circle cx="528" cy="248" r="52" fill="#37b58a" />
+      <circle cx="528" cy="248" r="24" fill="#7eddbe" />
+      <circle cx="752" cy="248" r="52" fill="#37b58a" />
+      <circle cx="752" cy="248" r="24" fill="#7eddbe" />
+      <circle cx="640" cy="380" r="150" fill="#37b58a" />
+      <ellipse cx="640" cy="150" rx="58" ry="30" fill="#2f7d4f" transform="rotate(-24 640 150)" />
+      <circle cx="578" cy="360" r="34" fill="#ffffff" />
+      <circle cx="702" cy="360" r="34" fill="#ffffff" />
+      <circle cx="578" cy="364" r="15" fill="#1c1b19" />
+      <circle cx="702" cy="364" r="15" fill="#1c1b19" />
+      <circle cx="583" cy="359" r="5" fill="#ffffff" />
+      <circle cx="707" cy="359" r="5" fill="#ffffff" />
+      <ellipse cx="600" cy="430" rx="26" ry="16" fill="#f28ba0" opacity="0.85" />
+      <ellipse cx="680" cy="430" rx="26" ry="16" fill="#f28ba0" opacity="0.85" />
+      <path d="M610 415 Q640 445 670 415" fill="none" stroke="#1c1b19" stroke-width="10" stroke-linecap="round" />
+      <g clip-path="url(#face)">
+        <rect x="480" y="220" width="90" height="420" fill="#ffffff" opacity="0.35" transform="rotate(24 525 430)" />
+        <rect x="590" y="220" width="34" height="420" fill="#ffffff" opacity="0.3" transform="rotate(24 607 430)" />
+      </g>
+    </svg>
+  </body>
+</html>

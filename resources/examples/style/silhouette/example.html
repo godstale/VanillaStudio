@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Silhouette</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: #2a1a44;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#2a1a44" />
+          <stop offset="0.45" stop-color="#a83a68" />
+          <stop offset="0.75" stop-color="#ff7a3c" />
+          <stop offset="1" stop-color="#ffc46b" />
+        </linearGradient>
+      </defs>
+      <rect width="1280" height="720" fill="url(#sky)" />
+      <circle cx="830" cy="470" r="95" fill="#ffe3a3" />
+      <path d="M0 560 Q320 500 640 545 T1280 535 V720 H0 Z" fill="#14101c" />
+      <g fill="#14101c">
+        <path d="M400 560 L428 560 L420 400 L470 320 L452 318 L414 380 L410 300 L428 220 L410 218 L398 290 L380 230 L364 236 L388 310 L382 400 L372 560 Z" />
+        <ellipse cx="330" cy="280" rx="120" ry="70" />
+        <ellipse cx="460" cy="250" rx="130" ry="76" />
+        <ellipse cx="400" cy="190" rx="110" ry="60" />
+        <ellipse cx="250" cy="330" rx="80" ry="50" />
+        <ellipse cx="540" cy="310" rx="90" ry="54" />
+      </g>
+      <g fill="#14101c">
+        <path d="M700 130 q20 -20 40 0 q20 -20 40 0 l-8 10 q-12 -10 -32 2 q-20 -12 -32 -2 Z" />
+        <path d="M850 200 q16 -16 32 0 q16 -16 32 0 l-6 8 q-10 -8 -26 2 q-16 -10 -26 -2 Z" />
+        <path d="M970 120 q16 -16 32 0 q16 -16 32 0 l-6 8 q-10 -8 -26 2 q-16 -10 -26 -2 Z" />
+        <path d="M620 220 q12 -12 24 0 q12 -12 24 0 l-5 6 q-7 -6 -19 1 q-12 -7 -19 -1 Z" />
+      </g>
+      <g stroke="#14101c" stroke-width="10" stroke-linecap="round">
+        <path d="M120 690 q30 -60 10 -110" fill="none" />
+        <path d="M180 695 q-10 -70 30 -120" fill="none" />
+        <path d="M1150 695 q20 -70 -10 -130" fill="none" />
+      </g>
+    </svg>
+  </body>
+</html>
