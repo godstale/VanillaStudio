@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Wall piece</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #8a8d90; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <pattern id="spk" width="26" height="26" patternUnits="userSpaceOnUse">
+          <circle cx="5" cy="7" r="2" fill="#6f7275" />
+          <circle cx="18" cy="19" r="1.6" fill="#9a9da0" />
+        </pattern>
+      </defs>
+      <rect x="0" y="0" width="1280" height="720" fill="#8a8d90" />
+      <rect x="0" y="0" width="1280" height="720" fill="url(#spk)" />
+      <rect x="0" y="640" width="1280" height="80" fill="#6f7275" />
+      <ellipse cx="640" cy="400" rx="480" ry="230" fill="#ffffff" opacity="0.25" />
+      <g stroke="#111" stroke-width="14" stroke-linejoin="round">
+        <path d="M220 480 L260 300 L360 280 L380 360 L470 340 L490 480 Z" fill="#ff2e88" />
+        <path d="M500 480 L540 290 L660 270 L680 360 L780 340 L790 480 Z" fill="#00c2d1" />
+        <path d="M800 480 L840 300 L960 290 L930 380 L1030 370 L990 480 Z" fill="#ffd400" />
+      </g>
+      <g stroke-linecap="round">
+        <line x1="300" y1="490" x2="296" y2="580" stroke="#ff2e88" stroke-width="10" />
+        <line x1="620" y1="490" x2="626" y2="600" stroke="#00c2d1" stroke-width="10" />
+        <line x1="900" y1="490" x2="894" y2="570" stroke="#ffd400" stroke-width="10" />
+        <circle cx="296" cy="588" r="8" fill="#ff2e88" />
+        <circle cx="626" cy="608" r="8" fill="#00c2d1" />
+        <circle cx="894" cy="578" r="8" fill="#ffd400" />
+      </g>
+      <text x="620" y="450" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="120" fill="#111" stroke="#f4f1ea" stroke-width="2">FLOW</text>
+      <g fill="#f4f1ea" opacity="0.85">
+        <polygon points="150,220 175,265 225,270 185,300 195,350 150,320 105,350 115,300 75,270 125,265" />
+        <polygon points="1130,180 1145,210 1180,212 1152,232 1160,266 1130,246 1100,266 1108,232 1080,212 1115,210" />
+      </g>
+    </svg>
+  </body>
+</html>

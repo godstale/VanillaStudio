@@ -1,0 +1,7 @@
+{
+  "seconds": 0,
+  "note": {
+    "ko": "명암을 따라 굵기가 달라지는 점들이 얼굴과 해를 그립니다.",
+    "en": "Dots whose radius follows luminance draw a face and a sun."
+  }
+}

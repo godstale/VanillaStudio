@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Two inks valley</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #f2c879; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <linearGradient id="duo" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f2c879" />
+          <stop offset="100%" stop-color="#c98f3d" />
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="1280" height="720" fill="url(#duo)" />
+      <circle cx="880" cy="180" r="90" fill="#f2c879" opacity="0.9" />
+      <polygon points="0,480 220,240 420,480" fill="#7a5a28" />
+      <polygon points="300,480 560,200 820,480" fill="#4a3a20" />
+      <polygon points="700,480 960,260 1220,480" fill="#7a5a28" />
+      <polygon points="220,240 260,300 220,320 190,290" fill="#f2c879" />
+      <polygon points="560,200 610,270 560,295 515,265" fill="#f2c879" />
+      <rect x="0" y="480" width="1280" height="240" fill="#1f2a5a" />
+      <polygon points="0,560 300,520 640,560 940,530 1280,560 1280,720 0,720" fill="#2e3d7d" />
+      <g fill="#f2c879" opacity="0.85">
+        <rect x="120" y="590" width="220" height="10" /><rect x="420" y="620" width="260" height="10" />
+        <rect x="780" y="590" width="200" height="10" /><rect x="1020" y="640" width="160" height="10" />
+      </g>
+      <g fill="#1f2a5a">
+        <polygon points="150,480 170,400 190,480" /><polygon points="200,480 225,380 250,480" />
+        <polygon points="1090,480 1110,400 1130,480" /><polygon points="1140,480 1165,380 1190,480" />
+      </g>
+    </svg>
+  </body>
+</html>
