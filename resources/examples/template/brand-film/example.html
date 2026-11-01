@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Brand film skeleton</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #241d16; color: #f7efe2; font-family: 'Segoe UI', system-ui, sans-serif; }
+      .slide { position: absolute; inset: 0 0 96px; display: grid; place-content: center;
+        justify-items: center; gap: 16px; text-align: center; opacity: 0; }
+      h1 { margin: 0; font-size: 84px; letter-spacing: -0.02em; }
+      p { margin: 0; color: #d8c6ac; font-size: 28px; }
+      .hills { width: 560px; height: 150px; }
+      .motif { width: 180px; height: 180px; border-radius: 50%;
+        background: radial-gradient(circle at 35% 35%, #ffd9a0, #e07b39 70%); }
+      .hand { font-family: Georgia, serif; font-style: italic; font-size: 76px; }
+      .mark { width: 120px; height: 120px; border-radius: 24px; background: #f7efe2; }
+      nav { position: absolute; right: 56px; bottom: 30px; left: 56px; display: flex; gap: 10px; }
+      nav div { height: 42px; border-top: 4px solid #4d4234; color: #8d7f68;
+        font-size: 20px; line-height: 42px; }
+      nav div.on { border-color: #e8a04c; color: #f7efe2; }
+    </style>
+  </head>
+  <body>
+    <div class="slide"><svg class="hills" viewBox="0 0 560 150"><path d="M0 120 Q140 40 280 90 T560 70 V150 H0 Z" fill="#5a6e46"/><path d="M0 135 Q180 80 360 110 T560 100 V150 H0 Z" fill="#7d8f5f"/></svg><h1>Morning in the valley</h1><p>World: set the place and mood</p></div>
+    <div class="slide"><div class="motif" id="motif"></div><h1>Something stirs</h1><p>Shift: the motif grows</p></div>
+    <div class="slide"><div class="hand">Made to last</div><p>Belief: say the value in words</p></div>
+    <div class="slide"><div class="mark"></div><h1>Quiet mark</h1><p>Signature: close with the brand</p></div>
+    <nav id="nav"></nav>
+    <script>
+      const SECONDS = 8;
+      const BEATS = [['World', 8], ['Shift', 8], ['Belief', 8], ['Signature', 5]];
+      const total = BEATS.reduce((s, [, x]) => s + x, 0);
+      const nav = document.getElementById('nav');
+      nav.innerHTML = BEATS.map(([n, s]) => `<div style="flex:${s}">${n} · ${s}s</div>`).join('');
+      const slides = [...document.querySelectorAll('.slide')];
+      const tabs = [...nav.children];
+      const motif = document.getElementById('motif');
+      window.seekExample = (t) => {
+        const cyc = ((t % SECONDS) + SECONDS) % SECONDS;
+        let at = (cyc / SECONDS) * total;
+        const active = BEATS.findIndex(([, s]) => (at < s ? true : ((at -= s), false)));
+        slides.forEach((s, i) => (s.style.opacity = i === active ? 1 : 0));
+        tabs.forEach((b, i) => b.classList.toggle('on', i === active));
+        const g = active === 1 ? (cyc / SECONDS) : 0;
+        motif.style.transform = `scale(${1 + 0.5 * g})`;
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

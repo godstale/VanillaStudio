@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Social reel skeleton</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #0d0d12; color: #f5f2ea; font-family: 'Segoe UI', system-ui, sans-serif;
+        display: grid; place-items: center; }
+      .hint { position: absolute; left: 90px; width: 260px; font-size: 30px; color: #9a93a8; }
+      .phone { width: 360px; height: 640px; border-radius: 36px; background: #17171f;
+        border: 10px solid #2c2c38; overflow: hidden; position: relative; }
+      .frame { position: absolute; inset: 0; display: grid; place-content: center;
+        justify-items: center; gap: 12px; text-align: center; opacity: 0; padding: 30px; }
+      .frame h1 { margin: 0; font-size: 64px; line-height: 1.02; letter-spacing: -0.02em; }
+      .frame p { margin: 0; color: #b9b2c6; font-size: 22px; }
+      .slam { background: #ff2d8a; border-radius: 18px; padding: 10px 22px; font-weight: 800; font-size: 40px; }
+      .stickers { display: flex; gap: 12px; }
+      .stickers i { width: 74px; height: 74px; border-radius: 22px; display: block;
+        border: 5px solid #fff; }
+      nav { position: absolute; bottom: 26px; left: 460px; right: 460px; display: flex; gap: 8px; }
+      nav div { flex: 1; height: 8px; border-radius: 4px; background: #2c2c38; }
+      nav div.on { background: #ff2d8a; }
+    </style>
+  </head>
+  <body>
+    <div class="hint">Vertical short: hook stops the scroll, then fast beats, then loop.</div>
+    <div class="phone">
+      <div class="frame"><div class="slam">WAIT</div><h1>Three seconds</h1><p>Hook: stop the scroll</p></div>
+      <div class="frame"><div class="stickers"><i style="background:#ffd400"></i><i style="background:#00e0c6"></i><i style="background:#7d2bd9"></i></div><h1>Fast payoff</h1><p>Payoff: rapid sticker cuts</p></div>
+      <div class="frame"><h1>Back to start</h1><p>Loop: match the hook</p></div>
+    </div>
+    <nav id="nav"><div></div><div></div><div></div></nav>
+    <script>
+      const SECONDS = 6;
+      const BEATS = [['Hook', 3], ['Payoff', 9], ['Loop', 3]];
+      const total = BEATS.reduce((s, [, x]) => s + x, 0);
+      const frames = [...document.querySelectorAll('.frame')];
+      const tabs = [...document.querySelectorAll('nav div')];
+      window.seekExample = (t) => {
+        const cyc = ((t % SECONDS) + SECONDS) % SECONDS;
+        let at = (cyc / SECONDS) * total;
+        const active = BEATS.findIndex(([, s]) => (at < s ? true : ((at -= s), false)));
+        frames.forEach((s, i) => (s.style.opacity = i === active ? 1 : 0));
+        tabs.forEach((b, i) => (b.className = i === active ? 'on' : ''));
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

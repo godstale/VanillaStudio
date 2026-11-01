@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Short story skeleton</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        color: #f5efe4; font-family: Georgia, serif; }
+      .slide { position: absolute; inset: 0 0 96px; display: grid; place-content: center;
+        justify-items: center; gap: 14px; text-align: center; opacity: 0; }
+      h1 { margin: 0; font-size: 80px; font-weight: 400; }
+      p { margin: 0; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 28px; opacity: 0.8; }
+      .moon { width: 130px; height: 130px; border-radius: 50%; background: #f5efe4; }
+      .cabin { width: 300px; height: 170px; border-radius: 12px; background: #3a2c22;
+        border: 6px solid #f5efe4; }
+      nav { position: absolute; right: 56px; bottom: 30px; left: 56px; display: flex; gap: 10px; }
+      nav div { height: 42px; border-top: 4px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.7);
+        font-size: 20px; line-height: 42px; font-family: 'Segoe UI', system-ui, sans-serif; }
+      nav div.on { border-color: #f5efe4; color: #fff; }
+    </style>
+  </head>
+  <body id="stage">
+    <div class="slide"><div class="moon"></div><h1>A quiet house</h1><p>Setup: who and where</p></div>
+    <div class="slide"><div class="cabin" id="tilt"></div><h1>The letter arrives</h1><p>Disturbance: the frame cools</p></div>
+    <div class="slide"><h1>Alone at midnight</h1><p>Crisis: one light remains</p></div>
+    <div class="slide"><div class="moon"></div><h1>Morning, warmer</h1><p>Resolution: return changed</p></div>
+    <nav id="nav"></nav>
+    <script>
+      const SECONDS = 10;
+      const BEATS = [['Setup', 10], ['Disturbance', 10], ['Crisis', 10], ['Resolution', 8]];
+      const BACK = ['#7fa3a0', '#4d6a86', '#141821', '#c98a54'];
+      const total = BEATS.reduce((s, [, x]) => s + x, 0);
+      const nav = document.getElementById('nav');
+      nav.innerHTML = BEATS.map(([n, s]) => `<div style="flex:${s}">${n} · ${s}s</div>`).join('');
+      const slides = [...document.querySelectorAll('.slide')];
+      const tabs = [...nav.children];
+      const stage = document.getElementById('stage');
+      const tilt = document.getElementById('tilt');
+      window.seekExample = (t) => {
+        const cyc = ((t % SECONDS) + SECONDS) % SECONDS;
+        let at = (cyc / SECONDS) * total;
+        const active = BEATS.findIndex(([, s]) => (at < s ? true : ((at -= s), false)));
+        slides.forEach((s, i) => (s.style.opacity = i === active ? 1 : 0));
+        tabs.forEach((b, i) => b.classList.toggle('on', i === active));
+        stage.style.background = BACK[active < 0 ? 0 : active];
+        tilt.style.transform = `rotate(${(cyc / SECONDS) * 6 - 3}deg)`;
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

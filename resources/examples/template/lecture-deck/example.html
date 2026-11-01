@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lecture deck skeleton</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #f2efe4; color: #263026; font-family: 'Segoe UI', system-ui, sans-serif; }
+      .bar { position: absolute; top: 0; left: 0; right: 0; height: 14px; background: #d8d2bd; }
+      .bar i { display: block; height: 100%; background: #4d7c5f; width: 25%; }
+      .slide { position: absolute; inset: 14px 0 96px; display: grid; place-content: center;
+        justify-items: center; gap: 14px; text-align: center; opacity: 0; }
+      h1 { margin: 0; font-size: 80px; }
+      p { margin: 0; color: #6f7568; font-size: 28px; }
+      ol { margin: 0; padding: 0; list-style: none; display: flex; gap: 16px; font-size: 40px; font-weight: 700; }
+      ol li { background: #263026; color: #f2efe4; border-radius: 14px; padding: 12px 26px; }
+      .diagram { width: 560px; height: 150px; border: 4px dashed #4d7c5f; border-radius: 18px;
+        display: grid; place-items: center; font-size: 36px; }
+      nav { position: absolute; right: 56px; bottom: 30px; left: 56px; display: flex; gap: 10px; }
+      nav div { height: 42px; border-top: 4px solid #cfc8ac; color: #8a8471;
+        font-size: 20px; line-height: 42px; }
+      nav div.on { border-color: #4d7c5f; color: #263026; }
+    </style>
+  </head>
+  <body>
+    <div class="bar"><i id="prog"></i></div>
+    <div class="slide"><ol><li>1</li><li>2</li><li>3</li></ol><h1>Leave able to do it</h1><p>Goals: what learners gain</p></div>
+    <div class="slide"><div class="diagram">Idea in steps</div><h1>One idea at a time</h1><p>Concept: diagram first</p></div>
+    <div class="slide"><h1>Try it now</h1><p>Demo: hands on the canvas</p></div>
+    <div class="slide"><h1>Check and go on</h1><p>Review: recap and next step</p></div>
+    <nav id="nav"></nav>
+    <script>
+      const SECONDS = 8;
+      const BEATS = [['Goals', 5], ['Concept', 8], ['Demo', 8], ['Review', 5]];
+      const total = BEATS.reduce((s, [, x]) => s + x, 0);
+      const nav = document.getElementById('nav');
+      nav.innerHTML = BEATS.map(([n, s]) => `<div style="flex:${s}">${n}</div>`).join('');
+      const slides = [...document.querySelectorAll('.slide')];
+      const tabs = [...nav.children];
+      const prog = document.getElementById('prog');
+      window.seekExample = (t) => {
+        const cyc = ((t % SECONDS) + SECONDS) % SECONDS;
+        let at = (cyc / SECONDS) * total;
+        const active = BEATS.findIndex(([, s]) => (at < s ? true : ((at -= s), false)));
+        slides.forEach((s, i) => (s.style.opacity = i === active ? 1 : 0));
+        tabs.forEach((b, i) => b.classList.toggle('on', i === active));
+        prog.style.width = `${((active + 1) / slides.length) * 100}%`;
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>
