@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><title>go</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0d0b12}
+svg{display:block;width:1280px;height:720px}
+</style></head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<radialGradient id="glow" cx=".5" cy=".5" r=".5">
+<stop offset="0" stop-color="#f2a93d" stop-opacity=".8"/><stop offset="1" stop-color="#f2a93d" stop-opacity="0"/>
+</radialGradient>
+</defs>
+<rect width="1280" height="720" fill="#0d0b12"/>
+<!-- tall pointed-arch nave -->
+<g fill="#1a1626" stroke="#05040a" stroke-width="6">
+<rect x="180" y="120" width="130" height="600"/>
+<rect x="970" y="120" width="130" height="600"/>
+<path d="M245 120 L245 420 Q245 300 320 220 Q395 300 395 420 L395 120Z" fill="#241d36"/>
+<path d="M885 120 L885 420 Q885 300 960 220 Q1035 300 1035 420 L1035 120Z" fill="#241d36"/>
+<path d="M480 40 L480 500 Q480 330 640 200 Q800 330 800 500 L800 40Z" fill="#2c2444"/>
+<path d="M540 80 L540 500 Q540 370 640 270 Q740 370 740 500 L740 80Z" fill="#7fb3c8" opacity=".28"/>
+<line x1="600" y1="120" x2="600" y2="460" stroke="#14101e" stroke-width="10"/>
+<line x1="680" y1="120" x2="680" y2="460" stroke="#14101e" stroke-width="10"/>
+<line x1="540" y1="300" x2="740" y2="300" stroke="#14101e" stroke-width="10"/>
+</g>
+<!-- rose window -->
+<circle cx="640" cy="180" r="64" fill="#1a1626" stroke="#05040a" stroke-width="6"/>
+<g id="rose"></g>
+<!-- candle rows -->
+<g id="candles"></g>
+<ellipse cx="640" cy="690" rx="420" ry="24" fill="#000" opacity=".6"/>
+</svg>
+<script>
+(function(){
+function h(i){var x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);}
+var r=document.getElementById('rose'),s='';
+for(var i=0;i<12;i++){var a=i*0.5236;
+s+='<line x1="640" y1="180" x2="'+(640+Math.cos(a)*58).toFixed(0)+'" y2="'+(180+Math.sin(a)*58).toFixed(0)+'" stroke="#8f6fd8" stroke-width="5"/>';
+s+='<circle cx="'+(640+Math.cos(a)*36).toFixed(0)+'" cy="'+(180+Math.sin(a)*36).toFixed(0)+'" r="9" fill="'+(i%2?'#7fb3c8':'#b8546b')+'"/>';
+}
+s+='<circle cx="640" cy="180" r="13" fill="#f2a93d"/>';
+r.innerHTML=s;
+var c=document.getElementById('candles'),t='';
+for(var k=0;k<9;k++){
+var x=430+k*55,y=600+((k%2)*20);
+t+='<circle cx="'+x+'" cy="'+(y-44)+'" r="34" fill="url(#glow)"/>';
+t+='<rect x="'+(x-9)+'" y="'+(y-30)+'" width="18" height="'+(150-(y-560))+'" fill="#e8dcc0"/>';
+t+='<ellipse cx="'+x+'" cy="'+(y-40)+'" rx="6" ry="12" fill="#ffd76b"/>';
+t+='<ellipse cx="'+x+'" cy="'+(y-42)+'" rx="3" ry="6" fill="#fff4c8"/>';
+}
+c.innerHTML=t;
+})();
+</script>
+</body>
+</html>

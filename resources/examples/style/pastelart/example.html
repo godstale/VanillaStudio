@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><title>pa</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#8a7f72}
+svg{display:block;width:1280px;height:720px}
+</style></head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<filter id="grain2"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.10 0"/><feComposite operator="over" in2="SourceGraphic"/></filter>
+<filter id="soft2" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>
+<rect width="1280" height="720" fill="#8a7f72"/>
+<g filter="url(#grain2)">
+<rect x="140" y="60" width="1000" height="600" rx="10" fill="#a89a86"/>
+<clipPath id="paperclip"><rect x="140" y="60" width="1000" height="600" rx="10"/></clipPath>
+<rect x="140" y="60" width="1000" height="600" rx="10" fill="none" stroke="#5c5248" stroke-width="14"/>
+<g id="art" clip-path="url(#paperclip)"></g>
+</g>
+</svg>
+<script>
+(function(){
+function h(i){var x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);}
+var g=document.getElementById('art'),s='';
+// soft sky blended bands
+var bands=['#c9d4dd','#b8c4d4','#d9c9c9','#e8d9b8','#9fb2c4'];
+for(var b=0;b<5;b++){
+s+='<rect x="170" y="'+(90+b*70)+'" width="940" height="86" rx="40" fill="'+bands[b]+'" opacity=".8" filter="url(#soft2)"/>';
+}
+// rolling pastel hills
+s+='<ellipse cx="450" cy="470" rx="380" ry="160" fill="#8aa06a" opacity=".9" filter="url(#soft2)"/>';
+s+='<ellipse cx="850" cy="490" rx="380" ry="170" fill="#7a9460" opacity=".9" filter="url(#soft2)"/>';
+s+='<ellipse cx="640" cy="570" rx="460" ry="130" fill="#a8b078" opacity=".9" filter="url(#soft2)"/>';
+// powdery flower dabs
+var cols=['#e88ca0','#f2e2ac','#e8f0f2','#d97a6b','#c9a0c8'];
+for(var i=0;i<420;i++){
+var x=180+h(i)*920,y=470+h(i+7000)*160;
+s+='<ellipse cx="'+x.toFixed(0)+'" cy="'+y.toFixed(0)+'" rx="'+(6+h(i+3)*10).toFixed(0)+'" ry="'+(4+h(i+5)*6).toFixed(0)+'" fill="'+cols[i%5]+'" opacity=".8" filter="url(#soft2)"/>';
+}
+// sun glow
+s+='<circle cx="880" cy="200" r="70" fill="#f5ecd0" opacity=".85" filter="url(#soft2)"/>';
+g.innerHTML=s;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><title>wc</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#f2ece0}
+svg{display:block;width:1280px;height:720px}
+</style></head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<filter id="paper"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0.55 0 0 0 0 0.52 0 0 0 0 0.47 0 0 0 0.08 0"/><feComposite operator="over" in2="SourceGraphic"/></filter>
+<filter id="bleed" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="7"/></filter>
+<radialGradient id="sun" cx=".5" cy=".5" r=".5">
+<stop offset="0" stop-color="#f7e3a1" stop-opacity=".9"/><stop offset="1" stop-color="#f7e3a1" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="lake" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#9fc4d4"/><stop offset="1" stop-color="#e6efe9"/>
+</linearGradient>
+</defs>
+<rect width="1280" height="720" fill="#f4eee2"/>
+<g filter="url(#paper)">
+<circle cx="880" cy="170" r="150" fill="url(#sun)"/>
+<g id="wash"></g>
+<path d="M0 470 Q200 380 420 430 T900 400 T1280 450 V720 H0 Z" fill="url(#lake)" opacity=".8"/>
+<g id="edge"></g>
+<g id="refl"></g>
+</g>
+</svg>
+<script>
+(function(){
+function h(i){var x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);}
+var w=document.getElementById('wash'),s='';
+// mountain washes: soft blobs with darker wet edge
+var mts=[[180,380,260,'#5b7690'],[430,330,330,'#43607c'],[700,370,280,'#66839e'],[1010,350,300,'#4a657f'],[1180,400,200,'#6d879e']];
+for(var k=0;k<mts.length;k++){
+var cx=mts[k][0],cy=mts[k][1],r=mts[k][2],c=mts[k][3];
+s+='<path d="M'+(cx-r)+' '+(cy+80)+' Q'+cx+' '+(cy-r)+' '+(cx+r)+' '+(cy+80)+' Z" fill="'+c+'" opacity=".62" filter="url(#bleed)"/>';
+s+='<path d="M'+(cx-r)+' '+(cy+80)+' Q'+cx+' '+(cy-r)+' '+(cx+r)+' '+(cy+80)+'" fill="none" stroke="'+c+'" stroke-width="12" opacity=".9" filter="url(#bleed)"/>';
+s+='<path d="M'+(cx-r*0.5)+' '+(cy+78)+' Q'+cx+' '+(cy-r*0.45)+' '+(cx+r*0.5)+' '+(cy+78)+'" fill="#f4eee2" opacity=".65" filter="url(#bleed)"/>';
+}
+w.innerHTML=s;
+// lake wet edges + reflections
+var e=document.getElementById('edge'),t='';
+for(var i=0;i<46;i++){var y=480+h(i+50)*200;
+t+='<line x1="'+(h(i)*1280).toFixed(0)+'" y1="'+y.toFixed(0)+'" x2="'+(h(i)*1280+120+h(i+3)*200).toFixed(0)+'" y2="'+y.toFixed(0)+'" stroke="#5f7d99" stroke-width="'+(2+h(i+7)*4).toFixed(1)+'" opacity=".4" filter="url(#bleed)"/>';}
+for(var j=0;j<4;j++){var mx=mts[j][0];
+t+='<ellipse cx="'+mx+'" cy="'+(520+j*45)+'" rx="'+(90-j*12)+'" ry="10" fill="'+mts[j][3]+'" opacity=".22" filter="url(#bleed)"/>';}
+e.innerHTML=t;
+})();
+</script>
+</body>
+</html>

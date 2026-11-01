@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><title>im</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#9db8c6}
+canvas{display:block;width:1280px;height:720px}
+</style></head>
+<body>
+<canvas id="c" width="1280" height="720"></canvas>
+<script>
+(function(){
+function h(i){var x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);}
+var cv=document.getElementById('c'),ctx=cv.getContext('2d');
+// sky base
+var sky=ctx.createLinearGradient(0,0,0,400);
+sky.addColorStop(0,'#b8d2de');sky.addColorStop(1,'#e9d9b8');
+ctx.fillStyle=sky;ctx.fillRect(0,0,1280,400);
+// water base
+var wt=ctx.createLinearGradient(0,400,0,720);
+wt.addColorStop(0,'#7fa3b5');wt.addColorStop(1,'#3d6478');
+ctx.fillStyle=wt;ctx.fillRect(0,400,1280,320);
+// distant trees band
+ctx.fillStyle='#5d7f52';ctx.fillRect(0,350,1280,60);
+var pal=['#e8e4ef','#c9d4b8','#9db884','#f2c14e','#e07a3f','#7fb3c8','#3f7d9b','#2f5b45','#f5f0dc','#d95f43'];
+function dab(x,y,w,hgt,c,rot,op){
+ctx.save();ctx.translate(x,y);ctx.rotate(rot);
+ctx.globalAlpha=op;ctx.fillStyle=c;
+ctx.fillRect(-w/2,-hgt/2,w,hgt);
+ctx.restore();ctx.globalAlpha=1;
+}
+var i,x,y;
+// foliage dabs
+for(i=0;i<900;i++){x=h(i)*1280;y=h(i+5000)*330+40;
+dab(x,y,8+h(i+3)*16,5+h(i+7)*9,pal[Math.floor(h(i+11)*pal.length)],(h(i+13)-0.5)*1.2,0.85);}
+// water shimmer dabs
+for(i=0;i<1100;i++){x=h(i+20000)*1280;y=420+h(i+25000)*280;
+var c2=i%5===0?'#f2e2ac':(i%3===0?'#a8c8d8':(h(i+31)>.5?'#5d93a8':'#2f5b6b'));
+dab(x,y,14+h(i+33)*30,4+h(i+37)*6,c2,(h(i+39)-0.5)*0.15,0.8);}
+// lily pads + blossoms
+for(i=0;i<40;i++){x=80+h(i+40000)*1120;y=470+h(i+41000)*220;
+ctx.fillStyle=i%3?'#3f7d4a':'#548c4a';
+ctx.beginPath();ctx.ellipse(x,y,20+h(i+43)*22,10+h(i+45)*8,0,0,6.283);ctx.fill();
+if(i%4===0){ctx.fillStyle='#f2e8f0';
+for(var p=0;p<6;p++){var a=p*1.047+h(i);
+ctx.beginPath();ctx.ellipse(x+Math.cos(a)*9,y+Math.sin(a)*6,7,4,a,0,6.283);ctx.fill();}
+ctx.fillStyle='#f2c14e';ctx.beginPath();ctx.arc(x,y,4,0,6.283);ctx.fill();}}
+// small arched bridge silhouette
+ctx.fillStyle='#7a4a2c';
+ctx.fillRect(880,300,280,26);
+ctx.fillRect(880,300,22,110);ctx.fillRect(1138,300,22,110);
+ctx.strokeStyle='#7a4a2c';ctx.lineWidth=10;
+ctx.beginPath();ctx.arc(1020,410,120,3.4,6.0);ctx.stroke();
+})();
+</script>
+</body>
+</html>

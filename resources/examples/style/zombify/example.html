@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><title>zo</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#232b1e}
+svg{display:block;width:1280px;height:720px}
+</style></head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<linearGradient id="zg" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#3a4a33"/><stop offset="1" stop-color="#141a10"/>
+</linearGradient>
+<filter id="zgrain"><feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0.1 0 0 0 0 0.12 0 0 0 0 0.08 0 0 0 0.15 0"/><feComposite operator="over" in2="SourceGraphic"/></filter>
+</defs>
+<rect width="1280" height="720" fill="url(#zg)"/>
+<circle cx="640" cy="180" r="120" fill="#c9d4a8" opacity=".25"/>
+<g id="mist"></g>
+<g filter="url(#zgrain)">
+<!-- original shambling character -->
+<ellipse cx="640" cy="660" rx="180" ry="22" fill="#000" opacity=".5"/>
+<path d="M520 660 L530 430 Q540 340 640 330 Q740 340 750 430 L760 660Z" fill="#5a6b46"/>
+<path d="M520 660 L530 430 Q540 340 640 330 L640 660Z" fill="#4a5a3a"/>
+<!-- torn cloth strips -->
+<g fill="#3a3f33">
+<polygon points="530,500 500,620 540,620 555,510"/>
+<polygon points="750,500 780,620 740,620 725,510"/>
+<polygon points="600,620 590,690 620,690 630,620"/>
+</g>
+<!-- head -->
+<ellipse cx="640" cy="250" rx="85" ry="95" fill="#7d9260"/>
+<ellipse cx="610" cy="260" rx="40" ry="50" fill="#8fa06e" opacity=".8"/>
+<!-- sunken eyes -->
+<ellipse cx="605" cy="245" rx="20" ry="24" fill="#2b1f16"/>
+<ellipse cx="680" cy="245" rx="20" ry="24" fill="#2b1f16"/>
+<circle cx="605" cy="248" r="6" fill="#c94a3d"/>
+<circle cx="680" cy="248" r="6" fill="#c94a3d"/>
+<!-- stitches + mouth -->
+<g stroke="#2b1f16" stroke-width="5" stroke-linecap="round">
+<path d="M590 320 Q640 340 690 315" fill="none"/>
+<line x1="610" y1="318" x2="610" y2="336"/>
+<line x1="640" y1="322" x2="640" y2="340"/>
+<line x1="668" y1="318" x2="668" y2="334"/>
+<path d="M570 200 Q640 170 710 200" fill="none"/>
+</g>
+<!-- arms reaching -->
+<path d="M535 420 Q440 450 380 520" stroke="#7d9260" stroke-width="44" fill="none" stroke-linecap="round"/>
+<path d="M745 420 Q840 450 900 520" stroke="#5a6b46" stroke-width="44" fill="none" stroke-linecap="round"/>
+<circle cx="372" cy="528" r="26" fill="#7d9260"/>
+<circle cx="908" cy="528" r="26" fill="#5a6b46"/>
+</g>
+</svg>
+<script>
+(function(){
+function h(i){var x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);}
+var g=document.getElementById('mist'),s='';
+for(var i=0;i<24;i++){
+var y=420+h(i+7)*260;
+s+='<ellipse cx="'+(h(i)*1280).toFixed(0)+'" cy="'+y.toFixed(0)+'" rx="'+(140+h(i+3)*160).toFixed(0)+'" ry="20" fill="#9fb4a0" opacity=".18"/>';
+}
+g.innerHTML=s;
+})();
+</script>
+</body>
+</html>

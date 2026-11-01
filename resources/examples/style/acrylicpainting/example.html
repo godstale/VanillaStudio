@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><title>ac</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#20242c}
+svg{display:block;width:1280px;height:720px}
+</style></head>
+<body>
+<svg viewBox="0 0 1280 720">
+<rect width="1280" height="720" fill="#20242c"/>
+<rect x="0" y="0" width="1280" height="720" fill="#f2e8d8" opacity=".08"/>
+<g id="bg"></g>
+<!-- vase -->
+<path d="M560 640 L560 420 Q560 380 600 360 L600 300 L680 300 L680 360 Q720 380 720 420 L720 640 Q640 670 560 640Z" fill="#2f6b8a" stroke="#14161c" stroke-width="8"/>
+<path d="M590 620 L590 430 Q590 400 620 385 L620 330 L660 330 L660 385 Q690 400 690 430 L690 620Z" fill="#4d9bb5" opacity=".8"/>
+<!-- bold tulips with crisp edges -->
+<g id="fl" stroke="#14161c" stroke-width="7" stroke-linejoin="round"></g>
+<g id="sat"></g>
+</svg>
+<script>
+(function(){
+function h(i){var x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);}
+var cols=['#e23b2e','#f2a03d','#e6d23b','#c92e7d','#e23b2e','#f26b3d'];
+var fl=document.getElementById('fl'),s='';
+var i,x,top;
+for(i=0;i<9;i++){
+x=400+i*60+((h(i)-.5)*30);
+top=150+h(i+3)*130;
+var c=cols[i%cols.length];
+s+='<line x1="640" y1="420" x2="'+x.toFixed(0)+'" y2="'+(top+70).toFixed(0)+'" stroke="#2f7d3a" stroke-width="12"/>';
+s+='<path d="M'+(x-52).toFixed(0)+' '+(top+70).toFixed(0)+' L'+(x-40).toFixed(0)+' '+top.toFixed(0)+' L'+(x-14).toFixed(0)+' '+(top+22).toFixed(0)+' L'+x.toFixed(0)+' '+(top-12).toFixed(0)+' L'+(x+14).toFixed(0)+' '+(top+22).toFixed(0)+' L'+(x+40).toFixed(0)+' '+top.toFixed(0)+' L'+(x+52).toFixed(0)+' '+(top+70).toFixed(0)+' Z" fill="'+c+'"/>';
+// crisp light facet
+s+='<path d="M'+x.toFixed(0)+' '+(top-12).toFixed(0)+' L'+(x+14).toFixed(0)+' '+(top+22).toFixed(0)+' L'+(x+8).toFixed(0)+' '+(top+62).toFixed(0)+' L'+(x-6).toFixed(0)+' '+(top+30).toFixed(0)+' Z" fill="#ffffff" opacity=".35"/>';
+}
+fl.innerHTML=s;
+// saturated overlapping background strokes
+var bg=document.getElementById('bg'),t='';
+var bcols=['#3d4a6b','#4d6b8a','#6b4a5a','#2f5b5b'];
+for(var k=0;k<130;k++){
+var y=h(k+800)*560;
+t+='<rect x="'+(h(k+801)*1280).toFixed(0)+'" y="'+y.toFixed(0)+'" width="'+(60+h(k+803)*160).toFixed(0)+'" height="'+(14+h(k+805)*22).toFixed(0)+'" rx="8" fill="'+bcols[k%4]+'" opacity=".55" transform="rotate('+((h(k+807)-.5)*24).toFixed(0)+' '+640+' '+y.toFixed(0)+')"/>';
+}
+bg.innerHTML=t;
+// satin sheen streaks
+var st=document.getElementById('sat'),u='';
+for(var j=0;j<9;j++){
+x=400+j*60+((h(j)-.5)*30);top=150+h(j+3)*130;
+u+='<line x1="'+(x-24).toFixed(0)+'" y1="'+(top+20).toFixed(0)+'" x2="'+(x-16).toFixed(0)+'" y2="'+(top+58).toFixed(0)+'" stroke="#ffffff" stroke-width="6" opacity=".7" stroke-linecap="round"/>';
+}
+st.innerHTML=u;
+})();
+</script>
+</body>
+</html>
