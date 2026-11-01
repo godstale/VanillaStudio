@@ -6,6 +6,10 @@ Ran lint. See lint-report.md for details.
 
 Ran lint. See lint-report.md for details.
 
+## [2026-11-01] lint | Wiki health check
+
+Ran lint. See lint-report.md for details.
+
 ## [2026-10-18] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
@@ -490,3 +494,7 @@ Ran lint. See lint-report.md for details.
 ## [2026-11-01] lint | Wiki health check
 
 Ran lint. See lint-report.md for details.
+
+## [2026-11-01] E done | 예제 라이브러리 완료·TE.8 사람 확인
+
+468/473 예제 + 카드·확대·소스 보기·호버 재생 확인. TE.6·TE.7·TE.8 종료, `feat/examples-styles` 병합 예정. [[decisions]]
