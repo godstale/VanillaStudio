@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>lofi art</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden}
+      svg{width:100%;height:100%;display:block}
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <rect width="1280" height="720" fill="#2b2a3d"/>
+      <rect x="90" y="60" width="640" height="600" rx="18" fill="#3d3a55"/>
+      <rect x="120" y="90" width="580" height="480" rx="10" fill="#1c2033"/>
+      <circle cx="560" cy="180" r="46" fill="#fdf6d8" opacity="0.9"/>
+      <g fill="#141828">
+        <rect x="150" y="400" width="60" height="170"/><rect x="230" y="350" width="80" height="220"/><rect x="330" y="420" width="55" height="150"/><rect x="410" y="330" width="90" height="240"/>
+      </g>
+      <g id="wins2" fill="#ffd166" opacity="0.8"></g>
+      <g id="rain" stroke="#9db4ff" stroke-width="4" stroke-linecap="round" opacity="0.7"></g>
+      <rect x="760" y="60" width="430" height="600" rx="18" fill="#6b5a86"/>
+      <rect x="800" y="330" width="350" height="26" fill="#3f3358"/>
+      <rect x="810" y="356" width="60" height="150" fill="#3f3358"/>
+      <rect x="920" y="356" width="60" height="150" fill="#3f3358"/>
+      <rect x="790" y="290" width="300" height="44" rx="8" fill="#2e2742"/>
+      <rect x="810" y="180" width="180" height="90" rx="10" fill="#f4a259"/>
+      <rect id="lampGlow" x="780" y="150" width="260" height="150" rx="24" fill="#ffd166" opacity="0.45"/>
+      <ellipse cx="900" cy="300" rx="130" ry="40" fill="#ffd166" opacity="0.3"/>
+      <rect x="1010" y="230" width="120" height="80" rx="8" fill="#9db4ff" stroke="#1c2033" stroke-width="6"/>
+      <rect x="1022" y="242" width="96" height="34" rx="4" fill="#1c2033"/>
+      <ellipse id="cat" cx="950" cy="300" rx="70" ry="40" fill="#241f38"/>
+      <circle cx="905" cy="285" r="26" fill="#241f38"/>
+      <polygon points="885,268 890,244 902,264" fill="#241f38"/>
+      <polygon points="912,264 920,242 928,266" fill="#241f38"/>
+      <circle id="eyeL" cx="897" cy="284" r="5" fill="#ffd166"/>
+      <circle id="eyeR" cx="913" cy="284" r="5" fill="#ffd166"/>
+      <g id="steam" stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.6">
+        <path class="st" d="M850 240 q-12 -22 0 -44 q12 -22 0 -44"/>
+        <path class="st" d="M880 240 q-12 -22 0 -44 q12 -22 0 -44"/>
+      </g>
+      <rect x="830" y="250" width="70" height="44" rx="10" fill="#e9f5db"/>
+    </svg>
+    <script>
+      const SECONDS = 4;
+      const rain = document.getElementById('rain');
+      const wins = document.getElementById('wins2');
+      let r = '';
+      const seed = (i) => { const x = Math.sin(i * 157.3 + 91.7) * 34981.3721; return x - Math.floor(x); };
+      for (let i = 0; i < 46; i += 1) {
+        r += `<line data-i="${i}" x1="${(130 + seed(i) * 560).toFixed(0)}" y1="100" x2="${(118 + seed(i) * 560).toFixed(0)}" y2="150"/>`;
+      }
+      rain.innerHTML = r;
+      const drops = [...rain.querySelectorAll('line')];
+      let w = '';
+      [[150,400,60],[230,350,80],[410,330,90]].forEach(([x, y, bw]) => {
+        for (let k = 0; k < 4; k += 1) w += `<rect x="${x + 8}" y="${y + 14 + k * 36}" width="${bw - 16}" height="16"/>`;
+      });
+      wins.innerHTML = w;
+      const steam = [...document.querySelectorAll('.st')];
+      const glow = document.getElementById('lampGlow');
+      const cat = document.getElementById('cat');
+      window.seekExample = (t) => {
+        const phase = (t % SECONDS) / SECONDS;
+        drops.forEach((d, i) => {
+          const fall = ((phase + seed(i + 700)) % 1) * 470;
+          d.setAttribute('transform', `translate(0 ${fall})`);
+          d.setAttribute('opacity', 0.25 + 0.6 * seed(i + 300));
+        });
+        steam.forEach((s, i) => {
+          s.setAttribute('transform', `translate(${8 * Math.sin(phase * 6.28 + i * 2)} ${-14 * phase})`);
+          s.setAttribute('opacity', 0.6 * (1 - phase));
+        });
+        glow.setAttribute('opacity', 0.4 + 0.08 * Math.sin(phase * 6.28));
+        cat.setAttribute('transform', `translate(0 ${-4 * Math.sin(phase * 6.28)})`);
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

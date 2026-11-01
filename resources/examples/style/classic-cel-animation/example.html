@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>classic cel animation</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden}
+      svg{width:100%;height:100%;display:block}
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <linearGradient id="csky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#7fb3d9"/><stop offset="1" stop-color="#e8f3e2"/>
+        </linearGradient>
+      </defs>
+      <rect width="1280" height="720" fill="url(#csky)"/>
+      <polygon points="0,420 220,240 440,420" fill="#6a8f7b"/>
+      <polygon points="300,420 560,200 820,420" fill="#54755f"/>
+      <polygon points="700,420 960,260 1220,420" fill="#6a8f7b"/>
+      <polygon points="200,260 220,240 240,260 230,300 210,300Z" fill="#f4f1ea"/>
+      <polygon points="540,220 560,200 580,220 570,260 550,260Z" fill="#f4f1ea"/>
+      <rect y="420" width="1280" height="300" fill="#8fbf6f"/>
+      <ellipse cx="200" cy="200" rx="90" ry="26" fill="#fff" opacity="0.9"/>
+      <ellipse cx="1050" cy="140" rx="110" ry="30" fill="#fff" opacity="0.9"/>
+      <ellipse cx="640" cy="600" rx="200" ry="24" fill="#000" opacity="0.15"/>
+      <g id="hero">
+        <ellipse cx="640" cy="470" rx="90" ry="100" fill="#e8913a" stroke="#3b2a1a" stroke-width="10"/>
+        <ellipse cx="640" cy="490" rx="52" ry="60" fill="#f7e3bd" stroke="#3b2a1a" stroke-width="8"/>
+        <polygon points="570,390 540,300 610,360" fill="#e8913a" stroke="#3b2a1a" stroke-width="9" stroke-linejoin="round"/>
+        <polygon points="710,390 740,300 670,360" fill="#e8913a" stroke="#3b2a1a" stroke-width="9" stroke-linejoin="round"/>
+        <circle cx="605" cy="440" r="12" fill="#3b2a1a"/><circle cx="675" cy="440" r="12" fill="#3b2a1a"/>
+        <circle cx="609" cy="436" r="4" fill="#fff"/><circle cx="679" cy="436" r="4" fill="#fff"/>
+        <path d="M615 480 Q640 496 665 480" fill="none" stroke="#3b2a1a" stroke-width="7" stroke-linecap="round"/>
+        <path id="tail" d="M728 500 Q800 490 810 430" fill="none" stroke="#3b2a1a" stroke-width="14" stroke-linecap="round"/>
+        <ellipse id="footL" cx="595" cy="570" rx="30" ry="16" fill="#3b2a1a"/>
+        <ellipse id="footR" cx="685" cy="570" rx="30" ry="16" fill="#3b2a1a"/>
+      </g>
+    </svg>
+    <script>
+      const SECONDS = 3;
+      const hero = document.getElementById('hero');
+      window.seekExample = (t) => {
+        const phase = (t % SECONDS) / SECONDS;
+        const air = Math.sin(phase * Math.PI * 2);
+        const lift = Math.max(0, air) * 150;
+        const squash = 1 + (air < 0 ? 0.22 * Math.abs(air) : -0.12 * air);
+        const stretch = 1 + (air > 0 ? 0.18 * air : -0.15 * Math.abs(air));
+        hero.setAttribute('transform', `translate(640 ${570 - lift}) scale(${squash} ${stretch}) translate(-640 -570)`);
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

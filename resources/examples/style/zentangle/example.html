@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>zentangle</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#faf6ec}
+      svg{width:100%;height:100%;display:block}
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <rect width="1280" height="720" fill="#faf6ec"/>
+      <g stroke="#222" fill="none" stroke-width="6">
+        <rect x="90" y="80" width="340" height="560" rx="8"/>
+        <rect x="470" y="80" width="340" height="560" rx="8"/>
+        <rect x="850" y="80" width="340" height="560" rx="8"/>
+      </g>
+      <g id="p1" stroke="#222" fill="none" stroke-width="4"></g>
+      <g id="p2" stroke="#222" fill="none" stroke-width="4"></g>
+      <g id="p3" stroke="#222" fill="#222"></g>
+    </svg>
+    <script>
+      let a = '';
+      for (let r = 0; r < 9; r += 1) for (let c = 0; c < 5; c += 1) {
+        const x = 110 + c * 62, y = 100 + r * 60;
+        a += `<circle cx="${x}" cy="${y}" r="18"/><circle cx="${x}" cy="${y}" r="8"/>`;
+      }
+      document.getElementById('p1').innerHTML = a;
+      let b = '';
+      for (let r = 0; r < 12; r += 1) {
+        const y = 100 + r * 46;
+        b += `<path d="M490 ${y} Q550 ${y - 26} 610 ${y} Q670 ${y + 26} 730 ${y} Q770 ${y - 14} 790 ${y}"/>`;
+      }
+      document.getElementById('p2').innerHTML = b;
+      let c = '';
+      for (let r = 0; r < 10; r += 1) for (let q = 0; q < 6; q += 1) {
+        const x = 880 + q * 56, y = 108 + r * 54;
+        c += `<polygon points="${x},${y} ${x + 22},${y + 14} ${x},${y + 28} ${x - 22},${y + 14}"/>`;
+      }
+      document.getElementById('p3').innerHTML = c;
+    </script>
+  </body>
+</html>
