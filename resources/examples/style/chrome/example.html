@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Mirror orb</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0b0d10;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<linearGradient id="env" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a0a0c"/><stop offset="0.3" stop-color="#43484f"/><stop offset="0.42" stop-color="#f4f7fa"/><stop offset="0.5" stop-color="#20242a"/><stop offset="0.62" stop-color="#e8edf2"/><stop offset="0.7" stop-color="#14171b"/><stop offset="1" stop-color="#050507"/></linearGradient>
+<linearGradient id="fl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3038"/><stop offset="1" stop-color="#0b0d10"/></linearGradient>
+<filter id="cb" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="18"/></filter>
+<radialGradient id="edge" cx="0.5" cy="0.5" r="0.5"><stop offset="0.72" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.55"/></radialGradient>
+</defs>
+<rect width="1280" height="720" fill="url(#fl)"/>
+<rect x="180" y="60" width="120" height="300" fill="#fff" opacity="0.12" filter="url(#cb)"/>
+<rect x="980" y="60" width="120" height="300" fill="#fff" opacity="0.12" filter="url(#cb)"/>
+<ellipse cx="640" cy="600" rx="280" ry="36" fill="#000" opacity="0.6" filter="url(#cb)"/>
+<ellipse cx="640" cy="596" rx="220" ry="24" fill="#aeb6bf" opacity="0.35" filter="url(#cb)"/>
+<circle cx="640" cy="360" r="230" fill="url(#env)"/>
+<circle cx="640" cy="360" r="230" fill="url(#edge)"/>
+<ellipse cx="560" cy="250" rx="60" ry="36" fill="#fff" opacity="0.9" transform="rotate(-24 560 250)"/>
+<circle cx="720" cy="440" r="10" fill="#fff" opacity="0.7"/>
+</svg>
+</body>
+</html>

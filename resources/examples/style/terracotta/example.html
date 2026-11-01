@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Earthen jars</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#caa87e;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<linearGradient id="tb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eeddbe"/><stop offset="1" stop-color="#caa87e"/></linearGradient>
+<linearGradient id="pot" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8f3f1c"/><stop offset="0.45" stop-color="#c66a38"/><stop offset="0.75" stop-color="#e09a62"/><stop offset="1" stop-color="#7a3016"/></linearGradient>
+<filter id="pb2" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="10"/></filter>
+</defs>
+<rect width="1280" height="720" fill="url(#tb)"/>
+<rect x="0" y="540" width="1280" height="16" fill="#8a6a45"/>
+<rect x="0" y="556" width="1280" height="164" fill="#b08d5e"/>
+<ellipse cx="420" cy="600" rx="150" ry="20" fill="#6e5232" opacity="0.5" filter="url(#pb2)"/>
+<ellipse cx="700" cy="610" rx="180" ry="22" fill="#6e5232" opacity="0.5" filter="url(#pb2)"/>
+<ellipse cx="970" cy="600" rx="130" ry="18" fill="#6e5232" opacity="0.5" filter="url(#pb2)"/>
+<path d="M350 300 h140 v40 c50 30 80 80 80 140 c0 70 -40 110 -70 130 h-120 c-30 -20 -70 -60 -70 -130 c0 -60 30 -110 80 -140 Z" fill="url(#pot)"/>
+<ellipse cx="420" cy="300" rx="70" ry="16" fill="#5e2812"/>
+<path d="M610 240 h180 v44 c60 36 96 96 96 168 c0 84 -48 132 -84 156 h-144 c-36 -24 -84 -72 -84 -156 c0 -72 36 -132 96 -168 Z" fill="url(#pot)"/>
+<ellipse cx="700" cy="240" rx="90" ry="18" fill="#5e2812"/>
+<path d="M915 330 h110 v36 c40 24 64 64 64 112 c0 56 -32 88 -56 104 h-96 c-24 -16 -56 -48 -56 -104 c0 -48 24 -88 64 -112 Z" fill="url(#pot)"/>
+<ellipse cx="970" cy="330" rx="55" ry="13" fill="#5e2812"/>
+<g id="grain"></g>
+</svg>
+<script>
+const H=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+let s='';
+for(let i=0;i<220;i++){const z=H(i+31);s+='<circle cx="'+(320+H(i)*720).toFixed(0)+'" cy="'+(240+H(i+3)*370).toFixed(0)+'" r="1.5" fill="'+(z<0.5?'#7a3016':'#f2c898')+'" opacity="0.5"/>';}
+document.getElementById('grain').innerHTML=s;
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Copper age</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#a05a24;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<linearGradient id="cop" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c47a3a"/><stop offset="0.5" stop-color="#a05a24"/><stop offset="1" stop-color="#6e3a14"/></linearGradient>
+<filter id="pb" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="4"/></filter>
+</defs>
+<rect width="1280" height="720" fill="url(#cop)"/>
+<g id="rust" filter="url(#pb)"></g>
+<polygon points="0,0 1280,0 1280,150 0,40" fill="#ffdf9e" opacity="0.14"/>
+<g id="rivets"></g>
+</svg>
+<script>
+const H=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+const greens=['#3f8f6f','#63b194','#2e6b52','#7fc7a5'];
+let s='';
+for(let i=0;i<80;i++){const edge=H(i+900);const cx=(edge<0.5?H(i)*300:(980+H(i)*300)).toFixed(0),cy=(H(i+901)*720).toFixed(0);
+s+='<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+(14+H(i+902)*46).toFixed(0)+'" ry="'+(10+H(i+903)*34).toFixed(0)+'" fill="'+greens[i%4]+'" opacity="'+(0.5+H(i+904)*0.4).toFixed(2)+'"/>';}
+for(let i=0;i<24;i++){const cx=(H(i+950)*1280).toFixed(0);
+s+='<rect x="'+cx+'" y="'+(H(i+951)*500).toFixed(0)+'" width="'+(5+H(i+952)*9).toFixed(0)+'" height="'+(40+H(i+953)*120).toFixed(0)+'" rx="5" fill="'+greens[i%4]+'" opacity="0.35"/>';}
+document.getElementById('rust').innerHTML=s;
+let v='';
+[[70,70],[1210,70],[70,650],[1210,650]].forEach(p=>{v+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="18" fill="#5e3010"/><circle cx="'+(p[0]-5)+'" cy="'+(p[1]-5)+'" r="6" fill="#e8a45c"/>';});
+document.getElementById('rivets').innerHTML=v;
+</script>
+</body>
+</html>

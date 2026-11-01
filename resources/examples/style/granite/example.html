@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Cut stone</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#2b2d33;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#43464c"/><stop offset="1" stop-color="#2b2d33"/></linearGradient>
+<linearGradient id="pol" x1="0" y1="0" x2="1" y2="1"><stop offset="0.35" stop-color="#fff" stop-opacity="0"/><stop offset="0.5" stop-color="#fff" stop-opacity="0.12"/><stop offset="0.65" stop-color="#fff" stop-opacity="0"/></linearGradient>
+</defs>
+<rect width="1280" height="720" fill="url(#gr)"/>
+<g id="sp"></g>
+<rect width="1280" height="720" fill="url(#pol)"/>
+<rect width="1280" height="720" fill="#000" opacity="0.15"/>
+</svg>
+<script>
+const H=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+const cols=['#d7dae0','#8f949c','#15161a','#b9a98f'];let s='';
+for(let i=0;i<700;i++){s+='<circle cx="'+(H(i)*1280).toFixed(0)+'" cy="'+(H(i+901)*720).toFixed(0)+'" r="'+(0.8+H(i+902)*1.9).toFixed(1)+'" fill="'+cols[i%4]+'" opacity="'+(0.5+H(i+903)*0.5).toFixed(2)+'"/>';}
+for(let i=0;i<40;i++){s+='<ellipse cx="'+(H(i+950)*1280).toFixed(0)+'" cy="'+(H(i+951)*720).toFixed(0)+'" rx="'+(4+H(i+952)*7).toFixed(1)+'" ry="'+(3+H(i+953)*5).toFixed(1)+'" fill="#d7dae0" opacity="0.5"/>';}
+document.getElementById('sp').innerHTML=s;
+</script>
+</body>
+</html>

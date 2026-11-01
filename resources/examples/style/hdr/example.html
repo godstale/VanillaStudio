@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Bright valley</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#1f5fae;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<linearGradient id="hdr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f5fae"/><stop offset="0.6" stop-color="#9fd0f2"/><stop offset="1" stop-color="#f6e3b4"/></linearGradient>
+<linearGradient id="val" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4d8a3c"/><stop offset="1" stop-color="#1e4d22"/></linearGradient>
+<filter id="hb" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>
+<rect width="1280" height="720" fill="url(#hdr)"/>
+<circle cx="880" cy="220" r="150" fill="#fff8e2" opacity="0.55" filter="url(#hb)"/>
+<circle cx="880" cy="220" r="66" fill="#fffdf4"/>
+<g id="clouds"></g>
+<path d="M0 470 Q240 380 480 450 T980 440 T1280 470 V720 H0 Z" fill="url(#val)"/>
+<rect x="0" y="560" width="1280" height="160" fill="#2a6d8f"/>
+<rect x="820" y="560" width="120" height="160" fill="#ffedb8" opacity="0.55" filter="url(#hb)"/>
+<g id="cref"></g>
+<path d="M0 470 Q240 380 480 450 T980 440 T1280 470 V500 H0 Z" fill="#123a1c" opacity="0.7"/>
+</svg>
+<script>
+const H=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+const dark=['#5a6f8e','#46586f','#6e7f99'],lite=['#ffffff','#f4f8ff'];
+let s='';
+for(let i=0;i<9;i++){const cx=(80+H(i)*1120).toFixed(0),cy=(60+H(i+21)*300).toFixed(0),w=(150+H(i+41)*190).toFixed(0),h=(34+H(i+61)*30).toFixed(0);
+s+='<ellipse cx="'+cx+'" cy="'+(cy+14)+'" rx="'+w+'" ry="'+h+'" fill="'+dark[i%3]+'" opacity="0.9"/>';
+s+='<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+w+'" ry="'+h+'" fill="'+lite[i%2]+'"/>';
+s+='<ellipse cx="'+cx+'" cy="'+(cy-10)+'" rx="'+(w*0.8).toFixed(0)+'" ry="'+(h*0.45).toFixed(0)+'" fill="#ffffff"/>';}
+document.getElementById('clouds').innerHTML=s;
+let r='';
+for(let i=0;i<12;i++){r+='<rect x="'+(H(i+101)*1240).toFixed(0)+'" y="'+(580+H(i+111)*120).toFixed(0)+'" width="'+(30+H(i+121)*90).toFixed(0)+'" height="6" rx="3" fill="#dff2ff" opacity="0.4"/>';}
+document.getElementById('cref').innerHTML=r;
+</script>
+</body>
+</html>

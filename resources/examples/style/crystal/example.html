@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Grown points</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0a1018;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<linearGradient id="cry" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eaf7ff"/><stop offset="1" stop-color="#7fa8cc"/></linearGradient>
+<radialGradient id="cgl" cx="0.5" cy="0.6" r="0.6"><stop offset="0" stop-color="#5fc6ff" stop-opacity="0.5"/><stop offset="1" stop-color="#5fc6ff" stop-opacity="0"/></radialGradient>
+<linearGradient id="prism" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff8ab0"/><stop offset="0.5" stop-color="#ffe98a"/><stop offset="1" stop-color="#7ae0ff"/></linearGradient>
+<filter id="cbl" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="14"/></filter>
+</defs>
+<rect width="1280" height="720" fill="#0a1018"/>
+<ellipse cx="640" cy="620" rx="380" ry="80" fill="url(#cgl)"/>
+<polygon points="560,600 560,260 640,140 720,260 720,600" fill="url(#cry)" opacity="0.95"/>
+<polygon points="560,260 640,140 720,260 640,300" fill="#ffffff"/>
+<polygon points="560,600 560,260 640,300 640,600" fill="#9dc4e4"/>
+<line x1="640" y1="140" x2="640" y2="600" stroke="#ffffff" stroke-width="3" opacity="0.8"/>
+<polygon points="380,600 400,380 470,300 540,380 540,600" fill="#8fb4d4"/>
+<polygon points="400,380 470,300 540,380 470,420" fill="#eaf7ff"/>
+<polygon points="740,600 760,420 830,350 900,430 900,600" fill="#a9cbe6"/>
+<polygon points="760,420 830,350 900,430 830,470" fill="#f2fbff"/>
+<line x1="560" y1="260" x2="470" y2="300" stroke="url(#prism)" stroke-width="6" stroke-linecap="round"/>
+<line x1="720" y1="260" x2="830" y2="350" stroke="url(#prism)" stroke-width="6" stroke-linecap="round"/>
+<g id="spark"></g>
+</svg>
+<script>
+let s='';
+[[640,110],[470,270],[830,320],[560,230]].forEach(p=>{
+s+='<path d="M'+p[0]+' '+(p[1]-22)+' L'+(p[0]+5)+' '+p[1]+' L'+p[0]+' '+(p[1]+22)+' L'+(p[0]-5)+' '+p[1]+' Z" fill="#fff" opacity="0.9"/>';});
+document.getElementById('spark').innerHTML=s;
+</script>
+</body>
+</html>

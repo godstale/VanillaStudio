@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Night pole</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#04060f;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<linearGradient id="asky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#04060f"/><stop offset="1" stop-color="#0e2242"/></linearGradient>
+<filter id="mb" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="22"/></filter>
+</defs>
+<rect width="1280" height="720" fill="url(#asky)"/>
+<g id="st"></g>
+<path d="M0 560 Q200 480 420 540 T860 530 T1280 560 V720 H0 Z" fill="#05070c"/>
+<g id="pines"></g>
+<polygon points="880,560 930,470 980,560" fill="#0d1410"/>
+<rect x="924" y="560" width="12" height="40" fill="#0d1410"/>
+<polygon points="840,560 930,430 1020,560" fill="#ff9d4a" opacity="0.22"/>
+<circle id="flame" cx="930" cy="540" r="12" fill="#ffb84a"/>
+<circle cx="930" cy="540" r="26" fill="#ff8a2a" opacity="0.35"/>
+</svg>
+<script>
+const H=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+const SECONDS=4;
+let s='<ellipse cx="700" cy="200" rx="420" ry="90" fill="#cfe0ff" opacity="0.16" filter="url(#mb)" transform="rotate(-24 700 200)"/>';
+for(let i=0;i<200;i++){const a=H(i)*6.2832,rr=40+H(i+1)*560;
+const x=(780+rr*Math.cos(a)).toFixed(0),y=(240+rr*Math.sin(a)*0.7).toFixed(0);
+if(y<0||y>560||x<0||x>1280)continue;
+const c=i%17===0?'#ffd9a0':(i%11===0?'#a8ccff':'#eef3ff');
+s+='<circle cx="'+x+'" cy="'+y+'" r="'+(0.8+H(i+2)*1.8).toFixed(1)+'" fill="'+c+'" opacity="'+(0.5+H(i+4)*0.5).toFixed(2)+'"/>';}
+s+='<circle cx="780" cy="240" r="6" fill="#fff"/><path d="M780 214 v52 M754 240 h52" stroke="#fff" stroke-width="2"/>';
+document.getElementById('st').innerHTML=s;
+const st=document.getElementById('st'),flame=document.getElementById('flame');
+let p='';for(let i=0;i<16;i++){const x=(40+H(i+700)*1200).toFixed(0);p+='<polygon points="'+x+',600 '+(Number(x)+26)+',520 '+(Number(x)+52)+',600" fill="#070b08"/>';}
+document.getElementById('pines').innerHTML=p;
+window.seekExample=(t)=>{
+const ph=(t%SECONDS)/SECONDS*6.2832;
+st.setAttribute('transform','rotate('+(8*Math.sin(ph)).toFixed(2)+' 780 240)');
+flame.setAttribute('r',(10+4*Math.abs(Math.sin(t*11))).toFixed(1));};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}window.seekExample(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Cooling crust</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#2a0d04;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<radialGradient id="heat" cx="0.5" cy="0.55" r="0.75"><stop offset="0" stop-color="#ff7a1e"/><stop offset="0.6" stop-color="#a32e08"/><stop offset="1" stop-color="#2a0d04"/></radialGradient>
+<filter id="lb" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3"/></filter>
+<filter id="lb2" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="9"/></filter>
+</defs>
+<rect width="1280" height="720" fill="url(#heat)"/>
+<g id="flow"></g>
+<g id="crack" stroke="#ff5a12" stroke-width="7" fill="none" filter="url(#lb)"></g>
+<g id="core" stroke="#ffd23e" stroke-width="2.5" fill="none"></g>
+<g id="crust" fill="#0c0c0e"></g>
+<g id="emb"></g>
+</svg>
+<script>
+const H=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+const SECONDS=4;
+let f='';for(let i=0;i<5;i++){f+='<ellipse id="f'+i+'" cx="'+(H(i+61)*1280).toFixed(0)+'" cy="'+(H(i+62)*720).toFixed(0)+'" rx="220" ry="90" fill="#ffb84a" opacity="0.25" filter="url(#lb2)"/>';}
+document.getElementById('flow').innerHTML=f;
+let ck='',co='';const P=[[60,600,300,520,560,560,820,480],[820,480,1020,540,1220,420],[200,300,420,260,640,320,900,240],[900,240,1100,260,1240,200],[420,700,520,560,560,560],[150,150,320,220,420,260]];
+P.forEach((p,i)=>{let d='M'+p[0]+' '+p[1];for(let k=2;k<p.length;k+=2){d+=' L'+p[k]+' '+p[k+1];}
+ck+='<path id="c'+i+'" d="'+d+'"/>';co+='<path id="o'+i+'" d="'+d+'"/>';});
+document.getElementById('crack').innerHTML=ck;document.getElementById('core').innerHTML=co;
+let u='';const GX=7,GY=5,cw=1280/GX,ch=720/GY;let gx=[];
+for(let r=0;r<=GY;r++){gx[r]=[];for(let c=0;c<=GX;c++){gx[r][c]=[c*cw+(H(r*17+c)*44-22),r*ch+(H(r*23+c+5)*44-22)];}}
+for(let r=0;r<GY;r++){for(let c=0;c<GX;c++){const g=13;
+const p0=gx[r][c],p1=gx[r][c+1],p2=gx[r+1][c+1],p3=gx[r+1][c];
+const cx=(p0[0]+p1[0]+p2[0]+p3[0])/4,cy=(p0[1]+p1[1]+p2[1]+p3[1])/4;
+const sh=pt=>{const dx=pt[0]-cx,dy=pt[1]-cy,l=Math.hypot(dx,dy)||1;return (pt[0]-dx/l*g).toFixed(0)+','+(pt[1]-dy/l*g).toFixed(0);};
+u+='<polygon points="'+sh(p0)+' '+sh(p1)+' '+sh(p2)+' '+sh(p3)+'"/>';}}
+document.getElementById('crust').innerHTML=u;
+let e='';for(let i=0;i<18;i++){e+='<circle id="e'+i+'" r="'+(2+H(i+81)*4).toFixed(1)+'" fill="#ffcf5e"/>';}
+document.getElementById('emb').innerHTML=e;
+window.seekExample=(t)=>{
+const p=(t%SECONDS)/SECONDS;
+for(let i=0;i<5;i++){const el=document.getElementById('f'+i);
+el.setAttribute('cx',(640+380*Math.sin(t*0.5+i*2.2)).toFixed(1));el.setAttribute('opacity',(0.18+0.12*Math.sin(t*1.3+i)).toFixed(3));}
+for(let i=0;i<6;i++){const o=(0.6+0.4*Math.sin(t*3+i*1.7)).toFixed(2);
+document.getElementById('c'+i).setAttribute('opacity',o);document.getElementById('o'+i).setAttribute('opacity',o);}
+for(let i=0;i<18;i++){const sp=30+50*H(i+82);let yy=((H(i+83)*760-t*sp)%760+760)%760;
+const el=document.getElementById('e'+i);el.setAttribute('cx',(H(i+84)*1280+16*Math.sin(t*2+i)).toFixed(1));el.setAttribute('cy',(700-yy).toFixed(1));}};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}window.seekExample(0);
+</script>
+</body>
+</html>

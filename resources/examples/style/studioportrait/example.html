@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Studio vase</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#d3d6dd;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<linearGradient id="cyc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6f6f8"/><stop offset="0.75" stop-color="#d3d6dd"/><stop offset="1" stop-color="#b7bbc5"/></linearGradient>
+<linearGradient id="vase" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#243b52"/><stop offset="0.35" stop-color="#5d84a6"/><stop offset="0.62" stop-color="#9dc0da"/><stop offset="0.85" stop-color="#3c5a76"/><stop offset="1" stop-color="#1d2f42"/></linearGradient>
+<filter id="sb" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="16"/></filter>
+</defs>
+<rect width="1280" height="720" fill="url(#cyc)"/>
+<rect x="60" y="80" width="90" height="560" fill="#fff" opacity="0.35" filter="url(#sb)"/>
+<rect x="1130" y="80" width="90" height="560" fill="#fff" opacity="0.35" filter="url(#sb)"/>
+<ellipse cx="640" cy="622" rx="220" ry="34" fill="#5a5e66" opacity="0.45" filter="url(#sb)"/>
+<path d="M585 130 h110 v46 c60 26 108 84 124 160 c14 66 -8 140 -52 196 c-30 38 -52 66 -52 108 h-150 c0 -42 -22 -70 -52 -108 c-44 -56 -66 -130 -52 -196 c16 -76 64 -134 124 -160 Z" fill="url(#vase)"/>
+<ellipse cx="640" cy="130" rx="62" ry="16" fill="#16222f"/>
+<ellipse cx="640" cy="126" rx="48" ry="10" fill="#0b1219"/>
+<path d="M560 300 c-10 90 20 170 62 236" stroke="#ffffff" stroke-width="10" fill="none" opacity="0.85" stroke-linecap="round"/>
+<path d="M592 220 c-24 60 -30 130 -12 200" stroke="#cfe3f2" stroke-width="6" fill="none" opacity="0.5" stroke-linecap="round"/>
+<rect x="565" y="620" width="150" height="18" rx="6" fill="#22303d"/>
+</svg>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Night trails</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#060a18;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<linearGradient id="nsk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060a18"/><stop offset="1" stop-color="#142c4e"/></linearGradient>
+<linearGradient id="rv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12345a"/><stop offset="1" stop-color="#050d18"/></linearGradient>
+<filter id="g3" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3"/></filter>
+<filter id="g8" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="8"/></filter>
+</defs>
+<rect width="1280" height="720" fill="url(#nsk)"/>
+<g id="stars"></g>
+<circle cx="180" cy="120" r="40" fill="#eef2f8" opacity="0.9"/>
+<rect x="120" y="300" width="90" height="130" fill="#0a0f1c"/>
+<rect x="240" y="250" width="110" height="180" fill="#0a0f1c"/>
+<rect x="930" y="270" width="100" height="160" fill="#0a0f1c"/>
+<rect x="1060" y="310" width="80" height="120" fill="#0a0f1c"/>
+<g id="wins"></g>
+<rect x="0" y="430" width="1280" height="18" fill="#1c2733"/>
+<path d="M60 430 Q640 380 1220 430" stroke="#39434e" stroke-width="8" fill="none"/>
+<g id="lamps"></g>
+<path id="t1" d="M40 448 Q420 420 760 438 T1240 424" stroke="#ff3b30" stroke-width="8" fill="none" filter="url(#g3)" stroke-linecap="round"/>
+<path id="t2" d="M1240 452 Q860 470 520 452 T40 466" stroke="#ffe9a0" stroke-width="8" fill="none" filter="url(#g3)" stroke-linecap="round"/>
+<circle id="h1" r="10" fill="#ff6a5e" filter="url(#g3)"/>
+<circle id="h2" r="10" fill="#fff3c0" filter="url(#g3)"/>
+<rect x="0" y="448" width="1280" height="272" fill="url(#rv)" opacity="0.88"/>
+<g id="sh"></g>
+</svg>
+<script>
+const H=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+const SECONDS=4;
+let st='';for(let i=0;i<70;i++){st+='<circle cx="'+(H(i)*1280).toFixed(0)+'" cy="'+(H(i+3)*260).toFixed(0)+'" r="'+(0.8+H(i+5)*1.6).toFixed(1)+'" fill="#dfe8ff" opacity="'+(0.4+H(i+9)*0.5).toFixed(2)+'"/>';}
+document.getElementById('stars').innerHTML=st;
+let w='';for(let i=0;i<40;i++){w+='<rect x="'+(120+H(i)*70).toFixed(0)+'" y="'+(260+H(i+41)*150).toFixed(0)+'" width="7" height="10" fill="#ffd97a" opacity="'+(0.3+H(i+2)*0.6).toFixed(2)+'"/>';}
+w+='';for(let i=0;i<20;i++){w+='<rect x="'+(930+H(i+71)*190).toFixed(0)+'" y="'+(280+H(i+73)*120).toFixed(0)+'" width="7" height="10" fill="#ffd97a" opacity="'+(0.3+H(i+79)*0.6).toFixed(2)+'"/>';}
+document.getElementById('wins').innerHTML=w;
+let lp='';for(let i=0;i<9;i++){const x=140+i*130;lp+='<circle cx="'+x+'" cy="418" r="5" fill="#ffe9a0"/><circle cx="'+x+'" cy="418" r="14" fill="#ffe9a0" opacity="0.35" filter="url(#g8)"/>';}
+document.getElementById('lamps').innerHTML=lp;
+let sh='';for(let i=0;i<14;i++){sh+='<rect x="'+(H(i+200)*1220).toFixed(0)+'" y="'+(470+H(i+210)*220).toFixed(0)+'" width="'+(6+H(i+220)*10).toFixed(0)+'" height="'+(20+H(i+230)*60).toFixed(0)+'" rx="6" fill="#ff9d5c" opacity="0.28" filter="url(#g3)"/>';}
+document.getElementById('sh').innerHTML=sh;
+const t1=document.getElementById('t1'),t2=document.getElementById('t2'),h1=document.getElementById('h1'),h2=document.getElementById('h2');
+const L1=t1.getTotalLength(),L2=t2.getTotalLength();
+t1.setAttribute('stroke-dasharray',L1);t2.setAttribute('stroke-dasharray',L2);
+window.seekExample=(t)=>{
+const p=(t%SECONDS)/SECONDS;
+t1.setAttribute('stroke-dashoffset',(L1*(1-p)).toFixed(1));
+t2.setAttribute('stroke-dashoffset',(L2*(1-p)).toFixed(1));
+const a=t1.getPointAtLength(L1*p),b=t2.getPointAtLength(L2*p);
+h1.setAttribute('cx',a.x);h1.setAttribute('cy',a.y);h2.setAttribute('cx',b.x);h2.setAttribute('cy',b.y);};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}window.seekExample(0);
+</script>
+</body>
+</html>

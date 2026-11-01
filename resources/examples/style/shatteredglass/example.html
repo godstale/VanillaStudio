@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Impact point</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0a0e18;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<linearGradient id="stbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b2740"/><stop offset="1" stop-color="#0a0e18"/></linearGradient>
+<filter id="shb" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2"/></filter>
+</defs>
+<rect width="1280" height="720" fill="url(#stbg)"/>
+<rect x="180" y="90" width="920" height="540" fill="#9fc0d8" opacity="0.16"/>
+<rect x="180" y="90" width="920" height="540" fill="none" stroke="#dfe9f2" stroke-width="14"/>
+<line x1="640" y1="90" x2="640" y2="630" stroke="#dfe9f2" stroke-width="10"/>
+<g id="cracks" stroke="#eef6ff" stroke-width="3" filter="url(#shb)" fill="none"></g>
+<g id="shards"></g>
+<circle cx="900" cy="300" r="10" fill="#fff"/>
+</svg>
+<script>
+const H=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+const SECONDS=3;
+const CX=900,CY=300,N=16;
+let c='';for(let i=0;i<10;i++){const a=H(i+21)*6.2832,L=120+H(i+22)*260;
+c+='<line id="k'+i+'" x1="'+CX+'" y1="'+CY+'" x2="'+(CX+L*Math.cos(a)).toFixed(0)+'" y2="'+(CY+L*Math.sin(a)).toFixed(0)+'"/>';}
+document.getElementById('cracks').innerHTML=c;
+let s='';for(let i=0;i<N;i++){const a=H(i+41)*6.2832,r0=30+H(i+42)*60,w=34+H(i+43)*52,hgt=22+H(i+44)*40;
+s+='<polygon id="g'+i+'" points="0,0 '+w.toFixed(0)+','+(hgt*0.4).toFixed(0)+' '+(w*0.5).toFixed(0)+','+hgt.toFixed(0)+'" fill="'+(i%3?'#cfe2f2':'#8fb0c9')+'" stroke="#f4fbff" stroke-width="2" opacity="0.92" data-a="'+a.toFixed(3)+'" data-r="'+r0.toFixed(0)+'" data-d="'+(160+H(i+45)*260).toFixed(0)+'" data-s="'+((H(i+46)*260-130)).toFixed(0)+'"/>';}
+document.getElementById('shards').innerHTML=s;
+const ease=x=>1-Math.pow(1-x,3);
+window.seekExample=(t)=>{
+const p=(t%SECONDS)/SECONDS,q=ease(Math.min(1,p*1.5));
+for(let i=0;i<10;i++){document.getElementById('k'+i).setAttribute('opacity',Math.min(1,p*9).toFixed(2));}
+for(let i=0;i<N;i++){const el=document.getElementById('g'+i);
+const a=parseFloat(el.dataset.a),r0=parseFloat(el.dataset.r),d=parseFloat(el.dataset.d),sp=parseFloat(el.dataset.s);
+el.setAttribute('transform','translate('+(CX+(r0+d*q)*Math.cos(a)).toFixed(1)+' '+(CY+(r0+d*q)*Math.sin(a)).toFixed(1)+') rotate('+(sp*q).toFixed(1)+')');}};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}window.seekExample(0);
+</script>
+</body>
+</html>

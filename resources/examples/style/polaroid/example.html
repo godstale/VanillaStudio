@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Instant print</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#46341f;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6e5638"/><stop offset="1" stop-color="#46341f"/></linearGradient>
+<linearGradient id="psky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6fa8d8"/><stop offset="1" stop-color="#f6d98b"/></linearGradient>
+<filter id="soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="14"/></filter>
+<clipPath id="ph"><rect x="420" y="86" width="440" height="392" rx="2"/></clipPath>
+</defs>
+<rect width="1280" height="720" fill="url(#wood)"/>
+<rect x="0" y="178" width="1280" height="5" fill="#3a2c1c" opacity="0.6"/>
+<rect x="0" y="358" width="1280" height="5" fill="#3a2c1c" opacity="0.6"/>
+<rect x="0" y="538" width="1280" height="5" fill="#3a2c1c" opacity="0.6"/>
+<rect x="352" y="66" width="560" height="624" rx="8" fill="#000" opacity="0.4" filter="url(#soft)"/>
+<rect x="380" y="40" width="520" height="640" rx="6" fill="#fbfaf4"/>
+<g clip-path="url(#ph)">
+<rect x="420" y="86" width="440" height="392" fill="url(#psky)"/>
+<circle id="sun" cx="742" cy="200" r="52" fill="#fff3c4"/>
+<path d="M420 372 Q520 272 646 356 T860 336 V478 H420 Z" fill="#5c8a4c"/>
+<path d="M420 416 Q560 338 722 408 T860 398 V478 H420 Z" fill="#3a6230"/>
+<path d="M560 250 q14 -14 28 0 M600 236 q14 -14 28 0" stroke="#2c3550" stroke-width="5" fill="none" stroke-linecap="round"/>
+</g>
+<rect id="dev" x="420" y="86" width="440" height="392" fill="#8f9599"/>
+</svg>
+<script>
+const SECONDS=3;
+const dev=document.getElementById('dev');
+const sun=document.getElementById('sun');
+window.seekExample=(t)=>{
+const p=(t%SECONDS)/SECONDS;
+dev.setAttribute('opacity',(1-p*0.97).toFixed(3));
+sun.setAttribute('opacity',(0.3+0.7*p).toFixed(3));
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}window.seekExample(0);
+</script>
+</body>
+</html>
