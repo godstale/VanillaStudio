@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vinyl figure</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+      body { background: linear-gradient(180deg, #232733 0%, #3a3f52 58%, #171a23 58.5%, #0e1017 100%); }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720" width="1280" height="720">
+      <defs>
+        <radialGradient id="vinyl" cx="38%" cy="28%" r="90%">
+          <stop offset="0%" stop-color="#eafff5" />
+          <stop offset="45%" stop-color="#bfe8d8" />
+          <stop offset="100%" stop-color="#6fae9c" />
+        </radialGradient>
+        <linearGradient id="base" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#4a4f63" />
+          <stop offset="100%" stop-color="#14161d" />
+        </linearGradient>
+      </defs>
+      <!-- display base -->
+      <ellipse cx="640" cy="618" rx="300" ry="34" fill="#000" opacity="0.55" />
+      <ellipse cx="640" cy="600" rx="270" ry="44" fill="url(#base)" stroke="#7c8299" stroke-width="4" />
+      <!-- tiny body -->
+      <rect x="570" y="470" width="140" height="110" rx="34" fill="#3f6d8e" />
+      <rect x="570" y="470" width="140" height="110" rx="34" fill="none" stroke="#24404f" stroke-width="6" />
+      <rect x="606" y="500" width="68" height="56" rx="10" fill="#f2e3c8" stroke="#24404f" stroke-width="5" />
+      <ellipse cx="556" cy="520" rx="26" ry="40" fill="#bfe8d8" stroke="#4e7f70" stroke-width="5" />
+      <ellipse cx="724" cy="520" rx="26" ry="40" fill="#9fd3bf" stroke="#4e7f70" stroke-width="5" />
+      <!-- oversized head -->
+      <circle cx="640" cy="310" r="185" fill="url(#vinyl)" stroke="#4e7f70" stroke-width="6" />
+      <ellipse cx="560" cy="245" rx="90" ry="48" fill="#ffffff" opacity="0.45" transform="rotate(-16 560 245)" />
+      <!-- dot eyes -->
+      <circle cx="570" cy="330" r="26" fill="#1d212b" />
+      <circle cx="710" cy="330" r="26" fill="#1d212b" />
+      <circle cx="578" cy="322" r="8" fill="#ffffff" />
+      <circle cx="718" cy="322" r="8" fill="#ffffff" />
+      <path d="M 614 398 Q 640 414 666 398" fill="none" stroke="#1d212b" stroke-width="9" stroke-linecap="round" />
+      <ellipse cx="520" cy="386" rx="26" ry="16" fill="#f2a3a3" opacity="0.8" />
+      <ellipse cx="760" cy="386" rx="26" ry="16" fill="#f2a3a3" opacity="0.8" />
+      <!-- round ear nubs -->
+      <circle cx="478" cy="220" r="40" fill="#bfe8d8" stroke="#4e7f70" stroke-width="5" />
+      <circle cx="802" cy="220" r="40" fill="#9fd3bf" stroke="#4e7f70" stroke-width="5" />
+    </svg>
+  </body>
+</html>

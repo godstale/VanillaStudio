@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tin soldier</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+      body { background: linear-gradient(180deg, #2e4a3e 0%, #3c5f50 62%, #6b5136 62.5%, #4e3a26 100%); }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720" width="1280" height="720">
+      <defs>
+        <linearGradient id="coat" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#a32727" />
+          <stop offset="35%" stop-color="#d33f3f" />
+          <stop offset="100%" stop-color="#7c1d1d" />
+        </linearGradient>
+      </defs>
+      <ellipse cx="640" cy="640" rx="220" ry="30" fill="#000" opacity="0.35" />
+      <!-- boots and legs -->
+      <rect x="576" y="500" width="56" height="110" fill="#e8e4da" stroke="#3a3a3a" stroke-width="5" />
+      <rect x="648" y="500" width="56" height="110" fill="#d8d4ca" stroke="#3a3a3a" stroke-width="5" />
+      <rect x="566" y="590" width="76" height="46" rx="8" fill="#22252b" />
+      <rect x="638" y="590" width="76" height="46" rx="8" fill="#22252b" />
+      <rect x="566" y="624" width="76" height="10" fill="#9aa0ab" />
+      <rect x="638" y="624" width="76" height="10" fill="#9aa0ab" />
+      <!-- stiff arms -->
+      <rect x="502" y="330" width="52" height="170" rx="12" fill="#a32727" stroke="#5c1414" stroke-width="5" />
+      <rect x="726" y="330" width="52" height="170" rx="12" fill="#8c2020" stroke="#5c1414" stroke-width="5" />
+      <circle cx="528" cy="510" r="26" fill="#f0c49c" stroke="#8a5a2b" stroke-width="4" />
+      <circle cx="752" cy="510" r="26" fill="#e0aa74" stroke="#8a5a2b" stroke-width="4" />
+      <!-- red coat torso -->
+      <rect x="554" y="300" width="172" height="215" rx="10" fill="url(#coat)" stroke="#5c1414" stroke-width="6" />
+      <!-- white cross straps -->
+      <polygon points="560,310 600,310 720,500 680,500" fill="#efe9dc" stroke="#8f8672" stroke-width="3" />
+      <polygon points="720,310 680,310 560,500 600,500" fill="#e4ddcd" stroke="#8f8672" stroke-width="3" />
+      <circle cx="640" cy="405" r="14" fill="#ffd166" stroke="#5c1414" stroke-width="4" />
+      <circle cx="610" cy="330" r="9" fill="#ffd166" stroke="#5c1414" stroke-width="3" />
+      <circle cx="670" cy="330" r="9" fill="#ffd166" stroke="#5c1414" stroke-width="3" />
+      <!-- chipped enamel: seeded paint chips -->
+      <g fill="#3a3f45">
+        <circle cx="588" cy="360" r="7" /><circle cx="700" cy="455" r="9" /><circle cx="660" cy="480" r="6" />
+        <circle cx="516" cy="400" r="6" /><circle cx="760" cy="360" r="7" />
+      </g>
+      <g fill="#c9ccd2">
+        <circle cx="596" cy="352" r="4" /><circle cx="708" cy="447" r="5" /><circle cx="522" cy="392" r="3" />
+      </g>
+      <!-- metallic wear on edges -->
+      <line x1="556" y1="315" x2="556" y2="505" stroke="#c9ccd2" stroke-width="4" opacity="0.8" />
+      <!-- face -->
+      <rect x="576" y="200" width="128" height="105" rx="20" fill="#f0c49c" stroke="#8a5a2b" stroke-width="5" />
+      <circle cx="612" cy="248" r="8" fill="#2b2320" />
+      <circle cx="668" cy="248" r="8" fill="#2b2320" />
+      <rect x="616" y="272" width="48" height="10" rx="5" fill="#7a4a2b" />
+      <!-- tall shako hat -->
+      <polygon points="560,205 720,205 700,80 580,80" fill="#22252b" stroke="#101216" stroke-width="5" />
+      <rect x="560" y="188" width="160" height="18" fill="#101216" />
+      <circle cx="640" cy="140" r="20" fill="#ffd166" stroke="#8a6a1a" stroke-width="4" />
+      <circle cx="640" cy="140" r="8" fill="#a32727" />
+      <circle cx="592" cy="110" r="6" fill="#3a3f45" />
+      <circle cx="688" cy="150" r="7" fill="#3a3f45" />
+      <line x1="592" y1="104" x2="597" y2="100" stroke="#c9ccd2" stroke-width="3" />
+    </svg>
+  </body>
+</html>

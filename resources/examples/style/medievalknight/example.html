@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Knight</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+      body { background: linear-gradient(180deg, #4a4a55 0%, #33333d 55%, #1d1d24 100%); }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720" width="1280" height="720">
+      <defs>
+        <linearGradient id="plate" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#8b93a5" />
+          <stop offset="28%" stop-color="#c9d2e2" />
+          <stop offset="42%" stop-color="#f4f8ff" />
+          <stop offset="55%" stop-color="#aeb8c9" />
+          <stop offset="100%" stop-color="#5a6274" />
+        </linearGradient>
+        <linearGradient id="plateD" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#6b7285" />
+          <stop offset="45%" stop-color="#dde5f2" />
+          <stop offset="60%" stop-color="#9aa3b8" />
+          <stop offset="100%" stop-color="#454b5c" />
+        </linearGradient>
+      </defs>
+      <!-- stone columns -->
+      <rect x="90" y="80" width="110" height="640" fill="#2c2c34" />
+      <rect x="1080" y="80" width="110" height="640" fill="#2c2c34" />
+      <rect x="70" y="60" width="150" height="30" fill="#3d3d48" />
+      <rect x="1060" y="60" width="150" height="30" fill="#3d3d48" />
+      <!-- pauldrons -->
+      <ellipse cx="470" cy="470" rx="130" ry="90" fill="url(#plateD)" stroke="#2c313c" stroke-width="6" />
+      <ellipse cx="810" cy="470" rx="130" ry="90" fill="url(#plateD)" stroke="#2c313c" stroke-width="6" />
+      <path d="M 380 440 A 130 90 0 0 1 560 440" fill="none" stroke="#f4f8ff" stroke-width="10" opacity="0.8" />
+      <path d="M 720 440 A 130 90 0 0 1 900 440" fill="none" stroke="#f4f8ff" stroke-width="10" opacity="0.8" />
+      <!-- breastplate with crisp specular bands -->
+      <path d="M 520 430 L 760 430 L 800 720 L 480 720 Z" fill="url(#plate)" stroke="#2c313c" stroke-width="7" />
+      <rect x="596" y="440" width="26" height="270" fill="#ffffff" opacity="0.85" />
+      <rect x="636" y="440" width="12" height="270" fill="#ffffff" opacity="0.6" />
+      <line x1="640" y1="440" x2="640" y2="710" stroke="#2c313c" stroke-width="4" />
+      <!-- gorget joining helm to breastplate -->
+      <rect x="572" y="312" width="136" height="130" fill="url(#plateD)" stroke="#2c313c" stroke-width="6" />
+      <!-- great helm -->
+      <path d="M 540 200 C 540 110 590 60 640 60 C 690 60 740 110 740 200 L 740 330 L 540 330 Z" fill="url(#plate)" stroke="#2c313c" stroke-width="7" />
+      <rect x="622" y="66" width="20" height="180" fill="#ffffff" opacity="0.7" />
+      <rect x="560" y="230" width="160" height="34" rx="8" fill="#14161c" />
+      <line x1="640" y1="230" x2="640" y2="264" stroke="#8b93a5" stroke-width="6" />
+      <!-- original heraldry shield: green tower and star on gold -->
+      <g stroke="#2c313c" stroke-width="7">
+        <path d="M 930 380 L 1090 380 L 1090 500 C 1090 570 1010 610 1010 610 C 1010 610 930 570 930 500 Z" fill="#1f7a4d" />
+      </g>
+      <path d="M 930 380 L 1090 380 L 1090 440 L 930 440 Z" fill="#ffd166" />
+      <g fill="#f4f1ea">
+        <rect x="988" y="470" width="44" height="70" />
+        <rect x="980" y="458" width="16" height="24" /><rect x="1002" y="458" width="16" height="24" /><rect x="1024" y="458" width="16" height="24" />
+      </g>
+      <polygon points="1010,410 1016,422 1029,422 1019,430 1022,443 1010,435 998,443 1001,430 991,422 1004,422" fill="#f4f1ea" />
+      <line x1="950" y1="400" x2="950" y2="560" stroke="#ffffff" stroke-width="8" opacity="0.5" />
+    </svg>
+  </body>
+</html>

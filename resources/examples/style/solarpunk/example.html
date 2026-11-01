@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sun terraces</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+      body { background: linear-gradient(180deg, #ffe9b8 0%, #cfe8f5 45%, #a8d4e6 100%); }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720" width="1280" height="720">
+      <circle cx="220" cy="140" r="64" fill="#fff3d0" />
+      <circle cx="220" cy="140" r="110" fill="#fff3d0" opacity="0.35" />
+      <g fill="none" stroke="#5a6b7a" stroke-width="5" stroke-linecap="round">
+        <path d="M 520 130 q 14 -14 28 0 q 14 -14 28 0" />
+        <path d="M 900 100 q 14 -14 28 0 q 14 -14 28 0" />
+      </g>
+      <!-- terraced building -->
+      <g stroke="#3e6b4f" stroke-width="5">
+        <rect x="330" y="500" width="620" height="220" rx="14" fill="#e9f2e4" />
+        <rect x="390" y="380" width="500" height="130" rx="14" fill="#dcead4" />
+        <rect x="450" y="260" width="380" height="130" rx="14" fill="#e9f2e4" />
+      </g>
+      <!-- terrace plants -->
+      <g fill="#3f7d4e">
+        <ellipse cx="400" cy="490" rx="34" ry="26" /><ellipse cx="470" cy="486" rx="28" ry="22" /><ellipse cx="880" cy="490" rx="34" ry="26" /><ellipse cx="810" cy="486" rx="26" ry="20" />
+        <ellipse cx="450" cy="372" rx="28" ry="22" /><ellipse cx="830" cy="372" rx="30" ry="24" />
+        <ellipse cx="520" cy="252" rx="26" ry="20" /><ellipse cx="760" cy="252" rx="28" ry="22" />
+      </g>
+      <g fill="#63a875">
+        <ellipse cx="392" cy="482" rx="16" ry="12" /><ellipse cx="872" cy="482" rx="16" ry="12" />
+        <ellipse cx="444" cy="364" rx="13" ry="10" /><ellipse cx="824" cy="364" rx="14" ry="10" />
+        <ellipse cx="514" cy="244" rx="12" ry="9" /><ellipse cx="754" cy="244" rx="13" ry="10" />
+      </g>
+      <!-- solar glass panels -->
+      <g stroke="#1d3a5f" stroke-width="5">
+        <polygon points="560,470 700,470 680,380 540,380" fill="#2e6da8" />
+        <polygon points="740,470 880,470 860,380 720,380" fill="#357cb8" />
+        <polygon points="560,350 660,350 648,290 548,290" fill="#2e6da8" />
+      </g>
+      <g stroke="#bfe0f2" stroke-width="3">
+        <line x1="600" y1="384" x2="612" y2="468" /><line x1="640" y1="382" x2="648" y2="468" />
+        <line x1="780" y1="384" x2="792" y2="468" /><line x1="820" y1="382" x2="828" y2="468" />
+        <line x1="548" y1="410" x2="688" y2="410" /><line x1="728" y1="410" x2="868" y2="410" />
+      </g>
+      <!-- morning light wash -->
+      <polygon points="0,0 500,0 200,720 0,720" fill="#fff3d0" opacity="0.28" />
+      <rect x="0" y="640" width="1280" height="80" fill="#8fbf7f" />
+      <g fill="#3f7d4e">
+        <ellipse cx="120" cy="630" rx="46" ry="30" /><ellipse cx="1160" cy="630" rx="52" ry="32" />
+      </g>
+    </svg>
+  </body>
+</html>
