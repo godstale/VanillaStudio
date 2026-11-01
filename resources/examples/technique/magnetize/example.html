@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#141C2E}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720"><circle id="m" cx="640" cy="360" r="26" fill="#FF5AA8"/><circle id="d0" r="16" fill="#39D0C4" opacity="0.5"/><circle id="d1" r="16" fill="#39D0C4" opacity="0.5"/><circle id="d2" r="16" fill="#39D0C4" opacity="0.5"/><circle id="d3" r="16" fill="#39D0C4" opacity="0.5"/><circle id="d4" r="16" fill="#39D0C4" opacity="0.5"/><circle id="d5" r="16" fill="#39D0C4" opacity="0.5"/><circle id="d6" r="16" fill="#39D0C4" opacity="0.5"/><circle id="d7" r="16" fill="#39D0C4" opacity="0.5"/><circle id="d8" r="16" fill="#39D0C4" opacity="0.5"/><circle id="d9" r="16" fill="#39D0C4" opacity="0.5"/><circle id="d10" r="16" fill="#39D0C4" opacity="0.5"/><circle id="d11" r="16" fill="#39D0C4" opacity="0.5"/><circle id="d12" r="16" fill="#39D0C4" opacity="0.5"/><circle id="d13" r="16" fill="#39D0C4" opacity="0.5"/></svg>
+<script>
+const SECONDS=3;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+const lerp=(a,b,e)=>a+(b-a)*e;
+const pp=v=>v<0.5?v*2:2-v*2;
+const H=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);};
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+const SX=[205.2, 782.7, 708.6, 1099.6, 1133.6, 804.5, 1119.4, 1003.4, 164.0, 309.0, 207.5, 1026.0, 676.0, 628.8],SY=[522.1, 510.4, 620.3, 534.0, 494.8, 201.1, 155.2, 183.6, 600.4, 483.2, 302.5, 213.0, 405.1, 119.2];
+const e=ss((p-0.05)/0.9);
+for(let i=0;i<14;i++){$('d'+i).setAttribute('cx',lerp(SX[i],640,e).toFixed(1));$('d'+i).setAttribute('cy',lerp(SY[i],360,e).toFixed(1));$('d'+i).setAttribute('opacity',(0.5+0.5*e).toFixed(3));}
+$('m').setAttribute('r',(22+8*Math.sin(p*Math.PI*4)).toFixed(1));
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#14232B}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720"><ellipse id="e" cx="640" cy="360" fill="#39D0C4"/><circle id="d0" r="46" fill="#7CE8DE"/><circle id="d1" r="46" fill="#7CE8DE"/></svg>
+<script>
+const SECONDS=4;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+const lerp=(a,b,e)=>a+(b-a)*e;
+const pp=v=>v<0.5?v*2:2-v*2;
+const H=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);};
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+const a=p*Math.PI*2;
+$('e').setAttribute('rx',(170+60*Math.sin(a)).toFixed(1));
+$('e').setAttribute('ry',(170-60*Math.sin(a)).toFixed(1));
+$('e').setAttribute('transform','translate(640 360) rotate('+(p*180).toFixed(1)+') translate(-640 -360)');
+const R=260-140*Math.abs(Math.sin(a));
+$('d0').setAttribute('cx',(640+R*Math.cos(a)).toFixed(1));$('d0').setAttribute('cy',(360+R*Math.sin(a)).toFixed(1));
+$('d1').setAttribute('cx',(640-R*Math.cos(a)).toFixed(1));$('d1').setAttribute('cy',(360-R*Math.sin(a)).toFixed(1));
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

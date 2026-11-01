@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#EFD9B4}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720"><g id="A"><rect width="1280" height="720" fill="#EFD9B4"/><circle cx="430" cy="360" r="150" fill="#E4572E"/><circle cx="880" cy="200" r="40" fill="#2E4057"/><rect x="200" y="560" width="200" height="26" rx="13" fill="#2E4057"/></g><clipPath id="cp"><rect id="cw" x="0" y="0" width="0" height="720"/></clipPath><g clip-path="url(#cp)"><rect width="1280" height="720" fill="#182433"/><rect x="720" y="230" width="260" height="260" rx="40" fill="#F5B942"/><circle cx="400" cy="180" r="34" fill="#39D0C4"/><rect x="820" y="560" width="200" height="26" rx="13" fill="#39D0C4"/></g><rect id="edge" y="0" width="12" height="720" fill="#fff"/></svg>
+<script>
+const SECONDS=3;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+const lerp=(a,b,e)=>a+(b-a)*e;
+const pp=v=>v<0.5?v*2:2-v*2;
+const H=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);};
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+const w=1280*ss(p);
+$('cw').setAttribute('width',w.toFixed(1));$('edge').setAttribute('x',(w-6).toFixed(1));
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

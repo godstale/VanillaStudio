@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#F2C879}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720"><rect id="bg" width="1280" height="720" fill="#F2C879"/><g id="stars" opacity="0"><circle cx="665" cy="197" r="6" fill="#F2EAD8"/><circle cx="757" cy="229" r="6" fill="#F2EAD8"/><circle cx="892" cy="98" r="6" fill="#F2EAD8"/><circle cx="328" cy="283" r="6" fill="#F2EAD8"/><circle cx="1127" cy="125" r="6" fill="#F2EAD8"/><circle cx="447" cy="177" r="6" fill="#F2EAD8"/><circle cx="668" cy="226" r="6" fill="#F2EAD8"/><circle cx="881" cy="286" r="6" fill="#F2EAD8"/></g><circle id="sun" cx="640" r="90"/><ellipse id="h1" cx="320" cy="640" rx="420" ry="150"/><ellipse id="h2" cx="1000" cy="660" rx="440" ry="150"/></svg>
+<script>
+const SECONDS=4;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+const lerp=(a,b,e)=>a+(b-a)*e;
+const pp=v=>v<0.5?v*2:2-v*2;
+const H=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);};
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+const e=ss(p);
+const mix=(a,b)=>a.map((v,i)=>Math.round(lerp(v,b[i],e)));
+const C=c=>'rgb('+c[0]+','+c[1]+','+c[2]+')';
+$('bg').setAttribute('fill',C(mix([242,200,121],[27,42,74])));
+$('sun').setAttribute('fill',C(mix([228,87,46],[232,237,243])));
+$('sun').setAttribute('cy',(500-300*e).toFixed(1));
+$('h1').setAttribute('fill',C(mix([62,107,79],[16,26,44])));
+$('h2').setAttribute('fill',C(mix([53,96,63],[12,20,36])));
+$('stars').setAttribute('opacity',ss((p-0.5)/0.5).toFixed(3));
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

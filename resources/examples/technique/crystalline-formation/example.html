@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#101B2A}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720"><circle id="core" cx="640" cy="360" r="10" fill="#BFE9FF"/><line id="m0" x1="640" y1="360" stroke="#BFE9FF" stroke-width="8" stroke-linecap="round"/><line id="m1" x1="640" y1="360" stroke="#BFE9FF" stroke-width="8" stroke-linecap="round"/><line id="m2" x1="640" y1="360" stroke="#BFE9FF" stroke-width="8" stroke-linecap="round"/><line id="m3" x1="640" y1="360" stroke="#BFE9FF" stroke-width="8" stroke-linecap="round"/><line id="m4" x1="640" y1="360" stroke="#BFE9FF" stroke-width="8" stroke-linecap="round"/><line id="m5" x1="640" y1="360" stroke="#BFE9FF" stroke-width="8" stroke-linecap="round"/><line id="u0" stroke="#8FD0F5" stroke-width="5" stroke-linecap="round" opacity="0"/><line id="u1" stroke="#8FD0F5" stroke-width="5" stroke-linecap="round" opacity="0"/><line id="u2" stroke="#8FD0F5" stroke-width="5" stroke-linecap="round" opacity="0"/><line id="u3" stroke="#8FD0F5" stroke-width="5" stroke-linecap="round" opacity="0"/><line id="u4" stroke="#8FD0F5" stroke-width="5" stroke-linecap="round" opacity="0"/><line id="u5" stroke="#8FD0F5" stroke-width="5" stroke-linecap="round" opacity="0"/><line id="u6" stroke="#8FD0F5" stroke-width="5" stroke-linecap="round" opacity="0"/><line id="u7" stroke="#8FD0F5" stroke-width="5" stroke-linecap="round" opacity="0"/><line id="u8" stroke="#8FD0F5" stroke-width="5" stroke-linecap="round" opacity="0"/><line id="u9" stroke="#8FD0F5" stroke-width="5" stroke-linecap="round" opacity="0"/><line id="u10" stroke="#8FD0F5" stroke-width="5" stroke-linecap="round" opacity="0"/><line id="u11" stroke="#8FD0F5" stroke-width="5" stroke-linecap="round" opacity="0"/></svg>
+<script>
+const SECONDS=4;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+const lerp=(a,b,e)=>a+(b-a)*e;
+const pp=v=>v<0.5?v*2:2-v*2;
+const H=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);};
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+const e=ss(p*1.1),e2=ss((p-0.35)/0.65);
+for(let i=0;i<6;i++){const an=i*Math.PI/3,L=240*e;
+const tx=640+L*Math.cos(an),ty=360+L*Math.sin(an);
+const m=$('m'+i);m.setAttribute('x2',tx.toFixed(1));m.setAttribute('y2',ty.toFixed(1));
+for(let k=0;k<2;k++){const u=$('u'+(i*2+k));const sa=an+(k?0.5:-0.5);
+const bx=640+L*0.55*Math.cos(an),by=360+L*0.55*Math.sin(an);
+u.setAttribute('x1',bx.toFixed(1));u.setAttribute('y1',by.toFixed(1));
+u.setAttribute('x2',(bx+80*e2*Math.cos(sa)).toFixed(1));u.setAttribute('y2',(by+80*e2*Math.sin(sa)).toFixed(1));
+u.setAttribute('opacity',e2.toFixed(3));}}
+$('core').setAttribute('r',(10+26*e2).toFixed(1));
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

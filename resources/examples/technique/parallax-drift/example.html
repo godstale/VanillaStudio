@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#101826}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720"><g id="f"><ellipse cx="300" cy="500" rx="400" ry="150" fill="#22344A"/><ellipse cx="1000" cy="520" rx="420" ry="150" fill="#22344A"/></g><g id="m"><ellipse cx="640" cy="580" rx="700" ry="170" fill="#2E4A5A"/><circle cx="640" cy="220" r="80" fill="#F5B942"/></g><g id="n"><rect x="120" y="420" width="40" height="200" fill="#0C1622"/><rect x="620" y="400" width="40" height="220" fill="#0C1622"/><rect x="1120" y="420" width="40" height="200" fill="#0C1622"/></g></svg>
+<script>
+const SECONDS=4;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+const lerp=(a,b,e)=>a+(b-a)*e;
+const pp=v=>v<0.5?v*2:2-v*2;
+const H=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);};
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+const a=p*Math.PI*2;
+$('f').setAttribute('transform','translate('+(50*Math.sin(a)).toFixed(1)+' 0)');
+$('m').setAttribute('transform','translate('+(110*Math.sin(a+1)).toFixed(1)+' 0)');
+$('n').setAttribute('transform','translate('+(190*Math.sin(a+2)).toFixed(1)+' 0)');
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

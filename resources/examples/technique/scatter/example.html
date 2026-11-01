@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#241A2E}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720"><circle id="core" cx="640" cy="360" r="60" fill="#F5B942"/><g id="s0"><polygon points="0,-16 0,16 64,0" fill="#FF6B5E"/></g><g id="s1"><polygon points="0,-16 0,16 64,0" fill="#F5B942"/></g><g id="s2"><polygon points="0,-16 0,16 64,0" fill="#39D0C4"/></g><g id="s3"><polygon points="0,-16 0,16 64,0" fill="#8B7CF6"/></g><g id="s4"><polygon points="0,-16 0,16 64,0" fill="#B8E356"/></g><g id="s5"><polygon points="0,-16 0,16 64,0" fill="#FF6B5E"/></g><g id="s6"><polygon points="0,-16 0,16 64,0" fill="#F5B942"/></g><g id="s7"><polygon points="0,-16 0,16 64,0" fill="#39D0C4"/></g></svg>
+<script>
+const SECONDS=3;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+const lerp=(a,b,e)=>a+(b-a)*e;
+const pp=v=>v<0.5?v*2:2-v*2;
+const H=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);};
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+const e=1-Math.pow(1-p,2);
+for(let i=0;i<8;i++){const an=i*Math.PI/4,R=30+300*e;
+const sp=(H(i)-0.5)*220;
+$('s'+i).setAttribute('transform','translate('+(640+R*Math.cos(an)).toFixed(1)+' '+(360+R*Math.sin(an)).toFixed(1)+') rotate('+(an*180/Math.PI+e*sp).toFixed(1)+')');$('s'+i).setAttribute('opacity',(1-0.6*e).toFixed(3));}
+$('core').setAttribute('r',(60-40*e).toFixed(1));
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

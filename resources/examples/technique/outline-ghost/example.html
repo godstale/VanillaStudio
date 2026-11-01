@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#101820}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720"><circle id="g3" cy="360" r="70" fill="none" stroke="#39D0C4" stroke-width="8" opacity="0.14"/><circle id="g2" cy="360" r="70" fill="none" stroke="#39D0C4" stroke-width="8" opacity="0.28"/><circle id="g1" cy="360" r="70" fill="none" stroke="#39D0C4" stroke-width="8" opacity="0.45"/><circle id="m" cy="360" r="70" fill="#39D0C4"/></svg>
+<script>
+const SECONDS=3;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+const lerp=(a,b,e)=>a+(b-a)*e;
+const pp=v=>v<0.5?v*2:2-v*2;
+const H=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);};
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+const X=q=>240+800*(q<0.5?q*2:2-q*2);
+const W=k=>{let v=(p-k*0.045)%1;return v<0?v+1:v;};
+$('m').setAttribute('cx',X(p).toFixed(1));
+for(let k=1;k<=3;k++)$('g'+k).setAttribute('cx',X(W(k)).toFixed(1));
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

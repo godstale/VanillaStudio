@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#F2EAD8}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720"><rect id="f" x="500" y="220" width="280" height="280" rx="24" fill="none" stroke="#2E4057" stroke-width="10"/><g id="m"><rect x="-120" y="-120" width="240" height="240" rx="36" fill="#E4572E"/></g></svg>
+<script>
+const SECONDS=2;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+const lerp=(a,b,e)=>a+(b-a)*e;
+const pp=v=>v<0.5?v*2:2-v*2;
+const H=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);};
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+const e=1-Math.pow(1-p,3);const b=1+0.7*(1-e)*Math.cos(p*14);
+$('m').setAttribute('transform','translate(640 360) scale('+b.toFixed(3)+')');
+$('f').setAttribute('opacity',(0.25+0.75*ss((p-0.5)/0.5)).toFixed(3));
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>
