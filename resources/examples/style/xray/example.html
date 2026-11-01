@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>X ray</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #05080f;
+        display: grid; place-items: center; }
+      svg { width: 700px; height: 560px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 700 560">
+      <g id="inner" opacity="0.25">
+        <rect x="250" y="120" width="200" height="320" rx="40" fill="none" stroke="#7fd4ff" stroke-width="6" />
+        <circle cx="350" cy="200" r="46" fill="none" stroke="#7fd4ff" stroke-width="6" />
+        <path d="M350 246 V360 M300 300 H400 M310 360 L290 430 M390 360 L410 430" stroke="#7fd4ff" stroke-width="6" fill="none" />
+        <circle cx="315" cy="300" r="10" fill="#7fd4ff" />
+        <circle cx="385" cy="300" r="10" fill="#7fd4ff" />
+      </g>
+      <g id="shell">
+        <rect x="250" y="120" width="200" height="320" rx="40" fill="#28425e" />
+        <circle cx="350" cy="200" r="46" fill="#28425e" />
+        <path d="M300 160 Q350 130 400 160" stroke="#4a6b8f" stroke-width="8" fill="none" />
+      </g>
+    </svg>
+    <script>
+      const SECONDS = 4;
+      const shell = document.getElementById('shell');
+      const inner = document.getElementById('inner');
+      window.seekExample = (t) => {
+        const p = (((t % SECONDS) + SECONDS) % SECONDS) / SECONDS;
+        const fade = p < 0.5 ? p * 2 : (1 - p) * 2;
+        shell.setAttribute('opacity', (1 - fade * 0.85).toFixed(3));
+        inner.setAttribute('opacity', (0.25 + fade * 0.75).toFixed(3));
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Radar</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #031007;
+        display: grid; place-items: center; }
+      svg { width: 680px; height: 680px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 680 680">
+      <defs>
+        <linearGradient id="sweep" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#39ff88" stop-opacity="0.7" />
+          <stop offset="100%" stop-color="#39ff88" stop-opacity="0" />
+        </linearGradient>
+      </defs>
+      <circle cx="340" cy="340" r="300" fill="#04180d" stroke="#1d5c38" stroke-width="3" />
+      <circle cx="340" cy="340" r="200" fill="none" stroke="#1d5c38" stroke-width="2" />
+      <circle cx="340" cy="340" r="100" fill="none" stroke="#1d5c38" stroke-width="2" />
+      <path d="M340 40 V640 M40 340 H640" stroke="#1d5c38" stroke-width="2" />
+      <g id="sweepG"></g>
+      <g id="blips"></g>
+    </svg>
+    <script>
+      const SECONDS = 4;
+      const sweepG = document.getElementById('sweepG');
+      const blips = document.getElementById('blips');
+      const rnd = (i, s) => {
+        const x = Math.sin(i * 57.3 + s * 131.7) * 9876.5;
+        return x - Math.floor(x);
+      };
+      const PTS = [0, 1, 2, 3, 4].map((i) => ({
+        r: 60 + rnd(i, 1) * 220,
+        a: rnd(i, 2) * Math.PI * 2,
+      }));
+      window.seekExample = (t) => {
+        const p = (((t % SECONDS) + SECONDS) % SECONDS) / SECONDS;
+        const ang = p * Math.PI * 2;
+        const x2 = 340 + Math.cos(ang - 0.5) * 300;
+        const y2 = 340 + Math.sin(ang - 0.5) * 300;
+        const x3 = 340 + Math.cos(ang) * 300;
+        const y3 = 340 + Math.sin(ang) * 300;
+        sweepG.innerHTML = `<path d="M340 340 L${x2.toFixed(1)} ${y2.toFixed(1)} A300 300 0 0 1 ${x3.toFixed(1)} ${y3.toFixed(1)} Z" fill="url(#sweep)" />`;
+        blips.innerHTML = PTS.map(({ r, a }) => {
+          let d = (ang - a) % (Math.PI * 2);
+          if (d < 0) d += Math.PI * 2;
+          const lit = Math.max(0, 1 - d / 2.2);
+          return `<circle cx="${(340 + Math.cos(a) * r).toFixed(1)}" cy="${(340 + Math.sin(a) * r).toFixed(1)}" r="10" fill="#8dffb9" opacity="${lit.toFixed(2)}" />`;
+        }).join('');
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

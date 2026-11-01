@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sonar</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #04140f;
+        display: grid; place-items: center; }
+      svg { width: 680px; height: 680px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 680 680">
+      <circle cx="340" cy="340" r="300" fill="none" stroke="#0e3d2e" stroke-width="2" />
+      <circle cx="340" cy="340" r="225" fill="none" stroke="#0e3d2e" stroke-width="2" />
+      <circle cx="340" cy="340" r="150" fill="none" stroke="#0e3d2e" stroke-width="2" />
+      <circle cx="340" cy="340" r="75" fill="none" stroke="#0e3d2e" stroke-width="2" />
+      <g id="rings" fill="none" stroke="#2ed3a0" stroke-width="4"></g>
+      <g id="blips" fill="#7dffd4"></g>
+      <circle cx="340" cy="340" r="10" fill="#2ed3a0" />
+    </svg>
+    <script>
+      const SECONDS = 4;
+      const rings = document.getElementById('rings');
+      const blips = document.getElementById('blips');
+      const rnd = (i, s) => {
+        const x = Math.sin(i * 91.7 + s * 47.3) * 24634.5;
+        return x - Math.floor(x);
+      };
+      const D = [90, 150, 210, 260];
+      window.seekExample = (t) => {
+        const p = (((t % SECONDS) + SECONDS) % SECONDS) / SECONDS;
+        rings.innerHTML = [0, 1, 2].map((k) => {
+          const r = ((p + k / 3) % 1) * 300;
+          return `<circle cx="340" cy="340" r="${r.toFixed(1)}" opacity="${(1 - r / 300).toFixed(2)}" />`;
+        }).join('');
+        blips.innerHTML = D.map((d, i) => {
+          const age = (p - (d / 320)) % 1;
+          const lit = age > 0 && age < 0.3 ? 1 - age / 0.3 : 0;
+          const a = rnd(i, 1) * 6.28;
+          return `<circle cx="${(340 + Math.cos(a) * d).toFixed(1)}" cy="${(340 + Math.sin(a) * d).toFixed(1)}" r="9" opacity="${lit.toFixed(2)}" />`;
+        }).join('');
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>
