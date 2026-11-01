@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Airbrush chrome</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #2a0a4a; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <radialGradient id="air" cx="50%" cy="35%" r="80%">
+          <stop offset="0%" stop-color="#ff4fd8" />
+          <stop offset="45%" stop-color="#7b2ff7" />
+          <stop offset="100%" stop-color="#160736" />
+        </radialGradient>
+        <linearGradient id="chrome" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffffff" />
+          <stop offset="30%" stop-color="#8f9bb3" />
+          <stop offset="50%" stop-color="#e8eefc" />
+          <stop offset="70%" stop-color="#5a6578" />
+          <stop offset="100%" stop-color="#dfe7fa" />
+        </linearGradient>
+        <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="22" />
+        </filter>
+      </defs>
+      <rect width="1280" height="720" fill="url(#air)" />
+      <ellipse cx="300" cy="150" rx="220" ry="120" fill="#ff9de2" opacity="0.5" filter="url(#soft)" />
+      <ellipse cx="1000" cy="580" rx="260" ry="130" fill="#ffb86b" opacity="0.45" filter="url(#soft)" />
+      <!-- laser lines -->
+      <g stroke="#c8fff4" stroke-width="6">
+        <line x1="0" y1="620" x2="1280" y2="180" />
+        <line x1="0" y1="660" x2="1280" y2="220" stroke-width="3" />
+      </g>
+      <g stroke="#ffe45e" stroke-width="5">
+        <line x1="0" y1="180" x2="1280" y2="560" />
+      </g>
+      <!-- chrome shapes -->
+      <ellipse cx="640" cy="330" rx="270" ry="150" fill="url(#chrome)" stroke="#0d0b1e" stroke-width="8" />
+      <ellipse cx="640" cy="305" rx="270" ry="60" fill="#ffffff" opacity="0.55" />
+      <path d="M250 560 L360 380 L470 560 Z" fill="url(#chrome)" stroke="#0d0b1e" stroke-width="8" stroke-linejoin="round" />
+      <rect x="830" y="400" width="220" height="160" rx="80" fill="url(#chrome)" stroke="#0d0b1e" stroke-width="8" />
+      <!-- chrome headline bars -->
+      <rect x="390" y="120" width="500" height="34" rx="17" fill="url(#chrome)" stroke="#0d0b1e" stroke-width="6" />
+      <rect x="450" y="166" width="380" height="22" rx="11" fill="url(#chrome)" stroke="#0d0b1e" stroke-width="5" />
+      <circle cx="1010" cy="150" r="46" fill="url(#chrome)" stroke="#0d0b1e" stroke-width="7" />
+      <circle cx="1010" cy="150" r="20" fill="#ff4fd8" />
+    </svg>
+  </body>
+</html>

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Soft aperture</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #0c0e0c; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="7" />
+        </filter>
+        <radialGradient id="vig" cx="50%" cy="50%" r="72%">
+          <stop offset="0%" stop-color="#000" stop-opacity="0" />
+          <stop offset="55%" stop-color="#000" stop-opacity="0" />
+          <stop offset="100%" stop-color="#000" stop-opacity="0.92" />
+        </radialGradient>
+      </defs>
+      <rect width="1280" height="720" fill="#2c3a2a" />
+      <g filter="url(#soft)">
+        <rect width="1280" height="480" fill="#7fa3b5" />
+        <circle cx="980" cy="140" r="90" fill="#f2e7c4" opacity="0.9" />
+        <path d="M0 480 L260 300 L520 480 Z" fill="#4a5d43" />
+        <path d="M400 480 L700 280 L1000 480 Z" fill="#55684a" />
+        <path d="M880 480 L1120 310 L1280 480 Z" fill="#4a5d43" />
+        <rect y="480" width="1280" height="240" fill="#5d7048" />
+        <rect x="560" y="380" width="160" height="140" fill="#6b4a35" />
+        <path d="M540 380 L640 300 L740 380 Z" fill="#3d2c22" />
+        <rect x="600" y="430" width="40" height="90" fill="#2c2018" />
+        <ellipse cx="200" cy="560" rx="90" ry="60" fill="#6f8f57" />
+        <ellipse cx="1080" cy="580" rx="100" ry="64" fill="#6f8f57" />
+      </g>
+      <rect width="1280" height="720" fill="url(#vig)" />
+    </svg>
+  </body>
+</html>

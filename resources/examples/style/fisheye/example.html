@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Round lens</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #050507; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <clipPath id="lens"><circle cx="640" cy="360" r="330" /></clipPath>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2b4a6b" />
+          <stop offset="60%" stop-color="#7fb0d1" />
+          <stop offset="100%" stop-color="#cfe3b8" />
+        </linearGradient>
+      </defs>
+      <rect width="1280" height="720" fill="#050507" />
+      <circle cx="640" cy="360" r="344" fill="#1c1c22" />
+      <g clip-path="url(#lens)">
+        <rect x="290" y="30" width="700" height="660" fill="url(#sky)" />
+        <circle cx="760" cy="200" r="55" fill="#fff3c4" />
+        <!-- curved horizon: bent upward at the edges -->
+        <path d="M290 380 Q640 300 990 380 L990 690 L290 690 Z" fill="#5d7048" />
+        <path d="M290 380 Q640 300 990 380" fill="none" stroke="#3d4c30" stroke-width="8" />
+        <!-- buildings bent along radial curves -->
+        <g fill="#3a3f4a" stroke="#22252c" stroke-width="5">
+          <path d="M380 420 Q400 300 430 250 L500 260 Q480 320 480 420 Z" />
+          <path d="M540 400 Q550 270 560 220 L640 220 Q640 300 640 400 Z" />
+          <path d="M700 400 Q700 310 720 250 L790 260 Q780 330 780 400 Z" />
+          <path d="M830 420 Q840 330 870 290 L920 300 Q900 360 900 420 Z" />
+        </g>
+        <g fill="#ffd166" opacity="0.9">
+          <rect x="575" y="250" width="16" height="14" /><rect x="600" y="250" width="16" height="14" />
+          <rect x="575" y="275" width="16" height="14" /><rect x="600" y="300" width="16" height="14" />
+          <rect x="440" y="300" width="14" height="12" /><rect x="740" y="300" width="14" height="12" />
+        </g>
+        <!-- curved road -->
+        <path d="M560 690 Q620 520 640 400 Q660 520 720 690 Z" fill="#2c2c30" />
+        <path d="M640 690 L640 400" stroke="#f2e7c4" stroke-width="6" stroke-dasharray="26 22" />
+      </g>
+      <circle cx="640" cy="360" r="330" fill="none" stroke="#3a3a44" stroke-width="10" />
+      <circle cx="640" cy="360" r="344" fill="none" stroke="#000" stroke-width="6" />
+    </svg>
+  </body>
+</html>

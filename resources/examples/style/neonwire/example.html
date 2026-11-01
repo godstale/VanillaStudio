@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Wire glow</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #020308; }
+      svg { display: block; width: 1280px; height: 720px; }
+      .w { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <filter id="bloom" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="14" />
+        </filter>
+      </defs>
+      <!-- cube -->
+      <g class="w" stroke="#22d3ee" stroke-width="22" opacity="0.5" filter="url(#bloom)">
+        <path d="M180 220 L330 150 L480 220 L480 420 L330 490 L180 420 Z" />
+        <path d="M180 220 L180 420 M330 150 L330 490 M480 220 L480 420 M180 220 L330 150 L480 220 M180 420 L330 490 L480 420" />
+      </g>
+      <g class="w" stroke="#22d3ee" stroke-width="5">
+        <path d="M180 220 L330 150 L480 220 L480 420 L330 490 L180 420 Z" />
+        <path d="M180 220 L180 420 M330 150 L330 490 M480 220 L480 420 M180 420 L330 490 L480 420 M330 150 L330 290 M180 220 L330 290 L480 220" />
+      </g>
+      <!-- pyramid -->
+      <g class="w" stroke="#ff5ad2" stroke-width="20" opacity="0.5" filter="url(#bloom)">
+        <path d="M800 460 L930 140 L1060 460 Z M800 460 L1060 460" />
+      </g>
+      <g class="w" stroke="#ff5ad2" stroke-width="5">
+        <path d="M800 460 L930 140 L1060 460 Z M800 460 L1060 460 M930 140 L930 460 M855 340 L1005 340" />
+      </g>
+      <!-- ring orbit -->
+      <g class="w" stroke="#ffd166" stroke-width="18" opacity="0.5" filter="url(#bloom)">
+        <ellipse cx="640" cy="560" rx="220" ry="70" />
+      </g>
+      <g class="w" stroke="#ffd166" stroke-width="5">
+        <ellipse cx="640" cy="560" rx="220" ry="70" />
+        <ellipse cx="640" cy="560" rx="150" ry="46" />
+      </g>
+      <circle cx="640" cy="560" r="10" fill="#fff7dd" />
+      <!-- small satellite diamond -->
+      <g class="w" stroke="#a3ff5e" stroke-width="12" opacity="0.5" filter="url(#bloom)">
+        <path d="M1120 120 l40 52 -40 52 -40 -52 Z" />
+      </g>
+      <g class="w" stroke="#a3ff5e" stroke-width="4">
+        <path d="M1120 120 l40 52 -40 52 -40 -52 Z M1080 172 h80" />
+      </g>
+    </svg>
+  </body>
+</html>

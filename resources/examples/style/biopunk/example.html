@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pulse pods</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #07130d; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <radialGradient id="pod" cx="50%" cy="42%" r="60%">
+          <stop offset="0%" stop-color="#b6ffd0" />
+          <stop offset="45%" stop-color="#2fae6b" />
+          <stop offset="100%" stop-color="#0b3a24" />
+        </radialGradient>
+        <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="10" />
+        </filter>
+      </defs>
+      <rect width="1280" height="720" fill="#07130d" />
+      <g id="tendrils" fill="none" stroke="#1f7a4d" stroke-width="14">
+        <path id="t0" d="M120 620 Q300 480 380 360" />
+        <path id="t1" d="M1160 620 Q980 470 900 340" />
+        <path id="t2" d="M640 700 Q640 560 640 440" />
+      </g>
+      <g id="veins" fill="none" stroke="#c8ff5e" stroke-width="5" opacity="0.9">
+        <path d="M120 620 Q300 480 380 360" />
+        <path d="M1160 620 Q980 470 900 340" />
+        <path d="M640 700 Q640 560 640 440" />
+      </g>
+      <g>
+        <ellipse id="p0" cx="380" cy="330" rx="130" ry="110" fill="url(#pod)" />
+        <ellipse id="p1" cx="900" cy="310" rx="140" ry="115" fill="url(#pod)" />
+        <ellipse id="p2" cx="640" cy="400" rx="110" ry="130" fill="url(#pod)" />
+      </g>
+      <g id="glow" fill="#c8ff5e" filter="url(#soft)">
+        <circle cx="380" cy="330" r="26" />
+        <circle cx="900" cy="310" r="28" />
+        <circle cx="640" cy="400" r="24" />
+      </g>
+      <g fill="#eaffd0">
+        <circle cx="350" cy="300" r="10" /><circle cx="410" cy="290" r="7" />
+        <circle cx="870" cy="280" r="10" /><circle cx="930" cy="340" r="7" />
+        <circle cx="615" cy="360" r="9" /><circle cx="665" cy="430" r="7" />
+      </g>
+    </svg>
+    <script>
+      const SECONDS = 3;
+      const pods = [document.getElementById('p0'), document.getElementById('p1'), document.getElementById('p2')];
+      const centers = [[380, 330], [900, 310], [640, 400]];
+      const veins = document.getElementById('veins');
+      const glow = document.getElementById('glow');
+
+      window.seekExample = (t) => {
+        const phase = (t % SECONDS) / SECONDS;
+        const a = phase * Math.PI * 2;
+        pods.forEach((p, i) => {
+          const s = 1 + 0.13 * Math.sin(a + (i * Math.PI * 2) / 3);
+          p.setAttribute('transform', `translate(${centers[i][0]} ${centers[i][1]}) scale(${s.toFixed(3)}) translate(${-centers[i][0]} ${-centers[i][1]})`);
+        });
+        veins.setAttribute('opacity', String(0.55 + 0.4 * Math.sin(a * 2)));
+        glow.setAttribute('opacity', String(0.5 + 0.5 * Math.sin(a * 2 + 1)));
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

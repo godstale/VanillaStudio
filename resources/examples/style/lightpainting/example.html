@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Light trails</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #020204; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="9" />
+        </filter>
+      </defs>
+      <rect width="1280" height="720" fill="#020204" />
+      <line x1="0" y1="620" x2="1280" y2="620" stroke="#1c1c26" stroke-width="4" />
+      <ellipse cx="640" cy="620" rx="200" ry="16" fill="#11131f" />
+      <g fill="none" stroke-linecap="round">
+        <path id="rib0b" stroke="#ff5ad2" stroke-width="20" opacity="0.45" filter="url(#soft)" />
+        <path id="rib1b" stroke="#5af2ff" stroke-width="20" opacity="0.45" filter="url(#soft)" />
+        <path id="rib0" stroke="#ff8ade" stroke-width="7" />
+        <path id="rib1" stroke="#9df6ff" stroke-width="7" />
+      </g>
+      <circle id="head0" r="14" fill="#ffe3f4" />
+      <circle id="head1" r="12" fill="#e3fbff" />
+    </svg>
+    <script>
+      const SECONDS = 4;
+      const N = 220;
+      const pts = [];
+      for (let k = 0; k < N; k += 1) {
+        const f = k / (N - 1);
+        const a = f * Math.PI * 4.2 + 0.6;
+        const r = 40 + f * 260;
+        pts.push([640 + r * Math.cos(a), 400 + r * 0.42 * Math.sin(a) - f * 130]);
+      }
+      const dOf = (n) => {
+        let d = `M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+        for (let k = 1; k < n; k += 1) d += `L${pts[k][0].toFixed(1)} ${pts[k][1].toFixed(1)}`;
+        return d;
+      };
+      const rib0 = document.getElementById('rib0');
+      const rib0b = document.getElementById('rib0b');
+      const rib1 = document.getElementById('rib1');
+      const rib1b = document.getElementById('rib1b');
+      const head0 = document.getElementById('head0');
+      const head1 = document.getElementById('head1');
+
+      window.seekExample = (t) => {
+        const phase = (t % SECONDS) / SECONDS;
+        const n = 3 + Math.floor(phase * (N - 3));
+        const d = dOf(n);
+        rib0.setAttribute('d', d);
+        rib0b.setAttribute('d', d);
+        head0.setAttribute('cx', String(pts[n - 1][0]));
+        head0.setAttribute('cy', String(pts[n - 1][1]));
+        const m = 3 + Math.floor(((phase + 0.5) % 1) * (N - 3));
+        const d2 = dOf(m);
+        rib1.setAttribute('d', d2);
+        rib1b.setAttribute('d', d2);
+        head1.setAttribute('cx', String(pts[m - 1][0]));
+        head1.setAttribute('cy', String(pts[m - 1][1]));
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

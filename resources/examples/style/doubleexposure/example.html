@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Double image</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #e8e2d4; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffd97a" />
+          <stop offset="55%" stop-color="#ff9d5c" />
+          <stop offset="100%" stop-color="#7a4a8f" />
+        </linearGradient>
+        <clipPath id="head">
+          <path d="M640 90 C500 90 430 200 430 320 C430 400 460 450 500 490 L470 720 L810 720 L780 490 C820 450 850 400 850 320 C850 200 780 90 640 90 Z" />
+        </clipPath>
+      </defs>
+      <rect width="1280" height="720" fill="#e8e2d4" />
+      <ellipse cx="640" cy="680" rx="330" ry="30" fill="#000" opacity="0.15" />
+      <!-- silhouette base -->
+      <path d="M640 90 C500 90 430 200 430 320 C430 400 460 450 500 490 L470 720 L810 720 L780 490 C820 450 850 400 850 320 C850 200 780 90 640 90 Z"
+        fill="#20242e" />
+      <!-- second image clipped inside -->
+      <g clip-path="url(#head)">
+        <rect x="400" y="60" width="480" height="690" fill="url(#sky)" />
+        <circle cx="640" cy="300" r="70" fill="#fff3c4" />
+        <path d="M400 480 L540 340 L660 480 L740 400 L880 520 L880 750 L400 750 Z" fill="#3d2b56" />
+        <path d="M400 560 L520 460 L640 560 L760 470 L880 580 L880 750 L400 750 Z" fill="#241a38" />
+        <rect x="400" y="600" width="480" height="150" fill="#171224" />
+        <g stroke="#241a38" stroke-width="8" fill="none">
+          <path d="M500 200 q15 -15 30 0 M545 230 q15 -15 30 0 M700 180 q15 -15 30 0" />
+        </g>
+        <g fill="#fff3c4">
+          <circle cx="520" cy="540" r="10" /><circle cx="590" cy="500" r="7" /><circle cx="700" cy="540" r="9" />
+        </g>
+      </g>
+      <!-- keep the outer edge readable -->
+      <path d="M640 90 C500 90 430 200 430 320 C430 400 460 450 500 490 L470 720 L810 720 L780 490 C820 450 850 400 850 320 C850 200 780 90 640 90 Z"
+        fill="none" stroke="#20242e" stroke-width="14" />
+    </svg>
+  </body>
+</html>
