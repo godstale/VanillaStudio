@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Claymation</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+      body { background: linear-gradient(180deg, #cfc6b8 0%, #bfb5a4 60%, #8f8471 60.5%, #6f6553 100%); }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720" width="1280" height="720">
+      <defs>
+        <filter id="clay" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="4" seed="7" result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="26" />
+        </filter>
+        <filter id="clay2" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" seed="21" result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="18" />
+        </filter>
+      </defs>
+      <ellipse cx="640" cy="610" rx="330" ry="40" fill="#000" opacity="0.25" />
+      <!-- lumpy clay body -->
+      <g filter="url(#clay)">
+        <path d="M 640 180 C 780 180 860 300 850 430 C 842 540 740 600 640 600 C 540 600 438 540 430 430 C 422 300 500 180 640 180 Z" fill="#c96f4a" />
+      </g>
+      <g filter="url(#clay2)">
+        <ellipse cx="640" cy="470" rx="120" ry="80" fill="#e0a370" />
+      </g>
+      <!-- fingerprint press marks -->
+      <g fill="none" stroke="#a34f30" stroke-width="5" opacity="0.55">
+        <path d="M 520 330 q 30 -24 62 -18" />
+        <path d="M 512 352 q 38 -30 78 -22" />
+        <path d="M 700 520 q 34 -12 60 8" />
+        <path d="M 694 542 q 40 -14 72 10" />
+      </g>
+      <!-- uneven clay eyes -->
+      <g filter="url(#clay2)">
+        <ellipse cx="575" cy="340" rx="46" ry="52" fill="#f4efe4" />
+        <ellipse cx="708" cy="346" rx="42" ry="48" fill="#f4efe4" />
+      </g>
+      <circle cx="582" cy="348" r="17" fill="#2b2320" />
+      <circle cx="700" cy="352" r="15" fill="#2b2320" />
+      <circle cx="587" cy="342" r="5" fill="#fff" />
+      <circle cx="705" cy="346" r="5" fill="#fff" />
+      <path d="M 610 430 Q 642 448 676 430" fill="none" stroke="#7a3a22" stroke-width="9" stroke-linecap="round" />
+      <!-- clay props: snail and ball -->
+      <g filter="url(#clay2)">
+        <ellipse cx="950" cy="560" rx="90" ry="58" fill="#5f8f7b" />
+        <circle cx="950" cy="510" r="58" fill="#7fb298" />
+        <circle cx="950" cy="510" r="30" fill="#4c7263" />
+        <circle cx="928" cy="556" r="10" fill="#2b2320" />
+      </g>
+      <g filter="url(#clay)">
+        <ellipse cx="330" cy="575" rx="70" ry="52" fill="#7a9cc4" />
+        <ellipse cx="330" cy="560" rx="40" ry="28" fill="#9db9d8" />
+      </g>
+    </svg>
+  </body>
+</html>

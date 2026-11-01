@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0e0f13;color:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#111"/>
+<g id="rp" text-anchor="middle" font-weight="900" font-size="110"><text x="640" y="180">KEEP GOING</text><text x="640" y="300">KEEP GOING</text><text x="640" y="420">KEEP GOING</text><text x="640" y="540">KEEP GOING</text><text x="640" y="660">KEEP GOING</text></g></svg>
+<script>
+const SECONDS = 3;
+window.seekExample = (t) => {
+const phase = (t % SECONDS) / SECONDS;
+const rows=document.getElementById('rp').children;
+for(let i=0;i<rows.length;i++){const w=0.5+0.5*Math.sin(phase*Math.PI*2-i*0.9);rows[i].setAttribute('opacity',0.25+0.75*w);rows[i].setAttribute('fill',w>0.6?'#f5b942':'#f4f1ea');}
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

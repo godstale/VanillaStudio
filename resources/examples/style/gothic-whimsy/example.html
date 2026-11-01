@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>gothic whimsy</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden}
+      svg{width:100%;height:100%;display:block}
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <linearGradient id="gsky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#1a1b2e"/><stop offset="0.7" stop-color="#4a4a6a"/><stop offset="1" stop-color="#8a8aa8"/>
+        </linearGradient>
+      </defs>
+      <rect width="1280" height="720" fill="url(#gsky)"/>
+      <circle cx="950" cy="150" r="90" fill="#e8e4d0"/>
+      <circle cx="920" cy="130" r="80" fill="#1a1b2e" opacity="0.25"/>
+      <g id="bstars" fill="#e8e4d0"></g>
+      <path d="M0 560 Q200 480 320 540 Q440 600 640 540 Q840 480 960 550 Q1100 610 1280 540 L1280 720 L0 720Z" fill="#3a3a52"/>
+      <path d="M0 620 Q260 560 480 610 Q700 660 940 600 Q1120 565 1280 610 L1280 720 L0 720Z" fill="#26263a"/>
+      <path d="M180 560 Q200 440 300 430 Q400 420 390 520" fill="none" stroke="#26263a" stroke-width="10"/>
+      <path d="M220 500 Q260 440 340 445" fill="none" stroke="#26263a" stroke-width="8"/>
+      <g stroke="#d8d4c0" stroke-width="7" stroke-linecap="round" fill="none">
+        <line x1="700" y1="480" x2="700" y2="400"/>
+        <line x1="700" y1="430" x2="660" y2="450"/>
+        <line x1="700" y1="430" x2="740" y2="450"/>
+        <circle cx="700" cy="380" r="22"/>
+        <path d="M688 380 l-8 -26 M712 380 l8 -26" />
+        <line x1="830" y1="500" x2="830" y2="440"/>
+        <circle cx="830" cy="424" r="15"/>
+        <line x1="830" y1="462" x2="808" y2="476"/>
+        <line x1="830" y1="462" x2="852" y2="476"/>
+      </g>
+      <polygon points="700,352 694,336 706,336" fill="#d8d4c0"/>
+      <g fill="#26263a">
+        <rect x="1050" y="380" width="90" height="170"/>
+        <polygon points="1040,380 1095,320 1150,380"/>
+        <rect x="1078" y="430" width="34" height="60" fill="#e8c96a"/>
+      </g>
+      <path d="M480 200 q30 -40 60 0 q30 40 60 0" fill="none" stroke="#26263a" stroke-width="9"/>
+      <path d="M200 150 q20 -30 45 0 q25 30 45 0" fill="none" stroke="#26263a" stroke-width="8"/>
+    </svg>
+    <script>
+      const seed = (i) => { const x = Math.sin(i * 211.7 + 7.3) * 12983.4281; return x - Math.floor(x); };
+      let s = '';
+      for (let i = 0; i < 70; i += 1) s += `<circle cx="${(seed(i) * 1280).toFixed(0)}" cy="${(seed(i + 200) * 330).toFixed(0)}" r="${(0.8 + seed(i + 400) * 1.6).toFixed(1)}" opacity="${(0.3 + seed(i + 600) * 0.6).toFixed(2)}"/>`;
+      document.getElementById('bstars').innerHTML = s;
+    </script>
+  </body>
+</html>

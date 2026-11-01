@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bobblehead</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+      body { background: linear-gradient(180deg, #9fc7e8 0%, #d7e9f5 55%, #5a6672 55.5%, #333a42 100%); font-family: 'Segoe UI', system-ui, sans-serif; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720" width="1280" height="720">
+      <defs>
+        <radialGradient id="bhead" cx="40%" cy="30%" r="90%">
+          <stop offset="0%" stop-color="#ffe9c9" />
+          <stop offset="55%" stop-color="#f2bf8b" />
+          <stop offset="100%" stop-color="#c98a52" />
+        </radialGradient>
+      </defs>
+      <rect x="0" y="560" width="1280" height="160" fill="#2c333b" />
+      <rect x="0" y="548" width="1280" height="18" fill="#4a545e" />
+      <!-- body fixed on dashboard -->
+      <polygon points="560,560 720,560 690,430 590,430" fill="#3f6d8e" stroke="#24404f" stroke-width="6" />
+      <rect x="596" y="452" width="88" height="40" rx="6" fill="#f2e3c8" />
+      <!-- spring neck -->
+      <polyline id="spring" points="640,430 622,412 658,394 622,376 658,358 640,344" fill="none" stroke="#8b8f98" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" />
+      <!-- nodding head group, pivot near neck -->
+      <g id="head">
+        <circle cx="640" cy="230" r="115" fill="url(#bhead)" stroke="#8a5a2b" stroke-width="6" />
+        <ellipse cx="640" cy="150" rx="115" ry="34" fill="#5b3a22" />
+        <rect x="525" y="128" width="230" height="30" rx="12" fill="#6e4a2c" />
+        <circle cx="598" cy="238" r="15" fill="#2b2320" />
+        <circle cx="682" cy="238" r="15" fill="#2b2320" />
+        <path d="M 610 288 Q 640 306 670 288" fill="none" stroke="#7a4a2b" stroke-width="8" stroke-linecap="round" />
+        <ellipse cx="572" cy="282" rx="18" ry="11" fill="#e8937c" opacity="0.8" />
+        <ellipse cx="708" cy="282" rx="18" ry="11" fill="#e8937c" opacity="0.8" />
+      </g>
+    </svg>
+    <script>
+      const SECONDS = 4;
+
+      // Head nods as a damped sine of t: one tap at t=0 rings down over the loop.
+      window.seekExample = (t) => {
+        const ang = 16 * Math.exp(-0.5 * t) * Math.sin((t * Math.PI * 3) / 2);
+        const bob = 10 * Math.exp(-0.5 * t) * Math.sin((t * Math.PI * 3) / 2 + 0.9);
+        document.getElementById('head').setAttribute('transform', `rotate(${ang} 640 344) translate(0 ${bob})`);
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

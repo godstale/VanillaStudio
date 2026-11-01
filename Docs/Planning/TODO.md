@@ -20,14 +20,14 @@
 항목별 목록은 `Examples-Backlog.md`, 제작 규칙과 시작 프롬프트는 `resources/examples/README.md`를 따른다. 배치별 소유 경로는 `resources/examples/<kind>/<id>/`뿐이다. 배치 완료 판정: `pnpm examples check` 통과, 전 항목 `preview.webp` 육안 확인, 건너뛴 항목 보고. 항목 수는 473개, 샘플 4개를 포함한다.
 
 - [x] TE.0 [단독] 예제 구조·`pnpm examples`·카드 표시·샘플 4종·백로그 — 대상: `scripts/examples.mjs`, `src/lib/examples/`, `resources/examples/` · (D-047)
-- [ ] TE.1 [병렬 · 1순위] 프로젝트 템플릿 E25(7개 남음) — 다른 배치의 시각 기준이 되므로 먼저 끝낸다
-- [ ] TE.2 [병렬 · 1순위] 스타일 E01~E24(198개 남음) — family별 배치, 동시 실행 가능
-- [ ] TE.3 [병렬 · 2순위] 구성 기법 E32~E47(181개, 미리보기 없음 161개) — 코드로 시연이 어려운 용어는 건너뛰고 보고
-- [ ] TE.4 [병렬 · 2순위] 팔레트 E48~E50(31개 남음) — `palette/blush-ledger` 레이아웃을 재사용해 색만 교체
-- [ ] TE.5 [병렬 · 3순위] 신 가이드 E26~E27(15개), 세부 프리셋 E28~E29(15개), 레시피 E30~E31(22개) — 외부 이미지를 오프라인 예제로 교체
-- [ ] TE.6 [단독 · 배치 병합마다] 병합 담당: `pnpm examples check`·`pnpm examples backlog` 실행 후 백로그 커밋, 전체 완료 시 `pnpm examples status` 기록
-- [ ] TE.7 [단독 · 마무리] 에이전트 참조 제공 — `example.html`을 워크스페이스나 CLI로 전달할지 결정(D-047 범위 밖) · 선행: TE.2
-- [ ] TE.8 [사람 확인] `pnpm tauri dev`에서 카드 호버 재생·확대 보기·소스 보기, 전체 완료 후 번들 크기 확인
+- [x] TE.1 [병렬 · 1순위] 프로젝트 템플릿 E25(7개 남음) — 다른 배치의 시각 기준이 되므로 먼저 끝낸다 — 완료: `feat/examples-styles`에 7종 추가, `pnpm examples check` 통과
+- [x] TE.2 [병렬 · 1순위] 스타일 E01~E24(198개 남음) — family별 배치, 동시 실행 가능 — 완료: style 200/200, `pnpm examples check` 통과
+- [x] TE.3 [병렬 · 2순위] 구성 기법 E32~E47(181개, 미리보기 없음 161개) — 코드로 시연이 어려운 용어는 건너뛰고 보고 — 완료: 176종 추가, 접근성 규약 5종(keyboard-nav·reduced-motion·alt-text·semantic-landmarks·aria-live)은 시연 불가로 건너뜀, `pnpm examples check` 통과
+- [x] TE.4 [병렬 · 2순위] 팔레트 E48~E50(31개 남음) — `palette/blush-ledger` 레이아웃을 재사용해 색만 교체 — 완료: 31종 추가, `pnpm examples check` 통과
+- [x] TE.5 [병렬 · 3순위] 신 가이드 E26~E27(15개), 세부 프리셋 E28~E29(15개), 레시피 E30~E31(22개) — 외부 이미지를 오프라인 예제로 교체 — 완료: 52종 추가, `pnpm examples check` 통과
+- [x] TE.6 [단독 · 배치 병합마다] 병합 담당: `pnpm examples check`·`pnpm examples backlog` 실행 후 백로그 커밋, 전체 완료 시 `pnpm examples status` 기록 — 완료: 단일 브랜치(`feat/examples-styles`)에서 전 배치 제작, `check` 통과(468/473, 5종 시연 불가 스킵), `backlog` 최신, status: style 200/200·template 8/8·palette 32/32·guide 15/15·preset 15/15·recipe 22/22·technique 176/181(미리보기 없음 5)
+- [x] TE.7 [단독 · 마무리] 에이전트 참조 제공 — `example.html`을 워크스페이스나 CLI로 전달할지 결정(D-047 범위 밖) · 선행: TE.2 — 완료: D-048로 "워크스페이스 복사" 채택(`references/examples/<kind>-<id>.html`, 읽기 전용 참조, 프롬프트에는 경로만). 구현은 E 범위 밖 후속 항목
+- [x] TE.8 [사람 확인] `pnpm tauri dev`에서 카드 호버 재생·확대 보기·소스 보기, 전체 완료 후 번들 크기 확인 — 완료: 자동 확인분(`pnpm build` 성공, dist 18MB 중 예제 기여분 약 6.2MB) + 웹 프록시(카드·확대·소스 보기) + 사람 확인(카드 호버 재생)
 
 ---
 

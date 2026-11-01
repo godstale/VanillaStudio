@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Three inks bloom</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #efe6d0; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <rect x="0" y="0" width="1280" height="720" fill="#efe6d0" />
+      <g opacity="0.85">
+        <g transform="translate(-16,10)">
+          <path d="M640 120 C600 180 580 230 600 280 L560 250 L540 300 L590 310 L560 360 L620 350 L640 420 L660 350 L720 360 L690 310 L740 300 L720 250 L680 280 C700 230 680 180 640 120 Z" fill="#d63384" />
+          <rect x="628" y="420" width="24" height="180" fill="#d63384" />
+          <path d="M628 500 C560 480 510 490 480 530 C540 540 600 540 628 520 Z" fill="#d63384" />
+        </g>
+        <g transform="translate(14,-10)">
+          <path d="M640 120 C600 180 580 230 600 280 L560 250 L540 300 L590 310 L560 360 L620 350 L640 420 L660 350 L720 360 L690 310 L740 300 L720 250 L680 280 C700 230 680 180 640 120 Z" fill="#0e9db5" />
+          <rect x="628" y="420" width="24" height="180" fill="#0e9db5" />
+          <path d="M628 500 C560 480 510 490 480 530 C540 540 600 540 628 520 Z" fill="#0e9db5" />
+        </g>
+        <g>
+          <path d="M640 120 C600 180 580 230 600 280 L560 250 L540 300 L590 310 L560 360 L620 350 L640 420 L660 350 L720 360 L690 310 L740 300 L720 250 L680 280 C700 230 680 180 640 120 Z" fill="#f2b705" />
+          <rect x="628" y="420" width="24" height="180" fill="#f2b705" />
+          <path d="M628 500 C560 480 510 490 480 530 C540 540 600 540 628 520 Z" fill="#f2b705" />
+          <path d="M652 500 C720 480 770 490 800 530 C740 540 680 540 652 520 Z" fill="#f2b705" />
+          <circle cx="640" cy="290" r="26" fill="#efe6d0" />
+        </g>
+      </g>
+      <rect x="180" y="640" width="920" height="10" fill="#1d1a15" opacity="0.3" />
+    </svg>
+  </body>
+</html>

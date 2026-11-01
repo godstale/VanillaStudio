@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Console</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0d1512;color:#eef4ec;font-family:'Segoe UI',system-ui,sans-serif}
+canvas{position:absolute;left:56px;top:56px;width:740px;height:608px;border-radius:20px;background:#122019}
+.dock{position:absolute;right:56px;top:120px;width:340px;border-radius:20px;background:#16261d;border:1px solid #274434;padding:28px;box-sizing:border-box}
+.dock h2{margin:0 0 14px;font-size:24px;letter-spacing:.12em}
+.presets{display:flex;gap:10px;margin-bottom:22px}
+.presets b{flex:1;text-align:center;padding:10px 0;border-radius:10px;background:#24402f;font-size:18px}
+.presets b.on{background:#7ee787;color:#0d1512}
+.slider{margin:0 0 18px;font-size:18px;color:#9db8a8}
+.slider .track{height:12px;border-radius:8px;background:#24402f;margin-top:8px;position:relative}
+.slider .track b{position:absolute;top:0;bottom:0;left:0;border-radius:8px;background:#7ee787}
+.slider .track b::after{content:'';position:absolute;top:-6px;right:-12px;width:24px;height:24px;border-radius:50%;background:#fff}
+.read{margin-top:20px;font-family:Consolas,monospace;font-size:26px;color:#7ee787}
+svg.hud{position:absolute;inset:0;width:1280px;height:720px;pointer-events:none}
+</style>
+</head>
+<body>
+<canvas id="cv" width="740" height="608"></canvas>
+<div class="dock" id="dock">
+<h2>CONTROL</h2>
+<div class="presets" id="pr"><b class="on">CALM</b><b>WILD</b><b>DEEP</b></div>
+<div class="slider">SPEED<div class="track"><b id="f0"></b></div></div>
+<div class="slider">GRAIN<div class="track"><b id="f1"></b></div></div>
+<div class="slider">GLOW<div class="track"><b id="f2"></b></div></div>
+<div class="read" id="num">042 / 128</div>
+</div>
+<svg class="hud" viewBox="0 0 1280 720"><path d="M24 64V24h40M1216 24h40v40M24 656v40h40M1256 656v40h-40" fill="none" stroke="#7ee787" stroke-width="3" opacity=".6"/></svg>
+<script>
+const SECONDS=4;
+const cv=document.getElementById('cv');
+const ctx=cv.getContext('2d');
+const fills=[document.getElementById('f0'),document.getElementById('f1'),document.getElementById('f2')];
+const tabs=[...document.querySelectorAll('#pr b')];
+const num=document.getElementById('num');
+window.seekExample=(t)=>{
+const p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+const a=p*Math.PI*2;
+ctx.fillStyle='#122019';
+ctx.fillRect(0,0,740,608);
+ctx.strokeStyle='rgba(126,231,135,.25)';
+ctx.lineWidth=1;
+for(let y=60;y<600;y+=52){ctx.beginPath();ctx.moveTo(30,y);ctx.lineTo(710,y);ctx.stroke();}
+const sp=[.5,1.2,2][Math.floor(p*3)%3];
+ctx.lineWidth=5;
+ctx.strokeStyle='#7ee787';
+ctx.shadowColor='#7ee787';
+ctx.shadowBlur=14;
+ctx.beginPath();
+for(let x=30;x<=710;x+=4){
+const y=304+130*Math.sin(x*.02*sp*2+a*2)+40*Math.sin(x*.05*sp+a*3);
+if(x===30)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+}
+ctx.stroke();
+ctx.shadowBlur=0;
+const vals=[.5+.3*Math.sin(a),.4+.3*Math.sin(a*1.3+1),.7+.25*Math.sin(a*.7+2)];
+fills.forEach((f,i)=>{
+f.style.width=(vals[i]*100)+'%';
+});
+tabs.forEach((el,i)=>el.classList.toggle('on',i===Math.floor(p*3)%3));
+num.textContent=String(20+Math.floor(40*vals[0])).padStart(3,'0')+' / '+String(100+Math.floor(56*vals[2]));
+};
+if(!navigator.webdriver){const loop=(ms)=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

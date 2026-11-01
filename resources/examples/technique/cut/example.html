@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cut</title>
+    <style>
+      html, body {
+        margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #10141C;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      .scene { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; }
+      #s1 { background: #10141C; }
+      #s2 { background: #E9E4D6; }
+      #s3 { background: #1E3320; }
+      .shape { width: 300px; height: 300px; }
+      #s1 .shape { border-radius: 50%; background: linear-gradient(135deg, #FFB347, #FF5A5F); }
+      #s2 .shape { border-radius: 40px; background: linear-gradient(135deg, #2456D6, #7AA2F7); }
+      #s3 .shape {
+        border-radius: 0; background: linear-gradient(135deg, #2E9E5B, #9BD6B4);
+        clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scene" id="s1"><div class="shape"></div></div>
+    <div class="scene" id="s2"><div class="shape"></div></div>
+    <div class="scene" id="s3"><div class="shape"></div></div>
+    <svg width="0" height="0" viewBox="0 0 10 10"></svg>
+    <script>
+      const SECONDS = 3;
+      const scenes = [
+        document.getElementById('s1'),
+        document.getElementById('s2'),
+        document.getElementById('s3'),
+      ];
+
+      window.seekExample = (t) => {
+        const phase = (t % SECONDS) / SECONDS;
+        const active = Math.min(2, Math.floor(phase * 3));
+        scenes.forEach((s, i) => {
+          s.style.opacity = i === active ? 1 : 0;
+        });
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

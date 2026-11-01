@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Downhill ride</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#9ec7e8;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs><filter id="ab" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3"/></filter></defs>
+<rect width="1280" height="720" fill="#9ec7e8"/>
+<g id="s">
+<rect x="0" y="0" width="1280" height="240" fill="#9ec7e8"/>
+<polygon points="520,240 760,240 640,120" fill="#7a8ba0"/>
+<polygon points="0,240 520,240 420,140 0,180" fill="#5c6e52"/>
+<polygon points="760,240 1280,240 1280,180 860,140" fill="#5c6e52"/>
+<g id="trees"></g>
+<polygon points="470,720 810,720 700,240 580,240" fill="#8a6a45"/>
+<polygon points="600,720 680,720 650,240 630,240" fill="#6e5233"/>
+<g id="dash"></g>
+</g>
+<g id="sl"></g>
+<path d="M180 720 Q640 620 1100 720 L1100 660 Q640 560 180 660 Z" fill="#1c1e24"/>
+<rect x="590" y="560" width="100" height="60" rx="10" fill="#2c2f36"/>
+<rect x="604" y="572" width="12" height="20" fill="#7ae08a"/>
+<rect x="622" y="572" width="12" height="34" fill="#7ae08a"/>
+<rect x="640" y="572" width="12" height="26" fill="#7ae08a"/>
+</svg>
+<script>
+const H=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+const SECONDS=3;
+let tr='';for(let i=0;i<12;i++){const k=i/11,edge=i%2?1:-1;
+const bx=edge>0?760+k*430:520-k*430,wdt=70-k*52;
+tr+='<polygon points="'+(bx-wdt/2).toFixed(0)+',560 '+bx.toFixed(0)+','+(200+k*60).toFixed(0)+' '+(bx+wdt/2).toFixed(0)+',560" fill="#4a3826"/>';
+tr+='<ellipse cx="'+bx.toFixed(0)+'" cy="'+(180+k*70).toFixed(0)+'" rx="'+(90-k*40).toFixed(0)+'" ry="'+(60-k*25).toFixed(0)+'" fill="#2e5a26"/>';}
+document.getElementById('trees').innerHTML=tr;
+let d='';for(let i=0;i<6;i++){d+='<rect id="g'+i+'" x="624" y="'+(300+i*70)+'" width="32" height="26" rx="4" fill="#f4ead0"/>';}
+document.getElementById('dash').innerHTML=d;
+let l='';for(let i=0;i<14;i++){const y=(60+H(i+600)*600).toFixed(0),side=i%2?1180:100;
+l+='<line id="l'+i+'" x1="'+side+'" y1="'+y+'" x2="'+(side+(side>640?-160:160))+'" y2="'+y+'" stroke="#fff" stroke-width="5" stroke-linecap="round"/>';}
+document.getElementById('sl').innerHTML=l;
+const s=document.getElementById('s');
+window.seekExample=(t)=>{
+s.setAttribute('transform','translate('+(16*Math.sin(t*37)+8*Math.sin(t*23)).toFixed(1)+' '+(10*Math.sin(t*41)).toFixed(1)+') rotate('+(1.2*Math.sin(t*29)).toFixed(2)+' 640 360)');
+for(let i=0;i<6;i++){document.getElementById('g'+i).setAttribute('y',(300+(((i*70+t*420)%460))).toFixed(1));}
+for(let i=0;i<14;i++){document.getElementById('l'+i).setAttribute('opacity',(0.2+0.55*Math.abs(Math.sin(t*9+i*1.1))).toFixed(3));}};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}window.seekExample(0);
+</script>
+</body>
+</html>

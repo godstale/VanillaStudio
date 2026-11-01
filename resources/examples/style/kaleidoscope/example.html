@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Kaleidoscope</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: #0a0616;
+      }
+      canvas {
+        width: 1280px;
+        height: 720px;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="c" width="1280" height="720"></canvas>
+    <script>
+      const SECONDS = 4;
+      const W = 288;
+      const H = 162;
+      const SEG = 12;
+      const STEP = (Math.PI * 2) / SEG;
+      const cv = document.getElementById('c');
+      const ctx = cv.getContext('2d');
+      const buf = document.createElement('canvas');
+      buf.width = W;
+      buf.height = H;
+      const btx = buf.getContext('2d');
+      const img = btx.createImageData(W, H);
+      const h2r = (h, s, l) => {
+        h = (((h % 360) + 360) % 360) / 360;
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+        const ch = (tt) => {
+          if (tt < 0) tt += 1;
+          if (tt > 1) tt -= 1;
+          if (tt < 1 / 6) return p + (q - p) * 6 * tt;
+          if (tt < 1 / 2) return q;
+          if (tt < 2 / 3) return p + (q - p) * (2 / 3 - tt) * 6;
+          return p;
+        };
+        return [ch(h + 1 / 3) * 255, ch(h) * 255, ch(h - 1 / 3) * 255];
+      };
+
+      // Pure function of t: one wedge folded into twelve mirrored segments.
+      window.seekExample = (t) => {
+        const ph = ((t % SECONDS) / SECONDS) * Math.PI * 2;
+        const d = img.data;
+        let k = 0;
+        for (let j = 0; j < H; j += 1) {
+          const dy = (j / H - 0.5) * 2;
+          for (let i = 0; i < W; i += 1) {
+            const dx = (i / W - 0.5) * 2 * 1.78;
+            const r = Math.sqrt(dx * dx + dy * dy) * 2.2;
+            let a = Math.atan2(dy, dx) + ph * 0.3;
+            let s = ((a % STEP) + STEP) % STEP;
+            if (s > STEP / 2) s = STEP - s;
+            const u = s * 3.0;
+            const p1 = Math.sin(u * 4 + r * 20 - ph * 1.6);
+            const p2 = Math.sin(r * 26 + ph * 1.2 + u * 2);
+            const v = (p1 + p2) / 2;
+            const col = h2r(r * 160 + u * 120 + ph * 40, 0.9, 0.3 + 0.28 * ((v + 1) / 2));
+            d[k] = col[0];
+            d[k + 1] = col[1];
+            d[k + 2] = col[2];
+            d[k + 3] = 255;
+            k += 4;
+          }
+        }
+        btx.putImageData(img, 0, 0);
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(buf, 0, 0, 1280, 720);
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

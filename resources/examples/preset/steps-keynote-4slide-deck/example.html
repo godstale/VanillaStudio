@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Steps</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#10141c;color:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+.slide{position:absolute;inset:0 0 110px;display:grid;place-content:center;justify-items:center;gap:16px;text-align:center;opacity:0}
+.k{font-size:22px;letter-spacing:.26em;color:#ffb347}
+.slide h1{margin:0;font-size:86px;letter-spacing:-.02em}
+.slide p{margin:0;font-size:28px;color:#a9b1c2}
+.pair{display:flex;gap:24px}
+.pair div{width:300px;border-radius:18px;background:#1b2334;border:1px solid #2b3a52;padding:26px;font-size:26px}
+.pair div.hi{border-color:#ffb347}
+.bars{display:flex;align-items:flex-end;gap:18px;height:170px}
+.bars i{width:90px;border-radius:10px;background:#ffb347}
+.cta{padding:18px 54px;border-radius:999px;background:#ffb347;color:#10141c;font-size:34px;font-weight:800}
+nav{position:absolute;left:90px;right:90px;bottom:36px;display:flex;gap:10px}
+nav div{flex:1;height:44px;border-top:4px solid #333b4d;color:#6c7588;font-size:20px;line-height:44px;text-align:center}
+nav div.on{border-color:#ffb347;color:#f4f1ea}
+svg.hud{position:absolute;inset:0;width:1280px;height:720px;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="slide"><div class="k">01 / THESIS</div><h1>One shift, whole pipeline</h1><p>A single headline states the change.</p></div>
+<div class="slide"><div class="k">02 / COMPARE</div><div class="pair"><div>Old path<br/>slow</div><div class="hi">New path<br/>fast</div></div><p>Two cards contrast the options.</p></div>
+<div class="slide"><div class="k">03 / PROOF</div><div class="bars"><i style="height:40%"></i><i style="height:75%"></i><i style="height:95%"></i></div><p>Three bars carry the numbers.</p></div>
+<div class="slide"><div class="cta">Begin now</div><p>One action closes the deck.</p></div>
+<nav id="nav"><div>THESIS</div><div>COMPARE</div><div>PROOF</div><div>CLOSE</div></nav>
+<svg class="hud" viewBox="0 0 1280 720"><path d="M24 64V24h40M1216 24h40v40" fill="none" stroke="#ffb347" stroke-width="3" opacity=".6"/></svg>
+<script>
+const SECONDS=6;
+const slides=[...document.querySelectorAll('.slide')];
+const tabs=[...document.querySelectorAll('#nav div')];
+window.seekExample=(t)=>{
+const p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+const idx=Math.min(3,Math.floor(p*4));
+slides.forEach((s,i)=>s.style.opacity=i===idx?1:0);
+tabs.forEach((el,i)=>el.classList.toggle('on',i===idx));
+};
+if(!navigator.webdriver){const loop=(ms)=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0e0f13;color:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect id="kbg" width="1280" height="720" fill="#14161c"/>
+<text id="k1" x="640" y="300" text-anchor="middle" font-size="130" font-weight="900" fill="#f4f1ea">WAKE UP</text>
+<text id="k2" x="640" y="450" text-anchor="middle" font-size="100" font-weight="900" fill="#f5b942">MOVE FAST</text>
+<text id="k3" x="640" y="580" text-anchor="middle" font-size="64" font-style="italic" font-family="Georgia,serif" fill="#9fd8ff">gently land</text></svg>
+<script>
+const SECONDS = 4;
+window.seekExample = (t) => {
+const phase = (t % SECONDS) / SECONDS;
+const ease=(x)=>x<0?0:x>1?1:x*x*(3-2*x);
+const k1=document.getElementById('k1'),k2=document.getElementById('k2'),k3=document.getElementById('k3');
+k1.setAttribute('x',-400+1040*ease(phase/0.25));k1.setAttribute('opacity',phase<0.3?1:0);
+k2.setAttribute('opacity',ease((phase-0.3)/0.15));k2.setAttribute('font-size',60+40*ease((phase-0.3)/0.15));
+k3.setAttribute('y',700-120*ease((phase-0.6)/0.2));k3.setAttribute('opacity',ease((phase-0.6)/0.2));
+document.getElementById('kbg').setAttribute('fill',phase<0.55?'#14161c':'#1e2a33');
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

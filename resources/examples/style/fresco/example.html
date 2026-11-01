@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><title>fr</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#8a7a63}
+svg{display:block;width:1280px;height:720px}
+</style></head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="2" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0.4 0 0 0 0 0.35 0 0 0 0 0.28 0 0 0 0.12 0"/><feComposite operator="over" in2="SourceGraphic"/></filter>
+</defs>
+<rect width="1280" height="720" fill="#8a7a63"/>
+<g filter="url(#grain)">
+<rect x="90" y="40" width="1100" height="640" fill="#c9b18c"/>
+<rect x="90" y="40" width="1100" height="640" fill="none" stroke="#5c4c38" stroke-width="22"/>
+<path d="M90 40 h1100 M90 680 h1100 M90 40 v640 M1190 40 v640" stroke="#5c4c38" stroke-width="22" fill="none"/>
+<!-- two muted figures -->
+<g>
+<ellipse cx="470" cy="300" rx="62" ry="76" fill="#a89a80"/>
+<path d="M380 620 Q390 420 470 370 Q550 420 560 620 Z" fill="#7d6a86"/>
+<path d="M420 620 Q425 470 470 440 Q515 470 520 620 Z" fill="#93826a"/>
+<path d="M430 420 Q470 400 510 420" stroke="#4a3f30" stroke-width="6" fill="none"/>
+</g>
+<g>
+<ellipse cx="810" cy="300" rx="62" ry="76" fill="#b09c80"/>
+<path d="M720 620 Q730 420 810 370 Q890 420 900 620 Z" fill="#96604a"/>
+<path d="M760 620 Q765 470 810 440 Q855 470 860 620 Z" fill="#93826a"/>
+<path d="M770 420 Q810 400 850 420" stroke="#4a3f30" stroke-width="6" fill="none"/>
+</g>
+<circle cx="640" cy="170" r="70" fill="#a8894f" opacity=".8"/>
+<!-- chipped areas revealing wall -->
+<ellipse cx="240" cy="520" rx="70" ry="44" fill="#6e5f4c"/>
+<ellipse cx="240" cy="520" rx="52" ry="30" fill="#57503f"/>
+<ellipse cx="1060" cy="180" rx="80" ry="50" fill="#6e5f4c"/>
+<ellipse cx="1060" cy="180" rx="60" ry="34" fill="#57503f"/>
+<ellipse cx="980" cy="580" rx="52" ry="30" fill="#6e5f4c"/>
+<!-- cracks -->
+<g id="cracks" stroke="#3f342a" stroke-width="4" fill="none" stroke-linecap="round"></g>
+</g>
+</svg>
+<script>
+(function(){
+function h(i){var x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);}
+var g=document.getElementById('cracks'),s='';
+var seeds=[[180,120],[640,80],[1100,300],[400,560],[850,420]];
+for(var k=0;k<seeds.length;k++){
+var x=seeds[k][0],y=seeds[k][1];
+s+='<path d="M'+x+' '+y;
+for(var i=0;i<7;i++){x+=(h(k*50+i)-0.5)*120;y+=(h(k*50+i+9)-0.3)*90;
+s+=' L'+x.toFixed(0)+' '+y.toFixed(0);}
+s+='"/>';
+}
+g.innerHTML=s;
+})();
+</script>
+</body>
+</html>

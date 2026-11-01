@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Signal</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0b1220;color:#d7f3ff;font-family:'Segoe UI',system-ui,sans-serif}
+canvas{position:absolute;inset:0;width:1280px;height:720px}
+.eq{position:absolute;left:64px;top:52px;font-size:32px}
+.eq b{color:#39d5f2}.eq i{color:#ffb347;font-style:normal}
+.read{position:absolute;right:64px;top:52px;font-family:Consolas,monospace;font-size:30px;color:#7ee787;text-align:right}
+svg.frame{position:absolute;inset:0;width:1280px;height:720px}
+</style>
+</head>
+<body>
+<canvas id="cv" width="1280" height="720"></canvas>
+<div class="eq"><b>v</b>(t) = <i>A</i> sin(2&#960;ft) &#183; trace <b>cyan</b></div>
+<div class="read" id="num">f 00.0<br/>A 0.00</div>
+<svg class="frame" viewBox="0 0 1280 720"><path d="M24 64V24h40M1216 24h40v40M24 656v40h40M1256 656v40h-40" fill="none" stroke="#39d5f2" stroke-width="3" opacity=".6"/></svg>
+<script>
+const SECONDS=4;
+const cv=document.getElementById('cv');
+const ctx=cv.getContext('2d');
+const num=document.getElementById('num');
+window.seekExample=(t)=>{
+const p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+const a=p*Math.PI*2;
+ctx.fillStyle='#0b1220';
+ctx.fillRect(0,0,1280,720);
+ctx.strokeStyle='rgba(120,150,180,.3)';
+ctx.lineWidth=1;
+for(let x=60;x<1220;x+=44){ctx.beginPath();ctx.moveTo(x,110);ctx.lineTo(x,660);ctx.stroke();}
+for(let y=130;y<670;y+=44){ctx.beginPath();ctx.moveTo(60,y);ctx.lineTo(1220,y);ctx.stroke();}
+const f=1+Math.floor(p*4);
+const A=60+40*Math.sin(a);
+ctx.strokeStyle='#ffb347';
+ctx.lineWidth=3;
+ctx.setLineDash([8,8]);
+ctx.beginPath();ctx.moveTo(60,385-A);ctx.lineTo(1220,385-A);ctx.stroke();
+ctx.setLineDash([]);
+ctx.strokeStyle='#39d5f2';
+ctx.lineWidth=5;
+ctx.shadowColor='#39d5f2';
+ctx.shadowBlur=14;
+ctx.beginPath();
+const upto=60+p*1160;
+for(let x=60;x<=upto;x+=4){
+const y=385+A*Math.sin((x-60)*.02*f+a);
+if(x===60)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+}
+ctx.stroke();
+ctx.shadowBlur=0;
+ctx.fillStyle='#39d5f2';
+const ex=60+p*1160;
+const ey=385+A*Math.sin((ex-60)*.02*f+a);
+ctx.beginPath();ctx.arc(ex,ey,9,0,7);ctx.fill();
+num.innerHTML='f 0'+f+'.0<br/>A '+(A/100).toFixed(2);
+};
+if(!navigator.webdriver){const loop=(ms)=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

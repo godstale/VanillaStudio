@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Stone chips</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#ece5d8;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<rect width="1280" height="720" fill="#ece5d8"/>
+<g id="chips"></g>
+<polygon points="0,0 1280,0 1280,180 0,60" fill="#ffffff" opacity="0.25"/>
+<polygon points="0,720 1280,720 1280,560 0,680" fill="#8a7f6a" opacity="0.18"/>
+</svg>
+<script>
+const H=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+const cols=['#b5542e','#5c6e5a','#3c3a38','#c9a227','#7d9bb3','#d8cfc0','#8a4a5e'];
+let s='';
+for(let i=0;i<110;i++){const cx=(H(i)*1280).toFixed(0),cy=(H(i+501)*720).toFixed(0),r=(6+H(i+502)*22).toFixed(0),n=3+(H(i+503)*4|0);
+let pts='';for(let k=0;k<n;k++){const a=k/n*6.283+H(i+504)*3,rr=r*(0.6+H(i+505+k)*0.6);
+pts+=(Number(cx)+rr*Math.cos(a)).toFixed(0)+','+(Number(cy)+rr*Math.sin(a)).toFixed(0)+' ';}
+s+='<polygon points="'+pts+'" fill="'+cols[i%7]+'" opacity="0.92"/>';}
+for(let i=0;i<160;i++){s+='<circle cx="'+(H(i+700)*1280).toFixed(0)+'" cy="'+(H(i+710)*720).toFixed(0)+'" r="'+(1+H(i+720)*2).toFixed(1)+'" fill="'+cols[(i+3)%7]+'"/>';}
+document.getElementById('chips').innerHTML=s;
+</script>
+</body>
+</html>

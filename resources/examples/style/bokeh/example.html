@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Night discs</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0b1c2c;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<linearGradient id="ng" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1c2c"/><stop offset="1" stop-color="#2a5560"/></linearGradient>
+<filter id="bk" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="9"/></filter>
+</defs>
+<rect width="1280" height="720" fill="url(#ng)"/>
+<circle cx="1020" cy="140" r="58" fill="#f4ecd8" opacity="0.9"/>
+<circle cx="1020" cy="140" r="86" fill="#f4ecd8" opacity="0.18"/>
+<g id="discs" filter="url(#bk)"></g>
+<path d="M-30 720 Q220 600 380 480 Q560 350 760 372 Q900 386 1010 330" stroke="#0a0f0a" stroke-width="30" fill="none" stroke-linecap="round"/>
+<path d="M380 480 Q460 420 470 340" stroke="#0a0f0a" stroke-width="16" fill="none" stroke-linecap="round"/>
+<g id="leaves"></g>
+</svg>
+<script>
+const H=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+const cols=['#ffd27a','#ff9d5c','#fff3d6','#ff7a6b','#ffe9a8'];
+let s='';
+for(let i=0;i<46;i++){const cx=(H(i)*1280).toFixed(0),cy=(H(i+99)*560).toFixed(0),r=(10+H(i+7)*30).toFixed(0);
+s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+cols[i%5]+'" opacity="'+(0.35+H(i+3)*0.4).toFixed(2)+'"/>';}
+document.getElementById('discs').innerHTML=s;
+let g='';
+for(let i=0;i<26;i++){const lx=(60+H(i+31)*760).toFixed(0),ly=(300+H(i+57)*380).toFixed(0),rx=(26+H(i+11)*30).toFixed(0),ry=(12+H(i+13)*12).toFixed(0),a=(H(i+5)*140-70).toFixed(0);
+g+='<ellipse cx="'+lx+'" cy="'+ly+'" rx="'+rx+'" ry="'+ry+'" fill="#0d1a10" transform="rotate('+a+' '+lx+' '+ly+')"/>';}
+document.getElementById('leaves').innerHTML=g;
+</script>
+</body>
+</html>

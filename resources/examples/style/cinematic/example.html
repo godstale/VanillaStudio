@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Wide frame</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#101c38"/><stop offset="0.55" stop-color="#7a3c4d"/><stop offset="0.8" stop-color="#e2703a"/><stop offset="1" stop-color="#f7b95c"/></linearGradient>
+<filter id="b8" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="8"/></filter>
+<filter id="b2" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2"/></filter>
+</defs>
+<rect width="1280" height="720" fill="url(#dusk)"/>
+<circle cx="640" cy="470" r="120" fill="#ffdf9e" opacity="0.5" filter="url(#b8)"/>
+<circle cx="640" cy="470" r="64" fill="#ffe9b8"/>
+<rect x="180" y="300" width="420" height="34" rx="17" fill="#2a1e33" opacity="0.75"/>
+<rect x="700" y="250" width="380" height="30" rx="15" fill="#33222f" opacity="0.7"/>
+<rect x="420" y="180" width="460" height="26" rx="13" fill="#241a2e" opacity="0.65"/>
+<path d="M0 520 L220 380 L420 520 Z" fill="#241d2e"/>
+<path d="M860 520 L1080 370 L1280 520 Z" fill="#241d2e"/>
+<path d="M0 560 L340 430 L640 560 L940 430 L1280 560 V720 H0 Z" fill="#171320"/>
+<polygon points="560,720 720,720 668,520 612,520" fill="#23232c"/>
+<polygon points="628,540 652,540 648,720 632,720" fill="#e8d98a"/>
+<rect x="606" y="586" width="68" height="30" rx="9" fill="#101014"/>
+<rect x="612" y="590" width="24" height="12" rx="3" fill="#9fd4ff" opacity="0.85"/>
+<rect x="640" y="590" width="24" height="12" rx="3" fill="#9fd4ff" opacity="0.85"/>
+<circle cx="606" cy="612" r="5" fill="#ff3b30"/>
+<circle cx="674" cy="612" r="5" fill="#ff3b30"/>
+<rect x="200" y="464" width="880" height="6" rx="3" fill="#fff" opacity="0.85" filter="url(#b2)"/>
+<circle cx="880" cy="470" r="14" fill="#ffd9ec" opacity="0.5" filter="url(#b2)"/>
+<circle cx="400" cy="470" r="9" fill="#bfe3ff" opacity="0.5" filter="url(#b2)"/>
+<rect width="1280" height="84" fill="#000"/>
+<rect y="636" width="1280" height="84" fill="#000"/>
+</svg>
+</body>
+</html>

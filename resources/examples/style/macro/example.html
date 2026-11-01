@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Close detail</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #1d2b18; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <filter id="blur6" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="16" />
+        </filter>
+        <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#8fce62" />
+          <stop offset="100%" stop-color="#2f6b2a" />
+        </linearGradient>
+        <radialGradient id="drop" cx="35%" cy="30%" r="80%">
+          <stop offset="0%" stop-color="#ffffff" />
+          <stop offset="35%" stop-color="#bfe3f2" />
+          <stop offset="100%" stop-color="#3f7d9c" />
+        </radialGradient>
+      </defs>
+      <rect width="1280" height="720" fill="#1d2b18" />
+      <!-- blurred surroundings -->
+      <g filter="url(#blur6)" opacity="0.9">
+        <ellipse cx="150" cy="120" rx="180" ry="120" fill="#3f6b35" />
+        <ellipse cx="1150" cy="620" rx="220" ry="150" fill="#3f6b35" />
+        <ellipse cx="1100" cy="100" rx="150" ry="110" fill="#577d3f" />
+        <ellipse cx="200" cy="640" rx="170" ry="120" fill="#577d3f" />
+        <circle cx="900" cy="200" r="60" fill="#cfe3b8" opacity="0.7" />
+        <circle cx="350" cy="500" r="70" fill="#cfe3b8" opacity="0.6" />
+      </g>
+      <!-- sharp leaf band -->
+      <path d="M120 620 Q560 480 1170 180 L1210 250 Q700 540 180 680 Z" fill="url(#leaf)" />
+      <line x1="160" y1="640" x2="1190" y2="215" stroke="#1e4a1e" stroke-width="10" />
+      <g stroke="#d4ecb8" stroke-width="6">
+        <line x1="400" y1="585" x2="340" y2="660" />
+        <line x1="580" y1="520" x2="530" y2="600" />
+        <line x1="760" y1="450" x2="720" y2="530" />
+        <line x1="940" y1="375" x2="910" y2="455" />
+        <line x1="480" y1="560" x2="540" y2="490" />
+        <line x1="660" y1="492" x2="720" y2="420" />
+        <line x1="840" y1="420" x2="900" y2="350" />
+      </g>
+      <!-- sharp droplets -->
+      <g>
+        <circle cx="560" cy="500" r="64" fill="url(#drop)" stroke="#eaf7ff" stroke-width="4" />
+        <circle cx="540" cy="478" r="16" fill="#ffffff" />
+        <circle cx="790" cy="415" r="46" fill="url(#drop)" stroke="#eaf7ff" stroke-width="4" />
+        <circle cx="776" cy="400" r="11" fill="#ffffff" />
+        <circle cx="950" cy="345" r="30" fill="url(#drop)" stroke="#eaf7ff" stroke-width="3" />
+        <circle cx="941" cy="336" r="8" fill="#ffffff" />
+      </g>
+    </svg>
+  </body>
+</html>

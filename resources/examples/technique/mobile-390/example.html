@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Phone 390</title>
+    <style>
+      html, body {
+        margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #14171C;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      .stage { display: grid; place-items: center; height: 100%; }
+      .phone {
+        width: 390px; height: 664px; border-radius: 52px; background: #E4DCC8;
+        padding: 16px; box-sizing: border-box;
+      }
+      .screen {
+        width: 100%; height: 100%; border-radius: 38px; background: #22262E;
+        padding: 28px 26px; box-sizing: border-box; overflow: hidden;
+      }
+      .notch { width: 130px; height: 18px; margin: 0 auto 22px; border-radius: 999px; background: #E4DCC8; }
+      .tabs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+      .tab { height: 44px; border-radius: 12px; background: #3A4150; }
+      .tab.on { background: #7AA2F7; }
+      .hero { height: 220px; border-radius: 18px; background: linear-gradient(135deg, #E07830, #C7A410); }
+      .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+      .cell { height: 110px; border-radius: 14px; background: #3A4150; }
+    </style>
+  </head>
+  <body>
+    <div class="stage">
+      <div class="phone"><div class="screen">
+        <div class="notch"></div>
+        <div class="tabs"><div class="tab on"></div><div class="tab"></div><div class="tab"></div></div>
+        <div class="hero"></div>
+        <div class="row"><div class="cell"></div><div class="cell"></div></div>
+      </div></div>
+    </div>
+  </body>
+</html>

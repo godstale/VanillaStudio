@@ -1,0 +1,7 @@
+{
+  "seconds": 3,
+  "note": {
+    "ko": "커서가 이동해 누르면 토글이 바뀌고 옆 패널이 밀려듭니다.",
+    "en": "A cursor travels, clicks a toggle, and a side panel slides in."
+  }
+}

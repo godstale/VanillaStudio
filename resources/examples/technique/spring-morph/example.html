@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Spring morph</title>
+    <style>
+      html, body {
+        margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #10141C;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      .stage { position: absolute; inset: 0; display: grid; place-items: center; }
+      #card { background: linear-gradient(135deg, #2E9E5B, #7AA2F7); }
+    </style>
+  </head>
+  <body>
+    <div class="stage"><div id="card"></div></div>
+    <svg width="0" height="0" viewBox="0 0 10 10"></svg>
+    <script>
+      const SECONDS = 4;
+      const card = document.getElementById('card');
+
+      const spring = (p) => 1 - Math.exp(-5 * p) * Math.cos(11 * p);
+
+      window.seekExample = (t) => {
+        const phase = (t % SECONDS) / SECONDS;
+        const k = spring(phase);
+        const w = 300 + 380 * k;
+        const h = 420 - 200 * k;
+        const r = 160 - 120 * k;
+        card.style.width = w.toFixed(1) + 'px';
+        card.style.height = h.toFixed(1) + 'px';
+        card.style.borderRadius = Math.max(24, r).toFixed(1) + 'px';
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Landing page skeleton</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #eef3f6; color: #16232c; font-family: 'Segoe UI', system-ui, sans-serif; }
+      .slide { position: absolute; inset: 0 0 96px; display: grid; place-content: center;
+        justify-items: center; gap: 14px; text-align: center; opacity: 0; }
+      h1 { margin: 0; font-size: 84px; letter-spacing: -0.02em; }
+      p { margin: 0; color: #5b6f7b; font-size: 28px; }
+      .cta { padding: 16px 40px; border-radius: 999px; background: #1663c7; color: #fff;
+        font-size: 30px; font-weight: 700; }
+      .cards { display: flex; gap: 18px; }
+      .cards div { width: 220px; border-radius: 18px; background: #fff; padding: 30px 0;
+        font-size: 32px; box-shadow: 0 10px 30px rgba(22,35,44,0.12); }
+      .quotes { display: flex; gap: 18px; font-size: 44px; font-weight: 700; }
+      nav { position: absolute; right: 56px; bottom: 30px; left: 56px; display: flex; gap: 10px; }
+      nav div { height: 42px; border-top: 4px solid #c3d2db; color: #75878f;
+        font-size: 20px; line-height: 42px; }
+      nav div.on { border-color: #1663c7; color: #16232c; }
+    </style>
+  </head>
+  <body>
+    <div class="slide"><h1>A calmer morning</h1><p>Hero: promise plus action</p><div class="cta">Start free</div></div>
+    <div class="slide"><div class="cards"><div>Fast</div><div>Kind</div><div>Yours</div></div><p>Features: three benefits</p></div>
+    <div class="slide"><div class="quotes"><span>4.9 / 5</span><span>12k teams</span></div><p>Proof: quotes and numbers</p></div>
+    <nav id="nav"></nav>
+    <script>
+      const SECONDS = 8;
+      const BEATS = [['Hero', 8], ['Features', 8], ['Proof', 6]];
+      const total = BEATS.reduce((s, [, x]) => s + x, 0);
+      const nav = document.getElementById('nav');
+      nav.innerHTML = BEATS.map(([n, s]) => `<div style="flex:${s}">${n} · ${s}s</div>`).join('');
+      const slides = [...document.querySelectorAll('.slide')];
+      const tabs = [...nav.children];
+      window.seekExample = (t) => {
+        const cyc = ((t % SECONDS) + SECONDS) % SECONDS;
+        let at = (cyc / SECONDS) * total;
+        const active = BEATS.findIndex(([, s]) => (at < s ? true : ((at -= s), false)));
+        slides.forEach((s, i) => (s.style.opacity = i === active ? 1 : 0));
+        tabs.forEach((b, i) => b.classList.toggle('on', i === active));
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

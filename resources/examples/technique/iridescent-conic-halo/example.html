@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#10141c;font-family:'Segoe UI',system-ui,sans-serif}
+.frame{position:absolute;left:330px;top:160px;width:620px;height:400px;border-radius:44px;overflow:hidden;background:#10141c}.spin{position:absolute;left:-60%;top:-60%;width:220%;height:220%;background:conic-gradient(from 0deg,#ff5fa2,#ffb347,#5ff2c8,#5aa8ff,#c77dff,#ff5fa2)}.spin.blur{filter:blur(46px);opacity:.65}.core{position:absolute;left:12px;top:12px;width:596px;height:376px;background:#161c26;border-radius:34px}.pill2{position:absolute;left:60px;top:90px;width:476px;height:96px;line-height:96px;text-align:center;font-size:36px;color:#f4f1ea;background:#232c3d;border-radius:999px}.bar{position:absolute;left:60px;top:230px;width:300px;height:64px;background:#232c3d;border-radius:16px}.go2{position:absolute;left:386px;top:230px;width:150px;height:64px;background:#2ed3b1;border-radius:16px}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#10141c"/></svg>
+<div class="frame"><div id="rotA" class="spin"></div><div id="rotB" class="spin blur"></div><div class="core"><div class="pill2">Where to, tomorrow?</div><div class="bar"></div><div class="go2"></div></div></div>
+<script>
+const SECONDS = 3;
+window.seekExample = (t) => {
+const p = (t % SECONDS) / SECONDS;
+const deg = p * 360;
+document.getElementById('rotA').style.transform = 'rotate(' + deg + 'deg)';
+document.getElementById('rotB').style.transform = 'rotate(' + deg + 'deg)';
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

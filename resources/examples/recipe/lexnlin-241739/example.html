@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><title>World pass</title><style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#060913;font-family:system-ui,'Segoe UI',sans-serif}
+canvas{width:1280px;height:720px;display:block}
+#cap{position:absolute;left:80px;bottom:44px;color:#dfe7f5;font-size:30px;letter-spacing:.24em;font-family:system-ui,sans-serif}
+svg.frame{position:absolute;inset:0}
+</style></head><body>
+<canvas id="cv" width="640" height="360"></canvas>
+<div id="cap">VALLEY PASS · CAM 02</div>
+<svg class="frame" viewBox="0 0 1280 720"><circle cx="1140" cy="120" r="46" fill="none" stroke="#dfe7f5" stroke-width="4"/><line x1="1140" y1="90" x2="1140" y2="150" stroke="#dfe7f5" stroke-width="4"/><line x1="1110" y1="120" x2="1170" y2="120" stroke="#dfe7f5" stroke-width="4"/></svg>
+<script>
+var SECONDS=8;
+function h(n){var x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x);}
+var cv=document.getElementById("cv"),ctx=cv.getContext("2d");
+function ridge(base,amp,f,ph,col){ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(0,360);
+for(var x=0;x<=640;x+=8){ctx.lineTo(x,base+amp*Math.sin(x*0.02*f+ph)+amp*0.4*Math.sin(x*0.055*f+ph*2));}
+ctx.lineTo(640,360);ctx.fill();}
+window.seekExample=function(t){
+var p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+var g=ctx.createLinearGradient(0,0,0,360);
+g.addColorStop(0,"#0a1230");g.addColorStop(0.55,"#27335f");g.addColorStop(0.72,"#c97b4a");g.addColorStop(0.78,"#1a2340");g.addColorStop(1,"#0a0f22");
+ctx.fillStyle=g;ctx.fillRect(0,0,640,360);
+for(var s=0;s<70;s++){ctx.fillStyle="rgba(220,230,255,"+(0.3+0.7*h(s*1.3))+")";ctx.fillRect(h(s*7.1)*640,(h(s*3.7)*150)|0,2,2);}
+ctx.fillStyle="#ffd9a0";ctx.beginPath();ctx.arc(470+p*60,218,26,0,7);ctx.fill();
+ctx.fillStyle="rgba(255,217,160,.25)";ctx.beginPath();ctx.arc(470+p*60,218,44,0,7);ctx.fill();
+ridge(250,26,1.0,p*3.0,"#3a466e");
+ridge(285,30,1.4,p*4.2+2,"#232c4e");
+ridge(320,34,1.8,p*5.6+4,"#141a33");
+};
+if(!navigator.webdriver){var loop=function(ms){window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script></body></html>

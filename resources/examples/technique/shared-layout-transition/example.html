@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#ece7db;font-family:'Segoe UI',system-ui,sans-serif}
+.slot{position:absolute;left:120px;width:320px;height:150px;background:#fffdf8;border-radius:18px;box-shadow:0 14px 30px rgba(30,25,15,.18)}.mini{position:absolute;left:24px;top:28px;width:110px;height:94px;border-radius:12px}.ln{position:absolute;background:#d8d2c2;border-radius:6px}#ghost{position:absolute;left:120px;top:150px;width:320px;height:150px;border:4px dashed #a8a294;border-radius:18px;opacity:0}#hero{position:absolute;background:linear-gradient(135deg,#d9502f,#e8933c);border-radius:18px;box-shadow:0 24px 50px rgba(30,25,15,.3)}#dex{position:absolute;left:680px;top:160px;width:440px;height:300px;opacity:0}.detail{position:absolute;left:0;top:150px;width:440px;height:150px;background:#fffdf8;border-radius:18px}#panel{position:absolute;left:640px;top:120px;width:520px;height:480px;border:4px dashed #a8a294;border-radius:26px}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#ece7db"/></svg>
+<div class="slot" style="top:330px"><div class="mini" style="background:#2f6b8f"></div><div class="ln" style="left:150px;top:30px;width:140px;height:26px"></div><div class="ln" style="left:150px;top:70px;width:100px;height:18px"></div></div>
+<div class="slot" style="top:510px"><div class="mini" style="background:#0b6e5e"></div><div class="ln" style="left:150px;top:30px;width:140px;height:26px"></div><div class="ln" style="left:150px;top:70px;width:100px;height:18px"></div></div>
+<div id="panel"></div><div id="ghost"></div>
+<div id="dex"><div class="detail"></div></div>
+<div id="hero"></div>
+<script>
+const SECONDS = 3;
+const ez = (x) => x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x);
+const A = {l:120,t:150,w:320,h:150,r:18}, B = {l:680,t:160,w:440,h:300,r:28};
+window.seekExample = (t) => {
+const p = (t % SECONDS) / SECONDS;
+const k = Math.min(1, Math.max(0, ez((p - 0.12) / 0.3) - ez((p - 0.62) / 0.28)));
+const h = document.getElementById('hero');
+h.style.left = (A.l + (B.l - A.l) * k) + 'px';
+h.style.top = (A.t + (B.t - A.t) * k) + 'px';
+h.style.width = (A.w + (B.w - A.w) * k) + 'px';
+h.style.height = (A.h + (B.h - A.h) * k) + 'px';
+h.style.borderRadius = (A.r + (B.r - A.r) * k) + 'px';
+document.getElementById('ghost').style.opacity = String(k);
+document.getElementById('dex').style.opacity = String(ez((k - 0.7) / 0.3));
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

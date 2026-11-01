@@ -1,0 +1,7 @@
+{
+  "seconds": 4,
+  "note": {
+    "ko": "회전하는 부채꼴이 지나가며 신호를 밝히는 레이더입니다.",
+    "en": "A conic sweep at omega t that lights blips as it passes."
+  }
+}

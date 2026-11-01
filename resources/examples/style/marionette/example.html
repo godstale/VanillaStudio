@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Marionette</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+      body { background: linear-gradient(180deg, #3b2f4a 0%, #584a6e 70%, #2c2438 100%); font-family: 'Segoe UI', system-ui, sans-serif; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720" width="1280" height="720">
+      <!-- control bar -->
+      <rect x="440" y="60" width="400" height="26" rx="13" fill="#8a6844" stroke="#5a4226" stroke-width="4" />
+      <circle cx="470" cy="73" r="10" fill="#5a4226" />
+      <circle cx="810" cy="73" r="10" fill="#5a4226" />
+      <!-- strings -->
+      <g stroke="#e8e2d2" stroke-width="3" opacity="0.9">
+        <line id="s-head" x1="640" y1="86" x2="640" y2="220" />
+        <line id="s-lh" x1="520" y1="86" x2="500" y2="420" />
+        <line id="s-rh" x1="760" y1="86" x2="780" y2="420" />
+        <line id="s-lk" x1="590" y1="86" x2="596" y2="540" />
+        <line id="s-rk" x1="690" y1="86" x2="684" y2="540" />
+      </g>
+      <!-- legs (thigh + shin with knee joint) -->
+      <g id="legL" stroke="#7a5a36" stroke-width="22" stroke-linecap="round">
+        <line id="thighL" x1="610" y1="470" x2="596" y2="545" />
+      </g>
+      <g id="legR" stroke="#6b4e2e" stroke-width="22" stroke-linecap="round">
+        <line id="thighR" x1="670" y1="470" x2="684" y2="545" />
+      </g>
+      <!-- torso -->
+      <rect x="588" y="330" width="104" height="150" rx="20" fill="#2e8b8b" stroke="#1c5252" stroke-width="6" />
+      <rect x="612" y="360" width="56" height="60" rx="8" fill="none" stroke="#f2e3c8" stroke-width="5" />
+      <!-- arms from shoulders -->
+      <g stroke="#8a6844" stroke-width="20" stroke-linecap="round">
+        <line id="armL" x1="592" y1="350" x2="500" y2="420" />
+        <line id="armR" x1="688" y1="350" x2="780" y2="420" />
+      </g>
+      <circle id="handL" cx="500" cy="420" r="20" fill="#8a6844" stroke="#5a4226" stroke-width="4" />
+      <circle id="handR" cx="780" cy="420" r="20" fill="#8a6844" stroke="#5a4226" stroke-width="4" />
+      <!-- shins below knees -->
+      <g stroke="#7a5a36" stroke-width="18" stroke-linecap="round">
+        <line id="shinL" x1="596" y1="545" x2="588" y2="620" />
+        <line id="shinR" x1="684" y1="545" x2="692" y2="620" />
+      </g>
+      <ellipse id="footL" cx="588" cy="628" rx="30" ry="16" fill="#4a3220" />
+      <ellipse id="footR" cx="692" cy="628" rx="30" ry="16" fill="#4a3220" />
+      <!-- head -->
+      <g id="phead">
+        <circle cx="640" cy="265" r="52" fill="#f0c49c" stroke="#8a5a2b" stroke-width="5" />
+        <circle cx="622" cy="262" r="7" fill="#2b2320" />
+        <circle cx="658" cy="262" r="7" fill="#2b2320" />
+        <path d="M 624 290 Q 640 300 656 290" fill="none" stroke="#7a4a2b" stroke-width="5" stroke-linecap="round" />
+        <path d="M 596 232 Q 640 196 684 232 L 684 218 Q 640 182 596 218 Z" fill="#a32727" />
+      </g>
+      <!-- wooden joints -->
+      <circle cx="592" cy="350" r="14" fill="#a37c4e" stroke="#5a4226" stroke-width="3" />
+      <circle cx="688" cy="350" r="14" fill="#a37c4e" stroke="#5a4226" stroke-width="3" />
+      <circle id="kneeL" cx="596" cy="545" r="13" fill="#a37c4e" stroke="#5a4226" stroke-width="3" />
+      <circle id="kneeR" cx="684" cy="545" r="13" fill="#a37c4e" stroke="#5a4226" stroke-width="3" />
+    </svg>
+    <script>
+      const SECONDS = 4;
+      const $ = (id) => document.getElementById(id);
+      const SL = 100; // arm length
+      const TL = 78;  // thigh length
+      const NL = 78;  // shin length
+
+      // Every limb swings as a pendulum function of t; strings stay pinned to hands and knees.
+      window.seekExample = (t) => {
+        const w = (Math.PI * 2) / SECONDS;
+        const aL = 0.55 * Math.sin(w * 2 * t);
+        const aR = 0.55 * Math.sin(w * 2 * t + Math.PI);
+        const gL = 0.4 * Math.sin(w * 2 * t + Math.PI / 2);
+        const gR = 0.4 * Math.sin(w * 2 * t + (Math.PI * 3) / 2);
+        const hx = 640 + 14 * Math.sin(w * t);
+
+        const handL = [592 + SL * Math.sin(aL), 350 + SL * Math.cos(aL)];
+        const handR = [688 + SL * Math.sin(aR), 350 + SL * Math.cos(aR)];
+        $('armL').setAttribute('x2', handL[0]); $('armL').setAttribute('y2', handL[1]);
+        $('armR').setAttribute('x2', handR[0]); $('armR').setAttribute('y2', handR[1]);
+        $('handL').setAttribute('cx', handL[0]); $('handL').setAttribute('cy', handL[1]);
+        $('handR').setAttribute('cx', handR[0]); $('handR').setAttribute('cy', handR[1]);
+        $('s-lh').setAttribute('x2', handL[0]); $('s-lh').setAttribute('y2', handL[1]);
+        $('s-rh').setAttribute('x2', handR[0]); $('s-rh').setAttribute('y2', handR[1]);
+
+        const kneeL = [610 + TL * Math.sin(gL), 470 + TL * Math.cos(gL)];
+        const kneeR = [670 + TL * Math.sin(gR), 470 + TL * Math.cos(gR)];
+        $('thighL').setAttribute('x2', kneeL[0]); $('thighL').setAttribute('y2', kneeL[1]);
+        $('thighR').setAttribute('x2', kneeR[0]); $('thighR').setAttribute('y2', kneeR[1]);
+        $('kneeL').setAttribute('cx', kneeL[0]); $('kneeL').setAttribute('cy', kneeL[1]);
+        $('kneeR').setAttribute('cx', kneeR[0]); $('kneeR').setAttribute('cy', kneeR[1]);
+        $('s-lk').setAttribute('x2', kneeL[0]); $('s-lk').setAttribute('y2', kneeL[1]);
+        $('s-rk').setAttribute('x2', kneeR[0]); $('s-rk').setAttribute('y2', kneeR[1]);
+
+        const footL = [kneeL[0] + NL * Math.sin(gL * 0.5), kneeL[1] + NL * Math.cos(gL * 0.5)];
+        const footR = [kneeR[0] + NL * Math.sin(gR * 0.5), kneeR[1] + NL * Math.cos(gR * 0.5)];
+        $('shinL').setAttribute('x1', kneeL[0]); $('shinL').setAttribute('y1', kneeL[1]);
+        $('shinL').setAttribute('x2', footL[0]); $('shinL').setAttribute('y2', footL[1]);
+        $('shinR').setAttribute('x1', kneeR[0]); $('shinR').setAttribute('y1', kneeR[1]);
+        $('shinR').setAttribute('x2', footR[0]); $('shinR').setAttribute('y2', footR[1]);
+        $('footL').setAttribute('cx', footL[0]); $('footL').setAttribute('cy', footL[1]);
+        $('footR').setAttribute('cx', footR[0]); $('footR').setAttribute('cy', footR[1]);
+
+        $('phead').setAttribute('transform', `translate(${hx - 640} 0)`);
+        $('s-head').setAttribute('x2', hx);
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

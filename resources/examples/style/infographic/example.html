@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Infographic</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #f6f4ec;
+        display: grid; place-items: center; font-family: 'Segoe UI', system-ui, sans-serif; }
+      svg { width: 1100px; height: 600px; }
+      text { font-size: 30px; font-weight: 700; fill: #263026; }
+      .sub { font-size: 22px; font-weight: 400; fill: #6f7568; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1100 600">
+      <text x="60" y="70">GROWTH</text>
+      <text class="sub" x="60" y="105">animated bars</text>
+      <g id="bars">
+        <rect x="80" y="460" width="90" height="60" fill="#2e7d4f" />
+        <rect x="220" y="460" width="90" height="60" fill="#e07b39" />
+        <rect x="360" y="460" width="90" height="60" fill="#3d6fb4" />
+      </g>
+      <g id="labels">
+        <text x="80" y="445">24</text><text x="220" y="445">51</text><text x="360" y="445">87</text>
+      </g>
+      <g>
+        <circle cx="760" cy="300" r="120" fill="none" stroke="#e0d9c2" stroke-width="36" />
+        <circle id="ring" cx="760" cy="300" r="120" fill="none" stroke="#2e7d4f" stroke-width="36"
+          stroke-dasharray="754" stroke-dashoffset="754" transform="rotate(-90 760 300)" stroke-linecap="round" />
+        <text x="715" y="315" id="pct">0%</text>
+      </g>
+      <g>
+        <circle cx="980" cy="130" r="26" fill="#e07b39" /><text x="940" y="200">01</text>
+        <circle cx="980" cy="300" r="26" fill="#3d6fb4" /><text x="940" y="370">02</text>
+        <circle cx="980" cy="470" r="26" fill="#2e7d4f" /><text x="940" y="540">03</text>
+      </g>
+    </svg>
+    <script>
+      const SECONDS = 4;
+      const bars = [...document.querySelectorAll('#bars rect')];
+      const labels = [...document.querySelectorAll('#labels text')];
+      const ring = document.getElementById('ring');
+      const pct = document.getElementById('pct');
+      const H = [180, 300, 380];
+      const V = [24, 51, 87];
+      window.seekExample = (t) => {
+        const p = (((t % SECONDS) + SECONDS) % SECONDS) / SECONDS;
+        const e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+        bars.forEach((b, i) => {
+          const h = 60 + H[i] * e;
+          b.setAttribute('y', 460 - h + 60);
+          b.setAttribute('height', h);
+          labels[i].setAttribute('y', 460 - h + 45);
+          labels[i].textContent = Math.round(V[i] * e);
+        });
+        ring.setAttribute('stroke-dashoffset', 754 * (1 - e * 0.72));
+        pct.textContent = `${Math.round(e * 72)}%`;
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

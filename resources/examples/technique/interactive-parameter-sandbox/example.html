@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Parameter sandbox</title>
+    <style>
+      html, body {
+        margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #10141C; color: #F4F1EA;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      .wrap { display: grid; grid-template-columns: 1fr 340px; gap: 40px; height: 100%; padding: 64px; box-sizing: border-box; }
+      .graph { border-radius: 24px; background: #1B2130; position: relative; overflow: hidden; }
+      .graph svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+      .dock { border-radius: 24px; background: #222936; padding: 40px 36px; box-sizing: border-box; }
+      .track { position: relative; height: 14px; margin: 44px 0 54px; border-radius: 7px; background: #3A4150; }
+      .knob {
+        position: absolute; top: -16px; width: 46px; height: 46px; border-radius: 50%;
+        background: #FFB347; margin-left: -23px;
+      }
+      .toggle { height: 52px; border-radius: 999px; background: #3A4150; margin-bottom: 24px; position: relative; }
+      .toggle i { position: absolute; top: 6px; left: 6px; width: 40px; height: 40px; border-radius: 50%; background: #7AA2F7; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="graph">
+        <svg viewBox="0 0 800 592" preserveAspectRatio="none">
+          <path id="wave" fill="none" stroke="#FFB347" stroke-width="10" stroke-linecap="round" />
+          <path id="wave2" fill="none" stroke="#7AA2F7" stroke-width="6" stroke-linecap="round" opacity="0.7" />
+        </svg>
+      </div>
+      <div class="dock">
+        <div class="track"><div class="knob" id="k1"></div></div>
+        <div class="track"><div class="knob" id="k2"></div></div>
+        <div class="toggle"><i id="tg"></i></div>
+        <div class="toggle"><i id="tg2"></i></div>
+      </div>
+    </div>
+    <svg width="0" height="0" viewBox="0 0 10 10"></svg>
+    <script>
+      const SECONDS = 4;
+      const k1 = document.getElementById('k1');
+      const k2 = document.getElementById('k2');
+      const tg = document.getElementById('tg');
+      const path = document.getElementById('wave');
+      const path2 = document.getElementById('wave2');
+
+      const curve = (amp, freq, shift) => {
+        let d = '';
+        for (let x = 0; x <= 800; x += 16) {
+          const y = 296 + amp * Math.sin((x / 800) * Math.PI * 2 * freq + shift);
+          d += (x === 0 ? 'M' : 'L') + x + ' ' + y.toFixed(1);
+        }
+        return d;
+      };
+
+      window.seekExample = (t) => {
+        const phase = (t % SECONDS) / SECONDS;
+        const a = (phase + 0.5) % 1;
+        const b = (phase * 2) % 1;
+        k1.style.left = (a * 100).toFixed(2) + '%';
+        k2.style.left = (b * 100).toFixed(2) + '%';
+        tg.style.left = '';
+        tg.parentElement.style.background = phase < 0.5 ? '#2E9E5B' : '#3A4150';
+        path.setAttribute('d', curve(60 + 140 * a, 1 + 2 * b, phase * Math.PI * 4));
+        path2.setAttribute('d', curve(200 - 120 * a, 3, phase * Math.PI * 2));
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

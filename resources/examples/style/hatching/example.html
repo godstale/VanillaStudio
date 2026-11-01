@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>hatching</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#fdfbf4}
+      svg{width:100%;height:100%;display:block}
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <rect width="1280" height="720" fill="#fdfbf4"/>
+      <rect x="70" y="60" width="500" height="600" fill="none" stroke="#222" stroke-width="5"/>
+      <ellipse cx="320" cy="590" rx="190" ry="26" fill="none" stroke="#222" stroke-width="4"/>
+      <g id="ball" stroke="#222" fill="none"></g>
+      <circle cx="320" cy="360" r="170" fill="none" stroke="#222" stroke-width="6"/>
+      <rect x="640" y="60" width="570" height="600" fill="none" stroke="#222" stroke-width="5"/>
+      <g id="cyl" stroke="#222" fill="none"></g>
+      <ellipse cx="925" cy="250" rx="130" ry="44" fill="none" stroke="#222" stroke-width="6"/>
+      <line x1="795" y1="250" x2="795" y2="520" stroke="#222" stroke-width="6"/>
+      <line x1="1055" y1="250" x2="1055" y2="520" stroke="#222" stroke-width="6"/>
+      <ellipse cx="925" cy="520" rx="130" ry="44" fill="none" stroke="#222" stroke-width="6"/>
+    </svg>
+    <script>
+      let b = '';
+      for (let i = 0; i < 30; i += 1) {
+        const y = 200 + i * 11;
+        const dx = Math.sqrt(Math.max(0, 170 * 170 - (y - 360) * (y - 360)));
+        const dark = (y - 200) / 330;
+        b += `<line x1="${(320 - dx).toFixed(0)}" y1="${y}" x2="${(320 + dx).toFixed(0)}" y2="${y}" stroke-width="${(1 + dark * 3).toFixed(1)}"/>`;
+        if (dark > 0.45) b += `<line x1="${(320 - dx).toFixed(0)}" y1="${y + 22}" x2="${(320 + dx * 0.7).toFixed(0)}" y2="${y - 16}" stroke-width="${(1 + dark * 2).toFixed(1)}"/>`;
+        if (dark > 0.7) b += `<line x1="${(320 - dx * 0.7).toFixed(0)}" y1="${y - 16}" x2="${(320 + dx).toFixed(0)}" y2="${y + 22}" stroke-width="2"/>`;
+      }
+      document.getElementById('ball').innerHTML = b;
+      let c = '';
+      for (let i = 0; i < 22; i += 1) {
+        const y = 262 + i * 12;
+        const dark = i / 22;
+        c += `<line x1="798" y1="${y}" x2="1052" y2="${y}" stroke-width="${(1 + dark * 3.4).toFixed(1)}"/>`;
+        if (dark > 0.5) c += `<line x1="${800 + i * 4}" y1="${y + 18}" x2="${860 + i * 4}" y2="${y - 14}" stroke-width="2"/>`;
+      }
+      document.getElementById('cyl').innerHTML = c;
+    </script>
+  </body>
+</html>

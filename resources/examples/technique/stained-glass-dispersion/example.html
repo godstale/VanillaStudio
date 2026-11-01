@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0d1420;font-family:'Segoe UI',system-ui,sans-serif}
+
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#0d1420"/>
+<polygon points="480,210 800,210 1000,640 280,640" fill="#ffffff" opacity="0.10"/>
+<g id="beams"></g>
+<g id="panes" stroke="#0a0d13" stroke-width="10"></g>
+<ellipse cx="640" cy="620" rx="420" ry="40" fill="#1c2635"/>
+<g id="spots"></g>
+<g id="motes" fill="#fff8e8"></g>
+</svg>
+<script>
+const SECONDS = 4;
+const COLS = ['#e04f5f','#f0a13c','#3fae7a','#3f8fe0','#9a63e0'];
+const PX = [140, 348, 556, 764, 972];
+const NS = 'http://www.w3.org/2000/svg';
+const panes = document.getElementById('panes');
+const beams = document.getElementById('beams');
+const spots = document.getElementById('spots');
+const motes = document.getElementById('motes');
+const spotEls = [], moteEls = [];
+for (let i = 0; i < 5; i++) {
+const r = document.createElementNS(NS, 'rect');
+r.setAttribute('x', PX[i]); r.setAttribute('y', 80); r.setAttribute('width', 150); r.setAttribute('height', 130); r.setAttribute('rx', 14); r.setAttribute('fill', COLS[i]);
+panes.appendChild(r);
+const b = document.createElementNS(NS, 'polygon');
+b.setAttribute('fill', COLS[i]); b.setAttribute('opacity', '0.28');
+b.setAttribute('points', PX[i] + ',210 ' + (PX[i] + 150) + ',210 ' + (PX[i] + 260) + ',600 ' + (PX[i] - 110) + ',600');
+beams.appendChild(b);
+const e = document.createElementNS(NS, 'ellipse');
+e.setAttribute('cx', PX[i] + 75); e.setAttribute('cy', 600); e.setAttribute('rx', 120); e.setAttribute('ry', 30); e.setAttribute('fill', COLS[i]); e.setAttribute('opacity', '0.55');
+spots.appendChild(e); spotEls.push(e);
+}
+for (let i = 0; i < 14; i++) {
+const h1 = Math.sin(i * 12.9898) * 43758.5453, h2 = Math.sin(i * 78.233) * 12543.123;
+const fx = h1 - Math.floor(h1), fy = h2 - Math.floor(h2);
+const c = document.createElementNS(NS, 'circle');
+c.setAttribute('cx', 300 + fx * 680); c.setAttribute('cy', 260 + fy * 320); c.setAttribute('r', 3 + fx * 4);
+motes.appendChild(c); moteEls.push(c);
+}
+window.seekExample = (t) => {
+const p = (t % SECONDS) / SECONDS;
+const a = Math.sin(p * 6.28318);
+beams.setAttribute('transform', 'translate(' + (a * 90) + ' 0) skewX(' + (a * 8) + ')');
+for (let i = 0; i < 5; i++) spotEls[i].setAttribute('cx', PX[i] + 75 + a * (70 + i * 26));
+for (let i = 0; i < 14; i++) moteEls[i].setAttribute('opacity', String(0.2 + 0.5 * Math.abs(Math.sin(p * 6.28318 + i * 1.7))));
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

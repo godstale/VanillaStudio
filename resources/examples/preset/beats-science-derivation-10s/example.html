@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Proof</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0d1117;color:#e6edf3;font-family:'Segoe UI',system-ui,sans-serif}
+canvas{position:absolute;inset:0;width:1280px;height:720px}
+.eq{position:absolute;left:64px;top:52px;font-size:34px}
+.eq b{color:#39d5f2}.eq i{color:#ff9ec6;font-style:normal}.eq u{color:#ffd97a;text-decoration:none}
+.hudnum{position:absolute;right:64px;top:52px;font-family:Consolas,monospace;font-size:30px;color:#39d5f2}
+svg.frame{position:absolute;inset:0;width:1280px;height:720px}
+</style>
+</head>
+<body>
+<canvas id="cv" width="1280" height="720"></canvas>
+<div class="eq"><b>T</b> = <i>r&#8321;</i> + <i>r&#8322;</i> + <i>r&#8323;</i> over <u>time</u></div>
+<div class="hudnum" id="num">N = 1</div>
+<svg class="frame" viewBox="0 0 1280 720"><path d="M24 64V24h40M1216 24h40v40M24 656v40h40M1256 656v40h-40" fill="none" stroke="#39d5f2" stroke-width="3" opacity=".6"/></svg>
+<script>
+const SECONDS=6;
+const cv=document.getElementById('cv');
+const ctx=cv.getContext('2d');
+const num=document.getElementById('num');
+const cols=['#39d5f2','#ff9ec6','#ffd97a'];
+const R=[130,56,32];
+window.seekExample=(t)=>{
+const p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+const a=p*Math.PI*2;
+ctx.fillStyle='#0d1117';
+ctx.fillRect(0,0,1280,720);
+ctx.strokeStyle='rgba(120,140,160,.25)';
+ctx.lineWidth=1;
+for(let x=80;x<1210;x+=46){ctx.beginPath();ctx.moveTo(x,120);ctx.lineTo(x,660);ctx.stroke();}
+for(let y=140;y<670;y+=46){ctx.beginPath();ctx.moveTo(60,y);ctx.lineTo(1220,y);ctx.stroke();}
+const n=p<.33?1:p<.72?2:3;
+const cx=340,cy=400;
+let x=cx,y=cy;
+ctx.lineWidth=3;
+for(let i=0;i<n;i++){
+const ang=a*(i+1)*1.4+i*1.2;
+const nx=x+R[i]*Math.cos(ang),ny=y+R[i]*Math.sin(ang);
+ctx.strokeStyle='rgba(150,170,190,.5)';
+ctx.beginPath();ctx.arc(x,y,R[i],0,7);ctx.stroke();
+ctx.strokeStyle=cols[i];
+ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(nx,ny);ctx.stroke();
+ctx.fillStyle=cols[i];
+ctx.beginPath();ctx.arc(nx,ny,6,0,7);ctx.fill();
+x=nx;y=ny;
+}
+ctx.strokeStyle='#39d5f2';
+ctx.lineWidth=4;
+ctx.shadowColor='#39d5f2';
+ctx.shadowBlur=12;
+ctx.beginPath();
+for(let px=0;px<=540;px+=4){
+let wy=0;
+for(let i=0;i<n;i++)wy+=R[i]*Math.sin((a+px*.02)*(i+1)*1.4+i*1.2);
+const yy=cy-wy*.85;
+if(px===0)ctx.moveTo(580+px,yy);else ctx.lineTo(580+px,yy);
+}
+ctx.stroke();
+ctx.shadowBlur=0;
+if(p>=.72){
+for(let i=0;i<3;i++){
+const bh2=i<n?[150,90,60][i]:24;
+ctx.fillStyle=cols[i];
+ctx.fillRect(150+i*64,650-bh2,36,bh2);
+}
+}
+num.textContent='N = '+n;
+};
+if(!navigator.webdriver){const loop=(ms)=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Laptop 1280</title>
+    <style>
+      html, body {
+        margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #14171C;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      .stage { display: grid; place-content: center; height: 100%; }
+      .lid {
+        width: 880px; height: 552px; border-radius: 22px 22px 0 0; background: #2B303B;
+        padding: 20px 20px 0; box-sizing: border-box;
+      }
+      .screen {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+        width: 100%; height: 100%; border-radius: 10px 10px 0 0; background: #F2EEE2;
+        padding: 36px; box-sizing: border-box; overflow: hidden;
+      }
+      .left .bar { height: 40px; border-radius: 8px; background: #22262E; }
+      .left .line { height: 16px; margin-top: 16px; border-radius: 8px; background: #C4BCA6; }
+      .left .btn { width: 180px; height: 52px; margin-top: 28px; border-radius: 999px; background: #2456D6; }
+      .right { border-radius: 16px; background: linear-gradient(135deg, #8E4394, #2456D6); }
+      .base {
+        width: 1020px; height: 26px; margin-left: -70px; border-radius: 0 0 18px 18px;
+        background: #3A4150;
+      }
+      .dent { width: 200px; height: 10px; margin: 0 auto; border-radius: 0 0 12px 12px; background: #22262E; }
+    </style>
+  </head>
+  <body>
+    <div class="stage">
+      <div>
+        <div class="lid"><div class="screen">
+          <div class="left"><div class="bar"></div><div class="line"></div><div class="line"></div><div class="btn"></div></div>
+          <div class="right"></div>
+        </div></div>
+        <div class="base"><div class="dent"></div></div>
+      </div>
+    </div>
+  </body>
+</html>

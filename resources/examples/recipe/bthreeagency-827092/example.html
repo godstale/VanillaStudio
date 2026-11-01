@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><title>Badge turntable</title><style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0b0e15;color:#eef1f6;font-family:system-ui,'Segoe UI',sans-serif}
+#stage{position:absolute;inset:0;display:grid;place-items:center;perspective:1200px}
+#coin{width:360px;height:360px;border-radius:50%;background:conic-gradient(from 0deg,#8a93a8,#f4f6fb,#8a93a8,#c9d2e4,#8a93a8);display:grid;place-items:center;box-shadow:0 30px 90px rgba(0,0,0,.6)}
+#core{width:250px;height:250px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#3a5cff,#101736 70%);display:grid;place-items:center;font-size:120px;font-weight:900}
+#shine{position:absolute;width:200px;height:560px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);transform:rotate(18deg)}
+.hud{position:absolute;font-size:26px;color:#8b96ad;letter-spacing:.2em}
+svg.frame{position:absolute;inset:0}
+</style></head><body>
+<div class="hud" style="left:120px;top:120px">ALLOY · 042</div>
+<div class="hud" style="right:120px;top:120px">ORBIT CAM</div>
+<div class="hud" style="left:120px;bottom:110px">GLASS CORE</div>
+<div class="hud" style="right:120px;bottom:110px">POLISHED RIM</div>
+<div id="stage"><div id="coin"><div id="core">V</div></div></div>
+<div id="shine"></div>
+<svg class="frame" viewBox="0 0 1280 720"><ellipse id="orb2" cx="640" cy="360" rx="330" ry="120" fill="none" stroke="#3a5cff" stroke-width="3"/></svg>
+<script>
+var SECONDS=6;
+var coin=document.getElementById("coin"),shine=document.getElementById("shine"),orb=document.getElementById("orb2");
+window.seekExample=function(t){
+var p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+coin.style.transform="rotateY("+(p*360)+"deg)";
+shine.style.left=(240+p*800)+"px";shine.style.top="-40px";
+orb.setAttribute("rx",330+20*Math.sin(p*6.283));
+};
+if(!navigator.webdriver){var loop=function(ms){window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script></body></html>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sky guard</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #1b2cc1; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <pattern id="bd" width="14" height="14" patternUnits="userSpaceOnUse">
+          <circle cx="4" cy="4" r="3" fill="#e4002b" opacity="0.55" />
+        </pattern>
+        <radialGradient id="burst" cx="50%" cy="46%" r="55%">
+          <stop offset="0%" stop-color="#ffd400" />
+          <stop offset="100%" stop-color="#ff5a00" />
+        </radialGradient>
+      </defs>
+      <rect x="0" y="0" width="1280" height="720" fill="#1b2cc1" />
+      <g fill="url(#burst)">
+        <polygon points="640,60 690,330 990,130 740,370 1120,330 760,430 1080,620 700,470 640,720 580,470 200,620 520,430 160,330 540,370 290,130 590,330" />
+      </g>
+      <rect x="0" y="0" width="1280" height="720" fill="url(#bd)" opacity="0.5" />
+      <g stroke="#111" stroke-linejoin="round">
+        <path d="M520 720 L560 470 L610 430 L600 300 L680 300 L670 430 L720 470 L760 720 Z" fill="#e4002b" stroke-width="10" />
+        <path d="M600 300 L560 180 L610 150 L640 200 L670 150 L720 180 L680 300 Z" fill="#f4c89a" stroke-width="10" />
+        <path d="M560 180 L540 120 L610 130 Z" fill="#5a3a22" stroke-width="8" />
+        <path d="M720 180 L740 120 L670 130 Z" fill="#5a3a22" stroke-width="8" />
+        <path d="M560 470 L420 540 L380 700 L470 700 L540 560 Z" fill="#e4002b" stroke-width="10" />
+        <path d="M720 470 L860 540 L900 700 L810 700 L740 560 Z" fill="#e4002b" stroke-width="10" />
+        <path d="M680 300 L900 420 L880 700 L760 700 L700 470 Z" fill="#7d2bd9" stroke-width="10" opacity="0.95" />
+        <rect x="470" y="620" width="130" height="100" rx="18" fill="#111" />
+        <rect x="680" y="620" width="130" height="100" rx="18" fill="#111" />
+      </g>
+      <g transform="rotate(-12 1020 180)">
+        <polygon points="1020,110 1046,160 1100,166 1056,200 1068,256 1020,224 972,256 984,200 940,166 994,160" fill="#ffd400" stroke="#111" stroke-width="8" stroke-linejoin="round" />
+        <text x="1020" y="212" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="44" fill="#111">GO!</text>
+      </g>
+    </svg>
+  </body>
+</html>

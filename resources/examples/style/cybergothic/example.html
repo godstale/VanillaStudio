@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dark cathedral</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #060609; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <linearGradient id="iron" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#1a1a22" />
+          <stop offset="50%" stop-color="#4d4d63" />
+          <stop offset="100%" stop-color="#14141b" />
+        </linearGradient>
+        <radialGradient id="rose" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#d6ffe9" />
+          <stop offset="35%" stop-color="#39ff9c" />
+          <stop offset="100%" stop-color="#06351f" />
+        </radialGradient>
+        <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="10" />
+        </filter>
+      </defs>
+      <rect width="1280" height="720" fill="#060609" />
+      <!-- main arch window -->
+      <path d="M490 660 V300 Q490 150 640 110 Q790 150 790 300 V660 Z" fill="#0c0d16" stroke="#b44dff" stroke-width="10" />
+      <path d="M490 660 V300 Q490 150 640 110 Q790 150 790 300 V660 Z" fill="none" stroke="#b44dff" stroke-width="26" opacity="0.35" filter="url(#soft)" />
+      <line x1="640" y1="110" x2="640" y2="660" stroke="#b44dff" stroke-width="6" />
+      <line x1="490" y1="420" x2="790" y2="420" stroke="#b44dff" stroke-width="6" />
+      <line x1="520" y1="270" x2="760" y2="270" stroke="#39ff9c" stroke-width="5" />
+      <!-- rose window -->
+      <circle cx="640" cy="540" r="72" fill="url(#rose)" />
+      <circle cx="640" cy="540" r="72" fill="none" stroke="#0c0d16" stroke-width="10" />
+      <circle cx="640" cy="540" r="46" fill="none" stroke="#0c0d16" stroke-width="8" />
+      <g stroke="#0c0d16" stroke-width="8">
+        <line x1="640" y1="468" x2="640" y2="612" />
+        <line x1="568" y1="540" x2="712" y2="540" />
+        <line x1="589" y1="489" x2="691" y2="591" />
+        <line x1="691" y1="489" x2="589" y2="591" />
+      </g>
+      <!-- side spires -->
+      <g fill="#0c0d16" stroke="#b44dff" stroke-width="6">
+        <path d="M300 660 V350 Q300 260 360 230 Q420 260 420 350 V660 Z" />
+        <path d="M860 660 V350 Q860 260 920 230 Q980 260 980 350 V660 Z" />
+      </g>
+      <line x1="360" y1="230" x2="360" y2="130" stroke="#b44dff" stroke-width="6" />
+      <line x1="920" y1="230" x2="920" y2="130" stroke="#b44dff" stroke-width="6" />
+      <circle cx="360" cy="120" r="10" fill="#39ff9c" />
+      <circle cx="920" cy="120" r="10" fill="#39ff9c" />
+      <!-- buckle rows -->
+      <g>
+        <rect x="180" y="600" width="90" height="30" rx="6" fill="url(#iron)" stroke="#8a8aa3" stroke-width="3" />
+        <rect x="1010" y="600" width="90" height="30" rx="6" fill="url(#iron)" stroke="#8a8aa3" stroke-width="3" />
+        <rect x="180" y="548" width="90" height="30" rx="6" fill="url(#iron)" stroke="#8a8aa3" stroke-width="3" />
+        <rect x="1010" y="548" width="90" height="30" rx="6" fill="url(#iron)" stroke="#8a8aa3" stroke-width="3" />
+        <rect x="214" y="606" width="22" height="18" fill="none" stroke="#39ff9c" stroke-width="4" />
+        <rect x="1044" y="606" width="22" height="18" fill="none" stroke="#39ff9c" stroke-width="4" />
+        <rect x="214" y="554" width="22" height="18" fill="none" stroke="#b44dff" stroke-width="4" />
+        <rect x="1044" y="554" width="22" height="18" fill="none" stroke="#b44dff" stroke-width="4" />
+      </g>
+    </svg>
+  </body>
+</html>

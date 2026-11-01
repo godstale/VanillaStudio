@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Soft 3D cartoon</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+      body { background: linear-gradient(115deg, #d8ecff 0%, #f6ecd9 55%, #ffd9b0 100%); }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720" width="1280" height="720">
+      <defs>
+        <radialGradient id="body" cx="38%" cy="30%" r="85%">
+          <stop offset="0%" stop-color="#ffffff" />
+          <stop offset="45%" stop-color="#fff6e8" />
+          <stop offset="80%" stop-color="#f3ddc2" />
+          <stop offset="100%" stop-color="#e3c39e" />
+        </radialGradient>
+        <radialGradient id="floor" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#b98d5f" stop-opacity="0.45" />
+          <stop offset="100%" stop-color="#b98d5f" stop-opacity="0" />
+        </radialGradient>
+        <linearGradient id="rim" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#ff9a3c" stop-opacity="0" />
+          <stop offset="100%" stop-color="#ff9a3c" stop-opacity="0.9" />
+        </linearGradient>
+      </defs>
+      <ellipse cx="640" cy="620" rx="330" ry="48" fill="url(#floor)" />
+      <!-- stub arms and feet behind body -->
+      <ellipse cx="380" cy="470" rx="62" ry="88" fill="#f0d9bc" transform="rotate(24 380 470)" />
+      <ellipse cx="900" cy="470" rx="62" ry="88" fill="#e8c8a4" transform="rotate(-24 900 470)" />
+      <ellipse cx="530" cy="628" rx="80" ry="42" fill="#e9cba6" />
+      <ellipse cx="750" cy="628" rx="80" ry="42" fill="#e9cba6" />
+      <!-- round body -->
+      <ellipse cx="640" cy="430" rx="235" ry="215" fill="url(#body)" />
+      <!-- warm rim light on the right edge -->
+      <path d="M 845 300 A 235 215 0 0 1 845 560" fill="none" stroke="url(#rim)" stroke-width="22" stroke-linecap="round" />
+      <!-- small round ears -->
+      <circle cx="470" cy="245" r="52" fill="#fff6e8" />
+      <circle cx="470" cy="245" r="26" fill="#f6cfae" />
+      <circle cx="810" cy="245" r="52" fill="#f3e2c9" />
+      <circle cx="810" cy="245" r="26" fill="#eebd92" />
+      <!-- glossy eyes -->
+      <ellipse cx="555" cy="400" rx="52" ry="66" fill="#2b2320" />
+      <ellipse cx="725" cy="400" rx="52" ry="66" fill="#2b2320" />
+      <circle cx="572" cy="376" r="20" fill="#ffffff" />
+      <circle cx="742" cy="376" r="20" fill="#ffffff" />
+      <circle cx="542" cy="420" r="8" fill="#ffffff" opacity="0.85" />
+      <circle cx="712" cy="420" r="8" fill="#ffffff" opacity="0.85" />
+      <!-- smile and blush -->
+      <path d="M 600 500 Q 640 532 680 500" fill="none" stroke="#7a4a2b" stroke-width="10" stroke-linecap="round" />
+      <ellipse cx="495" cy="480" rx="34" ry="20" fill="#ff9d9d" opacity="0.65" />
+      <ellipse cx="785" cy="480" rx="34" ry="20" fill="#ff9d9d" opacity="0.65" />
+      <!-- soft key light wash -->
+      <ellipse cx="520" cy="300" rx="150" ry="100" fill="#ffffff" opacity="0.35" transform="rotate(-18 520 300)" />
+    </svg>
+  </body>
+</html>

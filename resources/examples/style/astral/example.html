@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Astral</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: #0a0f24;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <radialGradient id="neb" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stop-color="#5a4a9e" stop-opacity="0.55" />
+          <stop offset="1" stop-color="#5a4a9e" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="1280" height="720" fill="#0a0f24" />
+      <ellipse cx="640" cy="370" rx="440" ry="270" fill="url(#neb)" />
+      <g id="stars"></g>
+      <circle cx="1080" cy="130" r="54" fill="#e8e2d4" />
+      <circle cx="1102" cy="112" r="46" fill="#0a0f24" />
+      <circle cx="640" cy="252" r="72" fill="#04060f" />
+      <path d="M556 342 Q640 300 724 342 L762 560 Q640 500 518 560 Z" fill="#04060f" />
+      <path d="M572 330 Q600 312 636 306" fill="none" stroke="#7fd8ff" stroke-width="7" stroke-linecap="round" opacity="0.55" />
+      <g id="dust"></g>
+    </svg>
+    <script>
+      const NS = 'http://www.w3.org/2000/svg';
+      const H = (n) => {
+        const s = Math.sin(n * 127.1 + 311.7) * 43758.5453;
+        return s - Math.floor(s);
+      };
+      const dot = (parent, x, y, r, fill, op) => {
+        const c = document.createElementNS(NS, 'circle');
+        c.setAttribute('cx', x.toFixed(1));
+        c.setAttribute('cy', y.toFixed(1));
+        c.setAttribute('r', r.toFixed(2));
+        c.setAttribute('fill', fill);
+        c.setAttribute('opacity', op.toFixed(2));
+        parent.appendChild(c);
+      };
+      const stars = document.getElementById('stars');
+      for (let i = 0; i < 240; i += 1) {
+        dot(stars, H(i * 1.71) * 1280, H(i * 2.63 + 9) * 720, 0.7 + H(i * 4.2 + 31) * 1.9, H(i * 6.1 + 77) > 0.8 ? '#9fd8ff' : '#ffffff', 0.25 + H(i * 8.4 + 55) * 0.65);
+      }
+      for (let i = 0; i < 10; i += 1) {
+        const x = H(i * 3.3 + 200) * 1280;
+        const y = H(i * 5.9 + 300) * 420;
+        const p = document.createElementNS(NS, 'path');
+        const s = 8 + H(i * 7.7 + 400) * 8;
+        p.setAttribute('d', `M${x - s} ${y}h${s * 2}M${x} ${y - s}v${s * 2}`);
+        p.setAttribute('stroke', '#cfe8ff');
+        p.setAttribute('stroke-width', '3');
+        p.setAttribute('stroke-linecap', 'round');
+        p.setAttribute('opacity', '0.8');
+        stars.appendChild(p);
+      }
+      const dust = document.getElementById('dust');
+      for (let i = 0; i < 130; i += 1) {
+        const f = H(i * 1.13 + 500);
+        const x = 518 + H(i * 2.47 + 510) * 244 + (f - 0.3) * 220 * f;
+        const y = 540 + f * 150 - H(i * 3.91 + 520) * 60;
+        dot(dust, x, y, 3.2 * (1 - f) + 0.7, H(i * 5.55 + 530) > 0.6 ? '#9fd8ff' : '#e8ecff', 0.9 * (1 - f) + 0.1);
+      }
+    </script>
+  </body>
+</html>

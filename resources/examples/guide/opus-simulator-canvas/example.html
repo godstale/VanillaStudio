@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Lab</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0d1512;color:#eef4ec;font-family:'Segoe UI',system-ui,sans-serif}
+.stage{position:absolute;left:56px;top:56px;width:760px;height:608px;border-radius:20px;background:#122019;border:1px solid #274434;overflow:hidden}
+.wave{position:absolute;left:60px;right:60px;top:120px;height:220px}
+.wave i{position:absolute;bottom:0;width:26px;border-radius:8px;background:linear-gradient(#7ee787,#1c6e4e)}
+.readout{position:absolute;left:60px;bottom:56px;display:flex;gap:40px}
+.readout div{font-size:22px;color:#9db8a8;letter-spacing:.14em}
+.readout b{display:block;font-size:54px;color:#fff;letter-spacing:0}
+.dock{position:absolute;right:56px;top:56px;width:340px;height:608px;border-radius:20px;background:#16261d;border:1px solid #274434;padding:30px;box-sizing:border-box}
+.dock h2{margin:0 0 6px;font-size:26px;letter-spacing:.12em}
+.dock p{margin:0 0 22px;font-size:19px;color:#9db8a8}
+.presets{display:flex;gap:10px;margin-bottom:26px}
+.presets b{flex:1;text-align:center;padding:12px 0;border-radius:10px;background:#24402f;font-size:19px}
+.presets b.on{background:#7ee787;color:#0d1512}
+.slider{margin:0 0 20px;font-size:19px;color:#9db8a8;letter-spacing:.1em}
+.slider .track{height:12px;border-radius:8px;background:#24402f;margin-top:8px;position:relative}
+.slider .track b{position:absolute;left:0;top:0;bottom:0;border-radius:8px;background:#7ee787}
+.slider .track::after{content:'';position:absolute;top:-6px;width:24px;height:24px;border-radius:50%;background:#fff}
+.s1 .track b{width:70%}.s1 .track::after{left:calc(70% - 12px)}
+.s2 .track b{width:42%}.s2 .track::after{left:calc(42% - 12px)}
+.s3 .track b{width:85%}.s3 .track::after{left:calc(85% - 12px)}
+.toggle{display:flex;align-items:center;gap:12px;margin-top:24px;font-size:19px}
+.toggle i{width:56px;height:30px;border-radius:999px;background:#7ee787;position:relative}
+.toggle i::after{content:'';position:absolute;right:4px;top:4px;width:22px;height:22px;border-radius:50%;background:#0d1512}
+.toggle j{width:56px;height:30px;border-radius:999px;background:#24402f;position:relative}
+.toggle j::after{content:'';position:absolute;left:4px;top:4px;width:22px;height:22px;border-radius:50%;background:#9db8a8}
+</style>
+</head>
+<body>
+<div class="stage">
+<svg width="760" height="360" viewBox="0 0 760 360"><path d="M0 180 Q 95 60 190 180 T 380 180 T 570 180 T 760 180" fill="none" stroke="#7ee787" stroke-width="6"/></svg>
+<div class="wave"><i style="left:0;height:40%"></i><i style="left:40px;height:70%"></i><i style="left:80px;height:55%"></i><i style="left:120px;height:90%"></i><i style="left:160px;height:64%"></i><i style="left:200px;height:80%"></i><i style="left:240px;height:48%"></i><i style="left:280px;height:74%"></i></div>
+<div class="readout"><div>RATE<b>042</b></div><div>SPAN<b>128</b></div><div>LOCK<b>ON</b></div></div>
+</div>
+<div class="dock">
+<h2>CONTROL</h2>
+<p>Sliders and presets drive the stage.</p>
+<div class="presets"><b class="on">CALM</b><b>WILD</b><b>DEEP</b></div>
+<div class="slider s1">SPEED<div class="track"><b></b></div></div>
+<div class="slider s2">GRAIN<div class="track"><b></b></div></div>
+<div class="slider s3">GLOW<div class="track"><b></b></div></div>
+<div class="toggle"><i></i>GRID<j></j>TRACE</div>
+</div>
+</body>
+</html>

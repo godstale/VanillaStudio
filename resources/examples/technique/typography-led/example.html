@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0e0f13;color:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#111"/>
+<text id="t1" x="640" y="330" text-anchor="middle" font-size="150" font-weight="900" fill="#f4f1ea">LISTEN</text>
+<text id="t2" x="640" y="330" text-anchor="middle" font-size="72" font-weight="700" fill="#f5b942">again · again · again</text>
+<g id="t3"><rect x="560" y="180" width="160" height="260" rx="36" fill="#8fd0ff"/><text x="640" y="540" text-anchor="middle" font-size="56" fill="#f4f1ea">Hold it</text></g>
+<g id="t4"><circle cx="640" cy="300" r="110" fill="none" stroke="#f5b942" stroke-width="16"/><text x="640" y="540" text-anchor="middle" font-size="60" font-weight="900" fill="#f4f1ea">DONE</text></g></svg>
+<script>
+const SECONDS = 4;
+window.seekExample = (t) => {
+const phase = (t % SECONDS) / SECONDS;
+const ease=(x)=>x<0?0:x>1?1:x*x*(3-2*x);
+const seg=Math.min(3,Math.floor(phase*4));
+for(let k=1;k<=4;k++)document.getElementById('t'+k).setAttribute('opacity',k===seg+1?1:0);
+document.getElementById('t1').setAttribute('font-size',110+40*ease((phase*4-seg)/1));
+document.getElementById('t4').setAttribute('transform','translate(640 300) scale('+(0.7+0.3*ease((phase*4-3)/1))+') translate(-640 -300)');
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+#sceneA{position:absolute;left:0;top:0;width:1280px;height:720px}.h1{position:absolute;left:340px;top:150px;width:600px;height:64px;background:#23211d;border-radius:12px}.h2{position:absolute;left:440px;top:240px;width:400px;height:40px;background:#8a8f98;border-radius:10px}#dot{position:absolute;left:598px;top:470px;width:84px;height:84px;background:#d9502f;border-radius:50%}#flood{position:absolute;background:#d9502f}#cardF{position:absolute;left:340px;top:150px;width:600px;height:420px;background:#0e3a34;border-radius:32px;opacity:0}.sun{position:absolute;left:70px;top:60px;width:150px;height:150px;background:#f2c879;border-radius:50%}.c1{position:absolute;left:70px;top:260px;width:460px;height:44px;background:#f4f1ea;border-radius:10px}.c2{position:absolute;left:70px;top:326px;width:320px;height:30px;background:#7fb5a8;border-radius:8px}
+</style>
+</head>
+<body>
+<div id="sceneA"><div class="h1"></div><div class="h2"></div><div id="dot"></div></div>
+<div id="flood"></div>
+<div id="cardF"><div class="sun"></div><div class="c1"></div><div class="c2"></div></div>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="none"/></svg>
+<script>
+const SECONDS = 4;
+const ez = (x) => x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x);
+const S0 = {l:598,t:470,w:84,h:84,r:999}, S1 = {l:-400,t:-400,w:2100,h:1600,r:60}, S2 = {l:340,t:150,w:600,h:420,r:32};
+const mix = (a,b,k) => ({l:a.l+(b.l-a.l)*k,t:a.t+(b.t-a.t)*k,w:a.w+(b.w-a.w)*k,h:a.h+(b.h-a.h)*k,r:a.r+(b.r-a.r)*k});
+window.seekExample = (t) => {
+const p = (t % SECONDS) / SECONDS;
+let s;
+if (p < 0.36) s = mix(S0, S1, ez(p / 0.36));
+else if (p < 0.5) s = S1;
+else if (p < 0.82) s = mix(S1, S2, ez((p - 0.5) / 0.32));
+else s = S2;
+const f = document.getElementById('flood');
+f.style.left = s.l + 'px'; f.style.top = s.t + 'px';
+f.style.width = s.w + 'px'; f.style.height = s.h + 'px';
+f.style.borderRadius = s.r + 'px';
+document.getElementById('sceneA').style.opacity = String(1 - ez(p / 0.3));
+document.getElementById('cardF').style.opacity = String(ez((p - 0.68) / 0.2));
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "seconds": 5,
+  "note": {
+    "ko": "커서가 곡선을 그려 클릭하면 화면이 확대되고 색면이 훑고 지나갑니다.",
+    "en": "A cursor arcs in to click, the view zooms, and a color wipe sweeps through."
+  }
+}

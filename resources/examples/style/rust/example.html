@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Oxidation</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#6f757c;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<linearGradient id="steel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a7adb5"/><stop offset="1" stop-color="#6f757c"/></linearGradient>
+<filter id="rb" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3"/></filter>
+</defs>
+<rect width="1280" height="720" fill="url(#steel)"/>
+<g id="brush"></g>
+<g id="ox" filter="url(#rb)"></g>
+<g id="pits"></g>
+</svg>
+<script>
+const H=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+let b='';
+for(let i=0;i<46;i++){b+='<rect x="0" y="'+(H(i+801)*720).toFixed(0)+'" width="1280" height="2" fill="'+(i%2?'#ffffff':'#3c4148')+'" opacity="0.08"/>';}
+document.getElementById('brush').innerHTML=b;
+const cols=['#7a2f0e','#a34d16','#c47a2a','#4a2410'];let s='';
+for(let i=0;i<70;i++){const cx=(H(i+810)*700).toFixed(0),cy=(260+H(i+811)*460).toFixed(0);
+s+='<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+(16+H(i+812)*60).toFixed(0)+'" ry="'+(10+H(i+813)*40).toFixed(0)+'" fill="'+cols[i%4]+'" opacity="'+(0.55+H(i+814)*0.4).toFixed(2)+'"/>';
+if(i%3===0){s+='<rect x="'+cx+'" y="'+cy+'" width="'+(6+H(i+815)*8).toFixed(0)+'" height="'+(50+H(i+816)*90).toFixed(0)+'" rx="5" fill="'+cols[(i+1)%4]+'" opacity="0.4"/>';}}
+document.getElementById('ox').innerHTML=s;
+let p='';
+for(let i=0;i<90;i++){p+='<circle cx="'+(H(i+850)*760).toFixed(0)+'" cy="'+(240+H(i+851)*480).toFixed(0)+'" r="'+(1+H(i+852)*2.6).toFixed(1)+'" fill="#2e1a08" opacity="0.7"/>';}
+document.getElementById('pits').innerHTML=p;
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#101B26}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720"><circle id="g" cx="640" cy="360" r="30" fill="#F5B942" opacity="0"/><circle id="m0" r="80" fill="#FF6B5E" opacity="0.85"/><circle id="m1" r="80" fill="#F5B942" opacity="0.85"/><circle id="m2" r="80" fill="#39D0C4" opacity="0.85"/></svg>
+<script>
+const SECONDS=3;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+const lerp=(a,b,e)=>a+(b-a)*e;
+const pp=v=>v<0.5?v*2:2-v*2;
+const H=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);};
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+const e=ss(p*1.2);
+const PX=[[340,640],[640,640],[940,640]],PY=[[360,360],[180,360],[360,360]];
+for(let i=0;i<3;i++){$('m'+i).setAttribute('cx',lerp(PX[i][0],PX[i][1],e).toFixed(1));$('m'+i).setAttribute('cy',lerp(PY[i][0],PY[i][1],e).toFixed(1));}
+const e2=ss((p-0.45)/0.55);$('g').setAttribute('r',(30+150*e2).toFixed(1));$('g').setAttribute('opacity',(0.5*e2).toFixed(3));
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

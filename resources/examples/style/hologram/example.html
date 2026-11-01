@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scan figure</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #020a10; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <radialGradient id="floor" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#0e3a4d" />
+          <stop offset="100%" stop-color="#020a10" />
+        </radialGradient>
+        <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="8" />
+        </filter>
+      </defs>
+      <rect width="1280" height="720" fill="#020a10" />
+      <ellipse cx="640" cy="620" rx="330" ry="60" fill="url(#floor)" />
+      <g id="mesh" fill="none" stroke="#4de8ff" stroke-width="4">
+        <circle cx="640" cy="270" r="110" />
+        <ellipse cx="640" cy="270" rx="110" ry="40" />
+        <ellipse cx="640" cy="270" rx="110" ry="75" />
+        <ellipse cx="640" cy="270" rx="60" ry="110" />
+        <ellipse cx="640" cy="270" rx="110" ry="110" />
+        <path d="M530 370 Q560 480 520 580 M750 370 Q720 480 760 580" />
+        <ellipse cx="640" cy="480" rx="120" ry="30" />
+        <ellipse cx="640" cy="530" rx="135" ry="30" />
+        <path d="M560 400 L560 580 M720 400 L720 580" />
+      </g>
+      <rect id="scan" x="440" y="100" width="400" height="26" fill="#bff6ff" opacity="0.85" filter="url(#soft)" />
+      <rect id="scanCore" x="440" y="108" width="400" height="8" fill="#ffffff" />
+      <g stroke="#4de8ff" stroke-width="3" opacity="0.35">
+        <line x1="120" y1="620" x2="1160" y2="620" />
+        <line x1="220" y1="650" x2="1060" y2="650" />
+      </g>
+    </svg>
+    <script>
+      const SECONDS = 3;
+      const mesh = document.getElementById('mesh');
+      const scan = document.getElementById('scan');
+      const core = document.getElementById('scanCore');
+      const DIPS = [0.3, 0.66];
+
+      window.seekExample = (t) => {
+        const phase = (t % SECONDS) / SECONDS;
+        const y = 120 + phase * 460;
+        scan.setAttribute('y', String(y));
+        core.setAttribute('y', String(y + 8));
+        const dipped = DIPS.some((d) => Math.abs(phase - d) < 0.03);
+        mesh.setAttribute('opacity', dipped ? '0.35' : String(0.75 + 0.25 * Math.sin(phase * Math.PI * 6)));
+        scan.setAttribute('opacity', dipped ? '0.25' : '0.85');
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

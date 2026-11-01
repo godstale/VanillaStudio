@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Case file</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #101014; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <pattern id="dots" width="12" height="12" patternUnits="userSpaceOnUse">
+          <circle cx="3" cy="3" r="2.2" fill="#000" opacity="0.35" />
+        </pattern>
+      </defs>
+      <rect x="0" y="0" width="1280" height="720" fill="#101014" />
+      <g transform="skewX(-8)">
+        <rect x="60" y="40" width="360" height="640" fill="#e8641b" stroke="#f4f1ea" stroke-width="10" />
+        <rect x="450" y="40" width="360" height="640" fill="#1f7a8c" stroke="#f4f1ea" stroke-width="10" />
+        <rect x="840" y="40" width="360" height="640" fill="#5b2a86" stroke="#f4f1ea" stroke-width="10" />
+      </g>
+      <g transform="skewX(-8)">
+        <rect x="60" y="40" width="360" height="640" fill="url(#dots)" />
+        <rect x="450" y="40" width="360" height="640" fill="url(#dots)" />
+        <rect x="840" y="40" width="360" height="640" fill="url(#dots)" />
+      </g>
+      <g>
+        <path d="M560 720 L585 480 L520 430 L560 300 L640 260 L720 300 L760 430 L695 480 L720 720 Z" fill="#23232b" stroke="#f4f1ea" stroke-width="10" stroke-linejoin="round" />
+        <ellipse cx="640" cy="200" rx="78" ry="92" fill="#d9a066" stroke="#f4f1ea" stroke-width="10" />
+        <rect x="566" y="150" width="148" height="44" rx="22" fill="#23232b" />
+        <rect x="588" y="216" width="104" height="26" rx="13" fill="#23232b" />
+        <path d="M585 480 L470 560 L430 720 L540 720 L580 600 Z" fill="#2e2e38" stroke="#f4f1ea" stroke-width="8" stroke-linejoin="round" />
+        <path d="M695 480 L810 560 L850 720 L740 720 L700 600 Z" fill="#2e2e38" stroke="#f4f1ea" stroke-width="8" stroke-linejoin="round" />
+        <rect x="880" y="90" width="220" height="64" fill="#f4f1ea" stroke="#101014" stroke-width="8" />
+        <text x="990" y="137" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="38" fill="#101014">NEW CASE</text>
+      </g>
+    </svg>
+  </body>
+</html>

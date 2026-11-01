@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0E1622}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720"><circle id="t0" r="9" fill="#F5B942"/><circle id="t1" r="9" fill="#FF6B5E"/><circle id="t2" r="9" fill="#FF6B5E"/><circle id="t3" r="9" fill="#FF6B5E"/><circle id="t4" r="9" fill="#FF6B5E"/><circle id="t5" r="9" fill="#FF6B5E"/><circle id="t6" r="9" fill="#FF6B5E"/><circle id="t7" r="9" fill="#FF6B5E"/><circle id="t8" r="9" fill="#39D0C4"/><circle id="t9" r="9" fill="#39D0C4"/><circle id="t10" r="9" fill="#39D0C4"/><circle id="t11" r="9" fill="#39D0C4"/><circle id="t12" r="9" fill="#39D0C4"/><circle id="t13" r="9" fill="#39D0C4"/><circle id="t14" r="9" fill="#39D0C4"/><circle id="t15" r="9" fill="#39D0C4"/><circle id="t16" r="9" fill="#39D0C4"/><circle id="t17" r="9" fill="#39D0C4"/><circle id="t18" r="9" fill="#39D0C4"/><circle id="t19" r="9" fill="#39D0C4"/><circle id="t20" r="9" fill="#8B7CF6"/><circle id="t21" r="9" fill="#8B7CF6"/><circle id="t22" r="9" fill="#8B7CF6"/><circle id="t23" r="9" fill="#8B7CF6"/><circle id="t24" r="9" fill="#8B7CF6"/><circle id="t25" r="9" fill="#8B7CF6"/><circle id="t26" r="9" fill="#8B7CF6"/><circle id="t27" r="9" fill="#8B7CF6"/><circle id="t28" r="9" fill="#8B7CF6"/><circle id="t29" r="9" fill="#8B7CF6"/><circle id="t30" r="9" fill="#8B7CF6"/><circle id="t31" r="9" fill="#8B7CF6"/><circle id="t32" r="9" fill="#8B7CF6"/><circle id="t33" r="9" fill="#8B7CF6"/><circle id="t34" r="9" fill="#8B7CF6"/><circle id="t35" r="9" fill="#8B7CF6"/><circle id="t36" r="9" fill="#B8E356"/><circle id="t37" r="9" fill="#B8E356"/><circle id="t38" r="9" fill="#B8E356"/><circle id="t39" r="9" fill="#B8E356"/><circle id="t40" r="9" fill="#B8E356"/><circle id="t41" r="9" fill="#B8E356"/><circle id="t42" r="9" fill="#B8E356"/><circle id="t43" r="9" fill="#B8E356"/><circle id="t44" r="9" fill="#B8E356"/><circle id="t45" r="9" fill="#B8E356"/><circle id="t46" r="9" fill="#B8E356"/><circle id="t47" r="9" fill="#B8E356"/></svg>
+<script>
+const SECONDS=4;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+const lerp=(a,b,e)=>a+(b-a)*e;
+const pp=v=>v<0.5?v*2:2-v*2;
+const H=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);};
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+const SX=[1124.7, 1160.6, 813.5, 1145.5, 1023.2, 138.1, 290.9, 183.9, 1047.0, 678.0, 628.2, 126.1, 794.9, 477.6, 104.5, 119.5, 1087.1, 713.7, 703.9, 905.8, 585.0, 758.5, 598.9, 430.9, 288.9, 575.1, 1079.3, 896.7, 1015.5, 874.6, 825.4, 659.5, 908.1, 77.2, 878.8, 857.7, 1073.3, 1127.0, 1215.8, 112.7, 1148.9, 85.6, 630.7, 930.9, 784.3, 1009.8, 325.9, 211.2],SY=[559.8, 514.8, 177.5, 124.8, 157.5, 636.0, 501.5, 294.0, 191.2, 411.8, 83.5, 230.3, 74.7, 511.8, 662.8, 240.2, 130.3, 230.5, 343.9, 446.2, 186.4, 86.0, 60.8, 646.8, 93.6, 314.4, 378.2, 148.9, 450.8, 611.9, 135.4, 606.5, 603.5, 138.2, 214.8, 611.3, 251.9, 603.3, 64.2, 516.4, 477.9, 515.0, 214.8, 644.8, 166.4, 378.7, 612.3, 509.8],EX=[640.0, 685.0, 668.1, 630.0, 599.5, 599.5, 630.0, 668.1, 726.0, 701.2, 660.0, 613.4, 574.0, 552.2, 554.0, 578.8, 620.0, 666.6, 706.0, 727.8, 751.4, 713.8, 664.9, 612.2, 563.8, 526.9, 507.3, 507.9, 528.6, 566.2, 615.1, 667.8, 716.2, 753.1, 772.7, 772.1, 748.8, 665.7, 575.7, 502.9, 466.9, 477.3, 531.2, 614.3, 704.3, 777.1, 813.1, 802.7],EY=[360.0, 360.0, 395.2, 403.9, 379.5, 340.5, 316.1, 324.8, 386.6, 426.0, 447.8, 446.0, 421.2, 380.0, 333.4, 294.0, 272.2, 274.0, 298.8, 340.0, 436.2, 473.1, 492.7, 492.1, 471.4, 433.8, 384.9, 332.2, 283.8, 246.9, 227.3, 227.9, 248.6, 286.2, 335.1, 387.8, 497.1, 533.1, 522.7, 468.8, 385.7, 295.7, 222.9, 186.9, 197.3, 251.2, 334.3, 424.3];
+for(let i=0;i<48;i++){const e=ss(p*1.25-H(i)*0.25);
+$('t'+i).setAttribute('cx',lerp(SX[i],EX[i],e).toFixed(1));$('t'+i).setAttribute('cy',lerp(SY[i],EY[i],e).toFixed(1));$('t'+i).setAttribute('opacity',(0.3+0.7*e).toFixed(3));}
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

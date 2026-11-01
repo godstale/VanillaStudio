@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Soap film</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0b0d16;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<radialGradient id="film" cx="0.38" cy="0.32" r="0.9"><stop offset="0" stop-color="#ffe9f6"/><stop offset="0.25" stop-color="#ff9de2"/><stop offset="0.45" stop-color="#8f7bff"/><stop offset="0.65" stop-color="#5fc6ff"/><stop offset="0.82" stop-color="#5ff2c4"/><stop offset="1" stop-color="#3a2a6e"/></radialGradient>
+<filter id="ib" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="20"/></filter>
+</defs>
+<rect width="1280" height="720" fill="#0b0d16"/>
+<g id="dust"></g>
+<ellipse cx="640" cy="610" rx="300" ry="34" fill="#8f7bff" opacity="0.25" filter="url(#ib)"/>
+<circle cx="640" cy="360" r="235" fill="url(#film)"/>
+<circle cx="640" cy="360" r="235" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.6"/>
+<ellipse cx="555" cy="260" rx="70" ry="44" fill="#fff" opacity="0.85" transform="rotate(-24 555 260)"/>
+<path d="M430 470 Q560 540 720 500" stroke="#fff" stroke-width="8" fill="none" opacity="0.4" stroke-linecap="round"/>
+</svg>
+<script>
+const H=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+let s='';
+for(let i=0;i<60;i++){s+='<circle cx="'+(H(i+11)*1280).toFixed(0)+'" cy="'+(H(i+13)*720).toFixed(0)+'" r="'+(0.8+H(i+17)*1.6).toFixed(1)+'" fill="#cfe0ff" opacity="'+(0.2+H(i+19)*0.5).toFixed(2)+'"/>';}
+document.getElementById('dust').innerHTML=s;
+</script>
+</body>
+</html>

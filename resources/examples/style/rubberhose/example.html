@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>rubberhose</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#e8e2d4}
+      svg{width:100%;height:100%;display:block}
+      .film{fill:#111}
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <rect x="0" y="0" width="1280" height="720" fill="#e8e2d4"/>
+      <rect x="0" y="540" width="1280" height="180" fill="#d5cdb6"/>
+      <ellipse cx="640" cy="580" rx="330" ry="34" fill="#000" opacity="0.14"/>
+      <g id="dancer" stroke="#111" stroke-width="14" stroke-linecap="round" fill="none">
+        <path id="legL" d="M610 400 Q590 470 560 520"/>
+        <path id="legR" d="M670 400 Q690 470 720 520"/>
+        <path id="armL" d="M540 280 Q470 300 430 350"/>
+        <path id="armR" d="M740 280 Q810 300 850 350"/>
+      </g>
+      <g id="body">
+        <ellipse cx="640" cy="330" rx="105" ry="120" fill="#f6f1e3" stroke="#111" stroke-width="14"/>
+        <ellipse cx="600" cy="300" rx="26" ry="34" fill="#111"/>
+        <ellipse cx="680" cy="300" rx="26" ry="34" fill="#111"/>
+        <circle cx="608" cy="292" r="7" fill="#e8e2d4"/>
+        <circle cx="688" cy="292" r="7" fill="#e8e2d4"/>
+        <path id="mouth" d="M600 370 Q640 400 680 370" fill="none" stroke="#111" stroke-width="12" stroke-linecap="round"/>
+        <path d="M596 250 q44 -34 88 0" fill="none" stroke="#111" stroke-width="10" stroke-linecap="round"/>
+      </g>
+      <g fill="#111">
+        <ellipse id="shoeL" cx="548" cy="532" rx="42" ry="24"/>
+        <ellipse id="shoeR" cx="732" cy="532" rx="42" ry="24"/>
+        <circle id="handL" cx="424" cy="356" r="26"/>
+        <circle id="handR" cx="856" cy="356" r="26"/>
+      </g>
+      <g fill="#111">
+        <circle cx="150" cy="150" r="60"/>
+        <circle cx="1130" cy="150" r="60"/>
+        <circle cx="150" cy="570" r="60"/>
+        <circle cx="1130" cy="570" r="60"/>
+      </g>
+      <rect id="flick" x="0" y="0" width="1280" height="720" fill="#000" opacity="0"/>
+      <rect x="0" y="0" width="1280" height="720" fill="none" stroke="#111" stroke-width="30"/>
+    </svg>
+    <script>
+      const SECONDS = 3;
+      const dancer = document.getElementById('dancer');
+      const body = document.getElementById('body');
+      const flick = document.getElementById('flick');
+      const shoeL = document.getElementById('shoeL');
+      const shoeR = document.getElementById('shoeR');
+      const handL = document.getElementById('handL');
+      const handR = document.getElementById('handR');
+      const DIPS = [0.2, 0.45, 0.72, 0.9];
+      window.seekExample = (t) => {
+        const phase = (t % SECONDS) / SECONDS;
+        const beat = Math.abs(Math.sin(phase * Math.PI * 4));
+        const bounce = 1 - 0.12 * beat;
+        dancer.setAttribute('transform', `translate(640 420) scale(1 ${bounce}) translate(-640 -420)`);
+        body.setAttribute('transform', `translate(0 ${-26 * beat})`);
+        const lift = 40 * Math.abs(Math.sin(phase * Math.PI * 2));
+        shoeL.setAttribute('cy', 532 - lift);
+        shoeR.setAttribute('cy', 532 - (40 - lift));
+        handL.setAttribute('cy', 356 - 60 * beat);
+        handR.setAttribute('cy', 356 - 60 * (1 - beat));
+        flick.setAttribute('opacity', DIPS.some((d) => Math.abs(phase - d) < 0.02) ? 0.22 : 0.04 * Math.sin(phase * 40));
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

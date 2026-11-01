@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Phone 360</title>
+    <style>
+      html, body {
+        margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #14171C;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      .stage { display: grid; place-items: center; height: 100%; }
+      .phone {
+        width: 360px; height: 656px; border-radius: 48px; background: #2B303B;
+        padding: 16px; box-sizing: border-box;
+      }
+      .screen {
+        width: 100%; height: 100%; border-radius: 34px; background: #F2EEE2;
+        padding: 30px 26px; box-sizing: border-box; overflow: hidden;
+      }
+      .notch { width: 120px; height: 18px; margin: 0 auto 22px; border-radius: 999px; background: #2B303B; }
+      .hero { height: 170px; border-radius: 18px; background: linear-gradient(135deg, #2456D6, #7AA2F7); }
+      .bar { height: 26px; margin: 24px 20px 0; border-radius: 6px; background: #22262E; }
+      .line { height: 14px; margin: 14px 20px 0; border-radius: 7px; background: #C4BCA6; }
+      .btn { height: 52px; margin: 26px 40px 0; border-radius: 999px; background: #2456D6; }
+    </style>
+  </head>
+  <body>
+    <div class="stage">
+      <div class="phone"><div class="screen">
+        <div class="notch"></div><div class="hero"></div>
+        <div class="bar"></div><div class="line"></div><div class="line"></div><div class="btn"></div>
+      </div></div>
+    </div>
+  </body>
+</html>

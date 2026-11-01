@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>etching</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden}
+      svg{width:100%;height:100%;display:block}
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <rect width="1280" height="720" fill="#e6d3ac"/>
+      <rect x="60" y="50" width="1160" height="620" fill="none" stroke="#7a5c3e" stroke-width="6"/>
+      <rect x="80" y="70" width="1120" height="580" fill="none" stroke="#7a5c3e" stroke-width="2"/>
+      <ellipse cx="640" cy="560" rx="300" ry="40" fill="none" stroke="#4a3a28" stroke-width="4"/>
+      <g id="form" stroke="#4a3a28" fill="none"></g>
+      <path d="M640 180 Q560 180 545 260 Q535 340 470 400 Q430 470 500 540 Q560 610 640 610 Q720 610 780 540 Q850 470 810 400 Q745 340 735 260 Q720 180 640 180Z" fill="#f2e4c4" stroke="#4a3a28" stroke-width="7"/>
+      <g id="shade" stroke="#4a3a28" fill="none"></g>
+      <path d="M520 220 Q480 300 500 380" fill="none" stroke="#4a3a28" stroke-width="4"/>
+      <circle cx="880" cy="170" r="46" fill="none" stroke="#4a3a28" stroke-width="5"/>
+      <g stroke="#4a3a28" stroke-width="3"><line x1="880" y1="100" x2="880" y2="120"/><line x1="880" y1="220" x2="880" y2="240"/><line x1="810" y1="170" x2="830" y2="170"/><line x1="930" y1="170" x2="950" y2="170"/></g>
+    </svg>
+    <script>
+      const seed = (i) => { const x = Math.sin(i * 173.3 + 311.1) * 15231.7331; return x - Math.floor(x); };
+      let f = '';
+      for (let i = 0; i < 34; i += 1) {
+        const y = 200 + i * 12;
+        const w = 90 + 90 * Math.sin((i / 34) * 3.14);
+        f += `<path d="M${(640 - w).toFixed(0)} ${y} Q640 ${y + 14} ${(640 + w).toFixed(0)} ${y}" stroke-width="2.4"/>`;
+      }
+      document.getElementById('form').innerHTML = f;
+      let s = '';
+      for (let i = 0; i < 22; i += 1) {
+        const y = 240 + i * 15;
+        s += `<line x1="${(655 + seed(i) * 20).toFixed(0)}" y1="${y}" x2="${(770 - seed(i + 9) * 20).toFixed(0)}" y2="${y + 34}" stroke-width="2.6"/>`;
+      }
+      document.getElementById('shade').innerHTML = s;
+    </script>
+  </body>
+</html>

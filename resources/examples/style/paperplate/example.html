@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Paper plate craft</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#6a8c5e;
+        font-family:'Segoe UI',system-ui,sans-serif}
+      svg{display:block;margin:0 auto}
+    </style>
+  </head>
+  <body>
+    <svg width="1280" height="720" viewBox="0 0 1280 720">
+      <ellipse cx="640" cy="660" rx="320" ry="28" fill="#00000030"/>
+      <!-- glued-on mane tufts (uneven, kid-craft) -->
+      <g id="mane"></g>
+      <!-- plate -->
+      <circle cx="640" cy="380" r="265" fill="#fdf6e3"/>
+      <circle cx="640" cy="380" r="265" fill="none" stroke="#d9c3ac" stroke-width="26" stroke-dasharray="26 14"/>
+      <circle cx="640" cy="380" r="228" fill="none" stroke="#e3d3ae" stroke-width="6"/>
+      <!-- crayon face -->
+      <g stroke-linecap="round" fill="none">
+        <path d="M470 330q60-50 120-20" stroke="#4a90c2" stroke-width="16"/>
+        <path d="M690 310q60-30 120 20" stroke="#4a90c2" stroke-width="16"/>
+        <circle cx="560" cy="390" r="30" fill="#fff" stroke="#2b2320" stroke-width="8"/>
+        <circle cx="720" cy="390" r="30" fill="#fff" stroke="#2b2320" stroke-width="8"/>
+        <circle cx="566" cy="396" r="12" fill="#2b2320"/>
+        <circle cx="714" cy="384" r="12" fill="#2b2320"/>
+        <ellipse cx="525" cy="465" rx="34" ry="18" fill="#f2a0a8" opacity=".85"/>
+        <ellipse cx="755" cy="465" rx="34" ry="18" fill="#f2a0a8" opacity=".85"/>
+        <path d="M600 460q40 30 80 0" stroke="#c93a3a" stroke-width="14"/>
+        <path d="M610 500q30 26 60 0" stroke="#c93a3a" stroke-width="10"/>
+      </g>
+      <!-- paper nose + whiskers -->
+      <polygon points="640,430 610,455 670,455" fill="#e8b53a" stroke="#8a5f10" stroke-width="5"/>
+      <g stroke="#2b2320" stroke-width="5">
+        <line x1="480" y1="450" x2="560" y2="445"/><line x1="480" y1="475" x2="560" y2="465"/>
+        <line x1="800" y1="450" x2="720" y2="445"/><line x1="800" y1="475" x2="720" y2="465"/>
+      </g>
+    </svg>
+    <script>
+      const NS = 'http://www.w3.org/2000/svg';
+      const M = document.getElementById('mane');
+      const cols = ['#e8743b', '#e8b53a', '#d94f4f', '#e8743b', '#e8b53a', '#d94f4f',
+                    '#e8743b', '#e8b53a', '#d94f4f', '#e8743b', '#e8b53a', '#d94f4f'];
+      for (let i = 0; i < 12; i++) {
+        const a = (i / 12) * Math.PI * 2 + 0.13;
+        const x = 640 + Math.cos(a) * 268, y = 380 + Math.sin(a) * 268;
+        const e = document.createElementNS(NS, 'rect');
+        e.setAttribute('x', -46); e.setAttribute('y', -46);
+        e.setAttribute('width', '92'); e.setAttribute('height', '92');
+        e.setAttribute('rx', '10');
+        e.setAttribute('fill', cols[i]);
+        e.setAttribute('stroke', '#00000033');
+        e.setAttribute('stroke-width', '4');
+        e.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(' + (a * 180 / Math.PI + 12).toFixed(1) + ')');
+        M.appendChild(e);
+      }
+    </script>
+  </body>
+</html>

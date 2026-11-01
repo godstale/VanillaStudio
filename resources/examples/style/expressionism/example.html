@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><title>ex</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#1d1a24}
+svg{display:block;width:1280px;height:720px}
+.jag{stroke-linecap:round;stroke-linejoin:round}
+</style></head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<linearGradient id="esk" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#e2572b"/><stop offset=".55" stop-color="#8f2f4a"/><stop offset="1" stop-color="#2b2340"/>
+</linearGradient>
+<filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="34"/></filter>
+</defs>
+<rect width="1280" height="720" fill="url(#esk)"/>
+<circle cx="950" cy="150" r="110" fill="#f2e2ac" opacity=".9" filter="url(#rough)"/>
+<g filter="url(#rough)">
+<path d="M0 560 L200 470 L340 540 L520 440 L700 550 L900 460 L1100 550 L1280 480 V720 H0Z" fill="#14121c"/>
+<g stroke="#14121c" stroke-width="7" stroke-linejoin="round">
+<path d="M140 560 C150 480 145 430 150 380 L270 360 C265 430 275 490 280 560 Z" fill="#f2c14e"/>
+<path d="M140 380 L270 360 L310 285 L175 295 Z" fill="#e2572b"/>
+<path d="M430 545 C440 460 435 400 445 335 L600 360 C595 430 600 490 605 545 Z" fill="#7fb3c8"/>
+<path d="M445 335 L600 360 L580 275 L460 260 Z" fill="#2f8f6b"/>
+<path d="M750 525 C760 450 755 400 770 345 L920 380 C912 440 915 490 920 525 Z" fill="#e2572b"/>
+<path d="M770 345 L920 380 L895 290 L760 275 Z" fill="#8f2f4a"/>
+</g>
+<g fill="#f5f0dc">
+<rect x="175" y="430" width="34" height="44" transform="rotate(-8 192 452)"/>
+<rect x="495" y="410" width="34" height="44" transform="rotate(6 512 432)"/>
+<rect x="810" y="415" width="34" height="44" transform="rotate(-6 827 437)"/>
+</g>
+<g id="st" stroke-width="9" class="jag"></g>
+</g>
+</svg>
+<script>
+(function(){
+function h(i){var x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);}
+var g=document.getElementById('st'),s='';
+var cols=['#f2c14e','#e2572b','#7fb3c8','#f5f0dc','#2f8f6b'];
+for(var i=0;i<70;i++){
+var x=h(i)*1280,y=h(i+900)*500;
+var x2=x+(h(i+5)-.5)*220,y2=y+(h(i+7)-.5)*140;
+s+='<line x1="'+x.toFixed(0)+'" y1="'+y.toFixed(0)+'" x2="'+x2.toFixed(0)+'" y2="'+y2.toFixed(0)+'" stroke="'+cols[i%5]+'" opacity=".8"/>';
+}
+g.innerHTML=s;
+})();
+</script>
+</body>
+</html>

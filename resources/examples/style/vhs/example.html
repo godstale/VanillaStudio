@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>VHS</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #000;
+        font-family: 'Courier New', monospace; }
+      .frame { position: relative; width: 100%; height: 100%;
+        background: linear-gradient(#3d5a80 0 55%, #2f6b46 55% 78%, #6e6252 78%); }
+      .sun { position: absolute; left: 840px; top: 120px; width: 130px; height: 130px;
+        border-radius: 50%; background: #f2d3a0; }
+      .rec { position: absolute; left: 48px; top: 36px; color: #fff; font-size: 44px;
+        text-shadow: 2px 2px 0 #000; }
+      .rec b { color: #ff2d3a; }
+      .date { position: absolute; right: 48px; bottom: 36px; color: #fff; font-size: 40px;
+        text-shadow: 2px 2px 0 #000; }
+      .track { position: absolute; left: 0; width: 100%; background: rgba(255,255,255,0.35); }
+      .noise { position: absolute; inset: 0; opacity: 0.12; }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <div class="sun"></div>
+      <div class="rec"><b>●</b> REC <span id="tc">0:00:00</span></div>
+      <div class="date">PM 8:42 JUL. 24 1986</div>
+      <div class="track" id="track"></div>
+      <svg class="noise" id="noise" width="1280" height="720"></svg>
+    </div>
+    <script>
+      const SECONDS = 4;
+      const tc = document.getElementById('tc');
+      const track = document.getElementById('track');
+      const noise = document.getElementById('noise');
+      const hash = (i, f) => {
+        const x = Math.sin(i * 17.3 + f * 5.1) * 9876.5;
+        return x - Math.floor(x);
+      };
+      window.seekExample = (t) => {
+        const time = (((t % SECONDS) + SECONDS) % SECONDS);
+        const s = Math.floor(time);
+        const f = Math.floor((time - s) * 30);
+        tc.textContent = `0:00:0${s}:${String(f).padStart(2, '0')}`;
+        const y = (time / SECONDS) * 900 - 90;
+        track.style.top = `${y.toFixed(1)}px`;
+        track.style.height = `${(14 + hash(Math.floor(time * 12), 3) * 22).toFixed(1)}px`;
+        let html = '';
+        const fr = Math.floor(time * 12);
+        for (let i = 0; i < 120; i += 1) {
+          if (hash(i, fr) > 0.6) {
+            html += `<rect x="${(hash(i, fr + 1) * 1280).toFixed(0)}" y="${(hash(i, fr + 2) * 720).toFixed(0)}" width="${(2 + hash(i, fr + 3) * 30).toFixed(0)}" height="2" fill="#fff" />`;
+          }
+        }
+        noise.innerHTML = html;
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

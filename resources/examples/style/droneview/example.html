@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Top fields</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#5c8a3c;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<rect width="1280" height="720" fill="#5c8a3c"/>
+<g id="m">
+<rect x="-240" y="-200" width="1760" height="1120" fill="#5c8a3c"/>
+<g id="fields"></g>
+<path d="M-240 700 Q200 560 480 640 T1000 560 T1560 660" stroke="#3f6d8f" stroke-width="64" fill="none"/>
+<path d="M-240 700 Q200 560 480 640 T1000 560 T1560 660" stroke="#7fb3d5" stroke-width="10" fill="none" stroke-dasharray="26 30"/>
+<path d="M300 -200 L700 920" stroke="#c9bd9a" stroke-width="46"/>
+<path d="M300 -200 L700 920" stroke="#8a7c58" stroke-width="4" stroke-dasharray="30 24"/>
+<g id="farm"></g>
+</g>
+</svg>
+<script>
+const H=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+const SECONDS=4;
+const cols=['#5c8a3c','#7aa24a','#a9b665','#8a6a45','#4f7a34','#c2a15c'];
+let s='';
+for(let r=0;r<4;r++){for(let c=0;c<6;c++){const x=(-240+c*300).toFixed(0),y=(-200+r*280).toFixed(0);
+s+='<rect x="'+x+'" y="'+y+'" width="292" height="272" fill="'+cols[(r*6+c)%6]+'"/>';
+if((r*6+c)%3===0){for(let k=0;k<6;k++){s+='<line x1="'+x+'" y1="'+(Number(y)+20+k*44)+'" x2="'+(Number(x)+292)+'" y2="'+(Number(y)+20+k*44)+'" stroke="#00000033" stroke-width="3"/>';}}}}
+document.getElementById('fields').innerHTML=s;
+let f='<rect x="1050" y="120" width="120" height="80" fill="#a33c2e"/><rect x="1050" y="100" width="120" height="26" fill="#5e2320"/>';
+for(let i=0;i<8;i++){f+='<circle cx="'+(1000+H(i+300)*220).toFixed(0)+'" cy="'+(240+H(i+310)*60).toFixed(0)+'" r="'+(10+H(i+320)*10).toFixed(0)+'" fill="#2e5a26"/>';}
+document.getElementById('farm').innerHTML=f;
+const m=document.getElementById('m');
+window.seekExample=(t)=>{
+const p=(t%SECONDS)/SECONDS,a=p*6.2832;
+m.setAttribute('transform','translate('+(90*Math.sin(a)).toFixed(1)+' '+(60*Math.cos(a)).toFixed(1)+')');};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}window.seekExample(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Dolly</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#05060c;font-family:'Segoe UI',system-ui,sans-serif}
+canvas{position:absolute;inset:0;width:1280px;height:720px}
+.bar{position:absolute;left:0;right:0;height:56px;background:#000}
+.bar.top{top:0}.bar.bot{bottom:0}
+svg.hud{position:absolute;inset:0;width:1280px;height:720px}
+</style>
+</head>
+<body>
+<canvas id="cv" width="1280" height="720"></canvas>
+<div class="bar top"></div>
+<div class="bar bot"></div>
+<svg class="hud" viewBox="0 0 1280 720"><circle cx="640" cy="360" r="180" fill="none" stroke="#fff" stroke-width="2" opacity=".35"/><path d="M24 96V80h40M1216 80h40v16" fill="none" stroke="#fff" stroke-width="2" opacity=".5"/></svg>
+<script>
+const SECONDS=5;
+const cv=document.getElementById('cv');
+const ctx=cv.getContext('2d');
+const h=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+window.seekExample=(t)=>{
+const p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+const a=p*Math.PI*2;
+const zoom=1+.18*Math.sin(a);
+ctx.fillStyle='#05060c';
+ctx.fillRect(0,0,1280,720);
+ctx.save();
+ctx.translate(640,360);
+ctx.scale(zoom,zoom);
+ctx.translate(-640,-360);
+const cx=640+60*Math.sin(a*.7),cy=350+40*Math.cos(a*.5);
+const cols=[[255,90,160],[80,220,255],[255,210,110]];
+for(let k=2;k>=0;k--){
+const dx=(k-1)*26;
+ctx.globalCompositeOperation='lighter';
+const g=ctx.createRadialGradient(cx+dx,cy,10,cx+dx,cy,300-k*40);
+g.addColorStop(0,`rgba(${cols[k][0]},${cols[k][1]},${cols[k][2]},.5)`);
+g.addColorStop(1,`rgba(${cols[k][0]},${cols[k][1]},${cols[k][2]},0)`);
+ctx.fillStyle=g;
+ctx.beginPath();
+ctx.moveTo(cx+dx,cy-260);
+ctx.lineTo(cx+dx+150,cy+160);
+ctx.lineTo(cx+dx-150,cy+160);
+ctx.closePath();ctx.fill();
+}
+ctx.globalCompositeOperation='source-over';
+ctx.strokeStyle='rgba(255,255,255,.85)';
+ctx.lineWidth=3;
+ctx.beginPath();
+ctx.moveTo(cx,cy-260);
+ctx.lineTo(cx+150,cy+160);
+ctx.lineTo(cx-150,cy+160);
+ctx.closePath();ctx.stroke();
+for(let i=0;i<120;i++){
+const sx=h(i)*1280,sy=h(i+400)*720;
+const tw=.3+.7*Math.abs(Math.sin(a*2+i));
+ctx.fillStyle=`rgba(255,255,255,${(.12+.3*tw).toFixed(3)})`;
+ctx.fillRect(sx,sy,2,2);
+}
+ctx.restore();
+const v=ctx.createRadialGradient(640,360,260,640,360,720);
+v.addColorStop(0,'rgba(0,0,0,0)');
+v.addColorStop(1,'rgba(0,0,0,.6)');
+ctx.fillStyle=v;
+ctx.fillRect(0,0,1280,720);
+};
+if(!navigator.webdriver){const loop=(ms)=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

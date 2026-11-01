@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#f4f1ea;color:#1c1b19;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#2e9df0"/>
+<text id="pp" x="640" y="430" text-anchor="middle" font-size="170" font-weight="900" fill="#fff">Hello!</text></svg>
+<script>
+const SECONDS = 3;
+window.seekExample = (t) => {
+const phase = (t % SECONDS) / SECONDS;
+const ease=(x)=>x<0?0:x>1?1:x*x*(3-2*x);
+const e2=ease(phase/0.35);const over=1+0.35*Math.sin(Math.min(1,(phase-0.2)/0.4)*Math.PI)*(phase>0.2&&phase<0.6?1:0);
+document.getElementById('pp').setAttribute('transform','translate(640 360) scale('+(Math.max(0.01,e2)*over)+') translate(-640 -360)');
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

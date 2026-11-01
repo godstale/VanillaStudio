@@ -1,0 +1,7 @@
+{
+  "seconds": 4,
+  "note": {
+    "ko": "조작대 프리셋이 바뀌면 파형과 막대, 판독값이 함께 살아 움직입니다.",
+    "en": "Switching dock presets drives the wave, bars and readouts together."
+  }
+}

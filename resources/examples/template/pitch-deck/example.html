@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pitch deck skeleton</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #0f1c26; color: #eef4f6; font-family: 'Segoe UI', system-ui, sans-serif; }
+      .slide { position: absolute; inset: 0 0 96px; display: grid; place-content: center;
+        justify-items: center; gap: 14px; text-align: center; opacity: 0; }
+      h1 { margin: 0; font-size: 82px; letter-spacing: -0.02em; }
+      p { margin: 0; color: #93a7b5; font-size: 28px; }
+      .chart { display: flex; align-items: flex-end; gap: 16px; height: 170px; }
+      .chart i { width: 64px; display: block; background: #4fd1a5; }
+      .chart i:last-child { background: #f2b134; }
+      .grid { display: grid; grid-template-columns: repeat(3, 220px); gap: 18px; }
+      .grid div { border: 2px solid #2c4252; border-radius: 14px; padding: 26px 0; font-size: 34px; }
+      nav { position: absolute; right: 56px; bottom: 30px; left: 56px; display: flex; gap: 10px; }
+      nav div { height: 42px; border-top: 4px solid #2c4252; color: #6d8595;
+        font-size: 19px; line-height: 42px; overflow: hidden; white-space: nowrap; }
+      nav div.on { border-color: #4fd1a5; color: #eef4f6; }
+    </style>
+  </head>
+  <body>
+    <div class="slide"><h1>Teams lose a day a week</h1><p>Problem: the pain in one line</p></div>
+    <div class="slide"><div class="grid"><div>Input</div><div>Engine</div><div>Output</div></div><h1>One calm tool</h1><p>Solution: what you built</p></div>
+    <div class="slide"><div class="chart"><i style="height:60px"></i><i style="height:100px"></i><i style="height:150px"></i></div><h1>A growing market</h1><p>Market: size with sources</p></div>
+    <div class="slide"><h1>12 teams · 4.9 / 5</h1><p>Traction: proof so far</p></div>
+    <div class="slide"><h1>Join us</h1><p>Ask: what you need</p></div>
+    <nav id="nav"></nav>
+    <script>
+      const SECONDS = 8;
+      const BEATS = [['Problem', 5], ['Solution', 6], ['Market', 6], ['Traction', 6], ['Ask', 4]];
+      const total = BEATS.reduce((s, [, x]) => s + x, 0);
+      const nav = document.getElementById('nav');
+      nav.innerHTML = BEATS.map(([n, s]) => `<div style="flex:${s}">${n}</div>`).join('');
+      const slides = [...document.querySelectorAll('.slide')];
+      const tabs = [...nav.children];
+      window.seekExample = (t) => {
+        const cyc = ((t % SECONDS) + SECONDS) % SECONDS;
+        let at = (cyc / SECONDS) * total;
+        const active = BEATS.findIndex(([, s]) => (at < s ? true : ((at -= s), false)));
+        slides.forEach((s, i) => (s.style.opacity = i === active ? 1 : 0));
+        tabs.forEach((b, i) => b.classList.toggle('on', i === active));
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

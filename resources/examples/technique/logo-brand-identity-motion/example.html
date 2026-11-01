@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0e0f13;color:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#101319"/>
+<circle id="lr" cx="640" cy="300" r="140" fill="none" stroke="#d8b25c" stroke-width="14"/>
+<polygon id="lt" points="640,210 730,360 550,360" fill="#f4f1ea"/>
+<rect id="ls" x="440" y="500" width="400" height="14" fill="#d8b25c"/>
+<text id="lw" x="640" y="580" text-anchor="middle" font-size="44" letter-spacing="12">ATELIER</text></svg>
+<script>
+const SECONDS = 3;
+window.seekExample = (t) => {
+const phase = (t % SECONDS) / SECONDS;
+const ease=(x)=>x<0?0:x>1?1:x*x*(3-2*x);
+const lr=document.getElementById('lr');const C=2*Math.PI*140;
+lr.style.strokeDasharray=String(C);lr.style.strokeDashoffset=String(C*(1-ease(phase/0.5)));
+const lt=document.getElementById('lt');
+lt.setAttribute('opacity',ease((phase-0.4)/0.25));lt.setAttribute('transform','translate(0 '+(60*(1-ease((phase-0.4)/0.25)))+')');
+const ls=document.getElementById('ls');
+ls.setAttribute('width',400*ease((phase-0.6)/0.25));
+document.getElementById('lw').setAttribute('opacity',ease((phase-0.7)/0.25));
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

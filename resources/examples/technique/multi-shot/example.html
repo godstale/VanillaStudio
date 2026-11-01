@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0e0f13;color:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720">
+<g id="s1"><rect width="1280" height="720" fill="#2e9df0"/><circle cx="640" cy="360" r="180" fill="#fff"/></g>
+<g id="s2"><rect width="1280" height="720" fill="#e0608f"/><rect x="440" y="160" width="400" height="400" rx="40" fill="#fff"/></g>
+<g id="s3"><rect width="1280" height="720" fill="#1e3a2c"/><polygon points="640,180 820,520 460,520" fill="#f5d942"/></g>
+<g fill="#fff"><circle id="d1" cx="600" cy="660" r="14"/><circle id="d2" cx="640" cy="660" r="14"/><circle id="d3" cx="680" cy="660" r="14"/></g></svg>
+<script>
+const SECONDS = 3;
+window.seekExample = (t) => {
+const phase = (t % SECONDS) / SECONDS;
+const i=Math.min(2,Math.floor(phase*3));
+for(let k=1;k<=3;k++){document.getElementById('s'+k).setAttribute('opacity',k===i+1?1:0);document.getElementById('d'+k).setAttribute('opacity',k===i+1?1:0.35);}
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

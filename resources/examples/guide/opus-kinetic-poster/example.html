@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Poster</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0d5c46;color:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+.flood{position:absolute;inset:0;background:linear-gradient(135deg,#0d5c46 55%,#083c2e 55.2%)}
+h1.giant{position:absolute;left:56px;top:140px;margin:0;font-size:230px;line-height:.86;font-weight:800;letter-spacing:-.04em;color:#ffe9c9}
+h1.giant span{display:block;color:transparent;-webkit-text-stroke:4px #ffe9c9}
+.pill{position:absolute;padding:16px 34px;border-radius:999px;font-size:26px;font-weight:700;letter-spacing:.08em}
+.p1{left:70px;top:60px;background:#ffe9c9;color:#0d5c46}
+.p2{right:70px;top:420px;background:transparent;border:3px solid #ffe9c9;color:#ffe9c9}
+.p3{right:70px;top:500px;background:#ff5a5f;color:#fff}
+#badge{position:absolute;right:120px;top:120px;width:190px;height:190px;border-radius:50%;display:grid;place-content:center;font-size:30px;font-weight:800;color:#0d5c46}
+#badge b{position:absolute;inset:0;border-radius:50%;background:conic-gradient(#ffe9c9,#ffb347,#ff5a5f,#7ee3f2,#ffe9c9)}
+#badge span{position:absolute;inset:26px;border-radius:50%;background:#0d5c46;color:#ffe9c9;display:grid;place-content:center}
+.corner{position:absolute;font-size:20px;letter-spacing:.2em;color:#ffe9c9;opacity:.85}
+svg.grid{position:absolute;inset:0;width:1280px;height:720px}
+</style>
+</head>
+<body>
+<div class="flood"></div>
+<h1 class="giant">LOUD<br/><span>QUIET</span></h1>
+<div class="pill p1">LIVE 06</div>
+<div class="pill p2">HALL B</div>
+<div class="pill p3">ENTRY FREE</div>
+<div id="badge"><b></b><span>PLAY</span></div>
+<div class="corner" style="left:70px;bottom:44px">GRID 04 / 12 COL</div>
+<div class="corner" style="right:70px;bottom:44px">40.7 N — 74.0 W</div>
+<svg class="grid" viewBox="0 0 1280 720">
+<path d="M640 0v720M0 360h1280" stroke="#ffe9c9" stroke-width="2" opacity=".25"/>
+<rect x="40" y="40" width="1200" height="640" fill="none" stroke="#ffe9c9" stroke-width="2" opacity=".4"/>
+</svg>
+<script>
+const SECONDS=6;
+const badge=document.getElementById('badge');
+window.seekExample=(t)=>{
+const p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+badge.style.transform=`rotate(${p*360}deg) scale(${1+.05*Math.sin(p*Math.PI*4)})`;
+};
+if(!navigator.webdriver){const loop=(ms)=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

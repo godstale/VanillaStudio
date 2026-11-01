@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cross stitch</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#7d6a55;
+        font-family:'Segoe UI',system-ui,sans-serif}
+      .aida{position:absolute;inset:60px 190px;background-color:#f1e8d5;
+        background-image:linear-gradient(#00000014 1px,transparent 1px),linear-gradient(90deg,#00000014 1px,transparent 1px);
+        background-size:22px 22px;border:18px solid #6b4f2e;border-radius:10px;box-shadow:0 18px 40px #00000055}
+      svg{position:relative;display:block;margin:78px auto}
+    </style>
+  </head>
+  <body>
+    <div class="aida"></div>
+    <svg width="900" height="564" viewBox="0 0 900 564" id="art"></svg>
+    <script>
+      // tulip pixel map: .=empty R=red D=dark-red G=green Y=yellow
+      const MAP = [
+        '.....RRRRR.....',
+        '....RRRRRRR....',
+        '..RRRRRRRRRRR..',
+        '..RRRRRRRRRRR..',
+        '..RRRYRRRYRRR..',
+        '...RRRRRRRRR...',
+        '...RRRRRRRRR...',
+        '....RRRRRRR....',
+        '.....RRRRR.....',
+        '.......G.......',
+        '...G...G...G...',
+        '....G..G..G....',
+        '.....G.G.G.....',
+        '.......G.......',
+      ];
+      const COL = { R: '#d94f4f', Y: '#e8b53a', G: '#4a8c3f' };
+      const NS = 'http://www.w3.org/2000/svg';
+      const art = document.getElementById('art');
+      const cell = 38, ox = (900 - MAP[0].length * cell) / 2, oy = 12;
+      for (let r = 0; r < MAP.length; r++) {
+        for (let c = 0; c < MAP[r].length; c++) {
+          const ch = MAP[r][c];
+          if (ch === '.') continue;
+          const x = ox + c * cell, y = oy + r * cell;
+          const p = document.createElementNS(NS, 'path');
+          const col = ch === 'G' ? COL.G : (ch === 'Y' ? COL.Y : (c % 2 ? COL.R : '#c93a3a'));
+          p.setAttribute('d', 'M' + x + ' ' + y + 'l34 34M' + (x + 34) + ' ' + y + 'l-34 34');
+          p.setAttribute('stroke', col);
+          p.setAttribute('stroke-width', '11');
+          p.setAttribute('stroke-linecap', 'round');
+          art.appendChild(p);
+        }
+      }
+    </script>
+  </body>
+</html>

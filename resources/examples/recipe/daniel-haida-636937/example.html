@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><title>Ledger film</title><style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#10261f;color:#f2f5ef;font-family:system-ui,'Segoe UI',sans-serif}
+#total{position:absolute;left:120px;top:80px}
+#total small{font-size:28px;color:#9fc3b4}
+#total div{font-size:120px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+#rcpt{position:absolute;left:120px;top:330px;width:300px;height:300px;background:#f7f4ea;color:#1c2420;border-radius:14px;padding:26px;font-size:24px}
+#rcpt b{display:block;height:18px;background:#1c2420;margin:14px 0;border-radius:4px}
+#bars{position:absolute;left:500px;top:330px;right:120px}
+.row{display:flex;align-items:center;gap:16px;margin:22px 0;font-size:26px}
+.row .tr{flex:1;height:44px;background:#1d3a30;border-radius:10px;overflow:hidden}
+.row .fl{height:100%;border-radius:10px}
+svg.frame{position:absolute;inset:0}
+</style></head><body>
+<div id="total"><small>balance this month</small><div id="num">0</div></div>
+<div id="rcpt">RECEIPT<b style="width:80%"></b><b style="width:60%"></b><b style="width:70%"></b><b style="width:45%;background:#0a8a5c"></b></div>
+<div id="bars">
+<div class="row"><span>FOOD</span><div class="tr"><div class="fl" id="f1" style="background:#ffb347"></div></div></div>
+<div class="row"><span>TRAVEL</span><div class="tr"><div class="fl" id="f2" style="background:#4f7cff"></div></div></div>
+<div class="row"><span>SUPPLY</span><div class="tr"><div class="fl" id="f3" style="background:#0a8a5c"></div></div></div>
+</div>
+<svg class="frame" viewBox="0 0 1280 720"><circle id="ok" cx="1120" cy="150" r="46" fill="none" stroke="#0a8a5c" stroke-width="8"/><path id="tick" d="M1098 150l16 16 30-34" fill="none" stroke="#7ce3a8" stroke-width="10" stroke-linecap="round"/></svg>
+<script>
+var SECONDS=6;
+var num=document.getElementById("num"),
+f1=document.getElementById("f1"),f2=document.getElementById("f2"),f3=document.getElementById("f3"),
+ok=document.getElementById("ok"),tick=document.getElementById("tick"),
+rcpt=document.getElementById("rcpt");
+function ease(x){x=x<0?0:x>1?1:x;return x*x*(3-2*x);}
+window.seekExample=function(t){
+var p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+var v=Math.floor(128400*ease((p-0.15)/0.7));
+num.textContent=v.toLocaleString("en-US");
+f1.style.width=(72*ease(p/0.5))+"%";f2.style.width=(48*ease((p-0.2)/0.5))+"%";f3.style.width=(88*ease((p-0.35)/0.5))+"%";
+rcpt.style.transform="translateY("+((1-ease(p/0.2))*400)+"px) rotate("+(-6*(1-ease(p/0.2)))+"deg)";
+var done=p>0.85?1:0;
+ok.style.opacity=tick.style.opacity=done;
+};
+if(!navigator.webdriver){var loop=function(ms){window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script></body></html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+.hd{position:absolute;left:90px;top:44px;width:340px;height:44px;background:#23211d;border-radius:8px}.sub{position:absolute;left:90px;top:104px;width:520px;height:22px;background:#b9b4a6;border-radius:6px}#vp{position:absolute;left:0;top:180px;width:1280px;height:360px;overflow:hidden}#strip{position:absolute;left:0;top:0;width:2560px;height:360px}.sc{position:absolute;top:0;width:854px;height:360px}.fadeL{position:absolute;left:0;top:180px;width:140px;height:360px;background:linear-gradient(90deg,#f4f1ea,rgba(244,241,234,0))}.fadeR{position:absolute;right:0;top:180px;width:140px;height:360px;background:linear-gradient(270deg,#f4f1ea,rgba(244,241,234,0))}.rail{position:absolute;left:440px;top:572px;width:400px;height:12px;background:#d8d2c2;border-radius:999px}#th{position:absolute;left:440px;top:566px;width:90px;height:24px;background:#23211d;border-radius:999px}.ft{position:absolute;left:90px;top:624px;width:700px;height:22px;background:#b9b4a6;border-radius:6px}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#f4f1ea"/></svg>
+<div class="hd"></div><div class="sub"></div>
+<div id="vp"><div id="strip">
+<div class="sc" style="left:0;background:linear-gradient(180deg,#f7d9a0 0%,#e8933c 55%,#b3541e 55%,#7a3a12 100%)"><svg width="854" height="360"><circle cx="640" cy="150" r="80" fill="#fff3d0"/><ellipse cx="200" cy="330" rx="260" ry="60" fill="#8a4a1a"/></svg></div>
+<div class="sc" style="left:853px;background:linear-gradient(180deg,#bfe3ee 0%,#5a97b5 55%,#2f6b8f 55%,#1d4a63 100%)"><svg width="854" height="360"><circle cx="200" cy="120" r="60" fill="#ffffff" opacity=".85"/><ellipse cx="600" cy="330" rx="300" ry="50" fill="#dff1f7" opacity=".5"/></svg></div>
+<div class="sc" style="left:1706px;background:linear-gradient(180deg,#2b3a55 0%,#4a5f8a 60%,#1c2635 60%,#101722 100%)"><svg width="854" height="360"><polygon points="120,320 320,120 520,320" fill="#5a6f96"/><polygon points="420,320 620,140 820,320" fill="#3c4c6c"/><circle cx="700" cy="90" r="46" fill="#f4f1ea"/></svg></div>
+</div></div>
+<div class="fadeL"></div><div class="fadeR"></div>
+<div class="rail"></div><div id="th"></div><div class="ft"></div>
+<script>
+const SECONDS = 4;
+window.seekExample = (t) => {
+const p = (t % SECONDS) / SECONDS;
+document.getElementById('strip').style.left = (-1280 * p) + 'px';
+document.getElementById('th').style.left = (440 + 310 * p) + 'px';
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

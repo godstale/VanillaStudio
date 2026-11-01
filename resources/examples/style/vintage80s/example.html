@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Warm tape</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #181410; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#7fb0d1" />
+          <stop offset="55%" stop-color="#f2b879" />
+          <stop offset="100%" stop-color="#e0784a" />
+        </linearGradient>
+        <filter id="grain">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
+          <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0" />
+        </filter>
+        <filter id="soft" x="-80%" y="-80%" width="260%" height="260%">
+          <feGaussianBlur stdDeviation="60" />
+        </filter>
+      </defs>
+      <rect width="1280" height="720" fill="url(#sky)" />
+      <circle cx="640" cy="470" r="130" fill="#fff3c4" />
+      <path d="M0 470 L220 300 L440 470 Z" fill="#5d4a5a" />
+      <path d="M360 470 L620 270 L880 470 Z" fill="#4a3a4c" />
+      <path d="M800 470 L1030 300 L1280 470 Z" fill="#5d4a5a" />
+      <rect y="470" width="1280" height="250" fill="#3d5a78" />
+      <g stroke="#f2e7c4" stroke-width="8" opacity="0.5">
+        <line x1="200" y1="540" x2="500" y2="540" />
+        <line x1="700" y1="600" x2="1100" y2="600" />
+      </g>
+      <!-- car -->
+      <rect x="480" y="520" width="320" height="60" rx="28" fill="#8f2f2f" />
+      <rect x="545" y="480" width="180" height="60" rx="26" fill="#8f2f2f" />
+      <circle cx="560" cy="586" r="30" fill="#1c1c1c" />
+      <circle cx="740" cy="586" r="30" fill="#1c1c1c" />
+      <!-- warm cast + grain -->
+      <rect width="1280" height="720" fill="#ff9a3d" opacity="0.22" />
+      <rect width="1280" height="720" filter="url(#grain)" opacity="0.28" />
+      <rect width="1280" height="26" fill="#181410" />
+      <rect y="694" width="1280" height="26" fill="#181410" />
+      <!-- drifting light leak -->
+      <ellipse id="leak" cx="300" cy="200" rx="260" ry="150" fill="#ffd166" opacity="0.5" filter="url(#soft)" />
+    </svg>
+    <script>
+      const SECONDS = 4;
+      const leak = document.getElementById('leak');
+
+      window.seekExample = (t) => {
+        const phase = (t % SECONDS) / SECONDS;
+        leak.setAttribute('cx', String(180 + phase * 920));
+        leak.setAttribute('opacity', String(0.35 + 0.25 * Math.sin(phase * Math.PI * 2)));
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Plush bag charm</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#f3dfe6;
+        font-family:'Segoe UI',system-ui,sans-serif}
+      svg{display:block;margin:0 auto}
+    </style>
+  </head>
+  <body>
+    <svg width="1280" height="720" viewBox="0 0 1280 720">
+      <defs>
+        <radialGradient id="fur" cx="42%" cy="36%" r="80%">
+          <stop offset="0" stop-color="#ffffff"/><stop offset=".75" stop-color="#f6ede2"/><stop offset="1" stop-color="#d9c3ac"/>
+        </radialGradient>
+      </defs>
+      <!-- ball chain -->
+      <g id="chain"></g>
+      <!-- strap -->
+      <path d="M560 128q80 90 160 0" fill="none" stroke="#8a5a3b" stroke-width="18" stroke-linecap="round"/>
+      <circle cx="560" cy="128" r="16" fill="#c9c9cf" stroke="#7c7c84" stroke-width="4"/>
+      <circle cx="720" cy="128" r="16" fill="#c9c9cf" stroke="#7c7c84" stroke-width="4"/>
+      <!-- ears -->
+      <path d="M500 300l-55-110 125 45z" fill="url(#fur)" stroke="#c9a87f" stroke-width="8" stroke-linejoin="round"/>
+      <path d="M780 300l55-110-125 45z" fill="url(#fur)" stroke="#c9a87f" stroke-width="8" stroke-linejoin="round"/>
+      <path d="M492 282l-28-58 66 24z" fill="#f2a0a8"/>
+      <path d="M788 282l28-58-66 24z" fill="#f2a0a8"/>
+      <!-- fluffy body: layered scallops -->
+      <g fill="url(#fur)" stroke="#c9a87f" stroke-width="6">
+        <circle cx="640" cy="430" r="200"/>
+        <circle cx="480" cy="360" r="70"/><circle cx="800" cy="360" r="70"/>
+        <circle cx="450" cy="470" r="70"/><circle cx="830" cy="470" r="70"/>
+        <circle cx="520" cy="580" r="70"/><circle cx="760" cy="580" r="70"/>
+        <circle cx="640" cy="620" r="70"/>
+      </g>
+      <!-- face -->
+      <circle cx="575" cy="420" r="24" fill="#2b2320"/>
+      <circle cx="583" cy="412" r="8" fill="#fff"/>
+      <circle cx="705" cy="420" r="24" fill="#2b2320"/>
+      <circle cx="713" cy="412" r="8" fill="#fff"/>
+      <ellipse cx="640" cy="465" rx="16" ry="12" fill="#d94f70"/>
+      <path d="M640 477v14M640 491c-8 12-28 14-36 4M640 491c8 12 28 14 36 4" stroke="#8a5a3b" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <ellipse cx="540" cy="475" rx="28" ry="15" fill="#f2a0a8" opacity=".8"/>
+      <ellipse cx="740" cy="475" rx="28" ry="15" fill="#f2a0a8" opacity=".8"/>
+      <!-- sewn tag -->
+      <g transform="rotate(12 800 560)">
+        <rect x="748" y="524" width="110" height="70" rx="8" fill="#fdf6e3" stroke="#8a5a3b" stroke-width="5"/>
+        <rect x="758" y="534" width="90" height="50" rx="4" fill="none" stroke="#d94f70" stroke-width="4" stroke-dasharray="10 7"/>
+        <circle cx="848" cy="559" r="9" fill="none" stroke="#8a5a3b" stroke-width="5"/>
+      </g>
+    </svg>
+    <script>
+      const C = document.getElementById('chain');
+      let s = '';
+      for (let i = 0; i <= 24; i++) {
+        const t = i / 24, x = 180 + t * 920, y = 60 - Math.sin(t * Math.PI) * 34;
+        s += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="13" fill="#d7d7dd" stroke="#7c7c84" stroke-width="4"/>';
+      }
+      C.innerHTML = s;
+    </script>
+  </body>
+</html>

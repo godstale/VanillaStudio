@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#141a26;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720">
+<rect width="1280" height="720" fill="#141a26"/>
+<ellipse cx="640" cy="360" rx="430" ry="210" fill="none" stroke="#3a4666" stroke-width="2" stroke-dasharray="10 12"/>
+<circle id="mag" cx="640" cy="360" r="46" fill="none" stroke="#ffd34d" stroke-width="4"/>
+<text id="w0" x="0" y="0" font-size="84" font-weight="900" fill="#f4f1ea" text-anchor="middle" dominant-baseline="central">LIGHT</text>
+<text id="w1" x="0" y="0" font-size="84" font-weight="900" fill="#f4f1ea" text-anchor="middle" dominant-baseline="central">LIFTS</text>
+<text id="w2" x="0" y="0" font-size="84" font-weight="900" fill="#ffd34d" text-anchor="middle" dominant-baseline="central">EVERY</text>
+<text id="w3" x="0" y="0" font-size="84" font-weight="900" fill="#f4f1ea" text-anchor="middle" dominant-baseline="central">FORM</text>
+</svg>
+<script>
+const SECONDS = 6;
+const words = [0, 1, 2, 3].map((i) => document.getElementById('w' + i));
+const mag = document.getElementById('mag');
+const clamp01 = (x) => x < 0 ? 0 : x > 1 ? 1 : x;
+const smooth = (x) => { x = clamp01(x); return x * x * (3 - 2 * x); };
+const lerp = (a, b, k) => a + (b - a) * k;
+const RX = 430, RY = 210, CX = 640, CY = 360;
+window.seekExample = (t) => {
+  const p = (t % SECONDS) / SECONDS;
+  const m = smooth((p - 0.34) / 0.14) * (1 - smooth((p - 0.68) / 0.15));
+  for (let i = 0; i < 4; i += 1) {
+    const th = (i / 4) * Math.PI * 2 + p * Math.PI * 2;
+    const ox = CX + RX * Math.cos(th);
+    const oy = CY + RY * Math.sin(th);
+    const sx = CX + (i - 1.5) * 268;
+    const x = lerp(ox, sx, m);
+    const y = lerp(oy, CY, m);
+    const tang = Math.atan2(RY * Math.cos(th), -RX * Math.sin(th)) * 180 / Math.PI + 90;
+    const rot = tang * (1 - m);
+    words[i].setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(' + rot.toFixed(1) + ')');
+  }
+  mag.setAttribute('r', (40 + 12 * Math.sin(p * Math.PI * 4)).toFixed(1));
+  mag.setAttribute('opacity', (0.35 + 0.55 * m).toFixed(3));
+};
+if (!navigator.webdriver) {
+  const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

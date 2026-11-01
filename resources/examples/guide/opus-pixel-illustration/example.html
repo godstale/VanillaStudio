@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Pixels</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0b0e1a;font-family:'Segoe UI',system-ui,sans-serif}
+canvas{position:absolute;inset:0;width:1280px;height:720px;image-rendering:pixelated}
+svg.hud{position:absolute;inset:0;width:1280px;height:720px}
+</style>
+</head>
+<body>
+<canvas id="cv" width="160" height="90"></canvas>
+<svg class="hud" viewBox="0 0 1280 720"><path d="M24 64V24h40M1216 24h40v40M24 656v40h40M1256 656v40h-40" fill="none" stroke="#8fa1bb" stroke-width="3" opacity=".6"/></svg>
+<script>
+const SECONDS=6;
+const cv=document.getElementById('cv');
+const ctx=cv.getContext('2d');
+ctx.imageSmoothingEnabled=false;
+const h=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+const stars=[];
+for(let i=0;i<70;i++)stars.push([h(i)*160,h(i+300)*46,h(i+700)]);
+function building(x,w,ht,win){
+ctx.fillStyle='#141a30';
+ctx.fillRect(x,62-ht,w,ht);
+ctx.fillStyle='#ffd97a';
+for(let wy=62-ht+2;wy<60;wy+=4)for(let wx=x+1;wx<x+w-1;wx+=3){
+if(h(wx*7+wy*13)>.5)ctx.fillRect(wx,wy,1,1);
+}
+}
+window.seekExample=(t)=>{
+const p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+const a=p*Math.PI*2;
+ctx.fillStyle='#0b0e1a';
+ctx.fillRect(0,0,160,90);
+stars.forEach(s=>{
+const tw=.4+.6*Math.abs(Math.sin(a*2+s[0]*9));
+ctx.fillStyle=`rgba(255,255,255,${(.25+.55*tw*s[2]).toFixed(3)})`;
+ctx.fillRect(s[0],s[1],1,1);
+});
+ctx.fillStyle='#f2e7c9';
+ctx.beginPath();ctx.arc(128,16,8,0,7);ctx.fill();
+ctx.fillStyle='#0b0e1a';
+ctx.beginPath();ctx.arc(125,14,7,0,7);ctx.fill();
+const off=(p*160)%160;
+const bx=[8,30,52,78,104,128];
+const bw=[14,16,18,14,16,14];
+const bh=[22,30,26,34,24,28];
+for(let l=0;l<2;l++){
+const sp=l?20:44;
+const ox=(p*sp)%160;
+for(let k=-1;k<2;k++)for(let i=0;i<bx.length;i++){
+let x=bx[i]+k*160-ox;
+if(l===1)x=bx[i]+k*160-((p*20)%160);
+if(x>-20&&x<160)building(x,bw[i]-(l?2:0),bh[i]+(l?6:0));
+}
+}
+ctx.fillStyle='#0e2440';
+ctx.fillRect(0,62,160,28);
+for(let x=0;x<160;x+=2){
+const wv=Math.sin(x*.4+a*3)*1.5;
+ctx.fillStyle=(x+Math.floor(a*8))%8<4?'#16405e':'#12344e';
+ctx.fillRect(x,62+((x*3)%4),2,8+wv);
+}
+ctx.fillStyle='rgba(255,217,122,.25)';
+ctx.fillRect(120,63,14,20);
+};
+if(!navigator.webdriver){const loop=(ms)=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

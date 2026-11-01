@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lone figure</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #060913; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <linearGradient id="lampP" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ff5ad2" />
+          <stop offset="100%" stop-color="#4d0f3d" />
+        </linearGradient>
+        <linearGradient id="lampC" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#5af2ff" />
+          <stop offset="100%" stop-color="#0d3d4d" />
+        </linearGradient>
+        <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="12" />
+        </filter>
+      </defs>
+      <rect width="1280" height="560" fill="#060913" />
+      <rect y="560" width="1280" height="160" fill="#0a0f22" />
+      <!-- lamps -->
+      <rect x="220" y="180" width="60" height="120" rx="20" fill="url(#lampP)" />
+      <rect x="220" y="180" width="60" height="120" rx="20" fill="#ff5ad2" opacity="0.4" filter="url(#soft)" />
+      <rect x="1000" y="180" width="60" height="120" rx="20" fill="url(#lampC)" />
+      <rect x="1000" y="180" width="60" height="120" rx="20" fill="#5af2ff" opacity="0.4" filter="url(#soft)" />
+      <line x1="250" y1="300" x2="250" y2="560" stroke="#1a2138" stroke-width="14" />
+      <line x1="1030" y1="300" x2="1030" y2="560" stroke="#1a2138" stroke-width="14" />
+      <!-- ground reflections -->
+      <g id="pools" filter="url(#soft)">
+        <ellipse cx="250" cy="620" rx="110" ry="30" fill="#ff5ad2" opacity="0.5" />
+        <ellipse cx="1030" cy="620" rx="110" ry="30" fill="#5af2ff" opacity="0.5" />
+        <ellipse cx="640" cy="640" rx="90" ry="22" fill="#8f7bff" opacity="0.35" />
+      </g>
+      <!-- lone silhouette -->
+      <ellipse cx="640" cy="660" rx="110" ry="18" fill="#000" opacity="0.7" />
+      <path d="M610 660 V470 Q610 410 640 410 Q670 410 670 470 V660 Z" fill="#000" />
+      <circle cx="640" cy="370" r="34" fill="#000" />
+      <path d="M560 340 Q640 290 720 340 L700 360 Q640 320 580 360 Z" fill="#000" />
+      <line x1="700" y1="355" x2="730" y2="560" stroke="#000" stroke-width="8" />
+      <g id="rain" stroke="#9db6d9" stroke-width="4" opacity="0.55"></g>
+    </svg>
+    <script>
+      const SECONDS = 3;
+      const rain = document.getElementById('rain');
+      const drops = [];
+      const hash = (n) => {
+        const s = Math.sin(n * 127.1 + 311.7) * 43758.5;
+        return s - Math.floor(s);
+      };
+      for (let i = 0; i < 70; i += 1) {
+        const ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        const x = hash(i) * 1280;
+        const len = 24 + hash(i + 500) * 30;
+        ln.setAttribute('x1', String(x));
+        ln.setAttribute('x2', String(x - 6));
+        rain.appendChild(ln);
+        drops.push({ el: ln, x, len, speed: 1.4 + hash(i + 900) * 1.2, off: hash(i + 1300) });
+      }
+      const pools = document.getElementById('pools');
+
+      window.seekExample = (t) => {
+        const phase = (t % SECONDS) / SECONDS;
+        for (const d of drops) {
+          const y = ((d.off * 720 + phase * 720 * d.speed) % 780) - 30;
+          d.el.setAttribute('y1', String(y));
+          d.el.setAttribute('y2', String(y + d.len));
+        }
+        pools.setAttribute('opacity', String(0.8 + 0.2 * Math.sin(phase * Math.PI * 4)));
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "seconds": 3,
+  "note": {
+    "ko": "필터가 바뀌어도 타일이 연속성을 유지하며 재배치되는 것을 본다.",
+    "en": "Tiles rearrange with continuity as the filter changes."
+  }
+}

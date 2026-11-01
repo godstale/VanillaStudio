@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><title>Pixel diorama</title><style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#070a16;font-family:system-ui,'Segoe UI',sans-serif}
+canvas{width:1280px;height:720px;image-rendering:pixelated;display:block}
+svg.frame{position:absolute;inset:0}
+</style></head><body>
+<canvas id="cv" width="320" height="180"></canvas>
+<svg class="frame" viewBox="0 0 1280 720"><rect x="18" y="18" width="1244" height="684" fill="none" stroke="#ffd166" stroke-width="4"/><circle id="moon" cx="1120" cy="110" r="26" fill="#f4f1de"/></svg>
+<script>
+var SECONDS=6;
+function h(n){var x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x);}
+var cv=document.getElementById("cv"),ctx=cv.getContext("2d"),moon=document.getElementById("moon");
+function px(x,y,w,hh,c){ctx.fillStyle=c;ctx.fillRect(x|0,y|0,w|0,hh|0);}
+window.seekExample=function(t){
+var p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+var g=ctx.createLinearGradient(0,0,0,180);
+g.addColorStop(0,"#0b1030");g.addColorStop(0.55,"#1b1f4d");g.addColorStop(0.62,"#0a0d20");g.addColorStop(1,"#05070f");
+ctx.fillStyle=g;ctx.fillRect(0,0,320,180);
+px(262+p*8-4,18,22,22,"#f4f1de");
+for(var s=0;s<40;s++){var sx=(h(s)*320+p*6*(1+h(s*7)))%320;px(sx,4+h(s*3)*60,1,1,"#cdd6ff");}
+for(var b=0;b<6;b++){var bx=14+b*52,by=64+((b*37)%18),bw=40,bh=112-by+64;
+px(bx,by,bw,bh-40,"#11162e");
+for(var wy=0;wy<6;wy++)for(var wx=0;wx<4;wx++){
+if(h(b*91+wy*7+wx*13)>0.45)px(bx+4+wx*9,by+6+wy*9,5,5,(wx===1&&wy===2)?"#ff5ad2":"#ffd166");}}
+px(30,52,64,14,"#ff5ad2");px(34,55,56,8,"#2b0a24");
+var flick=h(Math.floor(p*12)*3.3)>0.2?1:0.4;ctx.globalAlpha=flick;
+px(30,52,64,14,"#ff5ad2");ctx.globalAlpha=1;
+px(0,132,320,4,"#2a3358");
+for(var r=0;r<44;r++){var ry=136+r;var wob=Math.sin(r*1.4+p*12)*3;
+ctx.globalAlpha=0.5-r*0.01;
+px(20+wob+r*0.1,ry,60,1,r%5===0?"#ff5ad2":"#3d5a99");}
+ctx.globalAlpha=1;
+for(var c=0;c<3;c++){var cx2=(h(c*9)*300+p*30)%330-5;px(cx2,44+((c*53)%40),10,4,"#0a0d20");}
+moon.setAttribute("r",26+2*Math.sin(p*12.56));
+};
+if(!navigator.webdriver){var loop=function(ms){window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script></body></html>

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Blind shadows</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #0a0a0c; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <linearGradient id="beam" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#f2f2f2" />
+          <stop offset="100%" stop-color="#9a9a9a" />
+        </linearGradient>
+      </defs>
+      <rect width="1280" height="720" fill="#101014" />
+      <!-- window light -->
+      <rect x="920" y="60" width="260" height="400" fill="#e8e8e8" opacity="0.9" />
+      <g stroke="#101014" stroke-width="12">
+        <line x1="920" y1="140" x2="1180" y2="140" /><line x1="920" y1="220" x2="1180" y2="220" />
+        <line x1="920" y1="300" x2="1180" y2="300" /><line x1="920" y1="380" x2="1180" y2="380" />
+        <line x1="1050" y1="60" x2="1050" y2="460" />
+      </g>
+      <!-- figure in mid gray so it reads against the dark room -->
+      <ellipse cx="560" cy="680" rx="220" ry="26" fill="#000" opacity="0.7" />
+      <path d="M490 720 V440 Q490 340 560 340 Q630 340 630 440 V720 Z" fill="#2e2e35" />
+      <circle cx="560" cy="270" r="72" fill="#2e2e35" />
+      <path d="M486 282 q-34 12 -50 52 l26 12 q14 -30 40 -38 Z" fill="#2e2e35" />
+      <rect x="470" y="470" width="80" height="220" rx="24" fill="#2e2e35" transform="rotate(12 510 580)" />
+      <rect x="590" y="470" width="70" height="220" rx="24" fill="#232329" transform="rotate(-8 625 580)" />
+      <!-- hard blind shadows crossing the figure -->
+      <g opacity="0.9">
+        <g fill="url(#beam)" transform="rotate(-24 640 360)">
+          <rect x="-200" y="120" width="1700" height="30" />
+          <rect x="-200" y="190" width="1700" height="30" />
+          <rect x="-200" y="260" width="1700" height="30" />
+          <rect x="-200" y="330" width="1700" height="30" />
+          <rect x="-200" y="400" width="1700" height="30" />
+          <rect x="-200" y="470" width="1700" height="30" />
+        </g>
+      </g>
+      <!-- smoke curl -->
+      <path d="M740 600 q40 -60 10 -120 q-25 -50 15 -100" fill="none" stroke="#cfcfcf" stroke-width="8" opacity="0.4" />
+    </svg>
+  </body>
+</html>

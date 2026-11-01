@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 import { Templates } from './Templates';
 
@@ -88,7 +88,8 @@ describe('Templates', () => {
     const allRecipes = screen.getAllByTestId('recipe-card');
     expect(allRecipes.length).toBeGreaterThanOrEqual(20);
 
-    fireEvent.click(screen.getByRole('button', { name: /슬라이드|Slide/ }));
+    const mediaGroup = screen.getByRole('group', { name: /매체 분류|Media/ });
+    fireEvent.click(within(mediaGroup).getByRole('button', { name: /슬라이드|Slide/ }));
     const slideRecipes = screen.getAllByTestId('recipe-card');
     expect(slideRecipes.length).toBeGreaterThan(0);
     expect(slideRecipes.length).toBeLessThan(allRecipes.length);

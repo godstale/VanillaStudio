@@ -1,0 +1,17 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><title>Scale deck</title><style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#eef2f5;color:#14202e;font-family:system-ui,'Segoe UI',sans-serif}
+h1{position:absolute;left:100px;top:64px;margin:0;font-size:84px;letter-spacing:-.02em}
+#axis{position:absolute;left:100px;right:100px;top:330px;height:26px;background:#14202e;border-radius:13px}
+.tick{position:absolute;top:300px;width:6px;height:90px;background:#14202e}
+.lab{position:absolute;top:400px;width:220px;margin-left:-110px;text-align:center;font-size:26px;font-weight:700}
+.lab small{display:block;font-weight:400;color:#5b6b7e}
+.dot{position:absolute;top:318px;width:50px;height:50px;margin-left:-25px;border-radius:50%;background:#e4572e;border:6px solid #fff}
+svg.frame{position:absolute;inset:0}
+</style></head><body>
+<h1>From cell to city.</h1>
+<div id="axis"></div>
+<div class="tick" style="left:220px"></div><div class="lab" style="left:220px">CELL<small>0.01 mm</small></div><div class="dot" style="left:220px"></div>
+<div class="tick" style="left:640px"></div><div class="lab" style="left:640px">STREET<small>120 m</small></div><div class="dot" style="left:640px;background:#1d5fa8"></div>
+<div class="tick" style="left:1060px"></div><div class="lab" style="left:1060px">REGION<small>40 km</small></div><div class="dot" style="left:1060px;background:#0a8a5c"></div>
+<svg class="frame" viewBox="0 0 1280 720"><rect x="40" y="40" width="1200" height="640" fill="none" stroke="#14202e" stroke-width="3" opacity=".3"/></svg>
+</body></html>

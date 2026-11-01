@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Shell inlay</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0b0e12;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs><radialGradient id="abyss" cx="0.5" cy="0.35" r="0.8"><stop offset="0" stop-color="#232b34"/><stop offset="1" stop-color="#0b0e12"/></radialGradient></defs>
+<rect width="1280" height="720" fill="url(#abyss)"/>
+<g id="fan"></g>
+<g id="veins" stroke="#ffffff" stroke-width="3" opacity="0.55" fill="none"></g>
+<ellipse id="glow" cx="640" cy="300" rx="330" ry="150" fill="#ffffff" opacity="0.12"/>
+<path d="M240 660 Q640 600 1040 660" stroke="#0a0c0e" stroke-width="26" fill="none"/>
+</svg>
+<script>
+const H=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+const SECONDS=4;
+let f='';for(let i=0;i<9;i++){const a=Math.PI*(i/8),x1=(640-330*Math.cos(a)).toFixed(0);
+f+='<path id="s'+i+'" d="M640 640 L'+x1+' 300 Q640 '+(180+H(i)*60).toFixed(0)+' '+(640+330*Math.cos(a)).toFixed(0)+' 300 Z" stroke="#0a0c0e" stroke-width="10"/>';}
+document.getElementById('fan').innerHTML=f;
+let v='';for(let i=0;i<9;i++){const a=Math.PI*(i/8);
+v+='<path d="M640 640 Q'+(640-160*Math.cos(a)).toFixed(0)+' 420 '+(640-330*Math.cos(a)).toFixed(0)+' 300"/>';}
+document.getElementById('veins').innerHTML=v;
+const glow=document.getElementById('glow');
+window.seekExample=(t)=>{
+const p=(t%SECONDS)/SECONDS;
+for(let i=0;i<9;i++){document.getElementById('s'+i).setAttribute('fill','hsl('+((150+p*90+i*16)%360).toFixed(0)+',48%,'+(56+9*Math.sin(p*6.283+i)).toFixed(0)+'%)');}
+glow.setAttribute('opacity',(0.08+0.08*Math.sin(p*6.283)).toFixed(3));};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}window.seekExample(0);
+</script>
+</body>
+</html>

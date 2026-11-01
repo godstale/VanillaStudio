@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Fade</title>
+    <style>
+      html, body {
+        margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #10141C;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      .scene { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; }
+      #s1 { background: #10141C; }
+      #s2 { background: #E9E4D6; }
+      .ball { width: 300px; height: 300px; border-radius: 50%; }
+      #s1 .ball { background: linear-gradient(135deg, #FFB347, #FF5A5F); }
+      #s2 .ball { background: linear-gradient(135deg, #2E9E5B, #9BD6B4); border-radius: 40px; }
+    </style>
+  </head>
+  <body>
+    <div class="scene" id="s1"><div class="ball"></div></div>
+    <div class="scene" id="s2"><div class="ball"></div></div>
+    <svg width="0" height="0" viewBox="0 0 10 10"></svg>
+    <script>
+      const SECONDS = 3;
+      const s1 = document.getElementById('s1');
+      const s2 = document.getElementById('s2');
+
+      window.seekExample = (t) => {
+        const phase = (t % SECONDS) / SECONDS;
+        const k = phase < 0.5 ? phase * 2 : (1 - phase) * 2;
+        s1.style.opacity = 1 - k;
+        s2.style.opacity = k;
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

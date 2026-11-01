@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#000000;font-family:'Segoe UI',system-ui,sans-serif}
+#sky{position:absolute;left:0;top:0;width:1280px;height:560px}#sea{position:absolute;left:0;top:560px;width:1280px;height:160px}#disc{position:absolute;width:150px;height:150px;border-radius:50%}#stars{position:absolute;left:0;top:0;width:1280px;height:560px;opacity:0}.dot{position:absolute;top:650px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.4)}#glow{position:absolute;left:0;top:0;width:1280px;height:560px;background:radial-gradient(circle at 50% 60%,rgba(255,255,255,.5),rgba(255,255,255,0) 60%)}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#000"/></svg>
+<div id="sky"></div><div id="stars"><svg width="1280" height="560"><g fill="#fff"><circle cx="120" cy="80" r="4"/><circle cx="320" cy="160" r="3"/><circle cx="520" cy="60" r="4"/><circle cx="720" cy="140" r="3"/><circle cx="920" cy="70" r="5"/><circle cx="1120" cy="180" r="3"/><circle cx="220" cy="260" r="3"/><circle cx="820" cy="260" r="4"/><circle cx="1020" cy="300" r="3"/><circle cx="420" cy="320" r="3"/></g></svg></div>
+<div id="glow"></div><div id="disc"></div><div id="sea"></div>
+<div class="dot" id="d0" style="left:490px"></div><div class="dot" id="d1" style="left:560px"></div><div class="dot" id="d2" style="left:630px"></div><div class="dot" id="d3" style="left:700px"></div>
+<script>
+const SECONDS = 4;
+const ez = (x) => x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x);
+const STOPS = [[255,183,120],[150,205,235],[255,140,90],[16,24,48]];
+function lerp3(a, b, k) { return [a[0]+(b[0]-a[0])*k, a[1]+(b[1]-a[1])*k, a[2]+(b[2]-a[2])*k]; }
+function skyAt(p) {
+const seg = Math.min(2.9999, p * 3);
+const i = Math.floor(seg);
+return lerp3(STOPS[i], STOPS[i + 1], ez(seg - i));
+}
+window.seekExample = (t) => {
+const p = (t % SECONDS) / SECONDS;
+const c = skyAt(p);
+const css = 'rgb(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ')';
+document.getElementById('sky').style.background = css;
+document.getElementById('sea').style.background = 'rgb(' + Math.round(c[0]*0.35) + ',' + Math.round(c[1]*0.42) + ',' + Math.round(c[2]*0.5) + ')';
+const dx = 180 + 920 * p, dy = 400 - 300 * Math.sin(p * 3.14159);
+const disc = document.getElementById('disc');
+disc.style.left = (dx - 75) + 'px'; disc.style.top = dy + 'px';
+disc.style.background = p < 0.72 ? '#fff3d0' : '#e8ecf4';
+document.getElementById('stars').style.opacity = String(ez((p - 0.72) / 0.14));
+document.getElementById('glow').style.opacity = String(0.9 - 0.6 * ez((p - 0.6) / 0.25));
+const ai = Math.min(3, Math.floor(p * 4));
+for (let i = 0; i < 4; i++) {
+const d = document.getElementById('d' + i);
+d.style.background = i === ai ? '#fff' : 'rgba(255,255,255,.4)';
+d.style.transform = i === ai ? 'scale(1.35)' : 'scale(1)';
+}
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

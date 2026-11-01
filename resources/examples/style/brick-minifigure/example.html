@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Block figure</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+      body { background: linear-gradient(180deg, #e8e2d5 0%, #d9d2c0 62%, #b9b09a 62.5%, #a89f88 100%); }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720" width="1280" height="720">
+      <defs>
+        <linearGradient id="torso" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#1f7a8c" />
+          <stop offset="30%" stop-color="#2aa5b8" />
+          <stop offset="100%" stop-color="#14606e" />
+        </linearGradient>
+        <linearGradient id="head" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#f7d9ae" />
+          <stop offset="45%" stop-color="#f5c99b" />
+          <stop offset="100%" stop-color="#d9a06a" />
+        </linearGradient>
+        <linearGradient id="leg" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#2c3e70" />
+          <stop offset="40%" stop-color="#3b5290" />
+          <stop offset="100%" stop-color="#1d2a52" />
+        </linearGradient>
+      </defs>
+      <!-- stud baseplate in perspective -->
+      <polygon points="340,560 940,560 1040,680 240,680" fill="#4da64d" />
+      <polygon points="340,560 940,560 1040,680 240,680" fill="none" stroke="#358235" stroke-width="6" />
+      <g fill="#66c066">
+        <circle cx="470" cy="600" r="22" /><circle cx="570" cy="600" r="22" /><circle cx="670" cy="600" r="22" /><circle cx="770" cy="600" r="22" />
+        <circle cx="420" cy="645" r="22" /><circle cx="530" cy="645" r="22" /><circle cx="640" cy="645" r="22" /><circle cx="750" cy="645" r="22" /><circle cx="860" cy="645" r="22" />
+      </g>
+      <!-- legs -->
+      <rect x="540" y="440" width="92" height="130" fill="url(#leg)" />
+      <rect x="648" y="440" width="92" height="130" fill="url(#leg)" />
+      <!-- arms -->
+      <rect x="452" y="300" width="64" height="150" rx="10" fill="#1f7a8c" />
+      <rect x="764" y="300" width="64" height="150" rx="10" fill="#14606e" />
+      <rect x="446" y="440" width="76" height="60" rx="14" fill="#f5c99b" />
+      <rect x="758" y="440" width="76" height="60" rx="14" fill="#e0aa74" />
+      <!-- torso with printed pocket and buttons -->
+      <rect x="516" y="285" width="248" height="165" rx="12" fill="url(#torso)" />
+      <rect x="516" y="285" width="248" height="165" rx="12" fill="none" stroke="#0f4650" stroke-width="6" />
+      <rect x="600" y="360" width="80" height="60" rx="6" fill="none" stroke="#eaf6f6" stroke-width="6" />
+      <line x1="600" y1="380" x2="680" y2="380" stroke="#eaf6f6" stroke-width="5" />
+      <circle cx="640" cy="318" r="10" fill="#ffd166" stroke="#0f4650" stroke-width="4" />
+      <circle cx="640" cy="348" r="10" fill="#ffd166" stroke="#0f4650" stroke-width="4" />
+      <!-- head -->
+      <rect x="540" y="130" width="200" height="150" rx="26" fill="url(#head)" stroke="#8a5a2b" stroke-width="6" />
+      <rect x="610" y="102" width="60" height="34" rx="8" fill="#e0aa74" stroke="#8a5a2b" stroke-width="5" />
+      <circle cx="600" cy="200" r="13" fill="#2b2320" />
+      <circle cx="680" cy="200" r="13" fill="#2b2320" />
+      <path d="M 600 240 Q 640 264 680 240" fill="none" stroke="#7a4a2b" stroke-width="8" stroke-linecap="round" />
+      <!-- cap brim -->
+      <rect x="540" y="150" width="200" height="26" rx="10" fill="#c94f38" />
+    </svg>
+  </body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Wireframe</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #0a0d13;
+        display: grid; place-items: center; }
+      svg { width: 700px; height: 600px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 700 600">
+      <g id="cube" fill="none" stroke="#4fd1a5" stroke-width="3"></g>
+      <g id="pyr" fill="none" stroke="#7fa8f2" stroke-width="2"></g>
+    </svg>
+    <script>
+      const SECONDS = 4;
+      const cube = document.getElementById('cube');
+      const pyr = document.getElementById('pyr');
+      const V = [[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]];
+      const E = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+      const P = [[0,1],[1,2],[2,0],[0,3],[1,3],[2,3]];
+      const PV = [[0,-1.4,0],[1.6,1,1.2],[-1.6,1,1.2],[0,1,-1.6]];
+      const proj = (x, y, z) => [350 + x * 110, 280 + y * 110 - z * 20];
+      const rot = (p, a) => {
+        const [x, y, z] = p;
+        return [x * Math.cos(a) - z * Math.sin(a), y, x * Math.sin(a) + z * Math.cos(a)];
+      };
+      window.seekExample = (t) => {
+        const a = (((t % SECONDS) + SECONDS) % SECONDS) / SECONDS * Math.PI * 2;
+        cube.innerHTML = E.map(([i, j]) => {
+          const [x1, y1] = proj(...rot(V[i], a));
+          const [x2, y2] = proj(...rot(V[j], a));
+          return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" />`;
+        }).join('');
+        pyr.innerHTML = P.map(([i, j]) => {
+          const [x1, y1] = proj(...rot(PV[i], -a));
+          const [x2, y2] = proj(...rot(PV[j], -a));
+          return `<line x1="${(x1 + 260).toFixed(1)}" y1="${(y1 + 60).toFixed(1)}" x2="${(x2 + 260).toFixed(1)}" y2="${(y2 + 60).toFixed(1)}" />`;
+        }).join('');
+      };
+      if (!navigator.webdriver) {
+        const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

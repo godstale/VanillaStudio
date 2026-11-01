@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Folded sheet</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#e6dfcd;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<rect width="1280" height="720" fill="#e6dfcd"/>
+<g id="facets"></g>
+<g id="crease" stroke="#8a8071" stroke-width="3" fill="none" opacity="0.8"></g>
+<rect width="1280" height="720" fill="#5a5344" opacity="0.12"/>
+</svg>
+<script>
+const H=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+const W=8,Hh=5,cw=1280/W,ch=720/Hh;
+let px=[];
+for(let r=0;r<=Hh;r++){px[r]=[];for(let c=0;c<=W;c++){px[r][c]=[c*cw+(H(r*31+c)*36-18),r*ch+(H(r*37+c+9)*36-18)];}}
+let s='';
+for(let r=0;r<Hh;r++){for(let c=0;c<W;c++){
+const a=px[r][c],b=px[r][c+1],cc=px[r+1][c],d=px[r+1][c+1];
+const l1=(228+(H(r*7+c)*36-18)|0),l2=(228+(H(r*13+c+50)*36-18)|0);
+const f=p=>'M'+p[0][0].toFixed(0)+' '+p[0][1].toFixed(0)+'L'+p[1][0].toFixed(0)+' '+p[1][1].toFixed(0)+'L'+p[2][0].toFixed(0)+' '+p[2][1].toFixed(0)+'Z';
+s+='<path d="'+f([a,b,d])+'" fill="rgb('+l1+','+(l1-6)+','+(l1-22)+')"/>';
+s+='<path d="'+f([a,d,cc])+'" fill="rgb('+l2+','+(l2-6)+','+(l2-22)+')"/>';}}
+document.getElementById('facets').innerHTML=s;
+let k='<path d="M60 640 L420 380 L700 470 L1120 180"/><path d="M180 80 L520 330 L900 300 L1220 560"/><path d="M640 0 L660 330 L620 720"/>';
+document.getElementById('crease').innerHTML=k;
+</script>
+</body>
+</html>

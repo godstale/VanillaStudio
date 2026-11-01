@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Melting silver</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#07090c;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<linearGradient id="chr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f7fa"/><stop offset="0.45" stop-color="#8f979f"/><stop offset="0.62" stop-color="#2b2f34"/><stop offset="0.8" stop-color="#c9d1d8"/><stop offset="1" stop-color="#5a6169"/></linearGradient>
+<filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="18" result="b"/><feColorMatrix in="b" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 22 -10"/></filter>
+<radialGradient id="stage" cx="0.5" cy="0.45" r="0.8"><stop offset="0" stop-color="#232a32"/><stop offset="1" stop-color="#07090c"/></radialGradient>
+</defs>
+<rect width="1280" height="720" fill="url(#stage)"/>
+<g id="blobs" filter="url(#goo)" fill="url(#chr)"></g>
+<ellipse cx="640" cy="640" rx="330" ry="26" fill="#c9d1d8" opacity="0.2"/>
+</svg>
+<script>
+const H=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s);};
+const SECONDS=3,N=8;
+let s='';
+for(let i=0;i<N;i++){s+='<circle id="m'+i+'" r="'+(46+H(i+41)*70).toFixed(0)+'"/>';}
+document.getElementById('blobs').innerHTML=s;
+window.seekExample=(t)=>{
+for(let i=0;i<N;i++){const el=document.getElementById('m'+i);
+el.setAttribute('cx',(640+280*Math.sin(t*1.4+i*2.4)).toFixed(1));
+el.setAttribute('cy',(360+170*Math.cos(t*1.9+i*1.7)).toFixed(1));}};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}window.seekExample(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#f4f1ea;color:#1c1b19;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#f4f1ea"/>
+<text id="sl" x="640" y="400" text-anchor="middle" font-size="140" font-weight="900">Glide across</text></svg>
+<script>
+const SECONDS = 3;
+window.seekExample = (t) => {
+const phase = (t % SECONDS) / SECONDS;
+const ease=(x)=>x<0?0:x>1?1:x*x*(3-2*x);
+const inn=ease(phase/0.3), out=ease((phase-0.65)/0.3);
+document.getElementById('sl').setAttribute('x',1400-760*inn-1400*out);
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

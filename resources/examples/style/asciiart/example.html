@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ASCII art</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #0c0c0c;
+        display: grid; place-items: center; }
+      pre { font-family: 'Courier New', monospace; font-size: 15px; line-height: 1.15;
+        color: #c8e8c8; margin: 0; }
+    </style>
+  </head>
+  <body>
+    <pre id="art"></pre>
+    <script>
+      const RAMP = '@%#*+=-:. ';
+      const W = 100;
+      const H = 42;
+      // Fixed composition: moon disc over hills. Luminance is analytic, no sampling.
+      const lum = (x, y) => {
+        const nx = x / W - 0.5;
+        const ny = y / H - 0.5;
+        const moon = Math.hypot(nx - 0.22, ny + 0.18);
+        if (moon < 0.16) return 1;
+        const hill = 0.18 + 0.08 * Math.sin(nx * 18) + 0.05 * Math.sin(nx * 7 + 1);
+        if (ny > hill) return 0.25 + 0.35 * (ny - hill);
+        return 0.08 + 0.1 * (0.5 - ny);
+      };
+      let out = '';
+      for (let y = 0; y < H; y += 1) {
+        for (let x = 0; x < W; x += 1) {
+          out += RAMP[Math.min(RAMP.length - 1, Math.floor(lum(x, y) * RAMP.length))];
+        }
+        out += '\n';
+      }
+      document.getElementById('art').textContent = out;
+    </script>
+  </body>
+</html>

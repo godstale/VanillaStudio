@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#EFD9B4}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720"><g id="A"><rect width="1280" height="720" fill="#EFD9B4"/><circle id="ca" cy="360" r="140" fill="#E4572E"/></g><g id="B" display="none"><rect width="1280" height="720" fill="#182433"/><rect id="cb" y="220" width="280" height="280" rx="48" fill="#F5B942"/></g></svg>
+<script>
+const SECONDS=3;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+const lerp=(a,b,e)=>a+(b-a)*e;
+const pp=v=>v<0.5?v*2:2-v*2;
+const H=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);};
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+const q=pp(p),x=340+600*q,a=p<0.5;
+$('A').setAttribute('display',a?'inline':'none');$('B').setAttribute('display',a?'none':'inline');
+$('ca').setAttribute('cx',x.toFixed(1));
+$('cb').setAttribute('x',(x-140).toFixed(1));
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

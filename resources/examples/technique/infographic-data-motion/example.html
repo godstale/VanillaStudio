@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#f4f1ea;color:#1c1b19;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#f4f1ea"/>
+<text x="120" y="130" font-size="52" font-weight="800">Rise in numbers</text>
+<g id="bars" fill="#2e9df0"><rect x="140" y="560" width="90" height="10"/><rect x="300" y="560" width="90" height="10"/><rect x="460" y="560" width="90" height="10"/><rect x="620" y="560" width="90" height="10"/><rect x="780" y="560" width="90" height="10"/></g>
+<rect x="120" y="560" width="1060" height="6" fill="#1c1b19"/>
+<polyline id="line" points="140,520 300,440 460,460 620,340 780,300 940,220" fill="none" stroke="#e0608f" stroke-width="8" stroke-linecap="round"/>
+<text id="num" x="980" y="240" font-size="72" font-weight="900" fill="#e0608f">0</text></svg>
+<script>
+const SECONDS = 3;
+window.seekExample = (t) => {
+const phase = (t % SECONDS) / SECONDS;
+const ease=(x)=>x<0?0:x>1?1:x*x*(3-2*x);
+const hs=[180,260,220,320,380];
+const bars=document.getElementById('bars').children;
+for(let i=0;i<bars.length;i++){const h=hs[i]*ease((phase-i*0.1)/0.4);bars[i].setAttribute('height',Math.max(10,h));bars[i].setAttribute('y',560-Math.max(10,h));}
+const line=document.getElementById('line');const L=1400;
+line.style.strokeDasharray=String(L);line.style.strokeDashoffset=String(L*(1-ease(phase/0.8)));
+document.getElementById('num').textContent=String(Math.round(92*ease(phase)));
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

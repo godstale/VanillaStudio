@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0e0f13;color:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><defs><linearGradient id="cs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b2a4a"/><stop offset=".62" stop-color="#7a5a8c"/><stop offset="1" stop-color="#e08a5f"/></linearGradient></defs>
+<g id="cscene"><rect width="1280" height="720" fill="url(#cs)"/><circle cx="640" cy="400" r="110" fill="#ffd9a0"/><rect y="400" width="1280" height="320" fill="#14161c"/><rect id="mist" y="380" width="1280" height="60" fill="#fff" opacity=".15"/><circle cx="640" cy="450" r="9" fill="#f4f1ea"/></g>
+<rect width="1280" height="90" fill="#000"/><rect y="630" width="1280" height="90" fill="#000"/>
+<rect id="leak" x="-400" y="0" width="170" height="720" fill="#ffd9a0" opacity=".07" transform="skewX(-15)"/></svg>
+<script>
+const SECONDS = 4;
+window.seekExample = (t) => {
+const phase = (t % SECONDS) / SECONDS;
+const sc=document.getElementById('cscene');
+sc.setAttribute('transform','translate(640 360) scale('+(1+0.12*phase)+') translate(-640 -360)');
+document.getElementById('mist').setAttribute('x',-200*phase);
+document.getElementById('leak').setAttribute('x',-400+1900*phase);
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

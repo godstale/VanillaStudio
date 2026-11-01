@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Steam engine</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+      body { background: radial-gradient(circle at 50% 35%, #5a6a6e 0%, #33414a 60%, #1c252b 100%); }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720" width="1280" height="720">
+      <defs>
+        <linearGradient id="copper" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#8a5f22" />
+          <stop offset="35%" stop-color="#e0aa4e" />
+          <stop offset="100%" stop-color="#6e4a18" />
+        </linearGradient>
+      </defs>
+      <!-- backdrop gear silhouette -->
+      <g fill="#141b20" opacity="0.85">
+        <circle cx="1010" cy="500" r="150" />
+        <circle cx="1010" cy="500" r="90" fill="#243039" />
+        <circle cx="1010" cy="500" r="30" fill="#141b20" />
+      </g>
+      <g fill="#141b20" opacity="0.85">
+        <rect x="985" y="320" width="50" height="60" rx="8" /><rect x="985" y="620" width="50" height="60" rx="8" />
+        <rect x="830" y="475" width="60" height="50" rx="8" /><rect x="1130" y="475" width="60" height="50" rx="8" />
+      </g>
+      <!-- boiler -->
+      <rect x="430" y="230" width="340" height="360" rx="60" fill="url(#copper)" stroke="#3d2c10" stroke-width="8" />
+      <line x1="500" y1="245" x2="500" y2="575" stroke="#fff2c8" stroke-width="10" opacity="0.5" />
+      <!-- rivet rows -->
+      <g fill="#5e3d12" stroke="#ffe9a8" stroke-width="2">
+        <circle cx="460" cy="270" r="11" /><circle cx="520" cy="270" r="11" /><circle cx="580" cy="270" r="11" /><circle cx="640" cy="270" r="11" /><circle cx="700" cy="270" r="11" /><circle cx="740" cy="270" r="11" />
+        <circle cx="460" cy="550" r="11" /><circle cx="520" cy="550" r="11" /><circle cx="580" cy="550" r="11" /><circle cx="640" cy="550" r="11" /><circle cx="700" cy="550" r="11" /><circle cx="740" cy="550" r="11" />
+        <circle cx="455" cy="330" r="11" /><circle cx="455" cy="390" r="11" /><circle cx="455" cy="450" r="11" />
+        <circle cx="745" cy="330" r="11" /><circle cx="745" cy="390" r="11" /><circle cx="745" cy="450" r="11" />
+      </g>
+      <!-- gauge -->
+      <circle cx="600" cy="400" r="52" fill="#f4efe4" stroke="#3d2c10" stroke-width="8" />
+      <line x1="600" y1="400" x2="630" y2="368" stroke="#a32727" stroke-width="8" stroke-linecap="round" />
+      <circle cx="600" cy="400" r="9" fill="#3d2c10" />
+      <!-- pipes -->
+      <path d="M 430 300 L 300 300 L 300 590" fill="none" stroke="#8a5f22" stroke-width="44" stroke-linecap="round" />
+      <path d="M 430 300 L 300 300 L 300 590" fill="none" stroke="#3d2c10" stroke-width="52" stroke-linecap="round" opacity="0.35" />
+      <path d="M 770 340 L 900 340 L 900 590" fill="none" stroke="#8a5f22" stroke-width="36" stroke-linecap="round" />
+      <!-- valve wheel -->
+      <circle cx="770" cy="300" r="44" fill="none" stroke="#a32727" stroke-width="14" />
+      <line x1="726" y1="300" x2="814" y2="300" stroke="#a32727" stroke-width="10" />
+      <line x1="770" y1="256" x2="770" y2="344" stroke="#a32727" stroke-width="10" />
+      <!-- seeded steam puffs -->
+      <g fill="#e8ecef">
+        <ellipse cx="300" cy="180" rx="70" ry="46" opacity="0.85" />
+        <ellipse cx="270" cy="110" rx="55" ry="36" opacity="0.6" />
+        <ellipse cx="320" cy="50" rx="42" ry="28" opacity="0.4" />
+        <ellipse cx="900" cy="220" rx="56" ry="38" opacity="0.7" />
+        <ellipse cx="930" cy="150" rx="42" ry="28" opacity="0.45" />
+        <ellipse cx="905" cy="90" rx="30" ry="20" opacity="0.3" />
+      </g>
+      <rect x="240" y="590" width="800" height="40" rx="10" fill="#141b20" />
+    </svg>
+  </body>
+</html>

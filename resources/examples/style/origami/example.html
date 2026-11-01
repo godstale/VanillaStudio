@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Origami</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#dcebf2;
+        font-family:'Segoe UI',system-ui,sans-serif}
+      svg{display:block;margin:0 auto}
+    </style>
+  </head>
+  <body>
+    <svg width="1280" height="720" viewBox="0 0 1280 720">
+      <ellipse cx="640" cy="640" rx="330" ry="30" fill="#0000001e"/>
+      <!-- tail -->
+      <polygon points="560,470 380,560 560,540" fill="#e2574c"/>
+      <polygon points="560,470 470,545 560,540" fill="#b23a32"/>
+      <!-- body -->
+      <polygon points="560,470 720,430 660,560" fill="#f2685c"/>
+      <polygon points="560,470 640,505 660,560" fill="#c94840"/>
+      <!-- neck + head -->
+      <polygon points="720,430 860,250 790,460" fill="#f2685c"/>
+      <polygon points="860,250 790,460 830,270" fill="#c94840"/>
+      <polygon points="860,250 905,265 845,285" fill="#e8b53a"/>
+      <!-- wing up -->
+      <polygon points="620,450 560,150 700,440" fill="#f7f2e6"/>
+      <polygon points="620,450 560,150 630,440" fill="#d9d2bd"/>
+      <!-- wing fold lines -->
+      <g stroke="#9a9484" stroke-width="3">
+        <line x1="620" y1="450" x2="560" y2="150"/>
+        <line x1="590" y1="445" x2="640" y2="200"/>
+        <line x1="560" y1="470" x2="720" y2="430"/>
+        <line x1="720" y1="430" x2="860" y2="250"/>
+      </g>
+      <!-- legs hint -->
+      <polygon points="620,540 600,620 620,620" fill="#c94840"/>
+    </svg>
+  </body>
+</html>

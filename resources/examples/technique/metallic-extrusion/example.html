@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#23262E}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720"><rect x="240" y="560" width="800" height="40" rx="8" fill="#3A3F4A"/><rect id="bar" x="540" width="200" fill="#C7CDD6"/><rect id="sh" y="0" width="44" height="10" fill="#fff" opacity="0.55"/><line id="g1" x1="548" x2="732" stroke="#8A919C" stroke-width="6"/><line id="g2" x1="548" x2="732" stroke="#8A919C" stroke-width="6"/><ellipse id="cap" cx="640" rx="100" ry="22" fill="#E8EDF3"/></svg>
+<script>
+const SECONDS=3;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+const lerp=(a,b,e)=>a+(b-a)*e;
+const pp=v=>v<0.5?v*2:2-v*2;
+const H=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);};
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+const e=ss(p),h=40+300*e,top=560-h;
+$('bar').setAttribute('y',top.toFixed(1));$('bar').setAttribute('height',h.toFixed(1));
+$('cap').setAttribute('cy',top.toFixed(1));
+$('g1').setAttribute('y1',top+70);$('g1').setAttribute('y2',top+70);
+$('g2').setAttribute('y1',top+130);$('g2').setAttribute('y2',top+130);
+const sx=540+160*pp(p);$('sh').setAttribute('x',sx.toFixed(1));$('sh').setAttribute('y',(top+8).toFixed(1));$('sh').setAttribute('height',Math.max(10,h-16).toFixed(1));
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

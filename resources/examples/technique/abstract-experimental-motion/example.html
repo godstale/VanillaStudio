@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0e0f13;color:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#0b0b12"/>
+<circle id="a1" r="150" fill="#ff5a8a" opacity=".8"/><circle id="a2" r="120" fill="#3ad2ff" opacity=".8"/><circle id="a3" r="100" fill="#f5d942" opacity=".8"/></svg>
+<script>
+const SECONDS = 3;
+window.seekExample = (t) => {
+const phase = (t % SECONDS) / SECONDS;
+const P=phase*Math.PI*2;
+const at=(cx,cy,r,el)=>{document.getElementById(el).setAttribute('cx',cx);document.getElementById(el).setAttribute('cy',cy);document.getElementById(el).setAttribute('r',r);};
+at(640+260*Math.sin(P),360+160*Math.sin(2*P+1),150+30*Math.sin(3*P),'a1');
+at(640+260*Math.sin(P+2.1),360+160*Math.sin(2*P+3.1),120+24*Math.sin(3*P+2),'a2');
+at(640+260*Math.sin(P+4.2),360+160*Math.sin(2*P+5.2),100+20*Math.sin(3*P+4),'a3');
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Grid</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#123c8c;color:#fff;font-family:'Segoe UI',system-ui,sans-serif}
+h1{position:absolute;left:60px;top:150px;margin:0;font-size:210px;line-height:.85;font-weight:800;letter-spacing:-.03em}
+h1 span{display:block;color:transparent;-webkit-text-stroke:4px #fff}
+.pill{position:absolute;padding:14px 30px;border-radius:999px;font-size:24px;font-weight:700}
+.p1{left:70px;top:70px;background:#ff5a5f}
+.p2{left:280px;top:70px;background:#fff;color:#123c8c}
+.p3{right:70px;bottom:70px;background:#ffd400;color:#123c8c}
+#liq{position:absolute;right:110px;top:110px;width:200px;height:200px;border-radius:50%;display:grid;place-content:center;font-size:28px;font-weight:800;color:#123c8c}
+#liq b{position:absolute;inset:0;border-radius:50%;background:conic-gradient(#ff5a5f,#ffd400,#7ee3f2,#ff5a5f)}
+#liq span{position:absolute;inset:30px;border-radius:50%;background:#123c8c;color:#fff;display:grid;place-content:center}
+svg.grid{position:absolute;inset:0;width:1280px;height:720px}
+</style>
+</head>
+<body>
+<h1>CROWD<br/><span>NOISE</span></h1>
+<div class="pill p1">TOUR 09</div>
+<div class="pill p2">HALL C</div>
+<div class="pill p3">DOOR 19:00</div>
+<div id="liq"><b></b><span>GO</span></div>
+<svg class="grid" viewBox="0 0 1280 720">
+<path d="M426 0v720M852 0v720M0 240h1280M0 480h1280" stroke="#fff" stroke-width="2" opacity=".3"/>
+<rect x="40" y="40" width="1200" height="640" fill="none" stroke="#fff" stroke-width="3" opacity=".5"/>
+</svg>
+<script>
+const SECONDS=4;
+const liq=document.getElementById('liq');
+window.seekExample=(t)=>{
+const p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+liq.style.transform=`rotate(${p*360}deg)`;
+};
+if(!navigator.webdriver){const loop=(ms)=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

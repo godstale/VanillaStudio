@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Leathercraft</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#33302b;
+        font-family:'Segoe UI',system-ui,sans-serif}
+      .bench{position:absolute;inset:0;
+        background:repeating-linear-gradient(90deg,#00000018 0 3px,transparent 3px 90px),#4a4238}
+      svg{display:block;position:relative;margin:60px auto}
+    </style>
+  </head>
+  <body>
+    <div class="bench"></div>
+    <svg width="880" height="600" viewBox="0 0 880 600">
+      <ellipse cx="440" cy="560" rx="360" ry="24" fill="#00000055"/>
+      <!-- panel -->
+      <rect x="140" y="80" width="600" height="440" rx="26" fill="#9a6236"/>
+      <rect x="140" y="80" width="600" height="440" rx="26" fill="none" stroke="#5e3a1c" stroke-width="14"/>
+      <rect x="168" y="108" width="544" height="384" rx="16" fill="none" stroke="#e8c88f" stroke-width="6" stroke-dasharray="22 14"/>
+      <rect x="188" y="128" width="504" height="344" rx="10" fill="none" stroke="#5e3a1c" stroke-width="3" stroke-dasharray="4 8" opacity=".7"/>
+      <!-- grain -->
+      <g stroke="#00000022" stroke-width="3" fill="none">
+        <path d="M220 180q60 20 120 0t120 0M220 430q60-20 120 0t120 0"/>
+        <path d="M600 160q30 60 0 120t0 120M260 160q-20 60 0 120"/>
+      </g>
+      <!-- pressed emblem: mountain + sun -->
+      <circle cx="440" cy="300" r="105" fill="none" stroke="#5e3a1c" stroke-width="8"/>
+      <circle cx="440" cy="300" r="92" fill="none" stroke="#e8c88f" stroke-width="3"/>
+      <circle cx="440" cy="262" r="26" fill="#5e3a1c"/>
+      <path d="M368 340l40-58 30 34 24-26 50 50z" fill="#5e3a1c"/>
+      <path d="M368 340l40-58 30 34 24-26 50 50" fill="none" stroke="#e8c88f" stroke-width="3"/>
+      <!-- rivets -->
+      <g>
+        <circle cx="200" cy="140" r="14" fill="#c9c9cf" stroke="#5c6167" stroke-width="4"/>
+        <circle cx="680" cy="140" r="14" fill="#c9c9cf" stroke="#5c6167" stroke-width="4"/>
+        <circle cx="200" cy="460" r="14" fill="#c9c9cf" stroke="#5c6167" stroke-width="4"/>
+        <circle cx="680" cy="460" r="14" fill="#c9c9cf" stroke="#5c6167" stroke-width="4"/>
+      </g>
+      <!-- tools -->
+      <g transform="rotate(-18 810 420)">
+        <rect x="788" y="300" width="44" height="180" rx="20" fill="#7c4f24"/>
+        <rect x="794" y="240" width="32" height="70" rx="6" fill="#c9c9cf" stroke="#5c6167" stroke-width="4"/>
+      </g>
+    </svg>
+  </body>
+</html>

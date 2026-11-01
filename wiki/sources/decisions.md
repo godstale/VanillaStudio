@@ -5,7 +5,7 @@ tags: [decisions, phase-p2]
 date: 2026-09-28
 source_file: Docs/Planning/Decisions.md
 sources: []
-last_updated: 2026-10-22
+last_updated: 2026-11-01
 ---
 
 ## Summary
@@ -61,6 +61,7 @@ last_updated: 2026-10-22
 | D-045 | 워크스페이스 히스토리 일원화 기록·zip 압축/불러오기 | Accepted (2026-10-22) | [[issue-workspace-history-archive]] |
 | D-046 | 템플릿(프로젝트 뼈대)과 스타일(시각 어휘) 분리 | Accepted (2026-11-01) | [[research-2026-11-01-style-tags]] |
 | D-047 | 예제 라이브러리: 코드 예제 + 캡처 미리보기 | Accepted (2026-11-01) | [[research-2026-11-01-style-tags]] |
+| D-048 | 예제 소스의 워크스페이스 복사 제공 | Accepted (2026-11-01) | — |
 
 ## Connections
 

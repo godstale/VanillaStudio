@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Stage with dock</title>
+    <style>
+      html, body {
+        margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #10141C; color: #F4F1EA;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      .wrap { height: 100%; padding: 48px 48px 40px; box-sizing: border-box; }
+      .stage {
+        height: 480px; border-radius: 24px; background: #1B2130;
+        display: flex; align-items: flex-end; justify-content: center; gap: 26px;
+        padding-bottom: 48px; box-sizing: border-box; overflow: hidden;
+      }
+      .bar { width: 72px; border-radius: 16px; background: linear-gradient(180deg, #7AA2F7, #2456D6); }
+      .dock {
+        display: flex; align-items: center; gap: 28px; margin-top: 28px;
+        border-radius: 20px; background: #222936; padding: 22px 36px;
+      }
+      .pill { height: 44px; border-radius: 999px; background: #3A4150; }
+      .pill.on { background: #FFB347; }
+      .dial { width: 56px; height: 56px; border-radius: 50%; background: #3A4150; border: 6px solid #4A5160; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="stage" id="stage"></div>
+      <div class="dock">
+        <div class="pill on" style="width:150px"></div>
+        <div class="pill" style="width:150px"></div>
+        <div class="pill" style="width:220px"></div>
+        <div style="flex:1"></div>
+        <div class="dial"></div><div class="dial"></div><div class="dial"></div>
+      </div>
+    </div>
+    <svg width="0" height="0" viewBox="0 0 10 10"></svg>
+    <script>
+      const SECONDS = 4;
+      const stage = document.getElementById('stage');
+      const bars = [];
+      for (let i = 0; i < 12; i += 1) {
+        const b = document.createElement('div');
+        b.className = 'bar';
+        stage.appendChild(b);
+        bars.push(b);
+      }
+
+      window.seekExample = (t) => {
+        const phase = (t % SECONDS) / SECONDS;
+        bars.forEach((b, i) => {
+          const h = 90 + 220 * (0.5 + 0.5 * Math.sin(phase * Math.PI * 4 - i * 0.55));
+          b.style.height = h.toFixed(1) + 'px';
+        });
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

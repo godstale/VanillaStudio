@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0d1526}
+#px{width:1280px;height:720px;image-rendering:pixelated;display:block}
+</style>
+</head>
+<body>
+<canvas id="px" width="160" height="90"></canvas>
+<svg width="0" height="0" viewBox="0 0 10 10"></svg>
+<script>
+const SECONDS = 5;
+const cv = document.getElementById('px');
+const ctx = cv.getContext('2d');
+// Fixed-seed hash: same input always gives the same output, so every frame is a pure function of t.
+const hash = (n) => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+const SX = [], SY = [], SB = [];
+for (let i = 0; i < 46; i += 1) {
+  SX.push(Math.floor(hash(i + 1) * 160));
+  SY.push(Math.floor(hash(i + 999) * 58));
+  SB.push(Math.floor(hash(i + 50) * 4));
+}
+window.seekExample = (t) => {
+  const tick = Math.floor(t * 8);
+  ctx.fillStyle = '#0d1526';
+  ctx.fillRect(0, 0, 160, 90);
+  for (let i = 0; i < 46; i += 1) {
+    if (((SB[i] + tick) % 4) < 2) {
+      ctx.fillStyle = '#dfe8ff';
+      ctx.fillRect(SX[i], SY[i], 1, 1);
+    }
+  }
+  const sunx = Math.floor(18 + 124 * (t / SECONDS));
+  const suny = Math.floor(14 + 8 * Math.sin((t / SECONDS) * Math.PI * 2));
+  ctx.fillStyle = '#ffd34d';
+  ctx.fillRect(sunx, suny, 14, 14);
+  ctx.fillStyle = '#e8932e';
+  ctx.fillRect(sunx, suny + 12, 14, 2);
+  for (let x = 0; x < 160; x += 1) {
+    const h1 = Math.floor(52 + 8 * Math.sin(x * 0.11 + t * 2.1) + 4 * Math.sin(x * 0.031 - t * 1.2));
+    ctx.fillStyle = '#27436e';
+    ctx.fillRect(x, h1, 1, 90 - h1);
+    const h2 = Math.floor(64 + 7 * Math.sin(x * 0.09 - t * 2.6) + 4 * Math.sin(x * 0.05 + t * 1.4));
+    ctx.fillStyle = '#132441';
+    ctx.fillRect(x, h2, 1, 90 - h2);
+  }
+  const cx = Math.floor(20 + 120 * (t / SECONDS));
+  const cy = Math.floor(50 - 24 * Math.abs(Math.sin((t / SECONDS) * Math.PI * 2)));
+  ctx.fillStyle = '#e4572e';
+  ctx.fillRect(cx, cy, 7, 7);
+  ctx.fillStyle = '#f4f1ea';
+  ctx.fillRect(cx + 1, cy + 1, 2, 2);
+};
+if (!navigator.webdriver) {
+  const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

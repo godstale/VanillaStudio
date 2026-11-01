@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Overprint leaf</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #ece2cc; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <pattern id="grain" width="18" height="18" patternUnits="userSpaceOnUse">
+          <circle cx="4" cy="5" r="1.2" fill="#8a7d5f" opacity="0.5" />
+          <circle cx="13" cy="13" r="1" fill="#8a7d5f" opacity="0.4" />
+        </pattern>
+      </defs>
+      <rect x="0" y="0" width="1280" height="720" fill="#ece2cc" />
+      <rect x="0" y="0" width="1280" height="720" fill="url(#grain)" />
+      <rect x="90" y="50" width="1100" height="620" fill="none" stroke="#4a4234" stroke-width="6" />
+      <g style="mix-blend-mode:multiply">
+        <circle cx="560" cy="360" r="220" fill="#2a9d8f" opacity="0.88" />
+        <g transform="translate(150,-60)">
+          <path d="M640 150 C760 260 800 420 700 560 C600 420 560 260 640 150 Z" fill="#e76f51" opacity="0.88" />
+        </g>
+      </g>
+      <g fill="none" stroke="#4a4234" stroke-width="8">
+        <line x1="560" y1="580" x2="560" y2="660" />
+        <line x1="480" y1="620" x2="640" y2="620" />
+      </g>
+      <g fill="#4a4234">
+        <circle cx="420" cy="180" r="10" /><circle cx="470" cy="150" r="7" />
+        <circle cx="880" cy="560" r="10" /><circle cx="830" cy="590" r="7" />
+      </g>
+    </svg>
+  </body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#10141c}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<rect width="1280" height="720" fill="#10141c"/>
+<ellipse cx="640" cy="380" rx="380" ry="240" fill="#fff" opacity=".04"/>
+<rect id="card" x="390" y="312" width="500" height="96" rx="48" fill="#ffb347"/>
+<g id="u0"><circle cx="460" cy="360" r="20" fill="#10141c" opacity=".55"/><rect x="500" y="348" width="300" height="24" rx="12" fill="#10141c" opacity=".55"/></g>
+<g id="u1" opacity="0"><rect x="470" y="300" width="34" height="120" rx="10" fill="#10141c" opacity=".6"/><rect x="520" y="330" width="34" height="90" rx="10" fill="#10141c" opacity=".6"/><rect x="570" y="280" width="34" height="140" rx="10" fill="#10141c" opacity=".6"/><rect x="620" y="320" width="34" height="100" rx="10" fill="#10141c" opacity=".6"/><rect x="670" y="295" width="34" height="125" rx="10" fill="#10141c" opacity=".6"/><rect x="720" y="340" width="34" height="80" rx="10" fill="#10141c" opacity=".6"/></g>
+<g id="u2" opacity="0"><rect x="500" y="360" width="40" height="60" fill="#10141c" opacity=".6"/><rect x="550" y="330" width="40" height="90" fill="#10141c" opacity=".6"/><rect x="600" y="300" width="40" height="120" fill="#10141c" opacity=".6"/><rect x="650" y="270" width="40" height="150" fill="#10141c" opacity=".6"/><rect x="700" y="310" width="40" height="110" fill="#10141c" opacity=".6"/></g>
+<g id="u3" opacity="0"><circle cx="640" cy="360" r="52" fill="none" stroke="#10141c" stroke-width="18" opacity=".75"/><path d="M618 360 l16 16 30 -34" fill="none" stroke="#10141c" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/></g>
+</svg>
+<script>
+const SECONDS=4;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+const lerp=(a,b,e)=>a+(b-a)*e;
+const hx=c=>[parseInt(c.slice(1,3),16),parseInt(c.slice(3,5),16),parseInt(c.slice(5,7),16)];
+const mix=(a,b,e)=>{const A=hx(a),B=hx(b);return '#'+A.map((v,i)=>Math.round(lerp(v,B[i],e)).toString(16).padStart(2,'0')).join('');};
+const K=[
+{x:390,y:312,w:500,h:96,rx:48,c:'#ffb347'},
+{x:390,y:250,w:500,h:220,rx:32,c:'#39d0c4'},
+{x:440,y:230,w:400,h:260,rx:32,c:'#7d8aff'},
+{x:520,y:240,w:240,h:240,rx:120,c:'#7bd13c'}];
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+const f=p*4;
+const idx=Math.floor(f)%4;
+const nxt=(idx+1)%4;
+const e=ss(f-Math.floor(f));
+const A=K[idx],B=K[nxt];
+const c=$('card');
+c.setAttribute('x',lerp(A.x,B.x,e).toFixed(1));
+c.setAttribute('y',lerp(A.y,B.y,e).toFixed(1));
+c.setAttribute('width',lerp(A.w,B.w,e).toFixed(1));
+c.setAttribute('height',lerp(A.h,B.h,e).toFixed(1));
+c.setAttribute('rx',lerp(A.rx,B.rx,e).toFixed(1));
+c.setAttribute('fill',mix(A.c,B.c,e));
+for(let i=0;i<4;i++){
+const d=(i-idx+4)%4;
+$('u'+i).setAttribute('opacity',(d===0?(1-e):(d===1?e:0)).toFixed(3));
+}
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

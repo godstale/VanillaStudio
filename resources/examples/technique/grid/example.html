@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Grid</title>
+    <style>
+      html, body {
+        margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #E9E4D6; color: #22262E;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      .grid {
+        display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr);
+        gap: 32px; height: 100%; padding: 72px; box-sizing: border-box;
+      }
+      .card { border-radius: 20px; background: #FFFFFF; padding: 32px; box-sizing: border-box; }
+      .chip { width: 84px; height: 84px; border-radius: 20px; }
+      .bar { height: 26px; margin-top: 28px; border-radius: 6px; background: #22262E; }
+      .line { height: 16px; margin-top: 14px; border-radius: 8px; background: #CFC8B4; }
+    </style>
+  </head>
+  <body>
+    <div class="grid">
+      <div class="card"><div class="chip" style="background:#2456D6"></div><div class="bar"></div><div class="line"></div></div>
+      <div class="card"><div class="chip" style="background:#E07830"></div><div class="bar"></div><div class="line"></div></div>
+      <div class="card"><div class="chip" style="background:#2E9E5B"></div><div class="bar"></div><div class="line"></div></div>
+      <div class="card"><div class="chip" style="background:#8E4394"></div><div class="bar"></div><div class="line"></div></div>
+      <div class="card"><div class="chip" style="background:#C7A410"></div><div class="bar"></div><div class="line"></div></div>
+      <div class="card"><div class="chip" style="background:#3AA7C7"></div><div class="bar"></div><div class="line"></div></div>
+    </div>
+  </body>
+</html>

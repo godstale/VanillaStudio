@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Game UI</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #101820;
+        font-family: 'Segoe UI', system-ui, sans-serif; }
+      .scene { position: absolute; inset: 90px 320px 150px 40px; border-radius: 12px;
+        background: linear-gradient(#2c4a63, #16232e); overflow: hidden; }
+      .hill { position: absolute; bottom: 0; width: 100%; height: 120px; background: #2f6b46;
+        border-radius: 50% 50% 0 0; }
+      .hud-top { position: absolute; top: 20px; left: 40px; right: 360px; display: flex; gap: 24px; }
+      .bar { flex: 1; height: 26px; border-radius: 13px; background: #26313d; border: 2px solid #4a5a6c; }
+      .bar i { display: block; height: 100%; border-radius: 11px; }
+      .map { position: absolute; top: 20px; right: 40px; width: 280px; height: 200px; border-radius: 12px;
+        background: #0c1218; border: 3px solid #4a5a6c; }
+      .inv { position: absolute; bottom: 20px; left: 40px; right: 40px; display: flex; gap: 16px; }
+      .slot { width: 96px; height: 96px; border-radius: 12px; background: #1c2530; border: 3px solid #4a5a6c;
+        display: grid; place-items: center; font-size: 44px; }
+    </style>
+  </head>
+  <body>
+    <div class="scene"><div class="hill"></div></div>
+    <div class="hud-top">
+      <div class="bar"><i style="width:72%;background:#4fd1a5"></i></div>
+      <div class="bar"><i style="width:45%;background:#3d9df2"></i></div>
+      <div class="bar"><i style="width:90%;background:#f2b134"></i></div>
+    </div>
+    <svg class="map" viewBox="0 0 280 200">
+      <rect x="30" y="30" width="220" height="140" fill="#16232e" stroke="#4a5a6c" stroke-width="3" />
+      <path d="M30 120 L250 80" stroke="#4fd1a5" stroke-width="5" />
+      <circle cx="150" cy="100" r="12" fill="#ff5a5f" stroke="#fff" stroke-width="3" />
+      <circle cx="210" cy="140" r="8" fill="#f2b134" />
+    </svg>
+    <div class="inv">
+      <div class="slot">🗡</div><div class="slot">🛡</div><div class="slot">🧪</div>
+      <div class="slot">🗺</div><div class="slot"></div><div class="slot"></div>
+    </div>
+  </body>
+</html>

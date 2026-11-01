@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Egyptian relief</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: #191410; display: grid; place-items: center; }
+      svg { width: 900px; height: 560px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 900 560">
+      <defs>
+        <linearGradient id="rake" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#8a6f4d" />
+          <stop offset="55%" stop-color="#c9a878" />
+          <stop offset="100%" stop-color="#6e5638" />
+        </linearGradient>
+      </defs>
+      <rect x="40" y="30" width="820" height="500" rx="8" fill="url(#rake)" />
+      <rect x="40" y="30" width="820" height="500" rx="8" fill="none" stroke="#2c2117" stroke-width="10" />
+      <g>
+        <path d="M250 470 L250 300 Q250 260 300 250 L330 180 Q335 160 360 160 L400 160 L395 200 L430 210 L425 250 L380 260 L380 470 Z" fill="#b08a5c" stroke="#5e452a" stroke-width="4" />
+        <circle cx="372" cy="140" r="34" fill="#b08a5c" stroke="#5e452a" stroke-width="4" />
+        <path d="M400 130 L440 140 L405 155 Z" fill="#b08a5c" stroke="#5e452a" stroke-width="3" />
+        <path d="M560 470 L560 320 L660 320 L660 470 Z M590 280 L630 280 L625 200 L595 200 Z" fill="#a07d52" stroke="#5e452a" stroke-width="4" />
+        <path d="M470 120 L700 120 M470 440 L700 440" stroke="#5e452a" stroke-width="4" />
+        <g fill="#5e452a">
+          <circle cx="500" cy="180" r="7" /><circle cx="560" cy="180" r="7" /><circle cx="620" cy="180" r="7" /><circle cx="680" cy="180" r="7" />
+          <rect x="495" y="220" width="12" height="60" /><rect x="555" y="220" width="12" height="60" /><rect x="615" y="220" width="12" height="60" />
+        </g>
+        <path d="M250 470 L250 300 Q250 260 300 250" fill="none" stroke="#e8cf9e" stroke-width="4" opacity="0.8" />
+      </g>
+    </svg>
+  </body>
+</html>

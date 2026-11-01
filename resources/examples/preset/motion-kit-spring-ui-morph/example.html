@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Bloom</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0a0c12;font-family:'Segoe UI',system-ui,sans-serif}
+#halo{position:absolute;left:50%;top:50%;width:600px;height:600px;margin:-300px;border-radius:50%;filter:blur(40px);opacity:.5}
+#pillA{position:absolute;left:50%;top:50%;background:#f4f1ea;display:grid;place-content:center;color:#0a0c12;font-size:40px;font-weight:800}
+#pillB{position:absolute;left:50%;top:50%;border:4px solid #b8e62e;display:grid;place-content:center;color:#b8e62e;font-size:26px;font-weight:700}
+svg.hud{position:absolute;inset:0;width:1280px;height:720px}
+</style>
+</head>
+<body>
+<div id="halo"></div>
+<div id="pillB"><span>STAGE</span></div>
+<div id="pillA"><span id="txt">OPEN</span></div>
+<svg class="hud" viewBox="0 0 1280 720"><path d="M24 64V24h40M1216 24h40v40M24 656v40h40M1256 656v40h-40" fill="none" stroke="#b8e62e" stroke-width="3" opacity=".6"/></svg>
+<script>
+const SECONDS=4;
+const A=document.getElementById('pillA');
+const B=document.getElementById('pillB');
+const halo=document.getElementById('halo');
+const txt=document.getElementById('txt');
+function spring(q){return q<0?0:q>1?1:1-Math.exp(-5*q)*Math.cos(11*q);}
+window.seekExample=(t)=>{
+const p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS;
+const cyc=(p*2)%1;
+const q=spring(cyc*1.5);
+const wide=cyc<.5;
+const wA=wide?300+260*q:560-260*q;
+const hA=wide?300-140*q:160+140*q;
+A.style.width=wA+'px';A.style.height=hA+'px';
+A.style.marginLeft=(-wA/2-14)+'px';A.style.marginTop=(-hA/2)+'px';
+A.style.borderRadius=(hA/2)+'px';
+B.style.width=(wA+56)+'px';B.style.height=(hA+56)+'px';
+B.style.marginLeft=(-(wA+56)/2+14)+'px';B.style.marginTop=(-(hA+56)/2)+'px';
+B.style.borderRadius=((hA+56)/2)+'px';
+txt.textContent=wide?'OPEN':'READY';
+halo.style.background=`conic-gradient(from ${p*360}deg,#b8e62e,#39d5f2,#ff5a5f,#b8e62e)`;
+};
+if(!navigator.webdriver){const loop=(ms)=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Striped sun</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #12042b; }
+      svg { display: block; width: 1280px; height: 720px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0d0221" />
+          <stop offset="55%" stop-color="#541388" />
+          <stop offset="78%" stop-color="#ff2079" />
+          <stop offset="100%" stop-color="#12042b" />
+        </linearGradient>
+        <linearGradient id="sun" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffe45e" />
+          <stop offset="60%" stop-color="#ff9a3d" />
+          <stop offset="100%" stop-color="#ff2079" />
+        </linearGradient>
+        <linearGradient id="chrome" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffffff" />
+          <stop offset="45%" stop-color="#8f9bb3" />
+          <stop offset="55%" stop-color="#e8eefc" />
+          <stop offset="100%" stop-color="#5a6578" />
+        </linearGradient>
+        <clipPath id="sunClip"><circle cx="640" cy="360" r="190" /></clipPath>
+        <clipPath id="barClip"><rect id="barBox" x="340" y="120" width="600" height="70" rx="35" /></clipPath>
+      </defs>
+      <rect width="1280" height="500" fill="url(#sky)" />
+      <circle cx="640" cy="360" r="190" fill="url(#sun)" />
+      <g fill="#12042b" id="stripes">
+        <rect x="440" y="360" width="400" height="12" />
+        <rect x="440" y="390" width="400" height="16" />
+        <rect x="440" y="425" width="400" height="22" />
+        <rect x="440" y="466" width="400" height="28" />
+      </g>
+      <rect y="500" width="1280" height="220" fill="#0d0221" />
+      <g stroke="#ff2079" stroke-width="5" id="grid">
+        <line x1="0" y1="500" x2="1280" y2="500" />
+        <line x1="640" y1="500" x2="640" y2="720" />
+        <line x1="500" y1="500" x2="330" y2="720" />
+        <line x1="780" y1="500" x2="950" y2="720" />
+        <line x1="360" y1="500" x2="40" y2="720" />
+        <line x1="920" y1="500" x2="1240" y2="720" />
+      </g>
+      <g stroke="#ff2079" stroke-width="5" id="rows"></g>
+      <rect x="340" y="120" width="600" height="70" rx="35" fill="url(#chrome)" stroke="#0d0221" stroke-width="6" />
+      <g clip-path="url(#barClip)"><rect id="sheen" x="340" y="120" width="120" height="70" fill="#ffffff" opacity="0.65" /></g>
+    </svg>
+    <script>
+      const SECONDS = 3;
+      const rows = document.getElementById('rows');
+      const rowLines = [];
+      for (let i = 0; i < 6; i += 1) {
+        const ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        rows.appendChild(ln);
+        rowLines.push(ln);
+      }
+      const stripes = document.getElementById('stripes').children;
+      const sheen = document.getElementById('sheen');
+
+      window.seekExample = (t) => {
+        const phase = (t % SECONDS) / SECONDS;
+        for (let i = 0; i < rowLines.length; i += 1) {
+          const y = 505 + ((i * 40 + phase * 240) % 220);
+          rowLines[i].setAttribute('x1', '0');
+          rowLines[i].setAttribute('x2', '1280');
+          rowLines[i].setAttribute('y1', String(y));
+          rowLines[i].setAttribute('y2', String(y));
+        }
+        for (let i = 0; i < stripes.length; i += 1) {
+          stripes[i].setAttribute('y', String(360 + i * 32 + phase * 10));
+        }
+        sheen.setAttribute('x', String(300 + phase * 680));
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

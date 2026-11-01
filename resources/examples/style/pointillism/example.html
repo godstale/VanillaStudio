@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><title>pt</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#f4ecd8}
+canvas{display:block;width:1280px;height:720px}
+</style></head>
+<body>
+<canvas id="c" width="1280" height="720"></canvas>
+<script>
+(function(){
+function h(i){var x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);}
+var cv=document.getElementById('c'),ctx=cv.getContext('2d');
+ctx.fillStyle='#f4ecd8';ctx.fillRect(0,0,1280,720);
+function field(x,y){
+// returns [r,g,b] of underlying picture: sunset sky, dark sea, sailboat
+if(y<430){
+var t=y/430;
+var r=250-Math.floor(t*90),g=200-Math.floor(t*70),b=120+Math.floor(t*60);
+if(y>330){r=250;g=Math.floor(130+(y-330)*0.4);b=90;}
+return [r,g,b];
+}
+if(y<450) return [240,200,150];
+// sea
+var t2=(y-450)/270;
+var r2=Math.floor(60+t2*120),g2=Math.floor(60+t2*60),b2=Math.floor(120+t2*40);
+// sun glitter band
+if(x>520&&x<760&&((x+y)%28<9)){r2=250;g2=200;b2=120;}
+// sailboat silhouette zone
+var bx=x-640,by=y-560;
+if(by>-90&&by<40){
+var sail=Math.abs(bx)<(70-Math.abs(by+25)*0.55)&&bx>-8;
+var hull=Math.abs(bx)<90&&by>10&&by<10+(1-Math.abs(bx)/90)*26;
+if(sail) return [235,235,225];
+if(hull) return [60,30,20];
+}
+return [r2,g2,b2];
+}
+var N=15000;
+for(var i=0;i<N;i++){
+var x=h(i)*1280,y=h(i+77777)*720;
+var c=field(x,y);
+var j=(h(i+333)-0.5)*18;
+var r=Math.floor(c[0]+j),g=Math.floor(c[1]+j),b=Math.floor(c[2]+j);
+ctx.fillStyle='rgb('+r+','+g+','+b+')';
+var rad=3+h(i+555)*3.6;
+ctx.beginPath();ctx.arc(x,y,rad,0,6.283);ctx.fill();
+}
+// sun disc emphasis
+for(var k=0;k<500;k++){
+var a=h(k+99999)*6.283,rr=h(k+888)*70;
+var sx=640+Math.cos(a)*rr,sy=330+Math.sin(a)*rr*0.8;
+ctx.fillStyle='rgb(252,236,170)';
+ctx.beginPath();ctx.arc(sx,sy,3.4,0,6.283);ctx.fill();
+}
+})();
+</script>
+</body>
+</html>

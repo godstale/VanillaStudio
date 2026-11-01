@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0b1020;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720">
+<rect id="bg" width="1280" height="720" fill="#0b1020"/>
+<g id="root">
+<rect id="main" x="530" y="250" width="220" height="220" rx="110" fill="#f5f2ea"/>
+<g id="bars" fill="#141a26" opacity="0">
+<rect id="b0" x="430" y="305" width="420" height="26" rx="13"/>
+<rect id="b1" x="380" y="347" width="520" height="26" rx="13"/>
+<rect id="b2" x="460" y="389" width="360" height="26" rx="13"/>
+</g>
+<g id="dots" fill="#141a26" opacity="0">
+<circle cx="490" cy="285" r="30"/><circle cx="640" cy="285" r="30"/><circle cx="790" cy="285" r="30"/>
+<circle cx="490" cy="360" r="30"/><circle cx="640" cy="360" r="30"/><circle cx="790" cy="360" r="30"/>
+<circle cx="490" cy="435" r="30"/><circle cx="640" cy="435" r="30"/><circle cx="790" cy="435" r="30"/>
+</g>
+</g>
+</svg>
+<script>
+const SECONDS = 6;
+const bg = document.getElementById('bg');
+const root = document.getElementById('root');
+const main = document.getElementById('main');
+const barsG = document.getElementById('bars');
+const dotsG = document.getElementById('dots');
+const bars = [document.getElementById('b0'), document.getElementById('b1'), document.getElementById('b2')];
+const clamp01 = (x) => x < 0 ? 0 : x > 1 ? 1 : x;
+const smooth = (x) => { x = clamp01(x); return x * x * (3 - 2 * x); };
+const lerp = (a, b, k) => a + (b - a) * k;
+const BG = [[11, 16, 32], [13, 38, 30], [38, 22, 12]];
+const css = (c) => 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')';
+window.seekExample = (t) => {
+  const p = (t % SECONDS) / SECONDS;
+  const k12 = smooth((p - 0.333 + 0.04) / 0.08);
+  const k23 = smooth((p - 0.666 + 0.04) / 0.08);
+  const w = lerp(lerp(220, 780, k12), 900, k23);
+  const h = lerp(lerp(220, 150, k12), 430, k23);
+  const rx = lerp(lerp(110, 75, k12), 40, k23);
+  main.setAttribute('x', (640 - w / 2).toFixed(1));
+  main.setAttribute('y', (360 - h / 2).toFixed(1));
+  main.setAttribute('width', w.toFixed(1));
+  main.setAttribute('height', h.toFixed(1));
+  main.setAttribute('rx', rx.toFixed(1));
+  const g2 = smooth((p - 0.38) / 0.1);
+  const bop = k12 * (1 - k23);
+  barsG.setAttribute('opacity', bop.toFixed(3));
+  const bw = [0.62, 0.76, 0.52];
+  for (let i = 0; i < 3; i += 1) {
+    const ww = Math.max(1, (w - 170) * bw[i] * g2);
+    bars[i].setAttribute('width', ww.toFixed(1));
+    bars[i].setAttribute('x', (640 - ww / 2).toFixed(1));
+  }
+  const g3 = smooth((p - 0.72) / 0.1);
+  dotsG.setAttribute('opacity', k23.toFixed(3));
+  dotsG.setAttribute('transform', 'translate(640 360) scale(' + Math.max(0.001, g3).toFixed(3) + ') translate(-640 -360)');
+  const c = k12 < 1 ? BG[0].map((v, i) => Math.round(lerp(v, BG[1][i], k12))) : BG[1].map((v, i) => Math.round(lerp(v, BG[2][i], k23)));
+  bg.setAttribute('fill', css(c));
+  const col = smooth((p - 0.92) / 0.08);
+  const s = 1 - col * 0.92;
+  root.setAttribute('transform', 'translate(640 360) scale(' + s.toFixed(3) + ') translate(-640 -360)');
+};
+if (!navigator.webdriver) {
+  const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

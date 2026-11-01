@@ -1,0 +1,7 @@
+{
+  "seconds": 4,
+  "note": {
+    "ko": "박자에 맞춰 조각이 밀리고 색이 갈라지는 화면입니다.",
+    "en": "Slices offset by seeded noise with RGB splits at beat hits."
+  }
+}

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#141a22;font-family:'Segoe UI',system-ui,sans-serif}
+.tabs{position:absolute;left:340px;top:250px;width:600px}.row{display:flex;justify-content:space-between;font-size:34px;font-weight:700;padding:0 60px;color:#9aa7b8}.track{position:relative;height:96px;background:#232c38;border-radius:999px;margin-top:26px}#pill{position:absolute;top:8px;left:25px;width:150px;height:80px;border-radius:999px;background:linear-gradient(90deg,#2ed3b1,#2f6bff)}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#141a22"/><circle cx="180" cy="120" r="180" fill="#1b2431"/><circle cx="1120" cy="640" r="200" fill="#1b2431"/></svg>
+<div class="tabs"><div class="row"><span>Today</span><span>Week</span><span>Month</span></div><div class="track"><div id="pill"></div></div></div>
+<script>
+const SECONDS = 3;
+const X0 = 25, X1 = 425, BASE = 150;
+const ez = (x) => x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x);
+window.seekExample = (t) => {
+const p = (t % SECONDS) / SECONDS;
+const u = p < 0.5 ? p / 0.5 : (1 - p) / 0.5;
+const f = ez(u / 0.45), b = ez((u - 0.25) / 0.55);
+const lo = Math.min(f, b), hi = Math.max(f, b);
+const pill = document.getElementById('pill');
+pill.style.left = (X0 + (X1 - X0) * lo) + 'px';
+pill.style.width = (BASE + (X1 - X0) * (hi - lo)) + 'px';
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

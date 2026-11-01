@@ -1,0 +1,7 @@
+{
+  "seconds": 4,
+  "note": {
+    "ko": "고정된 속도로 떨어지는 문자 기둥과 잔상입니다.",
+    "en": "Columns of glyphs falling at seeded speeds with fading trails."
+  }
+}

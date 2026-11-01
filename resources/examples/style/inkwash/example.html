@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><title>iw</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#f5f1e6}
+svg{display:block;width:1280px;height:720px}
+</style></head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs>
+<filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9"/></filter>
+<linearGradient id="fade1" x1="0" y1="0" x2="1" y2="0">
+<stop offset="0" stop-color="#2b2b2e" stop-opacity=".85"/><stop offset="1" stop-color="#2b2b2e" stop-opacity="0"/>
+</linearGradient>
+</defs>
+<rect width="1280" height="720" fill="#f5f1e6"/>
+<g id="wash"></g>
+<g stroke="#2b2b2e" stroke-linecap="round" fill="none">
+<path d="M60 560 L300 300 L420 420 L560 240 L760 470" stroke-width="26" opacity=".8"/>
+<path d="M60 560 L300 300 L420 420 L560 240 L760 470" stroke-width="10" opacity=".9" filter="url(#soft)"/>
+<path d="M700 600 L950 380 L1060 480 L1220 330" stroke-width="20" opacity=".65"/>
+<path d="M700 600 L950 380 L1060 480 L1220 330" stroke-width="8" opacity=".8" filter="url(#soft)"/>
+<path d="M880 620 Q1000 560 1180 590" stroke-width="7" opacity=".5"/>
+<path d="M120 620 Q320 570 520 610" stroke-width="7" opacity=".5"/>
+</g>
+<g id="trees"></g>
+<rect x="1090" y="560" width="64" height="64" rx="6" fill="#a83a2c"/>
+<rect x="1102" y="572" width="40" height="40" fill="none" stroke="#f5f1e6" stroke-width="5"/>
+</svg>
+<script>
+(function(){
+function h(i){var x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);}
+var w=document.getElementById('wash'),s='';
+var i,x,y;
+// graded ink dissolving bands
+for(i=0;i<60;i++){x=h(i)*1280;y=180+h(i+9)*300;
+s+='<ellipse cx="'+x.toFixed(0)+'" cy="'+y.toFixed(0)+'" rx="'+(60+h(i+3)*130).toFixed(0)+'" ry="'+(10+h(i+5)*22).toFixed(0)+'" fill="#3a3a3e" opacity="'+(0.04+h(i+7)*0.08).toFixed(3)+'" filter="url(#soft)"/>';}
+// distant peaks fading
+for(i=0;i<5;i++){var px=150+i*250,py=200+h(i+40)*60;
+s+='<path d="M'+(px-160)+' 330 L'+px+' '+(py).toFixed(0)+' L'+(px+160)+' 330 Z" fill="url(#fade1)" opacity=".35" filter="url(#soft)"/>';}
+w.innerHTML=s;
+var t=document.getElementById('trees'),u='';
+for(i=0;i<9;i++){x=120+h(i+100)*1000;y=540+h(i+200)*120;
+u+='<g stroke="#2b2b2e" stroke-width="5" opacity=".7"><line x1="'+x.toFixed(0)+'" y1="'+y.toFixed(0)+'" x2="'+x.toFixed(0)+'" y2="'+(y-46).toFixed(0)+'"/>';
+u+='<path d="M'+x.toFixed(0)+' '+(y-30).toFixed(0)+' l-26 -12 M'+x.toFixed(0)+' '+(y-38).toFixed(0)+' l26 -12" fill="none"/></g>';}
+t.innerHTML=u;
+})();
+</script>
+</body>
+</html>

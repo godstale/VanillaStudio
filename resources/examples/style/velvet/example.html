@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Folded cloth</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#06231b;}
+svg{width:1280px;height:720px;display:block;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720">
+<defs><filter id="vb" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="12"/></filter></defs>
+<rect width="1280" height="720" fill="#06231b"/>
+<g id="folds"></g>
+<ellipse cx="640" cy="120" rx="500" ry="120" fill="#1a8a5f" opacity="0.3" filter="url(#vb)"/>
+<rect width="1280" height="720" fill="#020d09" opacity="0.35"/>
+</svg>
+<script>
+let s='';
+for(let i=0;i<8;i++){const x=40+i*155;
+s+='<path d="M'+x+' 0 Q '+(x+70)+' 240 '+x+' 480 Q '+(x-70)+' 600 '+x+' 720 L '+(x+110)+' 720 Q '+(x+40)+' 600 '+(x+110)+' 480 Q '+(x+180)+' 240 '+(x+110)+' 0 Z" fill="'+(i%2?'#0a3b2c':'#0f5c42')+'"/>';
+s+='<path d="M'+(x+110)+' 0 Q '+(x+180)+' 240 '+(x+110)+' 480 Q '+(x+40)+' 600 '+(x+110)+' 720" stroke="#8fe6bd" stroke-width="6" fill="none" opacity="0.8"/>';}
+document.getElementById('folds').innerHTML=s;
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Amber stone</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: radial-gradient(circle at 50% 40%, #3a2c1c, #120d07 80%); display: grid; place-items: center; }
+      svg { width: 620px; height: 520px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 620 520">
+      <defs>
+        <radialGradient id="amber" cx="42%" cy="35%" r="75%">
+          <stop offset="0%" stop-color="#ffe9ad" />
+          <stop offset="50%" stop-color="#e8a04c" />
+          <stop offset="100%" stop-color="#8a4d12" />
+        </radialGradient>
+      </defs>
+      <ellipse cx="310" cy="460" rx="180" ry="20" fill="#e8a04c" opacity="0.25" />
+      <path d="M310 60 Q470 60 500 230 Q520 380 380 430 Q330 448 310 448 Q290 448 240 430 Q100 380 120 230 Q150 60 310 60 Z" fill="url(#amber)" />
+      <g fill="#5e3408" opacity="0.9">
+        <path d="M310 200 Q300 260 310 330 Q320 260 310 200 Z" />
+        <path d="M310 240 Q270 230 250 200 Q285 205 310 240 Z" />
+        <path d="M310 240 Q350 230 370 200 Q335 205 310 240 Z" />
+        <path d="M310 290 Q275 285 260 260 Q290 262 310 290 Z" />
+        <path d="M310 290 Q345 285 360 260 Q330 262 310 290 Z" />
+      </g>
+      <path d="M200 130 Q260 90 340 95" stroke="#fff3d0" stroke-width="12" fill="none" opacity="0.7" stroke-linecap="round" />
+    </svg>
+  </body>
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Psychedelic</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: #0d0518;
+      }
+      canvas {
+        width: 1280px;
+        height: 720px;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="c" width="1280" height="720"></canvas>
+    <script>
+      const SECONDS = 4;
+      const W = 256;
+      const H = 144;
+      const cv = document.getElementById('c');
+      const ctx = cv.getContext('2d');
+      const buf = document.createElement('canvas');
+      buf.width = W;
+      buf.height = H;
+      const btx = buf.getContext('2d');
+      const img = btx.createImageData(W, H);
+      const N = (x, y) => Math.sin(x * 1.7 + Math.sin(y * 2.3) * 1.3) * Math.sin(y * 1.3 + Math.sin(x * 1.9) * 1.1);
+      const h2r = (h, s, l) => {
+        h = (((h % 360) + 360) % 360) / 360;
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+        const ch = (tt) => {
+          if (tt < 0) tt += 1;
+          if (tt > 1) tt -= 1;
+          if (tt < 1 / 6) return p + (q - p) * 6 * tt;
+          if (tt < 1 / 2) return q;
+          if (tt < 2 / 3) return p + (q - p) * (2 / 3 - tt) * 6;
+          return p;
+        };
+        return [ch(h + 1 / 3) * 255, ch(h) * 255, ch(h - 1 / 3) * 255];
+      };
+
+      // Pure function of t: warped concentric bands drift with the phase.
+      window.seekExample = (t) => {
+        const ph = ((t % SECONDS) / SECONDS) * Math.PI * 2;
+        const d = img.data;
+        let k = 0;
+        for (let j = 0; j < H; j += 1) {
+          const v = j / H;
+          for (let i = 0; i < W; i += 1) {
+            const u = i / W;
+            const dx = (u - 0.5) * 1.78;
+            const dy = v - 0.44;
+            const r = Math.sqrt(dx * dx + dy * dy);
+            const warp = N(u * 4 + ph, v * 4) + N(u * 6 - ph * 0.7, v * 6 + 1.1);
+            const b = Math.sin(r * 15 - ph * 2 + warp * 3.4);
+            const col = h2r(150 + b * 95 + ph * 25, 0.85, 0.26 + 0.3 * ((b + 1) / 2));
+            d[k] = col[0];
+            d[k + 1] = col[1];
+            d[k + 2] = col[2];
+            d[k + 3] = 255;
+            k += 4;
+          }
+        }
+        btx.putImageData(img, 0, 0);
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(buf, 0, 0, 1280, 720);
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

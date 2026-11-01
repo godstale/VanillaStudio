@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Motion study</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#231A2E}
+svg{width:100%;height:100%;display:block}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720"><circle id="b0" cx="400" cy="360" r="300" fill="#8B7CF6" opacity="0.3"/><circle id="b1" cx="900" cy="300" r="240" fill="#FF7AB8" opacity="0.3"/><circle id="b2" cx="650" cy="500" r="200" fill="#39D0C4" opacity="0.3"/><g id="g"><circle id="g0" r="8" fill="#F2EAD8" opacity="0.8"/><circle id="g1" r="8" fill="#F2EAD8" opacity="0.8"/><circle id="g2" r="8" fill="#F2EAD8" opacity="0.8"/><circle id="g3" r="8" fill="#F2EAD8" opacity="0.8"/><circle id="g4" r="8" fill="#F2EAD8" opacity="0.8"/><circle id="g5" r="8" fill="#F2EAD8" opacity="0.8"/><circle id="g6" r="8" fill="#F2EAD8" opacity="0.8"/><circle id="g7" r="8" fill="#F2EAD8" opacity="0.8"/><circle id="g8" r="8" fill="#F2EAD8" opacity="0.8"/><circle id="g9" r="8" fill="#F2EAD8" opacity="0.8"/><circle id="g10" r="8" fill="#F2EAD8" opacity="0.8"/><circle id="g11" r="8" fill="#F2EAD8" opacity="0.8"/></g><rect x="440" y="160" width="400" height="400" fill="none" stroke="#F2EAD8" stroke-width="4" opacity="0.7"/></svg>
+<script>
+const SECONDS=4;
+const $=i=>document.getElementById(i);
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const ss=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+const lerp=(a,b,e)=>a+(b-a)*e;
+const pp=v=>v<0.5?v*2:2-v*2;
+const H=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);};
+window.seekExample=t=>{
+const p=(t%SECONDS)/SECONDS;
+const a=p*Math.PI*2;
+$('b0').setAttribute('cx',(400+120*Math.sin(a)).toFixed(1));
+$('b1').setAttribute('cx',(900+120*Math.sin(a+2)).toFixed(1));
+$('b2').setAttribute('cy',(500+80*Math.sin(a+4)).toFixed(1));
+for(let i=0;i<12;i++){$('g'+i).setAttribute('cx',(140+H(i*2)*1000-90*Math.sin(a+i)).toFixed(1));$('g'+i).setAttribute('cy',(120+H(i*2+1)*480+40*Math.cos(a+i)).toFixed(1));}
+};
+if(!navigator.webdriver){const loop=ms=>{window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script>
+</body>
+</html>

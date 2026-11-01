@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Soapstone</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden;
+        background: linear-gradient(#46544c, #232b27); display: grid; place-items: center; }
+      svg { width: 720px; height: 480px; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 720 480">
+      <defs>
+        <linearGradient id="stone" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#9aa89d" />
+          <stop offset="55%" stop-color="#7b8a7e" />
+          <stop offset="100%" stop-color="#4c564e" />
+        </linearGradient>
+      </defs>
+      <ellipse cx="360" cy="410" rx="250" ry="26" fill="#000" opacity="0.45" />
+      <path d="M140 380 Q130 280 220 240 Q250 190 240 140 Q238 110 268 108 Q300 106 302 138 Q350 130 420 140 Q520 155 560 230 Q610 260 600 380 Q598 408 565 408 L175 408 Q142 408 140 380 Z" fill="url(#stone)" />
+      <path d="M220 240 Q300 210 420 220" stroke="#5c675f" stroke-width="5" fill="none" opacity="0.7" />
+      <path d="M200 300 Q320 275 480 295" stroke="#5c675f" stroke-width="5" fill="none" opacity="0.6" />
+      <ellipse cx="300" cy="190" rx="90" ry="40" fill="#fff" opacity="0.14" />
+      <circle cx="252" cy="150" r="12" fill="#39423c" />
+      <path d="M560 230 Q600 260 592 340" stroke="#c9d4c9" stroke-width="7" fill="none" opacity="0.5" stroke-linecap="round" />
+    </svg>
+  </body>
+</html>

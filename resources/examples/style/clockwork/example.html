@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Clockwork</title>
+    <style>
+      html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+      body { background: radial-gradient(circle at 50% 40%, #4a3f30 0%, #2b2519 70%, #171309 100%); font-family: 'Segoe UI', system-ui, sans-serif; }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 1280 720" width="1280" height="720">
+      <defs>
+        <radialGradient id="brass" cx="40%" cy="35%" r="90%">
+          <stop offset="0%" stop-color="#ffe9a8" />
+          <stop offset="55%" stop-color="#d9a441" />
+          <stop offset="100%" stop-color="#7c5a1e" />
+        </radialGradient>
+        <radialGradient id="brassD" cx="40%" cy="35%" r="90%">
+          <stop offset="0%" stop-color="#f2cd72" />
+          <stop offset="60%" stop-color="#a97e2a" />
+          <stop offset="100%" stop-color="#54401a" />
+        </radialGradient>
+      </defs>
+      <rect x="180" y="90" width="920" height="540" rx="26" fill="#1d1810" stroke="#8a6f3c" stroke-width="8" />
+      <g id="gear1"></g>
+      <g id="gear2"></g>
+      <g id="gear3"></g>
+      <!-- winding key -->
+      <g id="key">
+        <rect x="632" y="96" width="16" height="60" fill="#c9ccd2" />
+        <ellipse cx="640" cy="96" rx="46" ry="26" fill="none" stroke="#c9ccd2" stroke-width="14" />
+      </g>
+    </svg>
+    <script>
+      const SECONDS = 4;
+      const NS = 'http://www.w3.org/2000/svg';
+
+      // Build a gear with N teeth; returns {group, spin} with spokes rotating together.
+      function gear(id, cx, cy, teeth, rOut, rIn, fill) {
+        const g = document.getElementById(id);
+        let d = '';
+        const steps = teeth * 2;
+        for (let i = 0; i < steps; i++) {
+          const r = i % 2 === 0 ? rOut : rIn;
+          const a = (i / steps) * Math.PI * 2;
+          d += (i === 0 ? 'M' : 'L') + (cx + r * Math.cos(a)).toFixed(1) + ' ' + (cy + r * Math.sin(a)).toFixed(1);
+        }
+        const path = document.createElementNS(NS, 'path');
+        path.setAttribute('d', d + 'Z');
+        path.setAttribute('fill', fill);
+        path.setAttribute('stroke', '#3d2f14');
+        path.setAttribute('stroke-width', '6');
+        path.setAttribute('stroke-linejoin', 'round');
+        g.appendChild(path);
+        const spin = document.createElementNS(NS, 'g');
+        for (let s = 0; s < 5; s++) {
+          const a = (s / 5) * Math.PI * 2;
+          const spoke = document.createElementNS(NS, 'line');
+          spoke.setAttribute('x1', cx); spoke.setAttribute('y1', cy);
+          spoke.setAttribute('x2', cx + (rIn - 26) * Math.cos(a));
+          spoke.setAttribute('y2', cy + (rIn - 26) * Math.sin(a));
+          spoke.setAttribute('stroke', '#3d2f14');
+          spoke.setAttribute('stroke-width', '18');
+          spoke.setAttribute('stroke-linecap', 'round');
+          spin.appendChild(spoke);
+        }
+        const hub = document.createElementNS(NS, 'circle');
+        hub.setAttribute('cx', cx); hub.setAttribute('cy', cy); hub.setAttribute('r', '26');
+        hub.setAttribute('fill', '#3d2f14');
+        spin.appendChild(hub);
+        const pin = document.createElementNS(NS, 'circle');
+        pin.setAttribute('cx', cx); pin.setAttribute('cy', cy); pin.setAttribute('r', '10');
+        pin.setAttribute('fill', '#ffe9a8');
+        spin.appendChild(pin);
+        g.appendChild(spin);
+        return { cx, cy, spin };
+      }
+
+      const g1 = gear('gear1', 440, 380, 12, 150, 122, 'url(#brass)');
+      const g2 = gear('gear2', 700, 330, 24, 175, 150, 'url(#brassD)');
+      const g3 = gear('gear3', 880, 470, 18, 110, 90, 'url(#brass)');
+
+      // Rotation ratios follow tooth counts: angle_i = base * (12 / teeth_i), meshed gears counter-rotate.
+      window.seekExample = (t) => {
+        const base = (t * 360) / SECONDS; // driver gear turns 360 deg per loop
+        g1.spin.setAttribute('transform', `rotate(${base} ${g1.cx} ${g1.cy})`);
+        g2.spin.setAttribute('transform', `rotate(${-base * (12 / 24) + 7.5} ${g2.cx} ${g2.cy})`);
+        g3.spin.setAttribute('transform', `rotate(${base * (12 / 18) + 10} ${g3.cx} ${g3.cy})`);
+        document.getElementById('key').setAttribute('transform', `rotate(${base * 2} 640 130)`);
+      };
+
+      if (!navigator.webdriver) {
+        const loop = (ms) => {
+          window.seekExample(ms / 1000);
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+      window.seekExample(0);
+    </script>
+  </body>
+</html>

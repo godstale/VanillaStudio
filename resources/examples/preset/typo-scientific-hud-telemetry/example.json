@@ -1,0 +1,7 @@
+{
+  "seconds": 4,
+  "note": {
+    "ko": "수식 기호와 같은 색의 파형이 격자 위를 그리고 고정폭 판독값이 바뀝니다.",
+    "en": "A wave in formula-matched colors draws over a grid while mono readouts update."
+  }
+}

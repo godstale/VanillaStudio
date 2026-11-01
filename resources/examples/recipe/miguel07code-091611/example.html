@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><title>Epicycles</title><style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0b1026;color:#e8ecf7;font-family:system-ui,'Segoe UI',sans-serif}
+svg.stage{position:absolute;inset:0}
+.cap{position:absolute;left:80px;bottom:44px;font-size:28px;color:#8b96b5}
+</style></head><body>
+<svg class="stage" viewBox="0 0 1280 720">
+<g fill="none" stroke="#3a4666" stroke-width="2">
+<circle id="c1" cx="300" cy="360" r="150"/><circle id="c2" r="90"/><circle id="c3" r="52"/>
+</g>
+<line x1="300" y1="360" x2="660" y2="360" stroke="#3a4666" stroke-width="2"/>
+<polyline id="wave" fill="none" stroke="#ffd166" stroke-width="5"/>
+<circle id="tip" r="10" fill="#ffd166"/>
+<g id="arms" stroke="#7c8cff" stroke-width="4"><line id="a1"/><line id="a2"/><line id="a3"/></g>
+<g id="spec"></g>
+</svg>
+<div class="cap">three rotating vectors sum into one wave</div>
+<svg class="frame" viewBox="0 0 1280 720" style="position:absolute;inset:0"><rect x="24" y="24" width="1232" height="672" fill="none" stroke="#3a4666" stroke-width="3"/></svg>
+<script>
+var SECONDS=8;
+var NS="w3svg";
+var c2=document.getElementById("c2"),c3=document.getElementById("c3"),
+a1=document.getElementById("a1"),a2=document.getElementById("a2"),a3=document.getElementById("a3"),
+wave=document.getElementById("wave"),tip=document.getElementById("tip"),spec=document.getElementById("spec");
+var bars=[];
+for(var i=0;i<7;i++){var r=document.createElementNS("http://www.w3.org/2000/svg","rect");
+r.setAttribute("x",760+i*62);r.setAttribute("width",40);r.setAttribute("fill","#7c8cff");spec.appendChild(r);bars.push(r);}
+function pt(u){var a=2*Math.PI*u;
+var x=150*Math.cos(a)+90*Math.cos(2*a+1)+52*Math.cos(3*a+2.4);
+var y=150*Math.sin(a)+90*Math.sin(2*a+1)+52*Math.sin(3*a+2.4);return [x,y];}
+window.seekExample=function(t){
+var p=((t%SECONDS)+SECONDS)%SECONDS/SECONDS,u=p*2;
+var a=2*Math.PI*u;
+var x1=300+150*Math.cos(a),y1=360+150*Math.sin(a);
+var x2=x1+90*Math.cos(2*a+1),y2=y1+90*Math.sin(2*a+1);
+var x3=x2+52*Math.cos(3*a+2.4),y3=y2+52*Math.sin(3*a+2.4);
+c2.setAttribute("cx",x1);c2.setAttribute("cy",y1);
+c3.setAttribute("cx",x2);c3.setAttribute("cy",y2);
+a1.setAttribute("x1",300);a1.setAttribute("y1",360);a1.setAttribute("x2",x1);a1.setAttribute("y2",y1);
+a2.setAttribute("x1",x1);a2.setAttribute("y1",y1);a2.setAttribute("x2",x2);a2.setAttribute("y2",y2);
+a3.setAttribute("x1",x2);a3.setAttribute("y1",y2);a3.setAttribute("x2",x3);a3.setAttribute("y2",y3);
+tip.setAttribute("cx",660);tip.setAttribute("cy",360+(y3-360));
+var s="";for(var k=0;k<=110;k++){var q=pt(u-k/55);s+=(660+k*5.4)+","+(360+(q[1]))+" ";}
+wave.setAttribute("points",s);
+for(var i=0;i<7;i++){var hh2=40+110*Math.abs(Math.sin((i+1)*a*0.5+i));
+bars[i].setAttribute("y",660-hh2);bars[i].setAttribute("height",hh2);}
+};
+if(!navigator.webdriver){var loop=function(ms){window.seekExample(ms/1000);requestAnimationFrame(loop);};requestAnimationFrame(loop);}
+window.seekExample(0);
+</script></body></html>

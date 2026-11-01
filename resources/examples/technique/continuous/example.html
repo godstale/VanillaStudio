@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#f4f1ea;color:#1c1b19;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#dcebf5"/>
+<g id="pan"><rect x="0" y="400" width="2560" height="320" fill="#8fce8f"/>
+<circle cx="300" cy="200" r="90" fill="#f5b942"/><rect x="700" y="250" width="220" height="300" rx="14" fill="#b0724e"/><rect x="1100" y="300" width="180" height="250" rx="90" fill="#5d8a5a"/><rect x="1500" y="220" width="260" height="330" rx="14" fill="#3f5a78"/><circle cx="2000" cy="220" r="100" fill="#e0608f"/><rect x="2250" y="350" width="160" height="200" rx="14" fill="#c96f4a"/></g>
+<rect x="0" y="0" width="60" height="720" fill="#1c1b19" opacity=".25"/><rect x="1220" y="0" width="60" height="720" fill="#1c1b19" opacity=".25"/></svg>
+<script>
+const SECONDS = 4;
+window.seekExample = (t) => {
+const phase = (t % SECONDS) / SECONDS;
+document.getElementById('pan').setAttribute('transform','translate('+(-1280*phase)+' 0)');
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

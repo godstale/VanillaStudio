@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Embroidery</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#8f7a5f;
+        font-family:'Segoe UI',system-ui,sans-serif}
+      .linen{position:absolute;inset:0;
+        background:
+          repeating-linear-gradient(0deg,#00000010 0 2px,transparent 2px 5px),
+          repeating-linear-gradient(90deg,#00000010 0 2px,transparent 2px 5px),
+          #efe4cb}
+      svg{display:block;position:relative;margin:6px auto}
+    </style>
+  </head>
+  <body>
+    <div class="linen"></div>
+    <svg width="760" height="708" viewBox="0 0 760 708">
+      <ellipse cx="380" cy="680" rx="250" ry="20" fill="#00000022"/>
+      <!-- hoop -->
+      <circle cx="380" cy="350" r="310" fill="#e7d6ae"/>
+      <circle cx="380" cy="350" r="310" fill="none" stroke="#a06a35" stroke-width="34"/>
+      <circle cx="380" cy="350" r="310" fill="none" stroke="#7c4f24" stroke-width="34" stroke-dasharray="6 240" opacity=".5"/>
+      <circle cx="380" cy="350" r="288" fill="none" stroke="#c9b183" stroke-width="6"/>
+      <rect x="330" y="6" width="100" height="52" rx="10" fill="#8a8f96" stroke="#5c6167" stroke-width="5"/>
+      <clipPath id="in"><circle cx="380" cy="350" r="284"/></clipPath>
+      <g clip-path="url(#in)">
+        <rect x="96" y="66" width="568" height="568" fill="#f3ead2"/>
+        <!-- stem -->
+        <path d="M380 560C370 480 390 430 380 360" stroke="#4a7c3a" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="20 6"/>
+        <path d="M380 500q-60-10-95-55M380 460q60-8 92-52" stroke="#4a7c3a" stroke-width="11" fill="none" stroke-linecap="round"/>
+        <!-- leaves -->
+        <ellipse cx="272" cy="452" rx="62" ry="30" fill="#6aa152" transform="rotate(-24 272 452)"/>
+        <ellipse cx="488" cy="414" rx="62" ry="30" fill="#6aa152" transform="rotate(22 488 414)"/>
+        <!-- petals: directional thread strokes -->
+        <g id="petals"></g>
+        <!-- center -->
+        <circle cx="380" cy="300" r="52" fill="#e8a93d"/>
+        <g id="knots"></g>
+      </g>
+      <circle cx="380" cy="350" r="284" fill="none" stroke="#c9b183" stroke-width="6"/>
+    </svg>
+    <script>
+      const P = document.getElementById('petals');
+      const K = document.getElementById('knots');
+      let s = '';
+      const cols = ['#d94f70', '#e56b8a', '#c93a5e'];
+      for (let p = 0; p < 8; p++) {
+        const a = (p / 8) * Math.PI * 2;
+        const cx = 380 + Math.cos(a) * 118, cy = 300 + Math.sin(a) * 118;
+        const deg = (a * 180 / Math.PI).toFixed(1);
+        s += '<g transform="translate(' + cx + ' ' + cy + ') rotate(' + deg + ')">'
+          + '<ellipse rx="72" ry="46" fill="' + cols[p % 3] + '"/>'
+          + '<ellipse rx="72" ry="46" fill="none" stroke="#00000033" stroke-width="4"/>';
+        for (let i = -3; i <= 3; i++)
+          s += '<line x1="-64" y1="' + i * 12 + '" x2="64" y2="' + i * 12 + '" stroke="#ffffff55" stroke-width="5"/>';
+        s += '</g>';
+      }
+      P.innerHTML = s;
+      let k = '';
+      const seed = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+      for (const i of seed) {
+        const a = (i / 12) * Math.PI * 2;
+        k += '<circle cx="' + (380 + Math.cos(a) * 28).toFixed(1) + '" cy="' + (300 + Math.sin(a) * 28).toFixed(1)
+          + '" r="10" fill="#a86a1c" stroke="#7c4f10" stroke-width="3"/>';
+      }
+      K.innerHTML = k + '<circle cx="380" cy="300" r="10" fill="#a86a1c" stroke="#7c4f10" stroke-width="3"/>';
+    </script>
+  </body>
+</html>
