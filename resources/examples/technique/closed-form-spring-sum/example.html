@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#080d23;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720">
+<rect width="1280" height="720" fill="#080d23"/>
+<line x1="140" y1="380" x2="1140" y2="380" stroke="#33406e" stroke-width="8" stroke-linecap="round"/>
+<g id="ghosts" stroke="#6685ff" stroke-width="4"></g>
+<g id="trail"></g>
+<circle id="dot" cx="640" cy="380" r="54" fill="#ff654f" stroke="#fff4dd" stroke-width="6"/>
+<text id="val" x="1140" y="200" font-size="110" font-weight="900" fill="#fff4dd" text-anchor="end">x=0.50</text>
+<text x="140" y="200" font-size="44" font-weight="700" fill="#6685ff">STEP TIMES</text>
+<g id="steps" fill="#33406e"></g>
+</svg>
+<script>
+const SECONDS = 6;
+const dot = document.getElementById('dot');
+const val = document.getElementById('val');
+const trailG = document.getElementById('trail');
+const ghostsG = document.getElementById('ghosts');
+const stepsG = document.getElementById('steps');
+const TS = [0.5, 2.0, 3.6];
+const TG = [0.8, 0.25, 0.5];
+const X0 = 0.5;
+const NS = 'http://www.w3.org/2000/svg';
+const trail = [];
+for (let i = 0; i < 14; i += 1) {
+  const c = document.createElementNS(NS, 'circle');
+  c.setAttribute('cy', '380');
+  c.setAttribute('fill', '#ff654f');
+  trailG.appendChild(c);
+  trail.push(c);
+}
+const ghosts = [];
+for (let i = 0; i < 3; i += 1) {
+  const g = document.createElementNS(NS, 'line');
+  g.setAttribute('x1', (140 + TG[i] * 1000).toFixed(1));
+  g.setAttribute('x2', (140 + TG[i] * 1000).toFixed(1));
+  g.setAttribute('y1', '300');
+  g.setAttribute('y2', '460');
+  ghostsG.appendChild(g);
+  ghosts.push(g);
+  const s = document.createElementNS(NS, 'rect');
+  s.setAttribute('x', (140 + (TS[i] / SECONDS) * 1000 - 9).toFixed(1));
+  s.setAttribute('y', '560');
+  s.setAttribute('width', '18');
+  s.setAttribute('height', '40');
+  s.setAttribute('rx', '9');
+  stepsG.appendChild(s);
+}
+// Analytic underdamped step response: r(dt) = 1 - exp(-3.2 dt) cos(9 dt), summed over target changes.
+const resp = (dt) => dt <= 0 ? 0 : 1 - Math.exp(-3.2 * dt) * Math.cos(9 * dt);
+const at = (t) => {
+  let x = X0, prev = X0;
+  for (let i = 0; i < 3; i += 1) {
+    const d = TG[i] - prev;
+    prev = TG[i];
+    x += d * resp(t - TS[i]);
+  }
+  return x;
+};
+const X = (v) => 140 + v * 1000;
+window.seekExample = (t) => {
+  const x = at(t % SECONDS);
+  dot.setAttribute('cx', X(x).toFixed(1));
+  val.textContent = 'x=' + x.toFixed(2);
+  for (let i = 0; i < 14; i += 1) {
+    const xt = at(((t % SECONDS) - (i + 1) * 0.06 + SECONDS) % SECONDS);
+    trail[i].setAttribute('cx', X(xt).toFixed(1));
+    trail[i].setAttribute('r', (46 * (1 - i / 14)).toFixed(1));
+    trail[i].setAttribute('opacity', (0.35 * (1 - i / 14)).toFixed(3));
+  }
+  for (let i = 0; i < 3; i += 1) {
+    ghosts[i].setAttribute('opacity', (t % SECONDS) >= TS[i] ? '0.9' : '0.15');
+  }
+};
+if (!navigator.webdriver) {
+  const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

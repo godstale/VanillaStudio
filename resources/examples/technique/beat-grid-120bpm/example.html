@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0a0a0a;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720">
+<rect width="1280" height="720" fill="#0a0a0a"/>
+<circle id="ring" cx="640" cy="320" r="150" fill="none" stroke="#ffd34d" stroke-width="10"/>
+<text id="big" x="640" y="320" font-size="290" font-weight="900" fill="#f5f5f5" text-anchor="middle" dominant-baseline="central">1</text>
+<text id="word" x="640" y="540" font-size="64" font-weight="800" fill="#ffd34d" text-anchor="middle" letter-spacing="14">MOVE</text>
+<g id="dots" fill="#3a3a3a"></g>
+</svg>
+<script>
+const SECONDS = 6;
+const big = document.getElementById('big');
+const word = document.getElementById('word');
+const ring = document.getElementById('ring');
+const dotsG = document.getElementById('dots');
+const WORDS = ['MOVE', 'HIT', 'FLOW', 'PUSH', 'RISE', 'FALL'];
+const dots = [];
+for (let i = 0; i < 12; i += 1) {
+  const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  c.setAttribute('cx', (340 + i * 54.5).toFixed(1));
+  c.setAttribute('cy', '650');
+  c.setAttribute('r', '16');
+  dotsG.appendChild(c);
+  dots.push(c);
+}
+window.seekExample = (t) => {
+  const beat = Math.floor(t / 0.5) % 12;
+  const frac = (t % 0.5) / 0.5;
+  const punch = Math.exp(-5 * frac);
+  big.textContent = String(beat + 1);
+  big.setAttribute('transform', 'translate(640 320) scale(' + (1 + 0.28 * punch).toFixed(3) + ') translate(-640 -320)');
+  ring.setAttribute('r', (150 + 240 * (1 - punch)).toFixed(1));
+  ring.setAttribute('opacity', punch.toFixed(3));
+  word.textContent = WORDS[Math.floor(beat / 2)];
+  word.setAttribute('opacity', (0.55 + 0.45 * punch).toFixed(3));
+  for (let i = 0; i < 12; i += 1) {
+    dots[i].setAttribute('fill', i <= beat ? '#ffd34d' : '#3a3a3a');
+  }
+};
+if (!navigator.webdriver) {
+  const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

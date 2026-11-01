@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#080d23;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720">
+<rect width="1280" height="720" fill="#080d23"/>
+<path id="lane" d="" fill="none" stroke="#6685ff" stroke-width="4"/>
+<circle id="planet" cx="640" cy="380" r="52" fill="#ff654f"/>
+<g id="letters" font-size="62" font-weight="800" fill="#fff4dd" text-anchor="middle" dominant-baseline="central">
+<text id="L0">O</text><text id="L1">R</text><text id="L2">B</text><text id="L3">I</text><text id="L4">T</text><text id="L5">A</text><text id="L6">L</text>
+</g>
+<polygon id="head" points="" fill="#ffd34d"/>
+</svg>
+<script>
+const SECONDS = 6;
+const lane = document.getElementById('lane');
+const planet = document.getElementById('planet');
+const head = document.getElementById('head');
+const letters = [0, 1, 2, 3, 4, 5, 6].map((i) => document.getElementById('L' + i));
+const clamp01 = (x) => x < 0 ? 0 : x > 1 ? 1 : x;
+const smooth = (x) => { x = clamp01(x); return x * x * (3 - 2 * x); };
+const lerp = (a, b, k) => a + (b - a) * k;
+const closed = (u) => {
+  const th = u * Math.PI * 2;
+  return [640 + 430 * Math.cos(th), 380 + 190 * Math.sin(th), Math.atan2(190 * Math.cos(th), -430 * Math.sin(th)) * 180 / Math.PI];
+};
+const open = (u) => {
+  const x = 150 + 980 * u;
+  const y = 540 - 380 * u + 40 * Math.sin(u * 9);
+  return [x, y, Math.atan2(-380 + 360 * Math.cos(u * 9), 980) * 180 / Math.PI];
+};
+const blend = (u, b) => {
+  const c = closed(u), o = open(u);
+  return [lerp(c[0], o[0], b), lerp(c[1], o[1], b), lerp(c[2], o[2], b)];
+};
+window.seekExample = (t) => {
+  const p = (t % SECONDS) / SECONDS;
+  const b = smooth((p - 0.3) / 0.35);
+  let d = '';
+  for (let i = 0; i <= 120; i += 1) {
+    const q = blend(i / 120, b);
+    d += (i === 0 ? 'M' : 'L') + q[0].toFixed(1) + ' ' + q[1].toFixed(1);
+  }
+  lane.setAttribute('d', d);
+  for (let i = 0; i < 7; i += 1) {
+    const u = (i / 7 * 0.55 + p * 0.9) % 1;
+    const q = blend(u, b);
+    letters[i].setAttribute('transform', 'translate(' + q[0].toFixed(1) + ' ' + q[1].toFixed(1) + ') rotate(' + q[2].toFixed(1) + ')');
+  }
+  planet.setAttribute('opacity', (1 - b).toFixed(3));
+  planet.setAttribute('r', (52 - 20 * b).toFixed(1));
+  const e = blend(1, b);
+  const a = e[2] * Math.PI / 180;
+  const tip = [e[0] + 26 * Math.cos(a), e[1] + 26 * Math.sin(a)];
+  const b1 = [e[0] - 14 * Math.cos(a) - 13 * Math.sin(a), e[1] - 14 * Math.sin(a) + 13 * Math.cos(a)];
+  const b2 = [e[0] - 14 * Math.cos(a) + 13 * Math.sin(a), e[1] - 14 * Math.sin(a) - 13 * Math.cos(a)];
+  head.setAttribute('points', tip[0].toFixed(1) + ',' + tip[1].toFixed(1) + ' ' + b1[0].toFixed(1) + ',' + b1[1].toFixed(1) + ' ' + b2[0].toFixed(1) + ',' + b2[1].toFixed(1));
+  head.setAttribute('opacity', smooth((b - 0.5) / 0.2).toFixed(3));
+};
+if (!navigator.webdriver) {
+  const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

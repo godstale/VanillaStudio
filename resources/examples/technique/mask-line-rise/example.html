@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720">
+<rect width="1280" height="720" fill="#f4f1ea"/>
+<defs><clipPath id="win"><rect x="190" y="140" width="900" height="330"/></clipPath></defs>
+<g clip-path="url(#win)"><g id="rise">
+<text x="640" y="430" font-size="190" font-weight="900" fill="#1c1b19" text-anchor="middle">ASCEND</text>
+</g></g>
+<line id="base" x1="190" y1="470" x2="1090" y2="470" stroke="#1c1b19" stroke-width="6"/>
+<rect x="190" y="452" width="18" height="36" fill="#2e9df0"/>
+<rect x="1072" y="452" width="18" height="36" fill="#2e9df0"/>
+</svg>
+<script>
+const SECONDS = 4;
+const rise = document.getElementById('rise');
+const base = document.getElementById('base');
+const clamp01 = (x) => x < 0 ? 0 : x > 1 ? 1 : x;
+const smooth = (x) => { x = clamp01(x); return x * x * (3 - 2 * x); };
+window.seekExample = (t) => {
+  const p = (t % SECONDS) / SECONDS;
+  const y = 310 * (1 - smooth(p / 0.3) + smooth((p - 0.7) / 0.3));
+  rise.setAttribute('transform', 'translate(0 ' + y.toFixed(1) + ')');
+  rise.setAttribute('opacity', smooth(p / 0.05).toFixed(3));
+  const near = Math.exp(-Math.pow(p - 0.32, 2) / 0.004);
+  base.setAttribute('stroke-width', (6 + 10 * near).toFixed(1));
+  base.setAttribute('stroke', near > 0.4 ? '#2e9df0' : '#1c1b19');
+};
+if (!navigator.webdriver) {
+  const loop = (ms) => { window.seekExample(ms / 1000); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>
