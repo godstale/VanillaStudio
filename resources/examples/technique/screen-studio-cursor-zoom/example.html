@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0b0e14;font-family:'Segoe UI',system-ui,sans-serif}
+#view{position:absolute;left:0;top:0;width:1280px;height:720px;overflow:hidden}#stage{position:absolute;left:0;top:0;width:1280px;height:720px}.win{position:absolute;left:130px;top:60px;width:1020px;height:600px;background:#1a2230;border-radius:26px}.side{position:absolute;left:0;top:0;width:220px;height:600px;background:#141b27;border-radius:26px 0 0 26px}.main{position:absolute;left:220px;top:0;width:800px;height:600px}.shot{position:absolute;left:60px;top:60px;width:680px;height:360px;border-radius:18px;background:linear-gradient(135deg,#2f6bff,#2ed3b1 60%,#f2c879)}#go{position:absolute;left:550px;top:360px;width:170px;height:80px;line-height:80px;text-align:center;font-size:36px;font-weight:800;color:#fff;background:#d9502f;border-radius:20px}#focus{position:absolute;left:770px;top:380px;width:290px;height:180px;border:6px solid #f2c879;border-radius:24px;opacity:0}#curSvg{position:absolute;left:0;top:0}
+</style>
+</head>
+<body>
+<div id="view"><div id="stage"><div class="win"><div class="side"></div><div class="main"><div class="shot"></div><div id="go">Play</div></div></div><div id="focus"></div><svg viewBox="0 0 1280 720" width="1280" height="720" id="curSvg"><g id="cur"><polygon points="0,0 0,46 13,35 19,50 26,47 19,32 32,32" fill="#fff" stroke="#111" stroke-width="3"/></g></svg></div></div>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="none"/></svg>
+<script>
+const SECONDS = 4;
+const ez = (x) => x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x);
+window.seekExample = (t) => {
+const p = (t % SECONDS) / SECONDS;
+const cx = 300 + (830 - 300) * ez(p / 0.22);
+const cy = 560 + (440 - 560) * ez(p / 0.22);
+document.getElementById('cur').setAttribute('transform', 'translate(' + cx + ' ' + cy + ')');
+const z = 1 + 0.6 * (ez((p - 0.2) / 0.25) - ez((p - 0.68) / 0.24));
+const st = document.getElementById('stage');
+st.style.transformOrigin = '830px 440px';
+st.style.transform = 'scale(' + z + ')';
+document.getElementById('focus').style.opacity = String(0.9 * (ez((p - 0.24) / 0.15) - ez((p - 0.68) / 0.2)));
+const gs = 1 - 0.12 * (ez((p - 0.2) / 0.03) - ez((p - 0.28) / 0.06));
+document.getElementById('go').style.transform = 'scale(' + gs + ')';
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

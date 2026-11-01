@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#e9e4d8;font-family:'Segoe UI',system-ui,sans-serif}
+.card{position:absolute;left:340px;top:130px;width:600px;height:440px;background:#fffdf8;border-radius:28px;box-shadow:0 30px 60px rgba(30,25,15,.25)}#btn{position:absolute;left:230px;top:60px;width:140px;height:64px;line-height:64px;text-align:center;font-size:30px;font-weight:800;color:#fff;background:#d9502f;border-radius:18px}.slot{position:absolute;left:100px;top:270px;width:400px;height:26px;background:#e2dccb;border-radius:999px}#fill{position:absolute;left:0;top:0;height:26px;width:30px;background:#0b6e5e;border-radius:999px}#thumb{position:absolute;left:470px;top:-9px;width:44px;height:44px;background:#fff;border:4px solid #0b6e5e;border-radius:50%}.field{position:absolute;left:100px;top:360px;width:400px;height:60px;border:3px solid #23211d;border-radius:14px;font-size:32px;line-height:60px;padding-left:18px;color:#23211d}.caret{display:inline-block;width:4px;height:34px;background:#d9502f;vertical-align:middle;margin-left:4px}#ring{position:absolute;border:5px solid #d9502f;border-radius:50%;opacity:0}#curSvg{position:absolute;left:0;top:0}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#e9e4d8"/></svg>
+<div class="card"><div id="btn">Begin</div><div class="slot"><div id="fill"></div><div id="thumb"></div></div><div class="field"><span id="typed"></span><span class="caret"></span></div></div>
+<div id="ring"></div>
+<svg viewBox="0 0 1280 720" width="1280" height="720" id="curSvg"><g id="cur"><polygon points="0,0 0,44 12,34 18,48 24,45 18,31 30,31" fill="#fff" stroke="#1c1b19" stroke-width="3"/></g></svg>
+<script>
+const SECONDS = 4;
+const WORD = 'Plan a calm day';
+const KEYS = [[0,220,600],[0.16,640,250],[0.24,640,250],[0.34,470,400],[0.58,810,400],[0.66,470,505],[0.94,720,505]];
+const ez = (x) => x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x);
+function posAt(p) {
+for (let i = 0; i < KEYS.length - 1; i++) {
+const a = KEYS[i], b = KEYS[i + 1];
+if (p <= b[0] || i === KEYS.length - 2) {
+const k = ez((p - a[0]) / Math.max(0.0001, b[0] - a[0]));
+return [a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
+}}
+return [KEYS[0][1], KEYS[0][2]];
+}
+window.seekExample = (t) => {
+const p = (t % SECONDS) / SECONDS;
+const xy = posAt(p);
+document.getElementById('cur').setAttribute('transform', 'translate(' + xy[0] + ' ' + xy[1] + ')');
+const press = 1 - 0.14 * (ez((p - 0.16) / 0.03) - ez((p - 0.24) / 0.05));
+document.getElementById('btn').style.transform = 'scale(' + press + ')';
+const dk = ez((p - 0.34) / 0.24);
+const tx = 470 + (810 - 470) * dk;
+document.getElementById('thumb').style.left = tx + 'px';
+document.getElementById('fill').style.width = (tx - 440) + 'px';
+const tk = ez((p - 0.66) / 0.28);
+document.getElementById('typed').textContent = WORD.slice(0, Math.floor(tk * WORD.length));
+const rk = (p - 0.18) / 0.1;
+const ring = document.getElementById('ring');
+if (rk > 0 && rk < 1) {
+ring.style.opacity = '0.8';
+ring.style.left = (640 - 30 * rk) + 'px'; ring.style.top = (250 - 30 * rk) + 'px';
+ring.style.width = (60 * rk) + 'px'; ring.style.height = (60 * rk) + 'px';
+} else { ring.style.opacity = '0'; }
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

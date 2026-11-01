@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#10141c;font-family:'Segoe UI',system-ui,sans-serif}
+
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#10141c"/>
+<defs><pattern id="h" width="14" height="14" patternTransform="rotate(45)" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#2a3444"/><line x1="0" y1="0" x2="0" y2="14" stroke="#7f8ea3" stroke-width="5"/></pattern></defs>
+<line id="ray" x1="120" y1="360" x2="1160" y2="360" stroke="#f2c879" stroke-width="8" stroke-dasharray="36 24"/>
+<polygon points="640,60 620,100 660,100" fill="#7f8ea3"/><polygon points="640,660 620,620 660,620" fill="#7f8ea3"/>
+<g id="p0"><rect x="430" y="200" width="420" height="90" rx="14" fill="url(#h)" stroke="#c7d2e0" stroke-width="4"/></g>
+<g id="p1"><ellipse cx="640" cy="330" rx="200" ry="46" fill="#9fd8e8" stroke="#e8f4f8" stroke-width="6"/></g>
+<g id="p2"><rect x="470" y="420" width="340" height="60" rx="12" fill="#c98a3c" stroke="#f2d8a8" stroke-width="4"/></g>
+<g id="p3"><rect x="400" y="510" width="480" height="100" rx="14" fill="url(#h)" stroke="#c7d2e0" stroke-width="4"/></g>
+</svg>
+<script>
+const SECONDS = 4;
+const ez = (x) => x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x);
+const OFF = [-170, -60, 60, 170];
+window.seekExample = (t) => {
+const p = (t % SECONDS) / SECONDS;
+const s = ez(p / 0.42) * (1 - ez((p - 0.56) / 0.38));
+for (let i = 0; i < 4; i++) document.getElementById('p' + i).setAttribute('transform', 'translate(0 ' + (OFF[i] * s) + ')');
+const ray = document.getElementById('ray');
+ray.setAttribute('opacity', String(1 - s * 0.85));
+ray.setAttribute('stroke-dashoffset', String(-(t % SECONDS) * 160));
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

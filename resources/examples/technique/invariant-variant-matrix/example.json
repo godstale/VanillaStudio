@@ -1,0 +1,7 @@
+{
+  "seconds": 0,
+  "note": {
+    "ko": "공통 불변 영역과 가변 영역이 분리된 매트릭스를 본다.",
+    "en": "A matrix separating the shared invariant zone from variant cells."
+  }
+}
