@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pop-up book</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#7a6a58;
+        font-family:'Segoe UI',system-ui,sans-serif}
+      svg{display:block;margin:0 auto}
+    </style>
+  </head>
+  <body>
+    <svg width="1280" height="720" viewBox="0 0 1280 720">
+      <defs>
+        <linearGradient id="pgL" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#fdf6e3"/><stop offset="1" stop-color="#e3d3ae"/>
+        </linearGradient>
+        <linearGradient id="pgR" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#e3d3ae"/><stop offset="1" stop-color="#fdf6e3"/>
+        </linearGradient>
+      </defs>
+      <!-- table + cover -->
+      <rect x="90" y="120" width="1100" height="520" rx="18" fill="#8e2f3c"/>
+      <rect x="90" y="120" width="1100" height="520" rx="18" fill="none" stroke="#5e1f28" stroke-width="10"/>
+      <!-- pages -->
+      <polygon points="130,160 620,200 620,600 130,600" fill="url(#pgL)"/>
+      <polygon points="1150,160 660,200 660,600 1150,600" fill="url(#pgR)"/>
+      <rect x="620" y="200" width="40" height="400" fill="#0000002e"/>
+      <!-- gutter shadow -->
+      <polygon points="620,200 660,200 660,600 620,600" fill="#00000030"/>
+      <!-- pop-up castle: planes hinged at gutter -->
+      <g stroke-linejoin="round">
+        <polygon points="660,600 660,300 780,320 780,600" fill="#c9c9cf" stroke="#5c6167" stroke-width="6"/>
+        <polygon points="620,600 620,300 500,320 500,600" fill="#a9a9b2" stroke="#5c6167" stroke-width="6"/>
+        <polygon points="660,300 780,320 780,270 740,270 740,240 700,240 700,270 660,270" fill="#c9c9cf" stroke="#5c6167" stroke-width="6"/>
+        <polygon points="620,300 500,320 500,270 540,270 540,240 580,240 580,270 620,270" fill="#a9a9b2" stroke="#5c6167" stroke-width="6"/>
+        <!-- door + windows -->
+        <polygon points="660,600 660,480 730,490 730,600" fill="#5e3a5e"/>
+        <polygon points="620,600 620,480 550,490 550,600" fill="#4a2d4a"/>
+        <!-- pop-up trees -->
+        <polygon points="380,600 380,440 440,440 440,600" fill="#8a5f36" stroke="#5e3a1c" stroke-width="5"/>
+        <polygon points="350,450 410,360 470,450" fill="#4a8c3f" stroke="#2f6b2a" stroke-width="5"/>
+        <polygon points="900,600 900,440 960,440 960,600" fill="#8a5f36" stroke="#5e3a1c" stroke-width="5"/>
+        <polygon points="870,450 930,360 990,450" fill="#4a8c3f" stroke="#2f6b2a" stroke-width="5"/>
+        <!-- fold crease lines -->
+        <g stroke="#00000044" stroke-width="4" stroke-dasharray="12 8">
+          <line x1="660" y1="600" x2="660" y2="300"/>
+          <line x1="620" y1="600" x2="620" y2="300"/>
+        </g>
+      </g>
+      <!-- sun printed on page -->
+      <circle cx="300" cy="300" r="52" fill="#e8b53a"/>
+    </svg>
+  </body>
+</html>

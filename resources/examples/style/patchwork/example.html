@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Patchwork</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#5c4a63;
+        font-family:'Segoe UI',system-ui,sans-serif}
+      .quilt{position:absolute;left:330px;top:36px;width:620px;height:620px;display:grid;
+        grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:0;
+        border:22px solid #e8dcc2;border-radius:8px;box-shadow:0 20px 50px #00000066;
+        transform:rotate(-2deg);box-sizing:border-box;background:#e8dcc2}
+      .p{position:relative;overflow:hidden;border:3px dashed #ffffffcc;box-sizing:border-box}
+      .p1{background:radial-gradient(circle at 30% 30%,#ff8fa3 12%,transparent 13%),radial-gradient(circle at 70% 60%,#ff8fa3 12%,transparent 13%),radial-gradient(circle at 40% 80%,#ff8fa3 12%,transparent 13%),#ffd9e0;background-size:90px 90px}
+      .p2{background:repeating-linear-gradient(45deg,#4a90c2 0 18px,#e8f2f8 18px 36px)}
+      .p3{background:repeating-linear-gradient(0deg,#00000022 0 4px,transparent 4px 24px),repeating-linear-gradient(90deg,#00000022 0 4px,transparent 4px 24px),#e8b53a}
+      .p4{background:repeating-linear-gradient(0deg,#6aa152 0 22px,#e8f2e4 0 44px),repeating-linear-gradient(90deg,#00000030 0 4px,transparent 4px 44px)}
+      .p5{background:radial-gradient(circle,#d94f4f 0 34px,#f6e8d8 35px 44px,transparent 45px),#c93a3a;background-size:88px 88px;background-position:center}
+      .p6{background:repeating-linear-gradient(-45deg,#7d5ba6 0 16px,#d9c9ec 16px 32px)}
+      .p7{background:radial-gradient(circle at 50% 50%,#e8f2f8 0 26px,transparent 27px),repeating-conic-gradient(#4a90c2 0 25%,#e8f2f8 0 50%) 0 0/80px 80px}
+      .p8{background:linear-gradient(135deg,#e8743b 0 50%,#8e2f3c 50% 100%);background-size:64px 64px}
+      .p9{background:radial-gradient(circle at 70% 30%,#7bd13c 10%,transparent 11%),radial-gradient(circle at 30% 70%,#7bd13c 14%,transparent 15%),#f6e8d8;background-size:96px 96px}
+      .tag{position:absolute;right:120px;bottom:90px;background:#fdf6e3;border:3px solid #8a5a3b;
+        padding:10px 22px;font-size:26px;color:#5e3a1c;transform:rotate(6deg)}
+    </style>
+  </head>
+  <body>
+    <div class="quilt">
+      <div class="p p1"></div><div class="p p2"></div><div class="p p3"></div>
+      <div class="p p4"></div><div class="p p5"></div><div class="p p6"></div>
+      <div class="p p7"></div><div class="p p8"></div><div class="p p9"></div>
+    </div>
+    <div class="tag">hand-sewn</div>
+  </body>
+</html>

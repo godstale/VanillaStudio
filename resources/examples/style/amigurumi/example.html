@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Amigurumi</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#b9cfc0;
+        font-family:'Segoe UI',system-ui,sans-serif}
+      svg{display:block;margin:0 auto}
+    </style>
+  </head>
+  <body>
+    <svg width="1280" height="720" viewBox="0 0 1280 720">
+      <defs>
+        <clipPath id="bd"><circle cx="640" cy="400" r="225"/></clipPath>
+        <radialGradient id="bump" cx="35%" cy="30%" r="80%">
+          <stop offset="0" stop-color="#ffe9a8"/><stop offset=".7" stop-color="#f6c453"/><stop offset="1" stop-color="#d99a2b"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="640" cy="660" rx="300" ry="30" fill="#00000026"/>
+      <!-- wings -->
+      <ellipse cx="415" cy="440" rx="60" ry="110" fill="#e8a93d" transform="rotate(18 415 440)"/>
+      <ellipse cx="865" cy="440" rx="60" ry="110" fill="#e8a93d" transform="rotate(-18 865 440)"/>
+      <!-- body -->
+      <circle cx="640" cy="400" r="225" fill="#f6c453"/>
+      <g clip-path="url(#bd)" id="bumps"></g>
+      <circle cx="640" cy="400" r="225" fill="none" stroke="#b57a1f" stroke-width="10"/>
+      <!-- feet -->
+      <ellipse cx="560" cy="618" rx="48" ry="26" fill="#e08a3c"/>
+      <ellipse cx="720" cy="618" rx="48" ry="26" fill="#e08a3c"/>
+      <!-- tuft -->
+      <path d="M610 178q10-34 30-44M640 175v-46M670 178q-10-34-30-44" stroke="#e8a93d" stroke-width="16" stroke-linecap="round" fill="none"/>
+      <!-- bead eyes -->
+      <circle cx="555" cy="370" r="34" fill="#241d18"/>
+      <circle cx="567" cy="358" r="11" fill="#fff"/>
+      <circle cx="725" cy="370" r="34" fill="#241d18"/>
+      <circle cx="737" cy="358" r="11" fill="#fff"/>
+      <!-- beak -->
+      <path d="M608 430h64l-32 40z" fill="#e8743b" stroke="#a34a1d" stroke-width="6" stroke-linejoin="round"/>
+      <!-- blush -->
+      <ellipse cx="505" cy="440" rx="30" ry="16" fill="#e8743b" opacity=".65"/>
+      <ellipse cx="775" cy="440" rx="30" ry="16" fill="#e8743b" opacity=".65"/>
+    </svg>
+    <script>
+      const g = document.getElementById('bumps');
+      let s = '';
+      for (let r = -5; r <= 5; r++) {
+        for (let c = -5; c <= 5; c++) {
+          const x = 640 + c * 44 + (r % 2 ? 22 : 0), y = 400 + r * 40;
+          const dx = x - 640, dy = y - 400;
+          if (dx * dx + dy * dy < 215 * 215)
+            s += '<circle cx="' + x + '" cy="' + y + '" r="21" fill="url(#bump)" stroke="#d99a2b" stroke-width="3"/>';
+        }
+      }
+      g.innerHTML = s;
+    </script>
+  </body>
+</html>

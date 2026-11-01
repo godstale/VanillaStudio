@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Macrame</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#e9dfcd;
+        font-family:'Segoe UI',system-ui,sans-serif}
+      svg{display:block;margin:0 auto}
+    </style>
+  </head>
+  <body>
+    <svg width="1280" height="720" viewBox="0 0 1280 720">
+      <!-- dowel -->
+      <rect x="330" y="60" width="620" height="40" rx="20" fill="#8a5f36"/>
+      <rect x="330" y="60" width="620" height="14" rx="7" fill="#b08a5a"/>
+      <circle cx="330" cy="80" r="26" fill="#6e4a26"/>
+      <circle cx="950" cy="80" r="26" fill="#6e4a26"/>
+      <path d="M330 80q-90 30-110 120M950 80q90 30 110 120" stroke="#6e4a26" stroke-width="10" fill="none"/>
+      <g id="cords" stroke="#c9a87f" stroke-linecap="round" fill="none"></g>
+    </svg>
+    <script>
+      const G = document.getElementById('cords');
+      const NS = 'http://www.w3.org/2000/svg';
+      const el = (n, at) => { const e = document.createElementNS(NS, n); for (const k in at) e.setAttribute(k, at[k]); G.appendChild(e); };
+      const xs = [400, 460, 520, 580, 700, 760, 820, 880];
+      const span = [
+        [0, 1], [2, 3], // pairs at top
+      ];
+      // hanging cords with lark knots
+      for (const x of xs) {
+        el('path', { d: 'M' + x + ' 100v460', 'stroke-width': 12 });
+        el('ellipse', { cx: x, cy: 112, rx: 16, ry: 12, stroke: '#a8814f', 'stroke-width': 8, fill: '#e9dfcd' });
+      }
+      // square-knot bands: stacked trapezoids
+      const bands = [[430, 210], [550, 250], [730, 250], [850, 210]];
+      for (const [x, y] of bands) {
+        for (let i = 0; i < 4; i++) {
+          const yy = y + i * 44;
+          el('path', { d: 'M' + (x - 30) + ' ' + yy + 'h60l-12 30h-36z', fill: '#d9bd8d', stroke: '#a8814f', 'stroke-width': 6, 'stroke-linejoin': 'round' });
+        }
+      }
+      // center V of double half-hitches
+      for (let i = 0; i < 5; i++) {
+        el('circle', { cx: 640 - i * 26, cy: 300 + i * 34, r: 13, fill: '#d9bd8d', stroke: '#a8814f', 'stroke-width': 6 });
+        el('circle', { cx: 640 + i * 26, cy: 300 + i * 34, r: 13, fill: '#d9bd8d', stroke: '#a8814f', 'stroke-width': 6 });
+      }
+      el('circle', { cx: 640, cy: 486, r: 15, fill: '#d9bd8d', stroke: '#a8814f', 'stroke-width': 6 });
+      // fringe: fixed lengths
+      const fl = [90, 120, 105, 135, 115, 140, 125, 100];
+      xs.forEach((x, i) => {
+        for (let k = -1; k <= 1; k++) {
+          el('path', { d: 'M' + (x + k * 9) + ' 560v' + fl[(i + k + 8) % 8], 'stroke-width': 7 });
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Beadwork</title>
+    <style>
+      html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#2b2b38;
+        font-family:'Segoe UI',system-ui,sans-serif}
+      svg{display:block;margin:0 auto}
+    </style>
+  </head>
+  <body>
+    <svg width="1280" height="720" viewBox="0 0 1280 720">
+      <defs>
+        <radialGradient id="bd" cx="35%" cy="30%" r="85%">
+          <stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#ffd9e0"/><stop offset="1" stop-color="#a02848"/>
+        </radialGradient>
+        <radialGradient id="yd" cx="35%" cy="30%" r="85%">
+          <stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#ffe9a8"/><stop offset="1" stop-color="#c07f1a"/>
+        </radialGradient>
+        <radialGradient id="gd" cx="35%" cy="30%" r="85%">
+          <stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#bfe3b0"/><stop offset="1" stop-color="#2f6b2a"/>
+        </radialGradient>
+      </defs>
+      <rect x="300" y="40" width="680" height="640" rx="18" fill="#3a3a4c" stroke="#1c1c26" stroke-width="10"/>
+      <g id="beads"></g>
+    </svg>
+    <script>
+      // butterfly picture on a bead grid: .=empty P=pink Y=yellow G=green
+      const MAP = [
+        'PP...PP...PP...PP',
+        'PPP.PPPP.PPPP.PPP',
+        'PPPPPPPPPPPPPPPPP'.slice(0, 17),
+        '.PPPPPPPPPPPPPPP.',
+        '..PPPPPYPPPPPPP..',
+        '...PPYYYYYPPP....',
+        '....PPYYYPPP.....',
+        '.....PPYPP.......',
+        '......PPP........',
+        '...GG.PP..GG.....',
+        '..GGGGPPGGGGG....',
+        '.GGGGGPPGGGGGG...',
+        '..GGGGPPGGGGG....',
+        '...GG.PP..GG.....',
+      ];
+      const NS = 'http://www.w3.org/2000/svg';
+      const g = document.getElementById('beads');
+      const cell = 36, ox = 334, oy = 62;
+      const F = { P: 'url(#bd)', Y: 'url(#yd)', G: 'url(#gd)' };
+      const S = { P: '#a02848', Y: '#c07f1a', G: '#2f6b2a' };
+      for (let r = 0; r < MAP.length; r++) {
+        for (let c = 0; c < MAP[r].length; c++) {
+          const ch = MAP[r][c];
+          if (ch === '.') continue;
+          const e = document.createElementNS(NS, 'circle');
+          e.setAttribute('cx', ox + c * cell);
+          e.setAttribute('cy', oy + r * cell);
+          e.setAttribute('r', '16');
+          e.setAttribute('fill', F[ch]);
+          e.setAttribute('stroke', S[ch]);
+          e.setAttribute('stroke-width', '2.5');
+          g.appendChild(e);
+        }
+      }
+    </script>
+  </body>
+</html>
