@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0e0f13;color:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#101319"/>
+<ellipse id="psh" cx="640" cy="590" rx="230" ry="28" fill="#000" opacity=".6"/>
+<g id="pdev"><rect x="540" y="200" width="200" height="360" rx="46" fill="#222a3a" stroke="#8a93a3" stroke-width="3"/><rect id="pgl" x="540" y="200" width="70" height="360" fill="#fff" opacity=".18"/><circle cx="640" cy="500" r="14" fill="#d8b25c"/></g></svg>
+<script>
+const SECONDS = 3;
+window.seekExample = (t) => {
+const phase = (t % SECONDS) / SECONDS;
+const pdev=document.getElementById('pdev');
+pdev.setAttribute('transform','translate(640 380) rotate('+(6*Math.sin(phase*Math.PI*2))+') scale('+(1+0.02*Math.sin(phase*Math.PI*4))+') translate(-640 -380)');
+document.getElementById('pgl').setAttribute('x',500+180*phase);
+document.getElementById('psh').setAttribute('rx',230-20*Math.sin(phase*Math.PI*2));
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

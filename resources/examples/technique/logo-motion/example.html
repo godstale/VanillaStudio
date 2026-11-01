@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#0e0f13;color:#f4f1ea;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#101319"/>
+<g id="lg"><circle id="m1" cx="640" cy="300" r="110" fill="none" stroke="#f4f1ea" stroke-width="18"/><rect id="m2" x="620" y="200" width="40" height="200" fill="#f5b942"/><circle id="m3" cx="640" cy="300" r="26" fill="#f5b942"/></g></svg>
+<script>
+const SECONDS = 3;
+window.seekExample = (t) => {
+const phase = (t % SECONDS) / SECONDS;
+const ease=(x)=>x<0?0:x>1?1:x*x*(3-2*x);
+document.getElementById('m1').setAttribute('opacity',ease(phase/0.3));
+document.getElementById('m2').setAttribute('transform','translate(0 '+(-320*(1-ease((phase-0.25)/0.35)))+')');
+document.getElementById('m3').setAttribute('r',26*ease((phase-0.55)/0.25));
+document.getElementById('lg').setAttribute('transform','translate(640 320) scale('+(1+0.06*ease((phase-0.8)/0.2))+') translate(-640 -320)');
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>

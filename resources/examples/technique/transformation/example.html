@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Example</title>
+<style>
+html,body{margin:0;width:1280px;height:720px;overflow:hidden;background:#f4f1ea;color:#1c1b19;font-family:'Segoe UI',system-ui,sans-serif}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1280 720" width="1280" height="720"><rect width="1280" height="720" fill="#f4f1ea"/>
+<rect id="tf" x="490" y="210" width="300" height="300" rx="20" fill="#8a93a3"/>
+<text id="tt" x="640" y="640" text-anchor="middle" font-size="44">A plain case becomes a gift</text></svg>
+<script>
+const SECONDS = 3;
+window.seekExample = (t) => {
+const phase = (t % SECONDS) / SECONDS;
+const ease=(x)=>x<0?0:x>1?1:x*x*(3-2*x);
+const e2=ease((phase-0.15)/0.5), e3=ease((phase-0.6)/0.3);
+const tf=document.getElementById('tf');
+tf.setAttribute('rx',20+130*e2);tf.setAttribute('fill',e3>0.5?'#e0608f':'#8a93a3');
+tf.setAttribute('transform','translate(640 360) rotate('+(90*e2)+') scale('+(1+0.15*e3)+') translate(-640 -360)');
+document.getElementById('tt').setAttribute('opacity',0.4+0.6*e3);
+};
+if (!navigator.webdriver) {
+const loop = (ms) => {
+window.seekExample(ms / 1000);
+requestAnimationFrame(loop);
+};
+requestAnimationFrame(loop);
+}
+window.seekExample(0);
+</script>
+</body>
+</html>
